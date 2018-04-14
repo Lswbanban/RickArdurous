@@ -1,5 +1,11 @@
 <NotepadPlus>
     <Project name="RickArdurous">
         <File name="README.md" />
+        <File name="RickArdurous.ino" />
+        <File name="MapManager.h" />
+        <File name="MapManager.cpp" />
+        <File name="RickArdurous.h" />
+        <File name="SpriteData.cpp" />
+        <File name="SpriteData.h" />
     </Project>
 </NotepadPlus>
