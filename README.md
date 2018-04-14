@@ -6,5 +6,4 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 
-- Set up the Source control
-- Create the ino file
+- write the code for displaying a level
