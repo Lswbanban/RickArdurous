@@ -82,14 +82,16 @@ int MapManager::GetCameraSpeed(int step, int subStep)
 	// check if we need to move every frame or not
 	if (step > 1)
 	{
+		if (step > 8)
+			step = 8;
 		// this array return the number of pixel the camera should move this frame
-		char speed[] = { 1, 1, 1, 2, 3, 4, 5, 6 };
+		char speed[] = { 1, 1, 1, 2, 2, 3, 4, 4 };
 		return speed[step];
 	}
 	else
 	{
 		// use an array to declare the number of frame to wait
-		char frame[] = { 2, 2, 3, 4 };
+		char frame[] = { 1, 2, 3, 4 };
 		// check if we need to wait or if we can advance the camera transition
 		if (arduboy.everyXFrames(frame[subStep >> 1]))
 			return 1;
@@ -105,25 +107,19 @@ void MapManager::AnimateCameraTransition()
 	int xDiff = TargetCameraX - CameraX;
 	if (xDiff > 0)
 	{
-		int step = xDiff;
-		if (step > 8)
-			step = 8;
-		CameraTransitionX += GetCameraSpeed(step, CameraTransitionX);
+		CameraTransitionX += GetCameraSpeed(xDiff, CameraTransitionX);
 		if (CameraTransitionX >= LEVEL_SPRITE_WIDTH)
 		{
-			CameraTransitionX = 0;
+			CameraTransitionX -= LEVEL_SPRITE_WIDTH;
 			CameraX++;
 		}
 	}
 	else if (xDiff < 0)
 	{
-		int step = -xDiff;
-		if (step > 8)
-			step = 8;
-		CameraTransitionX -= GetCameraSpeed(step, -CameraTransitionX);
+		CameraTransitionX -= GetCameraSpeed(-xDiff, -CameraTransitionX);
 		if (CameraTransitionX <= -LEVEL_SPRITE_WIDTH)
 		{
-			CameraTransitionX = 0;
+			CameraTransitionX += LEVEL_SPRITE_WIDTH;
 			CameraX--;
 		}
 	}
@@ -134,7 +130,7 @@ void MapManager::AnimateCameraTransition()
 		CameraTransitionY += GetCameraSpeed(yDiff, CameraTransitionY);
 		if (CameraTransitionY >= LEVEL_SPRITE_HEIGHT)
 		{
-			CameraTransitionY = 0;
+			CameraTransitionY -= LEVEL_SPRITE_HEIGHT;
 			CameraY++;
 		}
 	}
@@ -143,7 +139,7 @@ void MapManager::AnimateCameraTransition()
 		CameraTransitionY -= GetCameraSpeed(-yDiff, -CameraTransitionY);
 		if (CameraTransitionY <= -LEVEL_SPRITE_HEIGHT)
 		{
-			CameraTransitionY = 0;
+			CameraTransitionY += LEVEL_SPRITE_HEIGHT;
 			CameraY--;
 		}
 	}
