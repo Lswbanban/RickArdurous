@@ -6,4 +6,4 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 
-- write the code for displaying a level
+- Bug in the MapManager::Draw() when the camera is in transition, we should iterate on 1 more sprite
