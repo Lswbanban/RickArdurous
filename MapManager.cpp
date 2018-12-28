@@ -52,7 +52,6 @@ namespace MapManager
 	char CameraTransitionX = 0;
 	char StartDrawSpriteX = 0;
 	char EndDrawSpriteX = 0;
-
 	char CameraTransitionY = 0;
 	char StartDrawSpriteY = 0;
 	
@@ -68,10 +67,11 @@ void MapManager::Update()
 		TargetCameraY = 8;
 	if (arduboy.pressed(UP_BUTTON))
 		TargetCameraY = 0;
-	if (arduboy.pressed(LEFT_BUTTON))
+	/*if (arduboy.pressed(LEFT_BUTTON))
 		TargetCameraX = 0;
 	if (arduboy.pressed(RIGHT_BUTTON))
 		TargetCameraX = 16;
+	*/
 	
 	AnimateCameraTransition();
 	Draw();

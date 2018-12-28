@@ -13,7 +13,11 @@ namespace SpriteData
 		NOTHING = 255,
 	};
 	
+	// sprite of the walls
 	extern const unsigned char Walls[][8];
+	
+	// sprite of the main character
+	extern const unsigned char Rick[];
 }
 
 #endif
