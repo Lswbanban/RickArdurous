@@ -21,12 +21,12 @@ const unsigned char level[][32] PROGMEM = {
 	{ 0, 255, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
 	{ 0, 255, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
 	{ 0, 255, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
+	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 };
 
 namespace MapManager
@@ -50,7 +50,11 @@ namespace MapManager
 	
 	// This variable is used to store a temporary shift of the camera during a transition animation
 	char CameraTransitionX = 0;
+	char StartDrawSpriteX = 0;
+	char EndDrawSpriteX = 0;
+
 	char CameraTransitionY = 0;
+	char StartDrawSpriteY = 0;
 	
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
@@ -108,6 +112,8 @@ void MapManager::AnimateCameraTransition()
 	if (xDiff > 0)
 	{
 		CameraTransitionX += GetCameraSpeed(xDiff, CameraTransitionX);
+		StartDrawSpriteX = 0;
+		EndDrawSpriteX = 1;
 		if (CameraTransitionX >= LEVEL_SPRITE_WIDTH)
 		{
 			CameraTransitionX -= LEVEL_SPRITE_WIDTH;
@@ -117,17 +123,25 @@ void MapManager::AnimateCameraTransition()
 	else if (xDiff < 0)
 	{
 		CameraTransitionX -= GetCameraSpeed(-xDiff, -CameraTransitionX);
+		StartDrawSpriteX = -1;
+		EndDrawSpriteX = 0;
 		if (CameraTransitionX <= -LEVEL_SPRITE_WIDTH)
 		{
 			CameraTransitionX += LEVEL_SPRITE_WIDTH;
 			CameraX--;
 		}
 	}
+	else
+	{
+		StartDrawSpriteX = 0;
+		EndDrawSpriteX = 0;
+	}
 	
 	int yDiff = TargetCameraY - CameraY;
 	if (yDiff > 0)
 	{
 		CameraTransitionY += GetCameraSpeed(yDiff, CameraTransitionY);
+		StartDrawSpriteY = 0;
 		if (CameraTransitionY >= LEVEL_SPRITE_HEIGHT)
 		{
 			CameraTransitionY -= LEVEL_SPRITE_HEIGHT;
@@ -137,19 +151,24 @@ void MapManager::AnimateCameraTransition()
 	else if (yDiff < 0)
 	{
 		CameraTransitionY -= GetCameraSpeed(-yDiff, -CameraTransitionY);
+		StartDrawSpriteY = -1;
 		if (CameraTransitionY <= -LEVEL_SPRITE_HEIGHT)
 		{
 			CameraTransitionY += LEVEL_SPRITE_HEIGHT;
 			CameraY--;
 		}
 	}
+	else
+	{
+		StartDrawSpriteY = 0;
+	}
 }
 
 // This function draw the map based on the current position of the camera.
 void MapManager::Draw()
 {
-	for (int y = 0; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
-		for (int x = 0; x < NB_HORIZONTAL_SPRITE_PER_SCREEN; ++x)
+	for (int y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
+		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
 		{
 			unsigned char spriteId = pgm_read_byte(&(level[y + CameraY][x + CameraX]));
 			if (spriteId != SpriteData::NOTHING)
