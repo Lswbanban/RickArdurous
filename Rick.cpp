@@ -28,6 +28,7 @@ namespace Rick
 	int y = 20;
 	
 	void HandleInput();
+	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void Draw();
 }
 
@@ -45,14 +46,14 @@ void Rick::HandleInput()
 		// reset anim frame to the first frame of the walk, and set the state
 		if (Input::IsJustPressed(LEFT_BUTTON))
 		{
-			CurrentAnimFrame = 0;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 			State = AnimState::WALK;
 		}
 		
 		if (arduboy.everyXFrames(ANIM_SPEED))
 		{
 			x--;
-			CurrentAnimFrame = (CurrentAnimFrame + 1) % 4;
+			SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
 		}
 	}
 	else if (Input::IsDown(RIGHT_BUTTON))
@@ -60,21 +61,30 @@ void Rick::HandleInput()
 		// reset anim frame to the first frame of the walk, and set the state
 		if (Input::IsJustPressed(LEFT_BUTTON))
 		{
-			CurrentAnimFrame = 0;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 			State = AnimState::WALK;
 		}
 		if (arduboy.everyXFrames(ANIM_SPEED))
 		{
 			x++;
-			CurrentAnimFrame = (CurrentAnimFrame + 1) % 4;
+			SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
 		}
 	}
 	else
 	{
 		// reset the state to idle by default
 		State = AnimState::IDLE;
-		CurrentAnimFrame = 0;
+		CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
 	}
+}
+
+void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId)
+{
+	// increase the current frame to the next one
+	CurrentAnimFrame++;
+	// check if we need to loop the animation
+	if (CurrentAnimFrame > endFrameId)
+		CurrentAnimFrame = startFrameId;
 }
 
 void Rick::Draw()

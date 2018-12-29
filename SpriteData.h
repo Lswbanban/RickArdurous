@@ -19,6 +19,13 @@ namespace SpriteData
 	const int LEVEL_SPRITE_HEIGHT = 8;
 	extern const unsigned char Walls[][LEVEL_SPRITE_WIDTH * (LEVEL_SPRITE_HEIGHT / 8)];
 	
+	enum RickAnimFrameId
+	{
+		IDLE = 0,
+		WALK_START = 0,
+		WALK_END = 3,
+	};
+	
 	// sprite of the main character
 	const int RICK_SPRITE_WIDTH = 9;
 	const int RICK_SPRITE_HEIGHT = 16;
