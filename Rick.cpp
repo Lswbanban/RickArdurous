@@ -27,6 +27,9 @@ namespace Rick
 	int x = 0;
 	int y = 20;
 	
+	// orientation of Rick
+	bool IsLookingLeft = true;
+	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void Draw();
@@ -48,6 +51,7 @@ void Rick::HandleInput()
 		{
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 			State = AnimState::WALK;
+			IsLookingLeft = true;
 		}
 		
 		if (arduboy.everyXFrames(ANIM_SPEED))
@@ -59,10 +63,11 @@ void Rick::HandleInput()
 	else if (Input::IsDown(RIGHT_BUTTON))
 	{
 		// reset anim frame to the first frame of the walk, and set the state
-		if (Input::IsJustPressed(LEFT_BUTTON))
+		if (Input::IsJustPressed(RIGHT_BUTTON))
 		{
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 			State = AnimState::WALK;
+			IsLookingLeft = false;
 		}
 		if (arduboy.everyXFrames(ANIM_SPEED))
 		{
@@ -89,5 +94,5 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 
 void Rick::Draw()
 {
-	arduboy.drawBitmap(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
 }
