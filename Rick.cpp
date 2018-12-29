@@ -32,5 +32,5 @@ void Rick::HandleInput()
 
 void Rick::Draw()
 {
-	arduboy.drawBitmap(x, y, SpriteData::Rick, 12, 16, WHITE);
+	arduboy.drawBitmap(x/3, y, SpriteData::Rick[(x/3)%4], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE);
 }

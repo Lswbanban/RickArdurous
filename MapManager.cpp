@@ -36,10 +36,6 @@ namespace MapManager
 	const int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
 	const int NB_VERTICAL_SPRITE_PER_SCREEN = 9;
 	
-	// the sprite width and height in pixel
-	const int LEVEL_SPRITE_WIDTH = 8;
-	const int LEVEL_SPRITE_HEIGHT = 8;
-	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
 	int CameraX = 0;
 	int CameraY = 0;
@@ -114,9 +110,9 @@ void MapManager::AnimateCameraTransition()
 		CameraTransitionX += GetCameraSpeed(xDiff, CameraTransitionX);
 		StartDrawSpriteX = 0;
 		EndDrawSpriteX = 1;
-		if (CameraTransitionX >= LEVEL_SPRITE_WIDTH)
+		if (CameraTransitionX >= SpriteData::LEVEL_SPRITE_WIDTH)
 		{
-			CameraTransitionX -= LEVEL_SPRITE_WIDTH;
+			CameraTransitionX -= SpriteData::LEVEL_SPRITE_WIDTH;
 			CameraX++;
 		}
 	}
@@ -125,9 +121,9 @@ void MapManager::AnimateCameraTransition()
 		CameraTransitionX -= GetCameraSpeed(-xDiff, -CameraTransitionX);
 		StartDrawSpriteX = -1;
 		EndDrawSpriteX = 0;
-		if (CameraTransitionX <= -LEVEL_SPRITE_WIDTH)
+		if (CameraTransitionX <= -SpriteData::LEVEL_SPRITE_WIDTH)
 		{
-			CameraTransitionX += LEVEL_SPRITE_WIDTH;
+			CameraTransitionX += SpriteData::LEVEL_SPRITE_WIDTH;
 			CameraX--;
 		}
 	}
@@ -142,9 +138,9 @@ void MapManager::AnimateCameraTransition()
 	{
 		CameraTransitionY += GetCameraSpeed(yDiff, CameraTransitionY);
 		StartDrawSpriteY = 0;
-		if (CameraTransitionY >= LEVEL_SPRITE_HEIGHT)
+		if (CameraTransitionY >= SpriteData::LEVEL_SPRITE_HEIGHT)
 		{
-			CameraTransitionY -= LEVEL_SPRITE_HEIGHT;
+			CameraTransitionY -= SpriteData::LEVEL_SPRITE_HEIGHT;
 			CameraY++;
 		}
 	}
@@ -152,9 +148,9 @@ void MapManager::AnimateCameraTransition()
 	{
 		CameraTransitionY -= GetCameraSpeed(-yDiff, -CameraTransitionY);
 		StartDrawSpriteY = -1;
-		if (CameraTransitionY <= -LEVEL_SPRITE_HEIGHT)
+		if (CameraTransitionY <= -SpriteData::LEVEL_SPRITE_HEIGHT)
 		{
-			CameraTransitionY += LEVEL_SPRITE_HEIGHT;
+			CameraTransitionY += SpriteData::LEVEL_SPRITE_HEIGHT;
 			CameraY--;
 		}
 	}
@@ -172,9 +168,9 @@ void MapManager::Draw()
 		{
 			unsigned char spriteId = pgm_read_byte(&(level[y + CameraY][x + CameraX]));
 			if (spriteId != SpriteData::NOTHING)
-				arduboy.drawBitmap(LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
-					(LEVEL_SPRITE_HEIGHT * y) - CAMERA_VERTICAL_SHIFT - CameraTransitionY,
+				arduboy.drawBitmap(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
+					(SpriteData::LEVEL_SPRITE_HEIGHT * y) - CAMERA_VERTICAL_SHIFT - CameraTransitionY,
 					SpriteData::Walls[spriteId],
-					LEVEL_SPRITE_WIDTH, LEVEL_SPRITE_HEIGHT, WHITE);
+					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE);
 		}
 }
