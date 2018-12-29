@@ -8,7 +8,7 @@
 #include "Rick.h"
 
 // instance of the arduboy class
-Arduboy arduboy;
+CustomArduboy arduboy;
 
 void setup()
 {

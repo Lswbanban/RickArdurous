@@ -1,8 +1,8 @@
 #ifndef _RICK_ARDUROUS_H_
 #define _RICK_ARDUROUS_H_
 
-#include <Arduboy.h>
+#include "CustomArduboy.h"
 
-extern Arduboy arduboy;
+extern CustomArduboy arduboy;
 
 #endif
