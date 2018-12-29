@@ -5,9 +5,12 @@
 #include "RickArdurous.h"
 #include "Rick.h"
 #include "SpriteData.h"
+#include "Input.h"
 
 namespace Rick
 {
+	const int ANIM_SPEED = 3;
+	
 	// state of Rick
 	enum AnimState
 	{
@@ -18,6 +21,7 @@ namespace Rick
 	
 	// the current state of Rick
 	AnimState State = AnimState::IDLE;
+	unsigned char CurrentAnimFrame = 0;
 	
 	// position of Rick
 	int x = 0;
@@ -35,27 +39,45 @@ void Rick::Update()
 
 void Rick::HandleInput()
 {
-	// reset the state to idle by default
-	State = AnimState::IDLE;
-
 	// check the input
-	if (arduboy.pressed(LEFT_BUTTON))
+	if (Input::IsDown(LEFT_BUTTON))
 	{
-		State = AnimState::WALK;
-		x--;
+		// reset anim frame to the first frame of the walk, and set the state
+		if (Input::IsJustPressed(LEFT_BUTTON))
+		{
+			CurrentAnimFrame = 0;
+			State = AnimState::WALK;
+		}
+		
+		if (arduboy.everyXFrames(ANIM_SPEED))
+		{
+			x--;
+			CurrentAnimFrame = (CurrentAnimFrame + 1) % 4;
+		}
 	}
-	if (arduboy.pressed(RIGHT_BUTTON))
+	else if (Input::IsDown(RIGHT_BUTTON))
 	{
-		State = AnimState::WALK;
-		x++;
+		// reset anim frame to the first frame of the walk, and set the state
+		if (Input::IsJustPressed(LEFT_BUTTON))
+		{
+			CurrentAnimFrame = 0;
+			State = AnimState::WALK;
+		}
+		if (arduboy.everyXFrames(ANIM_SPEED))
+		{
+			x++;
+			CurrentAnimFrame = (CurrentAnimFrame + 1) % 4;
+		}
+	}
+	else
+	{
+		// reset the state to idle by default
+		State = AnimState::IDLE;
+		CurrentAnimFrame = 0;
 	}
 }
 
 void Rick::Draw()
 {
-	int frameId = 0;
-	if (State == AnimState::WALK)
-		frameId = (x/3) % 4;
-	
-	arduboy.drawBitmap(x/3, y, SpriteData::Rick[frameId], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmap(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE);
 }

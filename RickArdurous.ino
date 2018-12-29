@@ -3,6 +3,7 @@
 */
 
 #include "RickArdurous.h"
+#include "Input.h"
 #include "MapManager.h"
 #include "Rick.h"
 
@@ -29,6 +30,9 @@ void loop()
 	// clear the screen
 	arduboy.clear();
 
+	// update the input
+	Input::Update();
+	
 	// update the managers
 	MapManager::Update();
 
