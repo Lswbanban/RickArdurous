@@ -57,6 +57,7 @@ namespace SpriteData
 	extern const unsigned char SpikeVertical[][SPIKE_VERTICAL_SPRITE_WIDTH * (SPIKE_VERTICAL_SPRITE_HEIGHT / 8)];
 
 	// animation of a shiny star sparks that should be drawn on top of the gold statue. This anim should be drawn in inverted color.
+	const int SHINE_STAR_SPRITE_FRAME_COUNT = 4;
 	const int SHINE_STAR_SPRITE_WIDTH = 5;
 	const int SHINE_STAR_SPRITE_HEIGHT = 8;
 	extern const unsigned char ShineStar[][SHINE_STAR_SPRITE_WIDTH * (SHINE_STAR_SPRITE_HEIGHT / 8)];

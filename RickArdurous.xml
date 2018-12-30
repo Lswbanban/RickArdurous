@@ -7,5 +7,17 @@
         <File name="RickArdurous.h" />
         <File name="SpriteData.cpp" />
         <File name="SpriteData.h" />
+        <File name="Rick.cpp" />
+        <File name="Rick.h" />
+        <File name="Input.h" />
+        <File name="Input.cpp" />
+        <File name="CustomArduboy.h" />
+        <File name="CustomArduboy.cpp" />
+        <File name="Item.h" />
+        <File name="Spike.cpp" />
+        <File name="Spike.h" />
+        <File name="Item.cpp" />
+        <File name="Statuette.h" />
+        <File name="Statuette.cpp" />
     </Project>
 </NotepadPlus>
