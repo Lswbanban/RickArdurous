@@ -13,11 +13,15 @@
         <File name="Input.cpp" />
         <File name="CustomArduboy.h" />
         <File name="CustomArduboy.cpp" />
-        <File name="Item.h" />
-        <File name="Spike.cpp" />
-        <File name="Spike.h" />
-        <File name="Item.cpp" />
-        <File name="Statuette.h" />
-        <File name="Statuette.cpp" />
+        <Folder name="Items">
+            <File name="Item.h" />
+            <File name="Spike.cpp" />
+            <File name="Spike.h" />
+            <File name="Item.cpp" />
+            <File name="Statuette.h" />
+            <File name="Statuette.cpp" />
+            <File name="Dynamite.h" />
+            <File name="Dynamite.cpp" />
+        </Folder>
     </Project>
 </NotepadPlus>
