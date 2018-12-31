@@ -6,10 +6,9 @@
 #include "Spike.h"
 #include "SpriteData.h"
 
-Spike::Spike(int startX, int startY, VisualType type) : Item(startX, startY)
+Spike::Spike(int startX, int startY, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::LETHAL)
 {
-	Type = type;
-};
+}
 
 void Spike::Update()
 {
@@ -24,16 +23,12 @@ void Spike::Update()
 			AnimFrameId = (AnimFrameId + 1) % SpriteData::SPIKE_SPRITE_FRAME_COUNT;
 	}
 	
-	switch (Type)
+	if (IsPropertySet(PropertyFlags::HORIZONTAL_SPIKE))
 	{
-		case VisualType::HORIZONTAL:
-			arduboy.drawBitmap(X, Y, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE);
-			break;
-		case VisualType::VERTICAL_RIGHT:
-			arduboy.drawBitmap(X, Y, SpriteData::SpikeVertical[AnimFrameId], SpriteData::SPIKE_VERTICAL_SPRITE_WIDTH, SpriteData::SPIKE_VERTICAL_SPRITE_HEIGHT, WHITE);
-			break;
-		case VisualType::VERTICAL_LEFT:
-			arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeVertical[AnimFrameId], SpriteData::SPIKE_VERTICAL_SPRITE_WIDTH, SpriteData::SPIKE_VERTICAL_SPRITE_HEIGHT, WHITE, true);
-			break;
+		arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
+	}
+	else
+	{
+		arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeVertical[AnimFrameId], SpriteData::SPIKE_VERTICAL_SPRITE_WIDTH, SpriteData::SPIKE_VERTICAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
 	}
 }

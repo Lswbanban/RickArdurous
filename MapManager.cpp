@@ -5,6 +5,7 @@
 #include "MapManager.h"
 #include "MapData.h"
 #include "SpriteData.h"
+#include "Rick.h"
 #include <avr/pgmspace.h>
 
 namespace MapManager
@@ -47,8 +48,18 @@ void MapManager::Update()
 		TargetCameraX = 16;
 	*/
 	
+	// first draw the lethal items
 	for (int i = 0; i < ITEM_COUNT; i++)
-		Items[i]->Update();
+		if (Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
+			Items[i]->Update();
+	
+	// update the main character
+	Rick::Update();
+
+	// draw the non lethal items
+	for (int i = 0; i < ITEM_COUNT; i++)
+		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
+			Items[i]->Update();
 	
 	AnimateCameraTransition();
 	Draw();
