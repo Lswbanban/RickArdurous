@@ -2,8 +2,6 @@
     <Project name="RickArdurous">
         <File name="README.md" />
         <File name="RickArdurous.ino" />
-        <File name="MapManager.h" />
-        <File name="MapManager.cpp" />
         <File name="RickArdurous.h" />
         <File name="SpriteData.cpp" />
         <File name="SpriteData.h" />
@@ -22,6 +20,12 @@
             <File name="Statuette.cpp" />
             <File name="Dynamite.h" />
             <File name="Dynamite.cpp" />
+        </Folder>
+        <Folder name="MapManager">
+            <File name="MapManager.h" />
+            <File name="MapManager.cpp" />
+            <File name="MapData.h" />
+            <File name="MapData.cpp" />
         </Folder>
     </Project>
 </NotepadPlus>
