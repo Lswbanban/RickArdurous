@@ -27,6 +27,8 @@ void Dynamite::Update()
 		}
 		else
 		{
+			// set the lethal flag when the dynamite explode
+			SetProperty(Item::PropertyFlags::LETHAL);
 			// we are in explosion part, so stop the sparks
 			SparksAnimFrameId = -1;
 			// increase the dynamite frame id, at different speed depending if it is the fuse consuming part or the explosion

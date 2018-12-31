@@ -6,6 +6,8 @@
 #include "Rick.h"
 #include "SpriteData.h"
 #include "Input.h"
+#include "Dynamite.h"
+#include "MapData.h"
 
 namespace Rick
 {
@@ -81,6 +83,10 @@ void Rick::HandleInput()
 		State = AnimState::IDLE;
 		CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
 	}
+	
+	//debug test code to place a dynamite
+	if (Input::IsJustPressed(A_BUTTON))
+		((Dynamite*)(MapManager::Items[4]))->LightUp(x,y);
 }
 
 void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId)

@@ -9,10 +9,13 @@ public:
 	Dynamite(int startX, int startY);
 	virtual void Update();
 	
-	void LightUp()
+	void LightUp(int x, int y)
 	{
+		X = x;
+		Y = y;
 		DynamiteAnimFrameId = 0;
 		SparksAnimFrameId = 0;
+		ClearProperty(Item::PropertyFlags::LETHAL);
 	}
 
 private:
