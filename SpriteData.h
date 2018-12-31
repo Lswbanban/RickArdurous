@@ -36,11 +36,13 @@ namespace SpriteData
 	extern const unsigned char Rick[][RICK_SPRITE_WIDTH * (RICK_SPRITE_HEIGHT / 8)];
 	
 	// animation for the dynamite, with the fuse and the explosion
+	const int DYNAMITE_SPRITE_FRAME_COUNT = 11;
 	const int DYNAMITE_SPRITE_WIDTH = 8;
 	const int DYNAMITE_SPRITE_HEIGHT = 8;
 	extern const unsigned char Dynamite[][DYNAMITE_SPRITE_WIDTH * (DYNAMITE_SPRITE_HEIGHT / 8)];
 
 	// animation for the sparks when the fuse of the dynamite is consuming. This anim should be drawn in inverted color.
+	const int SPARKS_SPRITE_FRAME_COUNT = 5;
 	const int SPARKS_SPRITE_WIDTH = 5;
 	const int SPARKS_SPRITE_HEIGHT = 8;
 	extern const unsigned char Sparks[][SPARKS_SPRITE_WIDTH * (SPARKS_SPRITE_HEIGHT / 8)];
