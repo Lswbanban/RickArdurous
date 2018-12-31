@@ -17,6 +17,7 @@ public:
 	virtual void Update() = 0;
 	
 	bool SetProperty(unsigned char flag) { Property |= flag; }
+	bool ClearProperty(unsigned char flag) { Property &= ~flag; }
 	bool IsPropertySet(unsigned char flag) { return (Property & flag) != 0; }
 
 protected:
