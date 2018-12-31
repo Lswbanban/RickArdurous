@@ -6,7 +6,7 @@
 class CustomArduboy : public Arduboy
 {
 public:
-	void drawBitmapExtended(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color, bool mirrorX);
+	bool drawBitmapExtended(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color, bool mirrorX);
 };
 
 #endif

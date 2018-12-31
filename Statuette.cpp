@@ -6,7 +6,7 @@
 #include "Statuette.h"
 #include "SpriteData.h"
 
-Statuette::Statuette(int startX, int startY) : Item(startX, startY)
+Statuette::Statuette(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::NONE)
 {
 };
 

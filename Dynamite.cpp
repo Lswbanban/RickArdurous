@@ -6,7 +6,7 @@
 #include "Dynamite.h"
 #include "SpriteData.h"
 
-Dynamite::Dynamite(int startX, int startY) : Item(startX, startY)
+Dynamite::Dynamite(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::NONE)
 {
 };
 

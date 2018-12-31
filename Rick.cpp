@@ -24,8 +24,8 @@ namespace Rick
 	unsigned char CurrentAnimFrame = 0;
 	
 	// position of Rick
-	int x = 0;
-	int y = 20;
+	int x = 15;
+	int y = 22;
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -94,5 +94,8 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 
 void Rick::Draw()
 {
-	arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
+	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
+	
+	if (collisionDetected)
+		x = 15;
 }
