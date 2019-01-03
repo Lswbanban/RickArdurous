@@ -1,13 +1,14 @@
 #ifndef _STATUETTE_H_
 #define _STATUETTE_H_
 
-#include "Item.h"
+#include "PickUpItem.h"
 
-class Statuette : public Item
+class Statuette : public PickUpItem
 {
 public:
 	Statuette(int startX, int startY);
 	virtual void Update();
+	virtual void PickUp();
 
 private:
 	const int ANIM_SPEED = 2;

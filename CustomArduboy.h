@@ -3,6 +3,8 @@
 
 #include <Arduboy.h>
 
+const uint8_t TRANSPARENT = 3;
+
 class CustomArduboy : public Arduboy
 {
 public:
