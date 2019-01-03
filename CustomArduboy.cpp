@@ -50,7 +50,7 @@ bool CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8_t *bitm
             sBuffer[bufferPosition] |= byteToWrite;
           else if (color == BLACK)
             sBuffer[bufferPosition] &= ~byteToWrite;
-          else
+          else if (color == INVERT)
             sBuffer[bufferPosition] ^= byteToWrite;
         }
         if (yOffset && bRow<(HEIGHT/8)-1) {
@@ -61,7 +61,7 @@ bool CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8_t *bitm
             sBuffer[bufferPosition] |= byteToWrite;
           else if (color == BLACK)
             sBuffer[bufferPosition] &= ~byteToWrite;
-          else
+          else if (color == INVERT)
             sBuffer[bufferPosition] ^= byteToWrite;
         }
       }

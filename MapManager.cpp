@@ -6,6 +6,7 @@
 #include "MapData.h"
 #include "SpriteData.h"
 #include "Rick.h"
+#include "PickUpItem.h"
 #include <avr/pgmspace.h>
 
 namespace MapManager
@@ -56,9 +57,20 @@ void MapManager::Update()
 	// update the main character
 	Rick::Update();
 
+		// first draw the lethal items
+	for (int i = 0; i < ITEM_COUNT; i++)
+		if (Items[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
+		{
+			Items[i]->Update();
+			Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
+		}
+
+	// update the main character
+	Rick::Draw();
+
 	// draw the non lethal items
 	for (int i = 0; i < ITEM_COUNT; i++)
-		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
+		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
 			Items[i]->Update();
 	
 	AnimateCameraTransition();

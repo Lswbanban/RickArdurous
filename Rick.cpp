@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "Dynamite.h"
 #include "MapData.h"
+#include "PickUpItem.h"
 
 namespace Rick
 {
@@ -34,13 +35,13 @@ namespace Rick
 	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
-	void Draw();
+	void CheckCollision();
 }
 
 void Rick::Update()
 {
 	HandleInput();
-	Draw();
+	CheckCollision();
 }
 
 void Rick::HandleInput()
@@ -98,10 +99,23 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 		CurrentAnimFrame = startFrameId;
 }
 
-void Rick::Draw()
+void Rick::CheckCollision()
 {
-	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
+	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
 	
 	if (collisionDetected)
 		x = 15;
+}
+
+void Rick::CheckCollisionWithPickUp(PickUpItem * item)
+{
+	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	
+	if (collisionDetected)
+		item->PickUp();
+}
+
+void Rick::Draw()
+{
+	arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
 }
