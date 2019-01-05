@@ -107,12 +107,19 @@ void Rick::CheckCollision()
 		x = 15;
 }
 
-void Rick::CheckCollisionWithPickUp(PickUpItem * item)
+/**
+ * Check if Rick collides with any pixel from the frame buffer, and if yes, assume those pixels
+ * belongs to the specified Pickup item, and then pick up that specified item.
+ * @return if true, that means, you can continue to check collision, otherwise that means Rick already pickup an item this frame.
+ */
+bool Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
 	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
 	
 	if (collisionDetected)
 		item->PickUp();
+	
+	return !collisionDetected;
 }
 
 void Rick::Draw()

@@ -57,12 +57,14 @@ void MapManager::Update()
 	// update the main character
 	Rick::Update();
 
-		// first draw the lethal items
+	// first draw the bonus items
+	bool shouldCheckCollisionWithPickup = true;
 	for (int i = 0; i < ITEM_COUNT; i++)
 		if (Items[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
 		{
 			Items[i]->Update();
-			Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
+			if (shouldCheckCollisionWithPickup)
+				shouldCheckCollisionWithPickup = Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
 		}
 
 	// update the main character
@@ -104,8 +106,10 @@ int MapManager::GetCameraSpeed(int step, int subStep)
 	}
 }
 
-// this function check if there's difference between the current position of the camera
-// and the target position, and animate the camera position to reach the target
+/**
+ * this function check if there's difference between the current position of the camera
+ * and the target position, and animate the camera position to reach the target
+ */
 void MapManager::AnimateCameraTransition()
 {
 	int xDiff = TargetCameraX - CameraX;
@@ -164,7 +168,9 @@ void MapManager::AnimateCameraTransition()
 	}
 }
 
-// This function draw the map based on the current position of the camera.
+/**
+ * This function draw the map based on the current position of the camera.
+ */
 void MapManager::Draw()
 {
 	for (int y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
