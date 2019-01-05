@@ -14,6 +14,8 @@
         <Folder name="Items">
             <File name="Item.h" />
             <File name="Item.cpp" />
+            <File name="PickUpItem.h" />
+            <File name="PickUpItem.cpp" />
             <File name="Spike.h" />
             <File name="Spike.cpp" />
             <File name="Statuette.h" />

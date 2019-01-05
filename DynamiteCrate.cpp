@@ -12,9 +12,13 @@ DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY
 
 void DynamiteCrate::Update()
 {
-	// draw the crate
 	if (IsPropertySet(Item::PropertyFlags::PICKUP))
+	{
+		// draw the crate
 		arduboy.drawBitmap(X, Y, SpriteData::DynamiteCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
+		// draw the shiny star
+		UpdateShineStar(-2, 9, 1, 6);
+	}
 }
 
 void DynamiteCrate::PickUp()
