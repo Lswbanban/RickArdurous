@@ -33,6 +33,12 @@ namespace Rick
 	// orientation of Rick
 	bool IsLookingLeft = true;
 	
+	// Inventory
+	char LifeCount = MAX_LIFE_COUNT;
+	char StatuetteCount = 0;
+	char BulletCount = MAX_BULLET_COUNT;
+	char DynamiteCount = MAX_DYNAMITE_COUNT;
+	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void CheckCollision();
@@ -104,7 +110,11 @@ void Rick::CheckCollision()
 	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
 	
 	if (collisionDetected)
+	{
+		if (LifeCount > 0)
+			LifeCount--;
 		x = 15;
+	}
 }
 
 /**
