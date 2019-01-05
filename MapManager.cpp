@@ -12,9 +12,9 @@
 namespace MapManager
 {
 	// the vertical shift value in pixel that should be aplied to the camera when drawing the level
-	const int CAMERA_VERTICAL_SHIFT = 2;
+	const int CAMERA_VERTICAL_SHIFT = 6;
 	const int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
-	const int NB_VERTICAL_SPRITE_PER_SCREEN = 9;
+	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
 	int CameraX = 0;
@@ -179,7 +179,7 @@ void MapManager::Draw()
 			unsigned char spriteId = pgm_read_byte(&(Level[y + CameraY][x + CameraX]));
 			if (spriteId != SpriteData::NOTHING)
 				arduboy.drawBitmap(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
-					(SpriteData::LEVEL_SPRITE_HEIGHT * y) - CAMERA_VERTICAL_SHIFT - CameraTransitionY,
+					(SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY,
 					SpriteData::Walls[spriteId],
 					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE);
 		}
