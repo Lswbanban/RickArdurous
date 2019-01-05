@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "Statuette.h"
 #include "SpriteData.h"
+#include "Rick.h"
 
 Statuette::Statuette(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::PICKUP)
 {
@@ -25,4 +26,5 @@ void Statuette::Update()
 void Statuette::PickUp()
 {
 	ClearProperty(Item::PropertyFlags::PICKUP);
+	Rick::StatuetteCount++;
 }

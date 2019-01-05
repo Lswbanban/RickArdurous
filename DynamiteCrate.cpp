@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "DynamiteCrate.h"
 #include "SpriteData.h"
+#include "Rick.h"
 
 DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::PICKUP)
 {
@@ -24,4 +25,5 @@ void DynamiteCrate::Update()
 void DynamiteCrate::PickUp()
 {
 	ClearProperty(Item::PropertyFlags::PICKUP);
+	Rick::DynamiteCount = Rick::MAX_DYNAMITE_COUNT;
 }

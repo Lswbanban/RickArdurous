@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "BulletCrate.h"
 #include "SpriteData.h"
+#include "Rick.h"
 
 BulletCrate::BulletCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::PICKUP)
 {
@@ -25,4 +26,5 @@ void BulletCrate::Update()
 void BulletCrate::PickUp()
 {
 	ClearProperty(Item::PropertyFlags::PICKUP);
+	Rick::BulletCount = Rick::MAX_BULLET_COUNT;
 }

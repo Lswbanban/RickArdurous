@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "Input.h"
 #include "MapManager.h"
+#include "HUD.h"
 
 // instance of the arduboy class
 CustomArduboy arduboy;
@@ -34,6 +35,9 @@ void loop()
 	
 	// update the managers
 	MapManager::Update();
+	
+	// update the HUD
+	HUD::Update();
 	
 	// draw the frame buffer
 	arduboy.display();

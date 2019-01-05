@@ -83,6 +83,11 @@ namespace SpriteData
 	extern const unsigned char HUDStatuette[];
 	extern const unsigned char HUDDynamite[];
 	extern const unsigned char HUDBullet[];
+
+	// tiny numbers for HUD
+	const int NUMBERS_SPRITE_WIDTH = 4;
+	const int NUMBERS_SPRITE_HEIGHT = 8;
+	extern const unsigned char Numbers[][NUMBERS_SPRITE_WIDTH * (NUMBERS_SPRITE_HEIGHT / 8)];
 }
 
 #endif
