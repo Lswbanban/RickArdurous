@@ -6,7 +6,7 @@ class PickUpItem;
 namespace Rick
 {
 	void Update();
-	void CheckCollisionWithPickUp(PickUpItem * item);
+	bool CheckCollisionWithPickUp(PickUpItem * item);
 	void Draw();
 }
 

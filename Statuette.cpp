@@ -1,5 +1,5 @@
 /*
- * Implement the logic and drawing of lethal spikes
+ * Implement the logic and drawing of the statuette bonus
 */
 
 #include "RickArdurous.h"

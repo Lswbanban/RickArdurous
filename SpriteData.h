@@ -68,6 +68,21 @@ namespace SpriteData
 	const int STATUE_SPRITE_WIDTH = 5;
 	const int STATUE_SPRITE_HEIGHT = 8;
 	extern const unsigned char Statue[];
+	
+	// dynamite and bullet bonus sprite
+	const int CRATE_SPRITE_WIDTH = 11;
+	const int CRATE_SPRITE_HEIGHT = 8;
+	extern const unsigned char BulletCrate[];
+	extern const unsigned char DynamiteCrate[];
+	
+	// HUD elements
+	const int HUD_SPRITE_WIDTH = 5;
+	const int HUD_BULLET_SPRITE_WIDTH = 7;
+	const int HUD_SPRITE_HEIGHT = 8;
+	extern const unsigned char HUDHeart[];
+	extern const unsigned char HUDStatuette[];
+	extern const unsigned char HUDDynamite[];
+	extern const unsigned char HUDBullet[];
 }
 
 #endif

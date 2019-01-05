@@ -3,10 +3,12 @@
 */
 
 #include "MapData.h"
+#include "SpriteData.h"
 #include "Spike.h"
 #include "Statuette.h"
 #include "Dynamite.h"
-#include "SpriteData.h"
+#include "DynamiteCrate.h"
+#include "BulletCrate.h"
 #include <avr/pgmspace.h>
 
 const unsigned char MapManager::Level[][32] PROGMEM = {
@@ -32,15 +34,17 @@ const unsigned char MapManager::Level[][32] PROGMEM = {
 };
 
 // below is the instances of all the Items
-Spike	sp1(100,30, Item::PropertyFlags::HORIZONTAL_SPIKE | Item::PropertyFlags::MIRROR_X);
-Spike	sp2(80,30, Item::PropertyFlags::MIRROR_X);
-Spike	sp3(60,30, Item::PropertyFlags::NONE);
+Spike	sp1(120,30, Item::PropertyFlags::HORIZONTAL_SPIKE | Item::PropertyFlags::MIRROR_X);
+Spike	sp2(110,30, Item::PropertyFlags::MIRROR_X);
+Spike	sp3(100,30, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
 Dynamite	dyn(50, 10);
+DynamiteCrate	dc(60, 25);
+BulletCrate		bc(80, 25);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
-	&sp1, &sp2, &sp3, &st, &dyn,
+	&sp1, &sp2, &sp3, &st, &dyn, &dc, &bc,
 	};
 
 // compute the number of items

@@ -13,13 +13,17 @@
         <File name="CustomArduboy.cpp" />
         <Folder name="Items">
             <File name="Item.h" />
-            <File name="Spike.cpp" />
-            <File name="Spike.h" />
             <File name="Item.cpp" />
+            <File name="Spike.h" />
+            <File name="Spike.cpp" />
             <File name="Statuette.h" />
             <File name="Statuette.cpp" />
             <File name="Dynamite.h" />
             <File name="Dynamite.cpp" />
+            <File name="DynamiteCrate.h" />
+            <File name="DynamiteCrate.cpp" />
+            <File name="BulletCrate.h" />
+            <File name="BulletCrate.cpp" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />
