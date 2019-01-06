@@ -31,8 +31,8 @@ namespace Rick
 	unsigned char CurrentAnimFrame = 0;
 	
 	// position of Rick
-	int x = 15;
-	int y = 22;
+	int X = 15;
+	int Y = 22;
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -66,7 +66,7 @@ void Rick::HandleInput()
 			if (State == AnimState::JUMP)
 			{
 				// move up
-				y--;
+				Y--;
 				
 				// increase the jump frame counter and check if we need to change state to fall
 				JumpFrameCount++;
@@ -76,7 +76,7 @@ void Rick::HandleInput()
 			else
 			{
 				// in fall state, move down
-				y++;
+				Y++;
 			}
 		
 			// In jump or Fall state, we can do air control
@@ -85,8 +85,8 @@ void Rick::HandleInput()
 			else if (Input::IsDown(RIGHT_BUTTON))
 				JumpAirSpeedX = 1;
 			
-			// move the x according to the air speed
-			x += JumpAirSpeedX;
+			// move the X according to the air speed
+			X += JumpAirSpeedX;
 		}
 	}
 	else
@@ -111,7 +111,7 @@ void Rick::HandleInput()
 			
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
-				x--;
+				X--;
 				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
 			}
 		}
@@ -127,7 +127,7 @@ void Rick::HandleInput()
 			}
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
-				x++;
+				X++;
 				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
 			}
 		}
@@ -141,7 +141,7 @@ void Rick::HandleInput()
 		
 		//debug test code to place a dynamite
 		if (Input::IsJustPressed(A_BUTTON))
-			((Dynamite*)(MapManager::Items[4]))->LightUp(x,y);
+			((Dynamite*)(MapManager::Items[4]))->LightUp(X,Y);
 	}
 }
 
@@ -160,8 +160,8 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 void Rick::CheckStaticCollision()
 {
 	// first check the floor collisions
-	int yUnderFeet = y + 13;
-	if ((yUnderFeet < 64) && ((arduboy.getPixel(x + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(x + 6, yUnderFeet) == WHITE)))
+	int yUnderFeet = Y + 13;
+	if ((yUnderFeet < 64) && ((arduboy.getPixel(X + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(X + 6, yUnderFeet) == WHITE)))
 	{
 		// We found a collision under the feet, so if we are falling, stop falling
 		if (State == AnimState::FALL)
@@ -175,15 +175,15 @@ void Rick::CheckStaticCollision()
 	}
 	
 	// draw rick sprite to check the wall collisions
-	bool wallCollision = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	bool wallCollision = arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
 	
 	if (wallCollision)
 	{
 		JumpAirSpeedX = 0;
 		if (IsLookingLeft)
-			x++;
+			X++;
 		else
-			x--;
+			X--;
 	}
 }
 
@@ -192,13 +192,13 @@ void Rick::CheckStaticCollision()
  */
 void Rick::CheckLethalCollision()
 {
-	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft);
+	bool collisionDetected = arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft);
 	
 	if (collisionDetected)
 	{
 		if (LifeCount > 0)
 			LifeCount--;
-		x = 15;
+		X = 15;
 	}
 }
 
@@ -209,11 +209,11 @@ void Rick::CheckLethalCollision()
  */
 void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
-	if (arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft))
+	if (arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft))
 		item->PickUp();
 }
 
 void Rick::Draw()
 {
-	arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
+	arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
 }
