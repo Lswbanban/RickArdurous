@@ -16,8 +16,10 @@ namespace Rick
 	const int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
 	const int MIN_AIR_CONTROL_ANIM_SPEED = 3;
 	const int MAX_AIR_CONTROL_ANIM_SPEED = 8;
-	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[] = { 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6 };
+	const char JUMP_AND_FALL_VERTICAL_MOVE[] 		= { 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1 };
+	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[]	= { 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6 };
 	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
+	const int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
 	
 	// state of Rick
 	enum AnimState
@@ -35,7 +37,7 @@ namespace Rick
 	
 	// position of Rick
 	int X = 15;
-	int Y = 22;
+	int Y = 8;
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -55,6 +57,7 @@ namespace Rick
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void UpdateAirControl(bool towardLeftDirection);
+	bool IsThereAnyFloorAt(int yUnderFeet);
 }
 
 void Rick::Update()
@@ -75,7 +78,7 @@ void Rick::HandleInput()
 			if (State == AnimState::JUMP)
 			{
 				// move up
-				Y--;
+				Y -= JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex];
 				// increase the jump frame counter and check if we need to change state to fall
 				JumpAndFallAnimSpeedIndex++;
 				if (JumpAndFallAnimSpeedIndex >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT)
@@ -87,9 +90,9 @@ void Rick::HandleInput()
 			else
 			{
 				// in fall state, move down
-				Y++;
+				Y += JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex];
 				// decrease the jump counter
-				if (JumpAndFallAnimSpeedIndex > 0)
+				if (JumpAndFallAnimSpeedIndex > FALL_VERTICAL_MIN_INDEX)
 					JumpAndFallAnimSpeedIndex--;
 			}
 		}
@@ -128,13 +131,14 @@ void Rick::HandleInput()
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
+			IsLookingLeft = true;
+			AirControlAnimSpeed = MIN_AIR_CONTROL_ANIM_SPEED;
+
 			// reset anim frame to the first frame of the walk, and set the state
 			if (Input::IsJustPressed(LEFT_BUTTON))
 			{
 				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 				State = AnimState::WALK;
-				IsLookingLeft = true;
-				AirControlAnimSpeed = MIN_AIR_CONTROL_ANIM_SPEED;
 			}
 			
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
@@ -145,13 +149,14 @@ void Rick::HandleInput()
 		}
 		else if (Input::IsDown(RIGHT_BUTTON))
 		{
+			IsLookingLeft = false;
+			AirControlAnimSpeed = MIN_AIR_CONTROL_ANIM_SPEED;
+			
 			// reset anim frame to the first frame of the walk, and set the state
 			if (Input::IsJustPressed(RIGHT_BUTTON))
 			{
 				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 				State = AnimState::WALK;
-				IsLookingLeft = false;
-				AirControlAnimSpeed = MIN_AIR_CONTROL_ANIM_SPEED;
 			}
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
@@ -205,6 +210,11 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
 	}
 }
 
+bool Rick::IsThereAnyFloorAt(int yUnderFeet)
+{
+	return (arduboy.getPixel(X + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(X + 6, yUnderFeet) == WHITE);
+}
+
 /**
  * Check if Rick is colliding with a static wall, floor, and ceiling and prevent him to move.
  */
@@ -212,11 +222,17 @@ void Rick::CheckStaticCollision()
 {
 	// first check the floor collisions
 	int yUnderFeet = Y + 13;
-	if ((yUnderFeet < 64) && ((arduboy.getPixel(X + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(X + 6, yUnderFeet) == WHITE)))
+	if (yUnderFeet >= HEIGHT)
+		yUnderFeet = HEIGHT-1;
+	if (IsThereAnyFloorAt(yUnderFeet))
 	{
 		// We found a collision under the feet, so if we are falling, stop falling
 		if (State == AnimState::FALL)
 			State = AnimState::IDLE;
+		
+		// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
+		while (IsThereAnyFloorAt(--yUnderFeet))
+			Y--;
 	}
 	else
 	{
@@ -255,6 +271,7 @@ void Rick::CheckLethalCollision()
 		if (LifeCount > 0)
 			LifeCount--;
 		X = 15;
+		Y = 8;
 	}
 }
 
