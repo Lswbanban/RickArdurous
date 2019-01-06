@@ -151,10 +151,18 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
  */
 void Rick::CheckStaticCollision()
 {
-	// draw the collision sprite on the side where Rick is moving
-	bool collision = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	// first check the floor collisions
+	if ((arduboy.getPixel(x+2, y+13) == WHITE) || (arduboy.getPixel(x+9, y+13) == WHITE))
+	{
+		y--;
+		if (State == AnimState::JUMP)
+			State = AnimState::IDLE;
+	}
 	
-	if (collision)
+	// draw rick sprite to check the wall collisions
+	bool wallCollision = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	
+	if (wallCollision)
 	{
 		JumpAirSpeedX = 0;
 		if (IsLookingLeft)
