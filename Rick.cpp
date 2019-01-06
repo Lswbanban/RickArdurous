@@ -140,14 +140,10 @@ void Rick::CheckLethalCollision()
  * belongs to the specified Pickup item, and then pick up that specified item.
  * @return if true, that means, you can continue to check collision, otherwise that means Rick already pickup an item this frame.
  */
-bool Rick::CheckCollisionWithPickUp(PickUpItem * item)
+void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
-	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft);
-	
-	if (collisionDetected)
+	if (arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft))
 		item->PickUp();
-	
-	return !collisionDetected;
 }
 
 void Rick::Draw()

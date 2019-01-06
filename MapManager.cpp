@@ -56,13 +56,11 @@ void MapManager::Update()
 	Rick::CheckLethalCollision();
 	
 	// first draw the bonus items
-	bool shouldCheckCollisionWithPickup = true;
 	for (int i = 0; i < ITEM_COUNT; i++)
 		if (Items[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
 		{
 			Items[i]->Update();
-			if (shouldCheckCollisionWithPickup)
-				shouldCheckCollisionWithPickup = Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
+			Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
 		}
 
 	// draw the non lethal items
