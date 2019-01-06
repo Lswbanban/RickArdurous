@@ -13,7 +13,9 @@
 namespace Rick
 {
 	const int WALK_ANIM_SPEED = 3;
-	const int AIR_CONTROL_ANIM_SPEED = 6;
+	const int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
+	const int MIN_AIR_CONTROL_ANIM_SPEED = 3;
+	const int MAX_AIR_CONTROL_ANIM_SPEED = 10;
 	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[] = { 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6 };
 	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
 	
@@ -41,7 +43,7 @@ namespace Rick
 	// variable for the jump state
 	unsigned char JumpAndFallFrameCount = 0;
 	unsigned char JumpAndFallAnimSpeedIndex = 0;
-	char AirSpeedX = 0;
+	unsigned char AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -51,6 +53,7 @@ namespace Rick
 	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
+	void UpdateAirControl(bool towardLeftDirection);
 }
 
 void Rick::Update()
@@ -91,16 +94,22 @@ void Rick::HandleInput()
 		}
 		
 		// move left or right while jumping or falling
-		if (arduboy.everyXFrames(AIR_CONTROL_ANIM_SPEED))
+		if (arduboy.everyXFrames(AirControlAnimSpeed))
 		{
 			// In jump or Fall state, we can do air control
 			if (Input::IsDown(LEFT_BUTTON))
-				AirSpeedX = -1;
+				UpdateAirControl(true);
 			else if (Input::IsDown(RIGHT_BUTTON))
-				AirSpeedX = 1;
+				UpdateAirControl(false);
 			
-			// move the X according to the air speed
-			X += AirSpeedX;
+			// move the X according to the orientation Rick, and if he didn't jump vertically
+			if (AirControlAnimSpeed != NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED)
+			{
+				if (IsLookingLeft)
+					X--;
+				else
+					X++;
+			}
 		}
 	}
 	else
@@ -121,7 +130,7 @@ void Rick::HandleInput()
 				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 				State = AnimState::WALK;
 				IsLookingLeft = true;
-				AirSpeedX = -1;
+				AirControlAnimSpeed = MIN_AIR_CONTROL_ANIM_SPEED;
 			}
 			
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
@@ -138,7 +147,7 @@ void Rick::HandleInput()
 				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 				State = AnimState::WALK;
 				IsLookingLeft = false;
-				AirSpeedX = 1;
+				AirControlAnimSpeed = MIN_AIR_CONTROL_ANIM_SPEED;
 			}
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
@@ -151,7 +160,7 @@ void Rick::HandleInput()
 			// reset the state to idle by default
 			State = AnimState::IDLE;
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
-			AirSpeedX = 0;
+			AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 		}
 		
 		//debug test code to place a dynamite
@@ -167,6 +176,29 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 	// check if we need to loop the animation
 	if (CurrentAnimFrame > endFrameId)
 		CurrentAnimFrame = startFrameId;
+}
+
+void Rick::UpdateAirControl(bool towardLeftDirection)
+{
+	// first check if we jump without any horizontal movement (just vertically)
+	if (AirControlAnimSpeed == NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED)
+	{
+		// the horizontal speed was null, so set the looking orientation and set the anim speed to max
+		IsLookingLeft = towardLeftDirection;
+		AirControlAnimSpeed = MAX_AIR_CONTROL_ANIM_SPEED;
+	}
+	else if (IsLookingLeft == towardLeftDirection)
+	{
+		if (AirControlAnimSpeed > MIN_AIR_CONTROL_ANIM_SPEED)
+			AirControlAnimSpeed--;
+	}
+	else
+	{
+		if (AirControlAnimSpeed < MAX_AIR_CONTROL_ANIM_SPEED)
+			AirControlAnimSpeed++;
+		if (AirControlAnimSpeed == MAX_AIR_CONTROL_ANIM_SPEED)
+			IsLookingLeft = towardLeftDirection;
+	}
 }
 
 /**
@@ -198,7 +230,7 @@ void Rick::CheckStaticCollision()
 	
 	if (wallCollision)
 	{
-		AirSpeedX = 0;
+		AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 		if (IsLookingLeft)
 			X++;
 		else
