@@ -14,7 +14,7 @@ namespace Rick
 {
 	const int WALK_ANIM_SPEED = 3;
 	const int JUMP_ANIM_SPEED = 3;
-	const int MAX_JUMP_UP_FRAME_COUNT = 5;
+	const int MAX_JUMP_FRAME_COUNT = 10;
 	
 	// state of Rick
 	enum AnimState
@@ -22,6 +22,7 @@ namespace Rick
 		IDLE = 0,
 		WALK,
 		JUMP,
+		FALL,
 		FIRE,
 	};
 	
@@ -37,7 +38,7 @@ namespace Rick
 	bool IsLookingLeft = true;
 	
 	// variable for the jump state
-	unsigned char JumpUpFrameCount = 0;
+	unsigned char JumpFrameCount = 0;
 	char JumpAirSpeedX = 0;
 	
 	// Inventory
@@ -58,20 +59,27 @@ void Rick::Update()
 void Rick::HandleInput()
 {
 	// handle the input differently according to the current state
-	if (State == AnimState::JUMP)
+	if ((State == AnimState::JUMP) || (State == AnimState::FALL))
 	{
 		if (arduboy.everyXFrames(JUMP_ANIM_SPEED))
 		{
-			// increase the jump frame counter
-			JumpUpFrameCount++;
-			
-			// move up or down, depending on the phase of the jump
-			if (JumpUpFrameCount < MAX_JUMP_UP_FRAME_COUNT)
+			if (State == AnimState::JUMP)
+			{
+				// move up
 				y--;
+				
+				// increase the jump frame counter and check if we need to change state to fall
+				JumpFrameCount++;
+				if (JumpFrameCount > MAX_JUMP_FRAME_COUNT)
+					State = AnimState::FALL;
+			}
 			else
+			{
+				// in fall state, move down
 				y++;
-			
-			// do air control
+			}
+		
+			// In jump or Fall state, we can do air control
 			if (Input::IsDown(LEFT_BUTTON))
 				JumpAirSpeedX = -1;
 			else if (Input::IsDown(RIGHT_BUTTON))
@@ -88,7 +96,7 @@ void Rick::HandleInput()
 		{
 			State = AnimState::JUMP;
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
-			JumpUpFrameCount = 0;
+			JumpFrameCount = 0;
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
@@ -152,11 +160,18 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 void Rick::CheckStaticCollision()
 {
 	// first check the floor collisions
-	if ((arduboy.getPixel(x+2, y+13) == WHITE) || (arduboy.getPixel(x+9, y+13) == WHITE))
+	int yUnderFeet = y + 13;
+	if ((yUnderFeet < 64) && ((arduboy.getPixel(x + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(x + 6, yUnderFeet) == WHITE)))
 	{
-		y--;
-		if (State == AnimState::JUMP)
+		// We found a collision under the feet, so if we are falling, stop falling
+		if (State == AnimState::FALL)
 			State = AnimState::IDLE;
+	}
+	else
+	{
+		// There's no collision under the feet, and not jumping, then we fall
+		if (State != AnimState::JUMP)
+			State = AnimState::FALL;
 	}
 	
 	// draw rick sprite to check the wall collisions
