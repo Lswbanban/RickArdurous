@@ -11,7 +11,9 @@ namespace Rick
 	const char MAX_DYNAMITE_COUNT = 5;
 	
 	void Update();
+	void CheckLethalCollision();
 	bool CheckCollisionWithPickUp(PickUpItem * item);
+	void CheckStaticCollision();
 	void Draw();
 	
 	// Rick Inventory
