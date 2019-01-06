@@ -13,8 +13,9 @@
 namespace Rick
 {
 	const int WALK_ANIM_SPEED = 3;
-	const int JUMP_ANIM_SPEED = 3;
-	const int MAX_JUMP_FRAME_COUNT = 10;
+	const int AIR_CONTROL_ANIM_SPEED = 6;
+	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[] = { 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6 };
+	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
 	
 	// state of Rick
 	enum AnimState
@@ -38,8 +39,9 @@ namespace Rick
 	bool IsLookingLeft = true;
 	
 	// variable for the jump state
-	unsigned char JumpFrameCount = 0;
-	char JumpAirSpeedX = 0;
+	unsigned char JumpAndFallFrameCount = 0;
+	unsigned char JumpAndFallAnimSpeedIndex = 0;
+	char AirSpeedX = 0;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -61,32 +63,44 @@ void Rick::HandleInput()
 	// handle the input differently according to the current state
 	if ((State == AnimState::JUMP) || (State == AnimState::FALL))
 	{
-		if (arduboy.everyXFrames(JUMP_ANIM_SPEED))
+		// increase the frame counter for the jump, and switch to the next frame when needed
+		JumpAndFallFrameCount++;
+		if (JumpAndFallFrameCount >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED[JumpAndFallAnimSpeedIndex])
 		{
+			JumpAndFallFrameCount = 0;
 			if (State == AnimState::JUMP)
 			{
 				// move up
 				Y--;
-				
 				// increase the jump frame counter and check if we need to change state to fall
-				JumpFrameCount++;
-				if (JumpFrameCount > MAX_JUMP_FRAME_COUNT)
+				JumpAndFallAnimSpeedIndex++;
+				if (JumpAndFallAnimSpeedIndex >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT)
+				{
 					State = AnimState::FALL;
+					JumpAndFallAnimSpeedIndex--;
+				}
 			}
 			else
 			{
 				// in fall state, move down
 				Y++;
+				// decrease the jump counter
+				if (JumpAndFallAnimSpeedIndex > 0)
+					JumpAndFallAnimSpeedIndex--;
 			}
+		}
 		
+		// move left or right while jumping or falling
+		if (arduboy.everyXFrames(AIR_CONTROL_ANIM_SPEED))
+		{
 			// In jump or Fall state, we can do air control
 			if (Input::IsDown(LEFT_BUTTON))
-				JumpAirSpeedX = -1;
+				AirSpeedX = -1;
 			else if (Input::IsDown(RIGHT_BUTTON))
-				JumpAirSpeedX = 1;
+				AirSpeedX = 1;
 			
 			// move the X according to the air speed
-			X += JumpAirSpeedX;
+			X += AirSpeedX;
 		}
 	}
 	else
@@ -96,7 +110,8 @@ void Rick::HandleInput()
 		{
 			State = AnimState::JUMP;
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
-			JumpFrameCount = 0;
+			JumpAndFallFrameCount = 0;
+			JumpAndFallAnimSpeedIndex = 0;
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
@@ -106,7 +121,7 @@ void Rick::HandleInput()
 				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 				State = AnimState::WALK;
 				IsLookingLeft = true;
-				JumpAirSpeedX = -1;
+				AirSpeedX = -1;
 			}
 			
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
@@ -123,7 +138,7 @@ void Rick::HandleInput()
 				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
 				State = AnimState::WALK;
 				IsLookingLeft = false;
-				JumpAirSpeedX = 1;
+				AirSpeedX = 1;
 			}
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
@@ -136,7 +151,7 @@ void Rick::HandleInput()
 			// reset the state to idle by default
 			State = AnimState::IDLE;
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
-			JumpAirSpeedX = 0;
+			AirSpeedX = 0;
 		}
 		
 		//debug test code to place a dynamite
@@ -170,8 +185,12 @@ void Rick::CheckStaticCollision()
 	else
 	{
 		// There's no collision under the feet, and not jumping, then we fall
-		if (State != AnimState::JUMP)
+		if ((State != AnimState::JUMP) && (State != AnimState::FALL))
+		{
 			State = AnimState::FALL;
+			JumpAndFallFrameCount = 0;
+			JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
+		}
 	}
 	
 	// draw rick sprite to check the wall collisions
@@ -179,7 +198,7 @@ void Rick::CheckStaticCollision()
 	
 	if (wallCollision)
 	{
-		JumpAirSpeedX = 0;
+		AirSpeedX = 0;
 		if (IsLookingLeft)
 			X++;
 		else
