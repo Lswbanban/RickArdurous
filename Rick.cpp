@@ -12,13 +12,16 @@
 
 namespace Rick
 {
-	const int ANIM_SPEED = 3;
+	const int WALK_ANIM_SPEED = 3;
+	const int JUMP_ANIM_SPEED = 3;
+	const int MAX_JUMP_UP_FRAME_COUNT = 5;
 	
 	// state of Rick
 	enum AnimState
 	{
 		IDLE = 0,
 		WALK,
+		JUMP,
 		FIRE,
 	};
 	
@@ -32,6 +35,10 @@ namespace Rick
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
+	
+	// variable for the jump state
+	unsigned char JumpUpFrameCount = 0;
+	char JumpAirSpeedX = 0;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -50,48 +57,84 @@ void Rick::Update()
 
 void Rick::HandleInput()
 {
-	// check the input
-	if (Input::IsDown(LEFT_BUTTON))
+	// handle the input differently according to the current state
+	if (State == AnimState::JUMP)
 	{
-		// reset anim frame to the first frame of the walk, and set the state
-		if (Input::IsJustPressed(LEFT_BUTTON))
+		if (arduboy.everyXFrames(JUMP_ANIM_SPEED))
 		{
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
-			State = AnimState::WALK;
-			IsLookingLeft = true;
-		}
-		
-		if (arduboy.everyXFrames(ANIM_SPEED))
-		{
-			x--;
-			SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
-		}
-	}
-	else if (Input::IsDown(RIGHT_BUTTON))
-	{
-		// reset anim frame to the first frame of the walk, and set the state
-		if (Input::IsJustPressed(RIGHT_BUTTON))
-		{
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
-			State = AnimState::WALK;
-			IsLookingLeft = false;
-		}
-		if (arduboy.everyXFrames(ANIM_SPEED))
-		{
-			x++;
-			SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
+			// increase the jump frame counter
+			JumpUpFrameCount++;
+			
+			// move up or down, depending on the phase of the jump
+			if (JumpUpFrameCount < MAX_JUMP_UP_FRAME_COUNT)
+				y--;
+			else
+				y++;
+			
+			// do air control
+			if (Input::IsDown(LEFT_BUTTON))
+				JumpAirSpeedX = -1;
+			else if (Input::IsDown(RIGHT_BUTTON))
+				JumpAirSpeedX = 1;
+			
+			// move the x according to the air speed
+			x += JumpAirSpeedX;
 		}
 	}
 	else
 	{
-		// reset the state to idle by default
-		State = AnimState::IDLE;
-		CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+		// check if we start a the jump
+		if (Input::IsJustPressed(B_BUTTON))
+		{
+			State = AnimState::JUMP;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+			JumpUpFrameCount = 0;
+		}
+		else if (Input::IsDown(LEFT_BUTTON))
+		{
+			// reset anim frame to the first frame of the walk, and set the state
+			if (Input::IsJustPressed(LEFT_BUTTON))
+			{
+				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
+				State = AnimState::WALK;
+				IsLookingLeft = true;
+				JumpAirSpeedX = -1;
+			}
+			
+			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
+			{
+				x--;
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
+			}
+		}
+		else if (Input::IsDown(RIGHT_BUTTON))
+		{
+			// reset anim frame to the first frame of the walk, and set the state
+			if (Input::IsJustPressed(RIGHT_BUTTON))
+			{
+				CurrentAnimFrame = SpriteData::RickAnimFrameId::WALK_START;
+				State = AnimState::WALK;
+				IsLookingLeft = false;
+				JumpAirSpeedX = 1;
+			}
+			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
+			{
+				x++;
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
+			}
+		}
+		else
+		{
+			// reset the state to idle by default
+			State = AnimState::IDLE;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+			JumpAirSpeedX = 0;
+		}
+		
+		//debug test code to place a dynamite
+		if (Input::IsJustPressed(A_BUTTON))
+			((Dynamite*)(MapManager::Items[4]))->LightUp(x,y);
 	}
-	
-	//debug test code to place a dynamite
-	if (Input::IsJustPressed(A_BUTTON))
-		((Dynamite*)(MapManager::Items[4]))->LightUp(x,y);
 }
 
 void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId)
@@ -113,6 +156,7 @@ void Rick::CheckStaticCollision()
 	
 	if (collision)
 	{
+		JumpAirSpeedX = 0;
 		if (IsLookingLeft)
 			x++;
 		else
