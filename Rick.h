@@ -12,7 +12,7 @@ namespace Rick
 	
 	void Update();
 	void CheckLethalCollision();
-	bool CheckCollisionWithPickUp(PickUpItem * item);
+	void CheckCollisionWithPickUp(PickUpItem * item);
 	void CheckStaticCollision();
 	void Draw();
 	
