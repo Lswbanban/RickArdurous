@@ -15,7 +15,7 @@ namespace Rick
 	const int WALK_ANIM_SPEED = 3;
 	const int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
 	const int MIN_AIR_CONTROL_ANIM_SPEED = 3;
-	const int MAX_AIR_CONTROL_ANIM_SPEED = 10;
+	const int MAX_AIR_CONTROL_ANIM_SPEED = 8;
 	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[] = { 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6 };
 	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
 	
@@ -44,6 +44,7 @@ namespace Rick
 	unsigned char JumpAndFallFrameCount = 0;
 	unsigned char JumpAndFallAnimSpeedIndex = 0;
 	unsigned char AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
+	unsigned char AirControlFrameCount = 0;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -94,8 +95,10 @@ void Rick::HandleInput()
 		}
 		
 		// move left or right while jumping or falling
-		if (arduboy.everyXFrames(AirControlAnimSpeed))
+		AirControlFrameCount++;
+		if (AirControlFrameCount >= AirControlAnimSpeed)
 		{
+			AirControlFrameCount = 0;
 			// In jump or Fall state, we can do air control
 			if (Input::IsDown(LEFT_BUTTON))
 				UpdateAirControl(true);
@@ -121,6 +124,7 @@ void Rick::HandleInput()
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
 			JumpAndFallFrameCount = 0;
 			JumpAndFallAnimSpeedIndex = 0;
+			AirControlFrameCount = 0;
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
@@ -222,6 +226,7 @@ void Rick::CheckStaticCollision()
 			State = AnimState::FALL;
 			JumpAndFallFrameCount = 0;
 			JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
+			AirControlFrameCount = 0;
 		}
 	}
 	
