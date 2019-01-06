@@ -43,20 +43,18 @@ void MapManager::Update()
 		TargetCameraY = 8;
 	if (arduboy.pressed(UP_BUTTON))
 		TargetCameraY = 0;
-	/*if (arduboy.pressed(LEFT_BUTTON))
-		TargetCameraX = 0;
-	if (arduboy.pressed(RIGHT_BUTTON))
-		TargetCameraX = 16;
-	*/
 	
+	// update the main character
+	Rick::Update();
+
 	// first draw the lethal items
 	for (int i = 0; i < ITEM_COUNT; i++)
 		if (Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
 			Items[i]->Update();
 	
-	// update the main character
-	Rick::Update();
-
+	// check the lethal collision after drawing the lethal items
+	Rick::CheckLethalCollision();
+	
 	// first draw the bonus items
 	bool shouldCheckCollisionWithPickup = true;
 	for (int i = 0; i < ITEM_COUNT; i++)
@@ -67,16 +65,20 @@ void MapManager::Update()
 				shouldCheckCollisionWithPickup = Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
 		}
 
-	// update the main character
-	Rick::Draw();
-
 	// draw the non lethal items
 	for (int i = 0; i < ITEM_COUNT; i++)
 		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
 			Items[i]->Update();
 	
+	
 	AnimateCameraTransition();
 	Draw();
+	
+	// check the collision with the walls, floor and ceilling after the map has been drawn
+	Rick::CheckStaticCollision();
+
+	// update the main character
+	Rick::Draw();
 }
 
 /**

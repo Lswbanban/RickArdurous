@@ -41,13 +41,11 @@ namespace Rick
 	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
-	void CheckCollision();
 }
 
 void Rick::Update()
 {
 	HandleInput();
-	CheckCollision();
 }
 
 void Rick::HandleInput()
@@ -105,9 +103,29 @@ void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId
 		CurrentAnimFrame = startFrameId;
 }
 
-void Rick::CheckCollision()
+/**
+ * Check if Rick is colliding with a static wall, floor, and ceiling and prevent him to move.
+ */
+void Rick::CheckStaticCollision()
 {
-	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	// draw the collision sprite on the side where Rick is moving
+	bool collision = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	
+	if (collision)
+	{
+		if (IsLookingLeft)
+			x++;
+		else
+			x--;
+	}
+}
+
+/**
+ * Chekc if Rick collides with any pixel that will kill him.
+ */
+void Rick::CheckLethalCollision()
+{
+	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft);
 	
 	if (collisionDetected)
 	{
@@ -124,7 +142,7 @@ void Rick::CheckCollision()
  */
 bool Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
-	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	bool collisionDetected = arduboy.drawBitmapExtended(x, y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft);
 	
 	if (collisionDetected)
 		item->PickUp();
