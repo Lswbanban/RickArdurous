@@ -9,6 +9,7 @@
 #include "Dynamite.h"
 #include "MapData.h"
 #include "PickUpItem.h"
+#include "MapManager.h"
 
 namespace Rick
 {
@@ -53,6 +54,9 @@ namespace Rick
 	char StatuetteCount = 0;
 	char BulletCount = MAX_BULLET_COUNT;
 	char DynamiteCount = MAX_DYNAMITE_COUNT;
+	
+	// all the dynamite instances
+	Dynamite AllDynamites[MAX_DYNAMITE_COUNT];
 	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
@@ -172,9 +176,12 @@ void Rick::HandleInput()
 			AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 		}
 		
-		//debug test code to place a dynamite
-		if (Input::IsJustPressed(A_BUTTON))
-			((Dynamite*)(MapManager::Items[4]))->LightUp(X,Y);
+		// place a dynamite when pressing the correct button
+		if ((Input::IsJustPressed(A_BUTTON)) && (DynamiteCount > 0))
+		{
+			AllDynamites[--DynamiteCount].LightUp(X, Y);
+			MapManager::AddItem(&(AllDynamites[DynamiteCount]));
+		}
 	}
 }
 

@@ -31,9 +31,32 @@ namespace MapManager
 	char CameraTransitionY = 0;
 	char StartDrawSpriteY = 0;
 	
+	// the items to currently update
+	static const unsigned int MAX_UPDATABLE_ITEM_COUNT = 100;
+	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
+	unsigned char ItemsToUpdateCount = 0;
+	
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw();
+}
+
+void MapManager::AddItem(Item * item)
+{
+	ItemsToUpdate[ItemsToUpdateCount++] = item;
+}
+
+void MapManager::RemoveItem(Item * item)
+{
+	for (int i = 0; i < ItemsToUpdateCount; ++i)
+		if (ItemsToUpdate[i] == item)
+		{
+			// decrease the item count
+			ItemsToUpdateCount--;
+			// if the array is not empty, move the last item to the empty place
+			if (ItemsToUpdateCount > 0)
+				ItemsToUpdate[i] = ItemsToUpdate[ItemsToUpdateCount];
+		}
 }
 
 void MapManager::Update()
@@ -48,19 +71,19 @@ void MapManager::Update()
 	Rick::Update();
 
 	// first draw the lethal items
-	for (int i = 0; i < ITEM_COUNT; i++)
-		if (Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
-			Items[i]->Update();
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
+			ItemsToUpdate[i]->Update();
 	
 	// check the lethal collision after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
 	// first draw the bonus items
-	for (int i = 0; i < ITEM_COUNT; i++)
-		if (Items[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
 		{
-			Items[i]->Update();
-			Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
+			ItemsToUpdate[i]->Update();
+			Rick::CheckCollisionWithPickUp((PickUpItem*)(ItemsToUpdate[i]));
 		}
 	
 	AnimateCameraTransition();
@@ -73,9 +96,9 @@ void MapManager::Update()
 	Rick::Draw();
 
 		// draw the non lethal items
-	for (int i = 0; i < ITEM_COUNT; i++)
-		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
-			Items[i]->Update();
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
+			ItemsToUpdate[i]->Update();
 }
 
 /**
