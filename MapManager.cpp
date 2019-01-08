@@ -62,12 +62,6 @@ void MapManager::Update()
 			Items[i]->Update();
 			Rick::CheckCollisionWithPickUp((PickUpItem*)(Items[i]));
 		}
-
-	// draw the non lethal items
-	for (int i = 0; i < ITEM_COUNT; i++)
-		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
-			Items[i]->Update();
-	
 	
 	AnimateCameraTransition();
 	Draw();
@@ -77,6 +71,11 @@ void MapManager::Update()
 
 	// update the main character
 	Rick::Draw();
+
+		// draw the non lethal items
+	for (int i = 0; i < ITEM_COUNT; i++)
+		if (!Items[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
+			Items[i]->Update();
 }
 
 /**
