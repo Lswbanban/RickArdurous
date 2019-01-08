@@ -36,13 +36,12 @@ Spike	sp1(120,30, Item::PropertyFlags::HORIZONTAL_SPIKE | Item::PropertyFlags::M
 Spike	sp2(110,30, Item::PropertyFlags::MIRROR_X);
 Spike	sp3(100,30, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
-Dynamite	dyn(50, 10);
 DynamiteCrate	dc(60, 25);
 BulletCrate		bc(80, 25);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
-	&sp1, &sp2, &sp3, &st, &dyn, &dc, &bc,
+	&sp1, &sp2, &sp3, &st, &dc, &bc,
 	};
 
 // compute the number of items
