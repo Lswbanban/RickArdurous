@@ -11,6 +11,8 @@
         <File name="Input.cpp" />
         <File name="CustomArduboy.h" />
         <File name="CustomArduboy.cpp" />
+        <File name="HUD.h" />
+        <File name="HUD.cpp" />
         <Folder name="Items">
             <File name="Item.h" />
             <File name="Item.cpp" />
