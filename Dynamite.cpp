@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "Dynamite.h"
 #include "SpriteData.h"
+#include "MapManager.h"
 
 Dynamite::Dynamite() : Item(0, 0, Item::PropertyFlags::NONE)
 {
@@ -13,6 +14,18 @@ Dynamite::Dynamite() : Item(0, 0, Item::PropertyFlags::NONE)
 Dynamite::Dynamite(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::NONE)
 {
 };
+
+void Dynamite::LightUp(int x, int y)
+{
+	X = x;
+	Y = y;
+	DynamiteAnimFrameId = 0;
+	SparksAnimFrameId = 0;
+	ClearProperty(Item::PropertyFlags::LETHAL);
+	SetProperty(Item::PropertyFlags::ALIVE);
+	// add myself to the map manager in order to be updated
+	MapManager::AddItem(this);
+}
 
 void Dynamite::Update()
 {
@@ -40,7 +53,11 @@ void Dynamite::Update()
 				DynamiteAnimFrameId++;
 			// if we reach the end of the dynamite explosion, disable the dynamite
 			if (DynamiteAnimFrameId == SpriteData::DYNAMITE_SPRITE_FRAME_COUNT)
+			{
 				DynamiteAnimFrameId = -1;
+				ClearProperty(Item::PropertyFlags::ALIVE);
+				MapManager::RemoveItem(this);
+			}
 		}
 	}
 	

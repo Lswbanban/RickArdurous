@@ -10,6 +10,7 @@ public:
 		LETHAL = 1,
 		PICKUP = 1 << 1,
 		MIRROR_X = 1 << 2,
+		ALIVE = 1 << 3,
 		// specific flag for the spikes
 		HORIZONTAL_SPIKE = 1 << 7,
 	};

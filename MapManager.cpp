@@ -54,8 +54,7 @@ void MapManager::RemoveItem(Item * item)
 			// decrease the item count
 			ItemsToUpdateCount--;
 			// if the array is not empty, move the last item to the empty place
-			if (ItemsToUpdateCount > 0)
-				ItemsToUpdate[i] = ItemsToUpdate[ItemsToUpdateCount];
+			ItemsToUpdate[i] = ItemsToUpdate[ItemsToUpdateCount];
 		}
 }
 
