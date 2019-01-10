@@ -61,10 +61,10 @@ void MapManager::RemoveItem(Item * item)
 void MapManager::Update()
 {
 	// debug code
-	if (arduboy.pressed(DOWN_BUTTON))
-		TargetCameraY = 8;
-	if (arduboy.pressed(UP_BUTTON))
-		TargetCameraY = 0;
+	//if (arduboy.pressed(DOWN_BUTTON))
+	//	TargetCameraY = 8;
+	//if (arduboy.pressed(UP_BUTTON))
+	//	TargetCameraY = 0;
 	
 	// update the main character
 	Rick::Update();
@@ -88,12 +88,17 @@ void MapManager::Update()
 	AnimateCameraTransition();
 	Draw();
 	
+		// first draw the lethal items
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::STATIC_COLLISION_NEEDED))
+			ItemsToUpdate[i]->CheckStaticCollision();
+
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
 
 	// update the main character
 	Rick::Draw();
-
+	
 		// draw the non lethal items
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
