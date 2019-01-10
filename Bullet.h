@@ -8,8 +8,8 @@ class Bullet : public Item
 public:
 	Bullet();
 	Bullet(int startX, int startY);
-	virtual void Update();
-	virtual void CheckStaticCollision();
+	virtual bool Update();
+	virtual bool CheckStaticCollision();
 	void Fire(int x, int y, bool isMovingToLeft);
 
 private:

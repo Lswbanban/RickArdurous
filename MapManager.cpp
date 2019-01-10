@@ -43,7 +43,8 @@ namespace MapManager
 
 void MapManager::AddItem(Item * item)
 {
-	ItemsToUpdate[ItemsToUpdateCount++] = item;
+	if (ItemsToUpdateCount < MAX_UPDATABLE_ITEM_COUNT)
+		ItemsToUpdate[ItemsToUpdateCount++] = item;
 }
 
 void MapManager::RemoveItem(Item * item)
@@ -55,6 +56,8 @@ void MapManager::RemoveItem(Item * item)
 			ItemsToUpdateCount--;
 			// if the array is not empty, move the last item to the empty place
 			ItemsToUpdate[i] = ItemsToUpdate[ItemsToUpdateCount];
+			// exit the loop when we have found and removed the item
+			break;
 		}
 }
 
@@ -69,10 +72,12 @@ void MapManager::Update()
 	// update the main character
 	Rick::Update();
 
+	
 	// first draw the lethal items
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
-			ItemsToUpdate[i]->Update();
+			if (ItemsToUpdate[i]->Update())
+				i--;
 	
 	// check the lethal collision after drawing the lethal items
 	Rick::CheckLethalCollision();
@@ -81,17 +86,19 @@ void MapManager::Update()
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
 		{
-			ItemsToUpdate[i]->Update();
+			if (ItemsToUpdate[i]->Update())
+				i--;
 			Rick::CheckCollisionWithPickUp((PickUpItem*)(ItemsToUpdate[i]));
 		}
 	
 	AnimateCameraTransition();
 	Draw();
 	
-		// first draw the lethal items
+	// call the function to check the static collision for the items that need it
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::STATIC_COLLISION_NEEDED))
-			ItemsToUpdate[i]->CheckStaticCollision();
+			if (ItemsToUpdate[i]->CheckStaticCollision())
+				i--;
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
@@ -102,7 +109,8 @@ void MapManager::Update()
 		// draw the non lethal items
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
-			ItemsToUpdate[i]->Update();
+			if(ItemsToUpdate[i]->Update())
+				i--;
 }
 
 /**

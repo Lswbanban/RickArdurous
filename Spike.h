@@ -7,7 +7,7 @@ class Spike : public Item
 {
 public:
 	Spike(int startX, int startY, unsigned char flag);
-	virtual void Update();
+	virtual bool Update();
 
 private:
 	const int ANIM_SPEED = 4;

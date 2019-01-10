@@ -25,7 +25,7 @@ void Bullet::Fire(int x, int y, bool isMovingToLeft)
 	MapManager::AddItem(this);
 }
 
-void Bullet::Update()
+bool Bullet::Update()
 {
 	// check if the bullet is alive
 	if (IsPropertySet(Item::PropertyFlags::ALIVE))
@@ -39,13 +39,15 @@ void Bullet::Update()
 		// draw the bullet
 		arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
 	}
+	return false;
 }
 
-void Bullet::CheckStaticCollision()
+bool Bullet::CheckStaticCollision()
 {
 	if ((X < 0) || (X > WIDTH))
 	{
 		ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
 		MapManager::RemoveItem(this);
 	}
+	return !IsPropertySet(Item::PropertyFlags::ALIVE);
 }

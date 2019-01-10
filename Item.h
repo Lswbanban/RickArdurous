@@ -17,8 +17,8 @@ public:
 	};
 	
 	Item(int startX, int startY, unsigned char flag);
-	virtual void Update() = 0;
-	virtual void CheckStaticCollision() {}
+	virtual bool Update() = 0;
+	virtual bool CheckStaticCollision() {}
 	
 	bool SetProperty(unsigned char flag) { Property |= flag; }
 	bool ClearProperty(unsigned char flag) { Property &= ~flag; }
