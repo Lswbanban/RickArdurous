@@ -61,6 +61,9 @@ void MapManager::RemoveItem(Item * item)
 		}
 }
 
+#include "DynamiteCrate.h"
+DynamiteCrate	dc2(60, 50);
+
 void MapManager::Update()
 {
 	// debug code
@@ -69,9 +72,12 @@ void MapManager::Update()
 	//if (arduboy.pressed(UP_BUTTON))
 	//	TargetCameraY = 0;
 	
+	// debug code to spawn a crate
+	if (ItemsToUpdateCount == 0)
+		MapManager::AddItem(&dc2);
+	
 	// update the main character
 	Rick::Update();
-
 	
 	// first draw the lethal items
 	for (int i = 0; i < ItemsToUpdateCount; i++)
@@ -125,7 +131,7 @@ int MapManager::GetCameraSpeed(int step, int subStep)
 		if (step > 8)
 			step = 8;
 		// this array return the number of pixel the camera should move this frame
-		char speed[] = { 1, 1, 1, 2, 2, 3, 4, 4 };
+		char speed[] = { 1, 1, 1, 2, 2, 3, 4, 4, 4 };
 		return speed[step];
 	}
 	else
