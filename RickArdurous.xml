@@ -28,6 +28,8 @@
             <File name="DynamiteCrate.cpp" />
             <File name="BulletCrate.h" />
             <File name="BulletCrate.cpp" />
+            <File name="Bullet.h" />
+            <File name="Bullet.cpp" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />

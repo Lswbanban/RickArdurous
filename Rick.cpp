@@ -7,6 +7,7 @@
 #include "SpriteData.h"
 #include "Input.h"
 #include "Dynamite.h"
+#include "Bullet.h"
 #include "MapData.h"
 #include "PickUpItem.h"
 #include "MapManager.h"
@@ -38,7 +39,7 @@ namespace Rick
 	
 	// position of Rick
 	int X = 15;
-	int Y = 8;
+	int Y = 40;
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -57,6 +58,8 @@ namespace Rick
 	
 	// all the dynamite instances
 	Dynamite AllDynamites[MAX_DYNAMITE_COUNT];
+	// all the bullet instances
+	Bullet AllBullets[MAX_BULLET_COUNT];
 	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
@@ -177,15 +180,30 @@ void Rick::HandleInput()
 		}
 		
 		// place a dynamite when pressing the correct button
-		if ((Input::IsJustPressed(A_BUTTON)) && (DynamiteCount > 0))
+		if (Input::IsJustPressed(A_BUTTON))
 		{
-			for (int i = DynamiteCount-1; i >= 0; --i)
-				if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
-				{
-					AllDynamites[i].LightUp(X, Y);
-					DynamiteCount--;
-					break;
-				}
+			if (Input::IsDown(DOWN_BUTTON))
+			{
+				if (DynamiteCount > 0)
+					for (int i = DynamiteCount-1; i >= 0; --i)
+						if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+						{
+							AllDynamites[i].LightUp(X, Y);
+							DynamiteCount--;
+							break;
+						}
+			}
+			// fire a bullet when pressing the correct button
+			else if (BulletCount > 0)
+			{
+				for (int i = BulletCount-1; i >= 0; --i)
+					if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+					{
+						AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
+						BulletCount--;
+						break;
+					}
+			}
 		}
 	}
 }

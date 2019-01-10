@@ -11,12 +11,14 @@ public:
 		PICKUP = 1 << 1,
 		MIRROR_X = 1 << 2,
 		ALIVE = 1 << 3,
+		STATIC_COLLISION_NEEDED = 1 << 4,
 		// specific flag for the spikes
 		HORIZONTAL_SPIKE = 1 << 7,
 	};
 	
 	Item(int startX, int startY, unsigned char flag);
 	virtual void Update() = 0;
+	virtual void CheckStaticCollision() {}
 	
 	bool SetProperty(unsigned char flag) { Property |= flag; }
 	bool ClearProperty(unsigned char flag) { Property &= ~flag; }
