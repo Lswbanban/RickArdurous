@@ -7,7 +7,7 @@ class Statuette : public PickUpItem
 {
 public:
 	Statuette(int startX, int startY);
-	virtual void Update();
+	virtual bool Update();
 	virtual void PickUp();
 };
 

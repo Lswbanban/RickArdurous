@@ -11,7 +11,7 @@ Statuette::Statuette(int startX, int startY) : PickUpItem(startX, startY, Item::
 {
 };
 
-void Statuette::Update()
+bool Statuette::Update()
 {
 	if (IsPropertySet(Item::PropertyFlags::PICKUP))
 	{
@@ -21,6 +21,7 @@ void Statuette::Update()
 		// draw the shiny star
 		UpdateShineStar(-2, 3, -2, 4);
 	}
+	return false;
 }
 
 void Statuette::PickUp()

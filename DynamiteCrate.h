@@ -7,7 +7,7 @@ class DynamiteCrate : public PickUpItem
 {
 public:
 	DynamiteCrate(int startX, int startY);
-	virtual void Update();
+	virtual bool Update();
 	virtual void PickUp();
 };
 

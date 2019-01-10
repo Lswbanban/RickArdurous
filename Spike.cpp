@@ -10,7 +10,7 @@ Spike::Spike(int startX, int startY, unsigned char flag) : Item(startX, startY, 
 {
 }
 
-void Spike::Update()
+bool Spike::Update()
 {
 	if (AnimFrameId == 0)
 	{
@@ -31,4 +31,6 @@ void Spike::Update()
 	{
 		arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeVertical[AnimFrameId], SpriteData::SPIKE_VERTICAL_SPRITE_WIDTH, SpriteData::SPIKE_VERTICAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
 	}
+	
+	return false;
 }

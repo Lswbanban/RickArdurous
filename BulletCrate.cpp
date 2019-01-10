@@ -11,7 +11,7 @@ BulletCrate::BulletCrate(int startX, int startY) : PickUpItem(startX, startY, It
 {
 };
 
-void BulletCrate::Update()
+bool BulletCrate::Update()
 {
 	if (IsPropertySet(Item::PropertyFlags::PICKUP))
 	{
@@ -20,7 +20,7 @@ void BulletCrate::Update()
 		// draw the shiny star
 		UpdateShineStar(-2, 9, 1, 6);
 	}
-
+	return false;
 }
 
 void BulletCrate::PickUp()

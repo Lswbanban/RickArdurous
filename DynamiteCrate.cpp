@@ -11,7 +11,7 @@ DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY
 {
 };
 
-void DynamiteCrate::Update()
+bool DynamiteCrate::Update()
 {
 	if (IsPropertySet(Item::PropertyFlags::PICKUP))
 	{
@@ -20,6 +20,7 @@ void DynamiteCrate::Update()
 		// draw the shiny star
 		UpdateShineStar(-2, 9, 1, 6);
 	}
+	return false;
 }
 
 void DynamiteCrate::PickUp()

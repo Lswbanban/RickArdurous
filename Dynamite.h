@@ -8,7 +8,7 @@ class Dynamite : public Item
 public:
 	Dynamite();
 	Dynamite(int startX, int startY);
-	virtual void Update();
+	virtual bool Update();
 	void LightUp(int x, int y);
 
 private:

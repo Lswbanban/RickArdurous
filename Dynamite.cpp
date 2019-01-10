@@ -27,7 +27,7 @@ void Dynamite::LightUp(int x, int y)
 	MapManager::AddItem(this);
 }
 
-void Dynamite::Update()
+bool Dynamite::Update()
 {
 	// check if the dynamite is alive
 	if (DynamiteAnimFrameId > -1)
@@ -67,4 +67,6 @@ void Dynamite::Update()
 	// draw the sparks if any
 	if (SparksAnimFrameId > -1)
 		arduboy.drawBitmap(X + (DynamiteAnimFrameId>>1), Y, SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
+	
+	return !IsPropertySet(Item::PropertyFlags::ALIVE);
 }
