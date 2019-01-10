@@ -9,15 +9,7 @@ public:
 	Dynamite();
 	Dynamite(int startX, int startY);
 	virtual void Update();
-	
-	void LightUp(int x, int y)
-	{
-		X = x;
-		Y = y;
-		DynamiteAnimFrameId = 0;
-		SparksAnimFrameId = 0;
-		ClearProperty(Item::PropertyFlags::LETHAL);
-	}
+	void LightUp(int x, int y);
 
 private:
 	const int DYNAMITE_ANIM_SPEED = 20;

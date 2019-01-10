@@ -179,8 +179,13 @@ void Rick::HandleInput()
 		// place a dynamite when pressing the correct button
 		if ((Input::IsJustPressed(A_BUTTON)) && (DynamiteCount > 0))
 		{
-			AllDynamites[--DynamiteCount].LightUp(X, Y);
-			MapManager::AddItem(&(AllDynamites[DynamiteCount]));
+			for (int i = DynamiteCount-1; i >= 0; --i)
+				if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+				{
+					AllDynamites[i].LightUp(X, Y);
+					DynamiteCount--;
+					break;
+				}
 		}
 	}
 }
