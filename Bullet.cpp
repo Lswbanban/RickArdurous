@@ -25,29 +25,31 @@ void Bullet::Fire(int x, int y, bool isMovingToLeft)
 	MapManager::AddItem(this);
 }
 
-bool Bullet::Update()
+bool Bullet::Update(UpdateStep step)
 {
-	// check if the bullet is alive
-	if (IsPropertySet(Item::PropertyFlags::ALIVE))
+	switch (step)
 	{
-		// move the bullet
-		if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
-			X -= BULLET_SPEED;
-		else
-			X += BULLET_SPEED;
-		
-		// draw the bullet
-		arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
-	}
-	return false;
-}
+		case UpdateStep::DRAW_LETHAL:
+			// check if the bullet is alive
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				// move the bullet
+				if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
+					X -= BULLET_SPEED;
+				else
+					X += BULLET_SPEED;
+				
+				// draw the bullet
+				arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
+			}
+			return false;
 
-bool Bullet::CheckStaticCollision()
-{
-	if ((X < 0) || (X > WIDTH))
-	{
-		ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
-		MapManager::RemoveItem(this);
+		case UpdateStep::CHECK_STATIC_COLLISION:
+			if ((X < 0) || (X > WIDTH))
+			{
+				ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
+				MapManager::RemoveItem(this);
+			}
+			return !IsPropertySet(Item::PropertyFlags::ALIVE);
 	}
-	return !IsPropertySet(Item::PropertyFlags::ALIVE);
 }

@@ -7,7 +7,7 @@ class BulletCrate : public PickUpItem
 {
 public:
 	BulletCrate(int startX, int startY);
-	virtual bool Update();
+	virtual bool Update(UpdateStep step);
 	virtual void PickUp();
 };
 

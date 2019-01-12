@@ -36,6 +36,7 @@ namespace MapManager
 	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
 	unsigned char ItemsToUpdateCount = 0;
 	
+	void UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw();
@@ -64,6 +65,14 @@ void MapManager::RemoveItem(Item * item)
 #include "DynamiteCrate.h"
 DynamiteCrate	dc2(60, 50);
 
+void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags)
+{
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (ItemsToUpdate[i]->IsPropertySet(itemPropertyFlags))
+			if (ItemsToUpdate[i]->Update(updateStep))
+				i--;
+}
+
 void MapManager::Update()
 {
 	// debug code
@@ -79,44 +88,27 @@ void MapManager::Update()
 	// update the main character
 	Rick::Update();
 	
-	// first draw the lethal items
-	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL))
-			if (ItemsToUpdate[i]->Update())
-				i--;
+	// update the lethal entities
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::PropertyFlags::LETHAL);
 	
 	// check the lethal collision after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
-	// first draw the bonus items
-	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::PICKUP))
-		{
-			if (ItemsToUpdate[i]->Update())
-				i--;
-			Rick::CheckCollisionWithPickUp((PickUpItem*)(ItemsToUpdate[i]));
-		}
-	
+	// animate the camera and draw the static collision
 	AnimateCameraTransition();
 	Draw();
 	
 	// call the function to check the static collision for the items that need it
-	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::STATIC_COLLISION_NEEDED))
-			if (ItemsToUpdate[i]->CheckStaticCollision())
-				i--;
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
 
+	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
+
 	// update the main character
 	Rick::Draw();
-	
-		// draw the non lethal items
-	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::LETHAL | Item::PropertyFlags::PICKUP))
-			if(ItemsToUpdate[i]->Update())
-				i--;
 }
 
 /**

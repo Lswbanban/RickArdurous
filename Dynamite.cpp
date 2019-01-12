@@ -7,11 +7,11 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-Dynamite::Dynamite() : Item(0, 0, Item::PropertyFlags::NONE)
+Dynamite::Dynamite() : Item(0, 0, Item::PropertyFlags::IGNORED_BY_ENEMIES)
 {
 };
 
-Dynamite::Dynamite(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::NONE)
+Dynamite::Dynamite(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::IGNORED_BY_ENEMIES)
 {
 };
 
@@ -22,12 +22,12 @@ void Dynamite::LightUp(int x, int y)
 	DynamiteAnimFrameId = 0;
 	SparksAnimFrameId = 0;
 	ClearProperty(Item::PropertyFlags::LETHAL);
-	SetProperty(Item::PropertyFlags::ALIVE);
+	SetProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::IGNORED_BY_ENEMIES);
 	// add myself to the map manager in order to be updated
 	MapManager::AddItem(this);
 }
 
-bool Dynamite::Update()
+bool Dynamite::Update(UpdateStep step)
 {
 	// check if the dynamite is alive
 	if (DynamiteAnimFrameId > -1)
@@ -46,6 +46,7 @@ bool Dynamite::Update()
 		{
 			// set the lethal flag when the dynamite explode
 			SetProperty(Item::PropertyFlags::LETHAL);
+			ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
 			// we are in explosion part, so stop the sparks
 			SparksAnimFrameId = -1;
 			// increase the dynamite frame id, at different speed depending if it is the fuse consuming part or the explosion
