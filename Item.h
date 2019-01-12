@@ -10,9 +10,9 @@ public:
 		// these flags will impact the update step
 		LETHAL = 1,
 		ENEMIES = 1 << 1,
-		// BULLET
-		STATIC_COLLISION_NEEDED = 1 << 2,
-		IGNORED_BY_ENEMIES = 1 << 3,
+		BULLET = 1 << 2,
+		STATIC_COLLISION_NEEDED = 1 << 3,
+		IGNORED_BY_ENEMIES = 1 << 4,
 		// these are other properties
 		MIRROR_X = 1 << 5,
 		ALIVE = 1 << 6,
@@ -24,6 +24,7 @@ public:
 	{
 		DRAW_LETHAL = 0,
 		DRAW_DANGEROUS,
+		ERASE_BULLET,
 		CHECK_STATIC_COLLISION,
 		DRAW_IGNORED_BY_ENEMIES,
 	};
