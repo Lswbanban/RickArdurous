@@ -8,6 +8,7 @@
 #include "Rick.h"
 #include "PickUpItem.h"
 #include <avr/pgmspace.h>
+#include "Input.h"
 
 namespace MapManager
 {
@@ -36,6 +37,9 @@ namespace MapManager
 	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
 	unsigned char ItemsToUpdateCount = 0;
 	
+	// debug draw state
+	unsigned char DebugDrawStep = 255;
+	
 	void UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
@@ -62,11 +66,15 @@ void MapManager::RemoveItem(Item * item)
 		}
 }
 
-#include "DynamiteCrate.h"
-DynamiteCrate	dc2(60, 50);
+#include "BulletCrate.h"
+BulletCrate	dc2(60, 50);
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags)
 {
+	// debug early exit
+	if (updateStep > DebugDrawStep)
+		return;
+	
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(itemPropertyFlags))
 			if (ItemsToUpdate[i]->Update(updateStep))
@@ -76,10 +84,10 @@ void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags it
 void MapManager::Update()
 {
 	// debug code
-	//if (arduboy.pressed(DOWN_BUTTON))
-	//	TargetCameraY = 8;
-	//if (arduboy.pressed(UP_BUTTON))
-	//	TargetCameraY = 0;
+	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(UP_BUTTON))
+		DebugDrawStep++;
+	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(DOWN_BUTTON))
+		DebugDrawStep--;
 	
 	// debug code to spawn a crate
 	if (ItemsToUpdateCount == 0)
@@ -94,6 +102,9 @@ void MapManager::Update()
 	// check the lethal collision after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
+	// call the function to check the static collision for the items that need it
+	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET);
+
 	// animate the camera and draw the static collision
 	AnimateCameraTransition();
 	Draw();
