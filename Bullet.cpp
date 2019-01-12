@@ -15,52 +15,55 @@ Bullet::Bullet(int startX, int startY) : Item(startX, startY, Item::PropertyFlag
 {
 }
 
+/**
+ * Make this bullet alive, and start moving from the specified position in the specified direction
+ * @param the x position, of the muzzle of the gun, not including the pixel of the gun (it should be the free pixel just after the gun)
+ * @param the y position of the muzzle of the gun
+ * @param isMovingToLeft if true, then the bullet will move to the left of the screen, otherwise to the right.
+ */
 void Bullet::Fire(int x, int y, bool isMovingToLeft)
 {
-	X = x;
-	Y = y;
+	// make the bullet alive and lethal
 	SetProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
+	// set the starting position and orienatation
 	if (isMovingToLeft)
+	{
 		SetProperty(Item::PropertyFlags::MIRROR_X);
+		X = x - BULLET_WIDTH;
+	}
+	else
+	{
+		X = x;
+	}
+	Y = y;
 	// add myself to the map manager in order to be updated
 	MapManager::AddItem(this);
 }
 
-void Bullet::GetStartAndEndX(unsigned char &startX, unsigned char &endX)
+unsigned char Bullet::GetBulletRayCastStartX()
 {
 	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
-	{
-		startX = X - BULLET_SPEED;
-		endX = X + BULLET_WIDTH;
-	}
+		return X - BULLET_SPEED;
 	else
-	{
-		startX = X;
-		endX = X + BULLET_SPEED + BULLET_WIDTH;
-	}
+		return X;
 }
 
 void Bullet::DrawBulletRay(unsigned char color)
 {
-	// get the ray cast positions
-	unsigned char startX;
-	unsigned char endX;
-	GetStartAndEndX(startX, endX);
 	// draw the line of the ray cast
-	arduboy.drawFastHLine(startX, Y, endX, color);
+	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, BULLET_RAY_CAST_LENGTH, color);
 }
 
 bool Bullet::ImpactBulletFound()
 {
 	// get the ray cast positions
-	unsigned char startX;
-	unsigned char endX;
-	GetStartAndEndX(startX, endX);
+	unsigned char startX = GetBulletRayCastStartX();
 	// iterate on the frame buffer to chack if any pixel is set
-	for (int i = startX; i <= endX; ++i)
-		if (arduboy.getPixel(i, Y) == WHITE)
+	for (int i = 0; i < BULLET_RAY_CAST_LENGTH; ++i)
+		if (arduboy.getPixel(startX + i, Y) == WHITE)
 			{
-				X = i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1);
+				// prepare the X and Y position for the sparks animation
+				X = startX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1);
 				Y -= (SpriteData::SPARKS_SPRITE_HEIGHT >> 1);
 				return true;
 			}
@@ -70,36 +73,32 @@ bool Bullet::ImpactBulletFound()
 
 bool Bullet::Update(UpdateStep step)
 {
+	// declare a flag to know when the bullet was removed
+	bool wasBulletRemovedThatFrame = false;
+	
 	switch (step)
 	{
 		case UpdateStep::DRAW_LETHAL:
-			// check if the bullet is alive
+			// draw a line along the whole move of the bullet
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
-			{
-				// draw a line along the whole move of the bullet
 				DrawBulletRay(WHITE);
-			}
-			return false;
+			break;
 
 		case UpdateStep::ERASE_BULLET:
+			// erase the line along the whole move of the bullet
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
-			{
-				// erase the line along the whole move of the bullet
 				DrawBulletRay(BLACK);
-			}
-			return false;
+			break;
 			
 		case UpdateStep::CHECK_STATIC_COLLISION:
 		{
-			// declare a flag to know when the bullet was removed
-			bool wasBulletRemovedThatFrame = false;
 			// draw the bullet or the sparks depending if the bullet is alive or not
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// check if the bullet collided on the static collision along its movement
-				// and move the bullet according to its direction
 				if (!ImpactBulletFound())
 				{
+					// no collision found, so move the bullet according to its direction
 					if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
 						X -= BULLET_SPEED;
 					else
@@ -107,10 +106,18 @@ bool Bullet::Update(UpdateStep step)
 				
 					// draw the bullet
 					arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
+					
+					// if the bullet is outside the screen, kill it immediately without playing sparks
+					if ((X < 0) || (X >= WIDTH))
+					{
+						ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
+						MapManager::RemoveItem(this);
+						wasBulletRemovedThatFrame = true;
+					}
 				}
 				else
 				{
-					//if ((X < 0) || (X > WIDTH))
+					// the bullet hit the wall, so kill it, and reset the sparks animation frame id
 					ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
 					SparksAnimFrameId = 0;
 				}
@@ -127,12 +134,14 @@ bool Bullet::Update(UpdateStep step)
 				}
 				else
 				{
+					// we reach the end of the sparks animation, so remove this bullet from the manager
 					MapManager::RemoveItem(this);
 					wasBulletRemovedThatFrame = true;
 				}
 			}
-			
-			return wasBulletRemovedThatFrame;
+			break;
 		}
 	}
+	// return the result
+	return wasBulletRemovedThatFrame;
 }
