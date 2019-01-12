@@ -10,7 +10,7 @@ Spike::Spike(int startX, int startY, unsigned char flag) : Item(startX, startY, 
 {
 }
 
-bool Spike::Update()
+bool Spike::Update(UpdateStep step)
 {
 	if (AnimFrameId == 0)
 	{

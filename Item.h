@@ -7,18 +7,29 @@ public:
 	enum PropertyFlags
 	{
 		NONE = 0,
+		// these flags will impact the update step
 		LETHAL = 1,
-		PICKUP = 1 << 1,
-		MIRROR_X = 1 << 2,
-		ALIVE = 1 << 3,
-		STATIC_COLLISION_NEEDED = 1 << 4,
+		ENEMIES = 1 << 1,
+		// BULLET
+		STATIC_COLLISION_NEEDED = 1 << 2,
+		IGNORED_BY_ENEMIES = 1 << 3,
+		// these are other properties
+		MIRROR_X = 1 << 5,
+		ALIVE = 1 << 6,
 		// specific flag for the spikes
 		HORIZONTAL_SPIKE = 1 << 7,
 	};
 	
+	enum UpdateStep
+	{
+		DRAW_LETHAL = 0,
+		DRAW_DANGEROUS,
+		CHECK_STATIC_COLLISION,
+		DRAW_IGNORED_BY_ENEMIES,
+	};
+	
 	Item(int startX, int startY, unsigned char flag);
-	virtual bool Update() = 0;
-	virtual bool CheckStaticCollision() {}
+	virtual bool Update(UpdateStep step) = 0;
 	
 	bool SetProperty(unsigned char flag) { Property |= flag; }
 	bool ClearProperty(unsigned char flag) { Property &= ~flag; }

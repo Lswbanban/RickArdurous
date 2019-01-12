@@ -7,16 +7,20 @@
 #include "SpriteData.h"
 #include "Rick.h"
 
-DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::PICKUP)
+DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::IGNORED_BY_ENEMIES)
 {
 };
 
-bool DynamiteCrate::Update()
+bool DynamiteCrate::Update(UpdateStep step)
 {
-	if (IsPropertySet(Item::PropertyFlags::PICKUP))
+	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
 	{
 		// draw the crate
 		arduboy.drawBitmap(X, Y, SpriteData::DynamiteCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
+		
+		// ask the main character to check collision with me
+		Rick::CheckCollisionWithPickUp(this);
+
 		// draw the shiny star
 		UpdateShineStar(-2, 9, 1, 6);
 	}
@@ -25,6 +29,6 @@ bool DynamiteCrate::Update()
 
 void DynamiteCrate::PickUp()
 {
-	ClearProperty(Item::PropertyFlags::PICKUP);
+	ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
 	Rick::DynamiteCount = Rick::MAX_DYNAMITE_COUNT;
 }
