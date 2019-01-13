@@ -69,7 +69,7 @@ void MapManager::RemoveItem(Item * item)
 #include "BulletCrate.h"
 #include "ArrowLauncher.h"
 BulletCrate	dc2(60, 50);
-ArrowLauncher al(5, 52, 0 /*Item::PropertyFlags::MIRROR_X*/);
+ArrowLauncher al(5, 52, 56, 0 /*Item::PropertyFlags::MIRROR_X*/);
 
 void MapManager::Init()
 {
