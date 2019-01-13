@@ -3,15 +3,15 @@
 */
 
 #include "RickArdurous.h"
-#include "Bullet.h"
+#include "ArrowBullet.h"
 #include "MapManager.h"
 #include "SpriteData.h"
 
-Bullet::Bullet() : Item(0, 0, Item::PropertyFlags::BULLET | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+ArrowBullet::ArrowBullet() : Item(0, 0, Item::PropertyFlags::BULLET | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
 {
 }
 
-Bullet::Bullet(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::BULLET | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+ArrowBullet::ArrowBullet(int startX, int startY, bool isArrow) : Item(startX, startY, Item::PropertyFlags::BULLET | Item::PropertyFlags::STATIC_COLLISION_NEEDED | (isArrow ? PropertyFlags::SPECIAL : 0))
 {
 }
 
@@ -21,7 +21,7 @@ Bullet::Bullet(int startX, int startY) : Item(startX, startY, Item::PropertyFlag
  * @param the y position of the muzzle of the gun
  * @param isMovingToLeft if true, then the bullet will move to the left of the screen, otherwise to the right.
  */
-void Bullet::Fire(int x, int y, bool isMovingToLeft)
+void ArrowBullet::Fire(int x, int y, bool isMovingToLeft)
 {
 	// make the bullet alive and lethal
 	SetProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
@@ -29,7 +29,7 @@ void Bullet::Fire(int x, int y, bool isMovingToLeft)
 	if (isMovingToLeft)
 	{
 		SetProperty(Item::PropertyFlags::MIRROR_X);
-		X = x - BULLET_WIDTH;
+		X = x - GetWidth();
 	}
 	else
 	{
@@ -42,7 +42,12 @@ void Bullet::Fire(int x, int y, bool isMovingToLeft)
 	MapManager::AddItem(this);
 }
 
-unsigned char Bullet::GetBulletRayCastStartX()
+unsigned char ArrowBullet::GetWidth()
+{
+	return IsPropertySet(Item::PropertyFlags::SPECIAL) ? ARROW_WIDTH : BULLET_WIDTH;
+}
+
+unsigned char ArrowBullet::GetBulletRayCastStartX()
 {
 	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
 		return X - CurrentBulletSpeed;
@@ -50,18 +55,18 @@ unsigned char Bullet::GetBulletRayCastStartX()
 		return X;
 }
 
-void Bullet::DrawBulletRay(unsigned char color)
+void ArrowBullet::DrawBulletRay(unsigned char color)
 {
 	// draw the line of the ray cast
-	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, CurrentBulletSpeed + BULLET_WIDTH, color);
+	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, CurrentBulletSpeed + GetWidth(), color);
 }
 
-bool Bullet::SearchForBulletImpact(int & impactPosition)
+bool ArrowBullet::SearchForBulletImpact(int & impactPosition)
 {
 	// get the ray cast positions
 	unsigned char startX = GetBulletRayCastStartX();
 	// iterate on the frame buffer to chack if any pixel is set
-	for (int i = 0; i < CurrentBulletSpeed + BULLET_WIDTH; ++i)
+	for (int i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
 		if (arduboy.getPixel(startX + i, Y) == WHITE)
 			{
 				// prepare the X and Y position for the sparks animation
@@ -72,7 +77,7 @@ bool Bullet::SearchForBulletImpact(int & impactPosition)
 	return false;
 }
 
-bool Bullet::Update(UpdateStep step)
+bool ArrowBullet::Update(UpdateStep step)
 {
 	switch (step)
 	{
@@ -104,10 +109,10 @@ bool Bullet::Update(UpdateStep step)
 					X += CurrentBulletSpeed;
 				
 				// from the second frame set the current bullet speed to its nominal value
-				CurrentBulletSpeed = BULLET_SPEED;
+				CurrentBulletSpeed = IsPropertySet(Item::PropertyFlags::SPECIAL) ? ARROW_SPEED : BULLET_SPEED;
 				
 				// draw the bullet
-				arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
+				arduboy.drawFastHLine(X, Y, GetWidth(), WHITE);
 				
 				// check if the bullet collided on the static collision along its movement, if yes prepare the sparks fx for the next frame
 				if (isImpactFound)

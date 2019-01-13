@@ -23,7 +23,8 @@ bool Spike::Update(UpdateStep step)
 			AnimFrameId = (AnimFrameId + 1) % SpriteData::SPIKE_SPRITE_FRAME_COUNT;
 	}
 	
-	if (IsPropertySet(PropertyFlags::HORIZONTAL_SPIKE))
+	// special spikes are horizontal
+	if (IsPropertySet(PropertyFlags::SPECIAL))
 	{
 		arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
 	}
