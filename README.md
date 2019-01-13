@@ -6,4 +6,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 
-- Bug in the MapManager::Draw() when the camera is in transition, we should iterate on 1 more sprite
+- The crawling state of Rick
+- The death state for Rick and the AI
+- The AI
