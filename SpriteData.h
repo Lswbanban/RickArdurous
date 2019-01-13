@@ -6,9 +6,9 @@ namespace SpriteData
 	enum WallId
 	{
 		BLOCK_8_8 = 0,
+		BLOCK_8_8_SPLIT,
 		BLOCK_16_8_LEFT,
 		BLOCK_16_8_RIGHT,
-		STATUE_BOTTOM,
 		STATUE_TOP,
 		NOTHING = 255,
 	};
