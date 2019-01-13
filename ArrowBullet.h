@@ -17,6 +17,7 @@ private:
 	const int ARROW_SPEED = 2;
 	const int ARROW_WIDTH = 8;
 	const int SPARKS_ANIM_SPEED = 3;
+	const int NO_PIXEL_FOUND = 1000; // special return value for SearchForPixelColorAlongBulletRay() when no color is found
 	
 	union
 	{
@@ -27,7 +28,8 @@ private:
 	unsigned char GetWidth();
 	unsigned char GetBulletRayCastStartX();
 	void DrawBulletRay(unsigned char color);
-	bool SearchForBulletImpact(int & impactPosition);
+	int SearchForPixelColorAlongBulletRay(unsigned int color);
+	void KillBulletWithoutSparks();
 };
 
 #endif
