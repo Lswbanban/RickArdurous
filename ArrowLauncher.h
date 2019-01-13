@@ -6,7 +6,7 @@
 class ArrowLauncher : public Item
 {
 public:
-	ArrowLauncher(int startX, int startY, unsigned char flag);
+	ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flag);
 	virtual bool Update(UpdateStep step);
 
 private:
@@ -15,6 +15,7 @@ private:
 	
 	ArrowBullet * Arrow;
 	unsigned char LastLaunchTime = CAN_LAUNCH_ARROW;
+	unsigned char DetectionWidth;
 };
 
 #endif
