@@ -7,7 +7,7 @@
 #include "SpriteData.h"
 #include "Input.h"
 #include "Dynamite.h"
-#include "Bullet.h"
+#include "ArrowBullet.h"
 #include "MapData.h"
 #include "PickUpItem.h"
 #include "MapManager.h"
@@ -63,7 +63,7 @@ namespace Rick
 	// all the dynamite instances
 	Dynamite AllDynamites[MAX_DYNAMITE_COUNT];
 	// all the bullet instances
-	Bullet AllBullets[MAX_BULLET_COUNT];
+	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);

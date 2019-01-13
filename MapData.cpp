@@ -32,7 +32,7 @@ const unsigned char MapManager::Level[][32] PROGMEM = {
 };
 
 // below is the instances of all the Items
-Spike	sp1(120,30, Item::PropertyFlags::HORIZONTAL_SPIKE | Item::PropertyFlags::MIRROR_X);
+Spike	sp1(120,30, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 Spike	sp2(110,30, Item::PropertyFlags::MIRROR_X);
 Spike	sp3(100,30, Item::PropertyFlags::NONE);
 Statuette	st(40,25);

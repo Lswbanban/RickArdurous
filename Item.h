@@ -16,8 +16,8 @@ public:
 		// these are other properties
 		MIRROR_X = 1 << 5,
 		ALIVE = 1 << 6,
-		// specific flag for the spikes
-		HORIZONTAL_SPIKE = 1 << 7,
+		// specific flag let to the derivated class for handling what they want
+		SPECIAL = 1 << 7,
 	};
 	
 	enum UpdateStep
