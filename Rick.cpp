@@ -373,7 +373,6 @@ void Rick::CheckLethalCollision()
 /**
  * Check if Rick collides with any pixel from the frame buffer, and if yes, assume those pixels
  * belongs to the specified Pickup item, and then pick up that specified item.
- * @return if true, that means, you can continue to check collision, otherwise that means Rick already pickup an item this frame.
  */
 void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {

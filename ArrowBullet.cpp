@@ -61,20 +61,22 @@ void ArrowBullet::DrawBulletRay(unsigned char color)
 	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, CurrentBulletSpeed + GetWidth(), color);
 }
 
-bool ArrowBullet::SearchForBulletImpact(int & impactPosition)
+int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned int color)
 {
 	// get the ray cast positions
 	unsigned char startX = GetBulletRayCastStartX();
-	// iterate on the frame buffer to chack if any pixel is set
+	// iterate on the frame buffer to check if any pixel is set
 	for (int i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
-		if (arduboy.getPixel(startX + i, Y) == WHITE)
-			{
-				// prepare the X and Y position for the sparks animation
-				impactPosition = startX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1);
-				return true;
-			}
+		if (arduboy.getPixel(startX + i, Y) == color)
+				return (startX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
 	// no collision found
-	return false;
+	return NO_PIXEL_FOUND;
+}
+
+void ArrowBullet::KillBulletWithoutSparks()
+{
+	ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
+	MapManager::RemoveItem(this);
 }
 
 bool ArrowBullet::Update(UpdateStep step)
@@ -90,7 +92,16 @@ bool ArrowBullet::Update(UpdateStep step)
 		case UpdateStep::ERASE_BULLET:
 			// erase the line along the whole move of the bullet
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				// before erasing first check if some pixels of the ray cast has been erased (which means the bullet has hit something)
+				bool shouldKillBullet = (SearchForPixelColorAlongBulletRay(BLACK) != NO_PIXEL_FOUND);
+				if (shouldKillBullet)
+					KillBulletWithoutSparks();
+				// now erase the bullet ray
 				DrawBulletRay(BLACK);
+				// return the value depending if the bullet was killed
+				return shouldKillBullet;
+			}
 			break;
 			
 		case UpdateStep::CHECK_STATIC_COLLISION:
@@ -99,8 +110,7 @@ bool ArrowBullet::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// first check the collition and get the impact position if any
-				int impactPosition = 0;
-				bool isImpactFound = SearchForBulletImpact(impactPosition);
+				int impactPosition = SearchForPixelColorAlongBulletRay(WHITE);
 				
 				// move the bullet X according to its direction
 				if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
@@ -115,7 +125,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				arduboy.drawFastHLine(X, Y, GetWidth(), WHITE);
 				
 				// check if the bullet collided on the static collision along its movement, if yes prepare the sparks fx for the next frame
-				if (isImpactFound)
+				if (impactPosition != NO_PIXEL_FOUND)
 				{
 					// the bullet hit the wall, so kill it
 					ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
@@ -127,8 +137,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				else if ((X < 0) || (X >= WIDTH))
 				{
 					// if the bullet is outside the screen, kill it immediately without playing sparks
-					ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
-					MapManager::RemoveItem(this);
+					KillBulletWithoutSparks();
 					return true;
 				}
 			}
