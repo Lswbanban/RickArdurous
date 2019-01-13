@@ -22,6 +22,8 @@ namespace Rick
 	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[]	= { 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6 };
 	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
 	const int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
+	const int FIRE_ANIM_SPEED = 3;
+	const int PLACE_DYNAMITE_ANIM_SPEED = 3;
 	
 	// state of Rick
 	enum AnimState
@@ -31,11 +33,13 @@ namespace Rick
 		JUMP,
 		FALL,
 		FIRE,
+		PLACE_DYNAMITE,
 	};
 	
 	// the current state of Rick
 	AnimState State = AnimState::IDLE;
 	unsigned char CurrentAnimFrame = 0;
+	char CurrentAnimDirection = 1;
 	
 	// position of Rick
 	int X = 15;
@@ -67,12 +71,7 @@ namespace Rick
 	bool IsThereAnyFloorAt(int yUnderFeet);
 }
 
-void Rick::Update()
-{
-	HandleInput();
-}
-
-void Rick::HandleInput()
+void Rick::UpdateInput()
 {
 	// handle the input differently according to the current state
 	if ((State == AnimState::JUMP) || (State == AnimState::FALL))
@@ -123,6 +122,66 @@ void Rick::HandleInput()
 				else
 					X++;
 			}
+		}
+	}
+	else if (State == AnimState::FIRE)
+	{
+		// change the anim frame id if it is the time to
+		if (arduboy.everyXFrames(FIRE_ANIM_SPEED))
+			CurrentAnimFrame += CurrentAnimDirection;
+		
+		// check if we reach the end of the animation
+		if (CurrentAnimFrame > SpriteData::RickAnimFrameId::FIRE_END)
+		{
+			// reset the anim frame to a correct value and reverse the anim direction
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::FIRE_END;
+			CurrentAnimDirection = -1;
+			
+			// fire the bullet
+			for (int i = BulletCount-1; i >= 0; --i)
+				if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+				{
+					AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
+					BulletCount--;
+					break;
+				}
+		}
+		// check if we finished the ping pong loop
+		else if (CurrentAnimFrame < SpriteData::RickAnimFrameId::FIRE_START)
+		{
+			// change the state and anim frame to idle
+			State = AnimState::IDLE;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+		}
+	}
+	else if (State == AnimState::PLACE_DYNAMITE)
+	{
+		// change the anim frame id if it is the time to
+		if (arduboy.everyXFrames(PLACE_DYNAMITE_ANIM_SPEED))
+			CurrentAnimFrame += CurrentAnimDirection;
+		
+		// check if we reach the end of the animation
+		if (CurrentAnimFrame > SpriteData::RickAnimFrameId::POSE_DYNAMITE_END)
+		{
+			// reset the anim frame to a correct value and reverse the anim direction
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_END;
+			CurrentAnimDirection = -1;
+			
+			// light up the dynamite
+			for (int i = DynamiteCount-1; i >= 0; --i)
+				if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+				{
+					AllDynamites[i].LightUp(X, Y + 5);
+					DynamiteCount--;
+					break;
+				}
+		}
+		// check if we finished the ping pong loop
+		else if (CurrentAnimFrame < SpriteData::RickAnimFrameId::POSE_DYNAMITE_START)
+		{
+			// change the state and anim frame to idle
+			State = AnimState::IDLE;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
 		}
 	}
 	else
@@ -179,28 +238,31 @@ void Rick::HandleInput()
 			AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 		}
 		
-		// place a dynamite when pressing the correct button
+		// place a dynamite or fire when pressing the correct button
 		if (Input::IsJustPressed(A_BUTTON))
 		{
+			// A + DOWN : we place a dynamite
 			if (Input::IsDown(DOWN_BUTTON))
 			{
 				if (DynamiteCount > 0)
 					for (int i = DynamiteCount-1; i >= 0; --i)
 						if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 						{
-							AllDynamites[i].LightUp(X, Y);
-							DynamiteCount--;
+							CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_START;
+							CurrentAnimDirection = 1;
+							State = AnimState::PLACE_DYNAMITE;
 							break;
 						}
 			}
-			// fire a bullet when pressing the correct button
+			// fire a bullet when pressing just A
 			else if (BulletCount > 0)
 			{
 				for (int i = BulletCount-1; i >= 0; --i)
 					if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 					{
-						AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
-						BulletCount--;
+						CurrentAnimFrame = SpriteData::RickAnimFrameId::FIRE_START;
+						CurrentAnimDirection = 1;
+						State = AnimState::FIRE;
 						break;
 					}
 			}

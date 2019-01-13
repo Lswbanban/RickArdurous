@@ -10,7 +10,7 @@ namespace Rick
 	const char MAX_BULLET_COUNT = 5;
 	const char MAX_DYNAMITE_COUNT = 5;
 	
-	void Update();
+	void UpdateInput();
 	void CheckLethalCollision();
 	void CheckCollisionWithPickUp(PickUpItem * item);
 	void CheckStaticCollision();
