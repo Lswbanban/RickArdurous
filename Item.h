@@ -37,9 +37,9 @@ public:
 	bool IsPropertySet(unsigned char flag) { return (Property & flag) != 0; }
 
 protected:
-	unsigned char Property = 0;
 	int X;
 	int Y;
+	unsigned char Property = 0;
 };
 
 #endif

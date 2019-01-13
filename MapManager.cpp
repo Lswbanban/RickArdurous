@@ -93,8 +93,8 @@ void MapManager::Update()
 	if (ItemsToUpdateCount == 0)
 		MapManager::AddItem(&dc2);
 	
-	// update the main character
-	Rick::Update();
+	// update the input of the main character
+	Rick::UpdateInput();
 	
 	// update the lethal entities
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::PropertyFlags::LETHAL);

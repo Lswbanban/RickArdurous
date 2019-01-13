@@ -15,12 +15,11 @@ private:
 	const int BULLET_SPEED = 4;
 	const int BULLET_WIDTH = 3;
 	const int SPARKS_ANIM_SPEED = 3;
-
-	// the frame id to play sparks when the bullet hit the wall
+	
 	union
 	{
-		char CurrentBulletSpeed;
-		char SparksAnimFrameId;
+		char CurrentBulletSpeed; // the current speed (which could be null on the first frame)
+		char SparksAnimFrameId; // the frame id to play sparks when the bullet hit the wall
 	};
 	
 	unsigned char GetBulletRayCastStartX();
