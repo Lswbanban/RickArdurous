@@ -7,7 +7,7 @@ class ArrowBullet : public Item
 {
 public:
 	ArrowBullet();
-	ArrowBullet(int startX, int startY, bool isArrow);
+	ArrowBullet(bool isArrow);
 	virtual bool Update(UpdateStep step);
 	void Fire(int x, int y, bool isMovingToLeft);
 

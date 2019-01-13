@@ -67,7 +67,15 @@ void MapManager::RemoveItem(Item * item)
 }
 
 #include "BulletCrate.h"
+#include "ArrowLauncher.h"
 BulletCrate	dc2(60, 50);
+ArrowLauncher al(5, 52, 0 /*Item::PropertyFlags::MIRROR_X*/);
+
+void MapManager::Init()
+{
+	MapManager::AddItem(&dc2);
+	MapManager::AddItem(&al);
+}
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags)
 {
@@ -88,10 +96,6 @@ void MapManager::Update()
 		DebugDrawStep++;
 	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(DOWN_BUTTON))
 		DebugDrawStep--;
-	
-	// debug code to spawn a crate
-	if (ItemsToUpdateCount == 0)
-		MapManager::AddItem(&dc2);
 	
 	// update the input of the main character
 	Rick::UpdateInput();

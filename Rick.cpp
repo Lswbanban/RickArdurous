@@ -44,6 +44,9 @@ namespace Rick
 	// position of Rick
 	int X = 15;
 	int Y = 40;
+	int GetX() { return X; }
+	int GetY() { return Y; }
+
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;

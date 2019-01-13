@@ -19,6 +19,9 @@ void setup()
 	arduboy.beginNoLogo();
 //	arduboy.begin();
 	arduboy.clear();
+	
+	// call init function of some managers
+	MapManager::Init();
 }
 
 void loop()

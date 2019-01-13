@@ -5,6 +5,7 @@ class Item;
 
 namespace MapManager
 {
+	void Init();
 	void Update();
 	
 	// function to add or remove the items currently updated
