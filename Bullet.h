@@ -12,17 +12,20 @@ public:
 	void Fire(int x, int y, bool isMovingToLeft);
 
 private:
-	const int BULLET_SPEED = 3;
+	const int BULLET_SPEED = 4;
 	const int BULLET_WIDTH = 3;
-	const int BULLET_RAY_CAST_LENGTH = BULLET_SPEED + BULLET_WIDTH;
 	const int SPARKS_ANIM_SPEED = 3;
 
 	// the frame id to play sparks when the bullet hit the wall
-	unsigned char SparksAnimFrameId;
+	union
+	{
+		char CurrentBulletSpeed;
+		char SparksAnimFrameId;
+	};
 	
 	unsigned char GetBulletRayCastStartX();
 	void DrawBulletRay(unsigned char color);
-	bool ImpactBulletFound();
+	bool SearchForBulletImpact(int & impactPosition);
 };
 
 #endif

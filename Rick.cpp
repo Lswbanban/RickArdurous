@@ -199,7 +199,7 @@ void Rick::HandleInput()
 				for (int i = BulletCount-1; i >= 0; --i)
 					if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 					{
-						AllBullets[i].Fire(IsLookingLeft ? X - 1 : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
+						AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
 						BulletCount--;
 						break;
 					}

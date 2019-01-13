@@ -36,6 +36,8 @@ void Bullet::Fire(int x, int y, bool isMovingToLeft)
 		X = x;
 	}
 	Y = y;
+	// for the first frame we set the bullet speed to zero
+	CurrentBulletSpeed = 0;
 	// add myself to the map manager in order to be updated
 	MapManager::AddItem(this);
 }
@@ -43,7 +45,7 @@ void Bullet::Fire(int x, int y, bool isMovingToLeft)
 unsigned char Bullet::GetBulletRayCastStartX()
 {
 	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
-		return X - BULLET_SPEED;
+		return X - CurrentBulletSpeed;
 	else
 		return X;
 }
@@ -51,20 +53,19 @@ unsigned char Bullet::GetBulletRayCastStartX()
 void Bullet::DrawBulletRay(unsigned char color)
 {
 	// draw the line of the ray cast
-	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, BULLET_RAY_CAST_LENGTH, color);
+	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, CurrentBulletSpeed + BULLET_WIDTH, color);
 }
 
-bool Bullet::ImpactBulletFound()
+bool Bullet::SearchForBulletImpact(int & impactPosition)
 {
 	// get the ray cast positions
 	unsigned char startX = GetBulletRayCastStartX();
 	// iterate on the frame buffer to chack if any pixel is set
-	for (int i = 0; i < BULLET_RAY_CAST_LENGTH; ++i)
+	for (int i = 0; i < CurrentBulletSpeed + BULLET_WIDTH; ++i)
 		if (arduboy.getPixel(startX + i, Y) == WHITE)
 			{
 				// prepare the X and Y position for the sparks animation
-				X = startX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1);
-				Y -= (SpriteData::SPARKS_SPRITE_HEIGHT >> 1);
+				impactPosition = startX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1);
 				return true;
 			}
 	// no collision found
@@ -73,9 +74,6 @@ bool Bullet::ImpactBulletFound()
 
 bool Bullet::Update(UpdateStep step)
 {
-	// declare a flag to know when the bullet was removed
-	bool wasBulletRemovedThatFrame = false;
-	
 	switch (step)
 	{
 		case UpdateStep::DRAW_LETHAL:
@@ -95,31 +93,38 @@ bool Bullet::Update(UpdateStep step)
 			// draw the bullet or the sparks depending if the bullet is alive or not
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				// check if the bullet collided on the static collision along its movement
-				if (!ImpactBulletFound())
-				{
-					// no collision found, so move the bullet according to its direction
-					if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
-						X -= BULLET_SPEED;
-					else
-						X += BULLET_SPEED;
+				// first check the collition and get the impact position if any
+				int impactPosition = 0;
+				bool isImpactFound = SearchForBulletImpact(impactPosition);
 				
-					// draw the bullet
-					arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
-					
-					// if the bullet is outside the screen, kill it immediately without playing sparks
-					if ((X < 0) || (X >= WIDTH))
-					{
-						ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
-						MapManager::RemoveItem(this);
-						wasBulletRemovedThatFrame = true;
-					}
-				}
+				// move the bullet X according to its direction
+				if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
+					X -= CurrentBulletSpeed;
 				else
+					X += CurrentBulletSpeed;
+				
+				// from the second frame set the current bullet speed to its nominal value
+				CurrentBulletSpeed = BULLET_SPEED;
+				
+				// draw the bullet
+				arduboy.drawFastHLine(X, Y, BULLET_WIDTH, WHITE);
+				
+				// check if the bullet collided on the static collision along its movement, if yes prepare the sparks fx for the next frame
+				if (isImpactFound)
 				{
-					// the bullet hit the wall, so kill it, and reset the sparks animation frame id
+					// the bullet hit the wall, so kill it
 					ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
+					// init the postion for the sparks sprite, and reset the sparks animation frame id
+					X = impactPosition;
+					Y -= (SpriteData::SPARKS_SPRITE_HEIGHT >> 1);
 					SparksAnimFrameId = 0;
+				}
+				else if ((X < 0) || (X >= WIDTH))
+				{
+					// if the bullet is outside the screen, kill it immediately without playing sparks
+					ClearProperty(Item::PropertyFlags::ALIVE | Item::PropertyFlags::LETHAL);
+					MapManager::RemoveItem(this);
+					return true;
 				}
 			}
 			else
@@ -136,12 +141,12 @@ bool Bullet::Update(UpdateStep step)
 				{
 					// we reach the end of the sparks animation, so remove this bullet from the manager
 					MapManager::RemoveItem(this);
-					wasBulletRemovedThatFrame = true;
+					return true;
 				}
 			}
 			break;
 		}
 	}
-	// return the result
-	return wasBulletRemovedThatFrame;
+	// return false by default
+	return false;
 }
