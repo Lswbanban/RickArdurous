@@ -16,6 +16,9 @@ namespace Rick
 	void CheckStaticCollision();
 	void Draw();
 	
+	int GetX();
+	int GetY();
+	
 	// Rick Inventory
 	extern char LifeCount;
 	extern char StatuetteCount;

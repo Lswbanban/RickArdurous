@@ -11,7 +11,7 @@ ArrowBullet::ArrowBullet() : Item(0, 0, Item::PropertyFlags::BULLET | Item::Prop
 {
 }
 
-ArrowBullet::ArrowBullet(int startX, int startY, bool isArrow) : Item(startX, startY, Item::PropertyFlags::BULLET | Item::PropertyFlags::STATIC_COLLISION_NEEDED | (isArrow ? PropertyFlags::SPECIAL : 0))
+ArrowBullet::ArrowBullet(bool isArrow) : Item(0, 0, Item::PropertyFlags::BULLET | Item::PropertyFlags::STATIC_COLLISION_NEEDED | (isArrow ? PropertyFlags::SPECIAL : 0))
 {
 }
 
