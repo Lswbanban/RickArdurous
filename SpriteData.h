@@ -28,12 +28,18 @@ namespace SpriteData
 		FIRE_END,
 		POSE_DYNAMITE_START,
 		POSE_DYNAMITE_END,
+		// restart the index because these index are for the RickCrawl array
+		CRAWL_START = 0,
+		CRAWL_END = 2,
 	};
 	
 	// sprite of the main character
 	const int RICK_SPRITE_WIDTH = 9;
 	const int RICK_SPRITE_HEIGHT = 16;
 	extern const unsigned char Rick[][RICK_SPRITE_WIDTH * (RICK_SPRITE_HEIGHT / 8)];
+	const int RICK_CRAWL_SPRITE_WIDTH = 12;
+	const int RICK_CRAWL_SPRITE_HEIGHT = 8;
+	extern const unsigned char RickCrawl[][RICK_CRAWL_SPRITE_WIDTH * (RICK_CRAWL_SPRITE_HEIGHT / 8)];
 	
 	// animation for the dynamite, with the fuse and the explosion
 	const int DYNAMITE_SPRITE_FRAME_COUNT = 11;
