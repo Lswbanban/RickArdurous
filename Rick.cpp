@@ -24,6 +24,7 @@ namespace Rick
 	const int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
 	const int FIRE_ANIM_SPEED = 3;
 	const int PLACE_DYNAMITE_ANIM_SPEED = 3;
+	const int CRAWL_ANIM_SPEED = 3;
 	
 	// state of Rick
 	enum AnimState
@@ -34,6 +35,7 @@ namespace Rick
 		FALL,
 		FIRE,
 		PLACE_DYNAMITE,
+		CRAWL,
 	};
 	
 	// the current state of Rick
@@ -68,10 +70,18 @@ namespace Rick
 	// all the bullet instances
 	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
+	void InitIdle();
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyFloorAt(int yUnderFeet);
+}
+
+void Rick::InitIdle()
+{
+	State = AnimState::IDLE;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
 void Rick::UpdateInput()
@@ -152,9 +162,8 @@ void Rick::UpdateInput()
 		// check if we finished the ping pong loop
 		else if (CurrentAnimFrame < SpriteData::RickAnimFrameId::FIRE_START)
 		{
-			// change the state and anim frame to idle
-			State = AnimState::IDLE;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+			// go back to idle
+			InitIdle();
 		}
 	}
 	else if (State == AnimState::PLACE_DYNAMITE)
@@ -182,9 +191,36 @@ void Rick::UpdateInput()
 		// check if we finished the ping pong loop
 		else if (CurrentAnimFrame < SpriteData::RickAnimFrameId::POSE_DYNAMITE_START)
 		{
-			// change the state and anim frame to idle
-			State = AnimState::IDLE;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+			// go back to idle
+			InitIdle();
+		}
+	}
+	else if (State == AnimState::CRAWL)
+	{
+		// if player release the down button, then the main character goes up
+		if (Input::IsJustReleased(DOWN_BUTTON))
+		{
+			InitIdle();
+		}
+		else if (Input::IsDown(LEFT_BUTTON))
+		{
+			IsLookingLeft = true;
+			// check if we should move to the next frame
+			if (arduboy.everyXFrames(CRAWL_ANIM_SPEED))
+			{
+				X--;
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::CRAWL_START, SpriteData::RickAnimFrameId::CRAWL_END);
+			}
+		}
+		else if (Input::IsDown(RIGHT_BUTTON))
+		{
+			IsLookingLeft = false;
+			// check if we should move to the next frame
+			if (arduboy.everyXFrames(CRAWL_ANIM_SPEED))
+			{
+				X++;
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::CRAWL_START, SpriteData::RickAnimFrameId::CRAWL_END);
+			}
 		}
 	}
 	else
@@ -197,6 +233,11 @@ void Rick::UpdateInput()
 			JumpAndFallFrameCount = 0;
 			JumpAndFallAnimSpeedIndex = 0;
 			AirControlFrameCount = 0;
+		}
+		else if (Input::IsJustPressed(DOWN_BUTTON))
+		{
+			State = AnimState::CRAWL;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::CRAWL_START;
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
@@ -236,9 +277,7 @@ void Rick::UpdateInput()
 		else
 		{
 			// reset the state to idle by default
-			State = AnimState::IDLE;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
-			AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
+			InitIdle();
 		}
 		
 		// place a dynamite or fire when pressing the correct button
@@ -342,7 +381,7 @@ void Rick::CheckStaticCollision()
 	}
 	
 	// draw rick sprite to check the wall collisions
-	bool wallCollision = arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, TRANSPARENT, IsLookingLeft);
+	bool wallCollision = Draw(TRANSPARENT);
 	
 	if (wallCollision)
 	{
@@ -359,7 +398,7 @@ void Rick::CheckStaticCollision()
  */
 void Rick::CheckLethalCollision()
 {
-	bool collisionDetected = arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft);
+	bool collisionDetected = Draw(BLACK);
 	
 	if (collisionDetected)
 	{
@@ -376,11 +415,14 @@ void Rick::CheckLethalCollision()
  */
 void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
-	if (arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, BLACK, IsLookingLeft))
+	if (Draw(BLACK))
 		item->PickUp();
 }
 
-void Rick::Draw()
+bool Rick::Draw(unsigned char color)
 {
-	arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, IsLookingLeft);
+	if (State == AnimState::CRAWL)
+		return arduboy.drawBitmapExtended(X, Y + 5, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
+	else
+		return arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, color, IsLookingLeft);
 }
