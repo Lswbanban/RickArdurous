@@ -415,15 +415,10 @@ bool Rick::IsThereAnyFloorAt(int yUnderFeet)
 
 bool Rick::IsThereAnyCeilingAt()
 {
-	int yAboveHead = Y + 3;
 	int startX = X;
 	if (!IsLookingLeft)
 		startX += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
-	int endX = startX + SpriteData::RICK_SPRITE_WIDTH;
-	for (int i = startX; i < endX; ++i)
-		if (arduboy.getPixel(i, yAboveHead) == WHITE)
-			return true;
-	return false;
+	return arduboy.CheckWhitePixelsInRow(startX, Y >> 3, SpriteData::RICK_SPRITE_WIDTH) != 0;
 }
 
 /**

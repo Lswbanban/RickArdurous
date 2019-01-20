@@ -12,13 +12,13 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
     return false;
 
   int yOffset = abs(y) % 8;
-  int sRow = y / 8;
+  int sRow = y >> 3;
   if (y < 0) {
     sRow--;
     yOffset = 8 - yOffset;
   }
   int yOffsetComplement = 8-yOffset;
-  int rows = h/8;
+  int rows = h >> 3;
   if (h%8!=0) rows++;
   // compute the start and end X (clamp if outside the screen)
   int startX = (x<0) ? -x : 0;
@@ -72,3 +72,14 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
   
   return collisionDetected;
 }
+
+unsigned int CustomArduboy::CheckWhitePixelsInRow(uint8_t x, uint8_t row, uint8_t w)
+{
+	unsigned int collisionDetected = 0;
+	int startX = (row*WIDTH) + x;
+	for (int i = 0; i < w; ++i)
+		if (sBuffer[startX + i])
+			collisionDetected |= 1 << i;
+  return collisionDetected;
+}
+
