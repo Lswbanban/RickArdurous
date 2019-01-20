@@ -25,6 +25,7 @@ namespace Rick
 	const int FIRE_ANIM_SPEED = 3;
 	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
+	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
 	
 	// state of Rick
 	enum AnimState
@@ -76,6 +77,7 @@ namespace Rick
 	
 	void InitIdle();
 	void InitCrouch();
+	void InitCrawl();
 	void InitStandUp();
 	bool IsDynamitePlacementRequested();
 	void PlaceDynamite();
@@ -100,11 +102,24 @@ void Rick::InitCrouch()
 	CurrentAnimDirection = 1;
 }
 
+void Rick::InitCrawl()
+{
+	// if the down button is still pressed, go to crawl state
+	State = AnimState::CRAWL;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::CRAWL_START;
+	// if the rick is looking right, move x 3 pixel to the left for keeping the hat aligned with the idle animation
+	if (!IsLookingLeft)
+		X -= WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
+}
+
 void Rick::InitStandUp()
 {
 	State = AnimState::STAND_UP;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::STAND_UP_START;
 	CurrentAnimDirection = -1;
+	// if the rick is looking right, move x 3 pixel to the right for keeping the hat aligned with the idle animation
+	if (!IsLookingLeft)
+		X += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
 }
 
 bool Rick::IsDynamitePlacementRequested()
@@ -232,9 +247,7 @@ void Rick::UpdateInput()
 			// check if the down button is still pressed or not
 			if (Input::IsDown(DOWN_BUTTON))
 			{
-				// if the down button is still pressed, go to crawl state
-				State = AnimState::CRAWL;
-				CurrentAnimFrame = SpriteData::RickAnimFrameId::CRAWL_START;
+				InitCrawl();
 			}
 			else
 			{
@@ -402,9 +415,15 @@ bool Rick::IsThereAnyFloorAt(int yUnderFeet)
 
 bool Rick::IsThereAnyCeilingAt()
 {
-	int yAboveHead = Y + 2;
-	return (arduboy.getPixel(X, yAboveHead) == WHITE) || (arduboy.getPixel(X + 4, yAboveHead) == WHITE)
-			|| (arduboy.getPixel(X + 8, yAboveHead) == WHITE);
+	int yAboveHead = Y + 3;
+	int startX = X;
+	if (!IsLookingLeft)
+		startX += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
+	int endX = startX + SpriteData::RICK_SPRITE_WIDTH;
+	for (int i = startX; i < endX; ++i)
+		if (arduboy.getPixel(i, yAboveHead) == WHITE)
+			return true;
+	return false;
 }
 
 /**
@@ -439,11 +458,18 @@ void Rick::CheckStaticCollision()
 	}
 	
 	// draw rick sprite to check the wall collisions
-	bool wallCollision = Draw(TRANSPARENT);
+	unsigned int wallCollision = Draw(TRANSPARENT);
 	if (wallCollision)
 	{
+		// cancel any speed in the air if colliding with a wall
 		AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
-		if (IsLookingLeft)
+		// declare a variable to know in which direction we should push the main character to exit the collision
+		bool pushToRight = IsLookingLeft;
+		// in crawl state we need to do additionnal test to check if it's the feet which are colliding. If yes then we are pushing in the same direction as the look
+		if ((State == AnimState::CRAWL) && ((wallCollision & 0x07) != 0))
+			pushToRight = !IsLookingLeft;
+		// push rick in the right direction
+		if (pushToRight)
 			X++;
 		else
 			X--;
@@ -480,7 +506,7 @@ void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 		item->PickUp();
 }
 
-bool Rick::Draw(unsigned char color)
+unsigned int Rick::Draw(unsigned char color)
 {
 	if (State == AnimState::CRAWL)
 		return arduboy.drawBitmapExtended(X, Y + 5, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
