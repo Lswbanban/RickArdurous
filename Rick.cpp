@@ -48,7 +48,6 @@ namespace Rick
 	int Y = 40;
 	int GetX() { return X; }
 	int GetY() { return Y; }
-
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -58,6 +57,9 @@ namespace Rick
 	unsigned char JumpAndFallAnimSpeedIndex = 0;
 	unsigned char AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 	unsigned char AirControlFrameCount = 0;
+	
+	// variable for crawl state
+	bool IsThereAnyCeilingAboveHead = false;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -75,6 +77,7 @@ namespace Rick
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyFloorAt(int yUnderFeet);
+	bool IsThereAnyCeilingAt();
 }
 
 void Rick::InitIdle()
@@ -197,12 +200,15 @@ void Rick::UpdateInput()
 	}
 	else if (State == AnimState::CRAWL)
 	{
-		// if player release the down button, then the main character goes up
-		if (Input::IsJustReleased(DOWN_BUTTON))
+		// if player release the down button and there's no ceiling above, then the main character goes up
+		if (!Input::IsDown(DOWN_BUTTON) && !IsThereAnyCeilingAboveHead)
 		{
 			InitIdle();
+			return;
 		}
-		else if (Input::IsDown(LEFT_BUTTON))
+		
+		// handle the crawling on left and right
+		if (Input::IsDown(LEFT_BUTTON))
 		{
 			IsLookingLeft = true;
 			// check if we should move to the next frame
@@ -349,6 +355,13 @@ bool Rick::IsThereAnyFloorAt(int yUnderFeet)
 	return (arduboy.getPixel(X + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(X + 6, yUnderFeet) == WHITE);
 }
 
+bool Rick::IsThereAnyCeilingAt()
+{
+	int yAboveHead = Y + 2;
+	return (arduboy.getPixel(X, yAboveHead) == WHITE) || (arduboy.getPixel(X + 4, yAboveHead) == WHITE)
+			|| (arduboy.getPixel(X + 8, yAboveHead) == WHITE);
+}
+
 /**
  * Check if Rick is colliding with a static wall, floor, and ceiling and prevent him to move.
  */
@@ -382,7 +395,6 @@ void Rick::CheckStaticCollision()
 	
 	// draw rick sprite to check the wall collisions
 	bool wallCollision = Draw(TRANSPARENT);
-	
 	if (wallCollision)
 	{
 		AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
@@ -391,6 +403,10 @@ void Rick::CheckStaticCollision()
 		else
 			X--;
 	}
+	
+	// check above the head in craw state
+	if (State == AnimState::CRAWL)
+		IsThereAnyCeilingAboveHead = IsThereAnyCeilingAt();
 }
 
 /**

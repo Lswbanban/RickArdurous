@@ -112,12 +112,12 @@ void MapManager::Update()
 	// animate the camera and draw the static collision
 	AnimateCameraTransition();
 	Draw();
-	
-	// call the function to check the static collision for the items that need it
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
+	
+	// call the function to check the static collision for the items that need it
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
