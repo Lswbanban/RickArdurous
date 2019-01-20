@@ -23,7 +23,7 @@ namespace Rick
 	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
 	const int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
 	const int FIRE_ANIM_SPEED = 3;
-	const int PLACE_DYNAMITE_ANIM_SPEED = 3;
+	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
 	
 	// state of Rick
@@ -34,7 +34,8 @@ namespace Rick
 		JUMP,
 		FALL,
 		FIRE,
-		PLACE_DYNAMITE,
+		CROUCH_DOWN,
+		STAND_UP,
 		CRAWL,
 	};
 	
@@ -60,6 +61,7 @@ namespace Rick
 	
 	// variable for crawl state
 	bool IsThereAnyCeilingAboveHead = false;
+	bool ShouldWePlaceADynamite = false;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -73,6 +75,9 @@ namespace Rick
 	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
 	void InitIdle();
+	void InitStandUp();
+	bool IsDynamitePlacementRequested();
+	void PlaceDynamite();
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void UpdateAirControl(bool towardLeftDirection);
@@ -85,6 +90,36 @@ void Rick::InitIdle()
 	State = AnimState::IDLE;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
+}
+
+void Rick::InitStandUp()
+{
+	State = AnimState::STAND_UP;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_END;
+	CurrentAnimDirection = -1;
+}
+
+bool Rick::IsDynamitePlacementRequested()
+{
+	if ((Input::IsJustPressed(A_BUTTON)) && (DynamiteCount > 0))
+		for (int i = DynamiteCount-1; i >= 0; --i)
+			if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+				return true;
+	return false;
+}
+
+void Rick::PlaceDynamite()
+{
+	// find an available dynamite and light it up
+	for (int i = DynamiteCount-1; i >= 0; --i)
+		if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+		{
+			AllDynamites[i].LightUp(X, Y + 5);
+			DynamiteCount--;
+			break;
+		}
+	// reset the dynamite placement flag 
+	ShouldWePlaceADynamite = false;
 }
 
 void Rick::UpdateInput()
@@ -169,30 +204,46 @@ void Rick::UpdateInput()
 			InitIdle();
 		}
 	}
-	else if (State == AnimState::PLACE_DYNAMITE)
+	else if (State == AnimState::CROUCH_DOWN)
 	{
+		// check if the player wants to place a dynamite
+		if (!ShouldWePlaceADynamite)
+			ShouldWePlaceADynamite = IsDynamitePlacementRequested();
+		
 		// change the anim frame id if it is the time to
-		if (arduboy.everyXFrames(PLACE_DYNAMITE_ANIM_SPEED))
+		if (arduboy.everyXFrames(CROUCH_STAND_ANIM_SPEED))
 			CurrentAnimFrame += CurrentAnimDirection;
 		
 		// check if we reach the end of the animation
 		if (CurrentAnimFrame > SpriteData::RickAnimFrameId::POSE_DYNAMITE_END)
 		{
-			// reset the anim frame to a correct value and reverse the anim direction
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_END;
-			CurrentAnimDirection = -1;
-			
-			// light up the dynamite
-			for (int i = DynamiteCount-1; i >= 0; --i)
-				if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
-				{
-					AllDynamites[i].LightUp(X, Y + 5);
-					DynamiteCount--;
-					break;
-				}
+			// now we can place the dynamite, because we reach the end of the animation
+			if (ShouldWePlaceADynamite)
+				PlaceDynamite();
+
+			// check if the down button is still pressed or not
+			if (Input::IsDown(DOWN_BUTTON))
+			{
+				// if the down button is still pressed, go to crawl state
+				State = AnimState::CRAWL;
+				CurrentAnimFrame = SpriteData::RickAnimFrameId::CRAWL_START;
+			}
+			else
+			{
+				// the player release the down button, so we need to stand up
+				// reset the anim frame to a correct value and reverse the anim direction
+				InitStandUp();
+			}
 		}
+	}
+	else if (State == AnimState::STAND_UP)
+	{
+		// change the anim frame id if it is the time to
+		if (arduboy.everyXFrames(CROUCH_STAND_ANIM_SPEED))
+			CurrentAnimFrame += CurrentAnimDirection;
+
 		// check if we finished the ping pong loop
-		else if (CurrentAnimFrame < SpriteData::RickAnimFrameId::POSE_DYNAMITE_START)
+		if (CurrentAnimFrame < SpriteData::RickAnimFrameId::POSE_DYNAMITE_START)
 		{
 			// go back to idle
 			InitIdle();
@@ -200,10 +251,14 @@ void Rick::UpdateInput()
 	}
 	else if (State == AnimState::CRAWL)
 	{
+		// light up the dynamite if the playe press A
+		if (IsDynamitePlacementRequested())
+			PlaceDynamite();
+		
 		// if player release the down button and there's no ceiling above, then the main character goes up
 		if (!Input::IsDown(DOWN_BUTTON) && !IsThereAnyCeilingAboveHead)
 		{
-			InitIdle();
+			InitStandUp();
 			return;
 		}
 		
@@ -242,8 +297,9 @@ void Rick::UpdateInput()
 		}
 		else if (Input::IsJustPressed(DOWN_BUTTON))
 		{
-			State = AnimState::CRAWL;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::CRAWL_START;
+			State = AnimState::CROUCH_DOWN;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_START;
+			CurrentAnimDirection = 1;
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
@@ -286,34 +342,17 @@ void Rick::UpdateInput()
 			InitIdle();
 		}
 		
-		// place a dynamite or fire when pressing the correct button
-		if (Input::IsJustPressed(A_BUTTON))
+		// fire when pressing the correct button
+		if ((Input::IsJustPressed(A_BUTTON)) && (BulletCount > 0))
 		{
-			// A + DOWN : we place a dynamite
-			if (Input::IsDown(DOWN_BUTTON))
-			{
-				if (DynamiteCount > 0)
-					for (int i = DynamiteCount-1; i >= 0; --i)
-						if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
-						{
-							CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_START;
-							CurrentAnimDirection = 1;
-							State = AnimState::PLACE_DYNAMITE;
-							break;
-						}
-			}
-			// fire a bullet when pressing just A
-			else if (BulletCount > 0)
-			{
-				for (int i = BulletCount-1; i >= 0; --i)
-					if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
-					{
-						CurrentAnimFrame = SpriteData::RickAnimFrameId::FIRE_START;
-						CurrentAnimDirection = 1;
-						State = AnimState::FIRE;
-						break;
-					}
-			}
+			for (int i = BulletCount-1; i >= 0; --i)
+				if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
+				{
+					CurrentAnimFrame = SpriteData::RickAnimFrameId::FIRE_START;
+					CurrentAnimDirection = 1;
+					State = AnimState::FIRE;
+					break;
+				}
 		}
 	}
 }
