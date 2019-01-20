@@ -75,6 +75,7 @@ namespace Rick
 	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
 	void InitIdle();
+	void InitCrouch();
 	void InitStandUp();
 	bool IsDynamitePlacementRequested();
 	void PlaceDynamite();
@@ -92,10 +93,17 @@ void Rick::InitIdle()
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
+void Rick::InitCrouch()
+{
+	State = AnimState::CROUCH_DOWN;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::CROUCH_START;
+	CurrentAnimDirection = 1;
+}
+
 void Rick::InitStandUp()
 {
 	State = AnimState::STAND_UP;
-	CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_END;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::STAND_UP_START;
 	CurrentAnimDirection = -1;
 }
 
@@ -215,7 +223,7 @@ void Rick::UpdateInput()
 			CurrentAnimFrame += CurrentAnimDirection;
 		
 		// check if we reach the end of the animation
-		if (CurrentAnimFrame > SpriteData::RickAnimFrameId::POSE_DYNAMITE_END)
+		if (CurrentAnimFrame > SpriteData::RickAnimFrameId::CROUCH_END)
 		{
 			// now we can place the dynamite, because we reach the end of the animation
 			if (ShouldWePlaceADynamite)
@@ -242,8 +250,8 @@ void Rick::UpdateInput()
 		if (arduboy.everyXFrames(CROUCH_STAND_ANIM_SPEED))
 			CurrentAnimFrame += CurrentAnimDirection;
 
-		// check if we finished the ping pong loop
-		if (CurrentAnimFrame < SpriteData::RickAnimFrameId::POSE_DYNAMITE_START)
+		// check if we finished the ping pon+g loop
+		if (CurrentAnimFrame < SpriteData::RickAnimFrameId::STAND_UP_END)
 		{
 			// go back to idle
 			InitIdle();
@@ -297,9 +305,7 @@ void Rick::UpdateInput()
 		}
 		else if (Input::IsJustPressed(DOWN_BUTTON))
 		{
-			State = AnimState::CROUCH_DOWN;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::POSE_DYNAMITE_START;
-			CurrentAnimDirection = 1;
+			InitCrouch();
 		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
