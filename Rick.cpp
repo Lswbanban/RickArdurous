@@ -25,11 +25,11 @@ namespace Rick
 	const int FIRE_ANIM_SPEED = 3;
 	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
-	const int DEATH_ANIM_SPEED = 2;
+	const int DEATH_ANIM_SPEED = 4;
 	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
-	const int DEATH_MOVING_SPEED = 8;
-	const int DEATH_VELOCITY_X = 8;
-	const int DEATH_VELOCITY_Y = -20;
+	const int DEATH_MOVING_SPEED = 16;
+	const int DEATH_VELOCITY_X = 9;
+	const int DEATH_VELOCITY_Y = -30;
 	const int HALF_GRAVITY = 1;
 	
 	// state of Rick
