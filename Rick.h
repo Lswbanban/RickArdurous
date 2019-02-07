@@ -14,7 +14,7 @@ namespace Rick
 	void CheckLethalCollision();
 	void CheckCollisionWithPickUp(PickUpItem * item);
 	void CheckStaticCollision();
-	unsigned int Draw(unsigned char color);
+	unsigned int Draw();
 	
 	int GetX();
 	int GetY();

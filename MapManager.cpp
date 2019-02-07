@@ -123,7 +123,7 @@ void MapManager::Update()
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
 
 	// update the main character
-	Rick::Draw(WHITE);
+	Rick::Draw();
 }
 
 /**
