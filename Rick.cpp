@@ -311,7 +311,7 @@ void Rick::UpdateInput()
 		if (Input::IsJustPressed(B_BUTTON))
 		{
 			State = AnimState::JUMP;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
 			JumpAndFallFrameCount = 0;
 			JumpAndFallAnimSpeedIndex = 0;
 			AirControlFrameCount = 0;
@@ -446,6 +446,7 @@ void Rick::CheckStaticCollision()
 		if ((State != AnimState::JUMP) && (State != AnimState::FALL))
 		{
 			State = AnimState::FALL;
+			CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
 			JumpAndFallFrameCount = 0;
 			JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
 			AirControlFrameCount = 0;
