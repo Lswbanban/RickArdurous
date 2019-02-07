@@ -25,7 +25,7 @@ namespace Rick
 	const int FIRE_ANIM_SPEED = 3;
 	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
-	const int DEATH_ANIM_SPEED = 8;
+	const int DEATH_ANIM_SPEED = 2;
 	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
 	const int DEATH_MOVING_SPEED = 8;
 	const int DEATH_VELOCITY_X = 8;
@@ -50,6 +50,7 @@ namespace Rick
 	AnimState State = AnimState::IDLE;
 	unsigned char CurrentAnimFrame = 0;
 	char CurrentAnimDirection = 1;
+	bool IsAlive() { return State != AnimState::DEATH;}
 	
 	// position of Rick
 	int X = 15;

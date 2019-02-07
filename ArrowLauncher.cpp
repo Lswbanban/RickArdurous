@@ -35,7 +35,7 @@ bool ArrowLauncher::Update(UpdateStep step)
 		int rickY = Rick::GetY();
 		int rickX = Rick::GetX();
 		// check if the main character is inside the detection range
-		if ((Y > rickY) && (Y < rickY + 13) && (minX < rickX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > rickX))
+		if (Rick::IsAlive() && (Y > rickY) && (Y < rickY + 13) && (minX < rickX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > rickX))
 		{
 			Arrow->Fire(X, Y, isShootingTowardLeft);
 			LastLaunchTime = 0;
