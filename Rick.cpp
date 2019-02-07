@@ -381,7 +381,7 @@ void Rick::UpdateInput()
 			JumpAndFallAnimSpeedIndex = 0;
 			AirControlFrameCount = 0;
 		}
-		else if (Input::IsJustPressed(DOWN_BUTTON))
+		else if (Input::IsDown(DOWN_BUTTON))
 		{
 			InitCrouch();
 		}
