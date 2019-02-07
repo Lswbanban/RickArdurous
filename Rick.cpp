@@ -25,7 +25,12 @@ namespace Rick
 	const int FIRE_ANIM_SPEED = 3;
 	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
+	const int DEATH_ANIM_SPEED = 8;
 	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
+	const int DEATH_MOVING_SPEED = 8;
+	const int DEATH_VELOCITY_X = 8;
+	const int DEATH_VELOCITY_Y = -20;
+	const int HALF_GRAVITY = 1;
 	
 	// state of Rick
 	enum AnimState
@@ -38,6 +43,7 @@ namespace Rick
 		CROUCH_DOWN,
 		STAND_UP,
 		CRAWL,
+		DEATH,
 	};
 	
 	// the current state of Rick
@@ -53,9 +59,11 @@ namespace Rick
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
+
+	// variable for different states
+	unsigned char StateFrameCounter = 0; // a generic frame counter that can be used by different states
 	
 	// variable for the jump state
-	unsigned char JumpAndFallFrameCount = 0;
 	unsigned char JumpAndFallAnimSpeedIndex = 0;
 	unsigned char AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 	unsigned char AirControlFrameCount = 0;
@@ -63,6 +71,10 @@ namespace Rick
 	// variable for crawl state
 	bool IsThereAnyCeilingAboveHead = false;
 	bool ShouldWePlaceADynamite = false;
+	
+	// variable for death state
+	int DeathStartX = 0;
+	int DeathStartY = 0;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -75,10 +87,12 @@ namespace Rick
 	// all the bullet instances
 	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
+	void Respawn();
 	void InitIdle();
 	void InitCrouch();
 	void InitCrawl();
 	void InitStandUp();
+	void InitDeath();
 	bool IsDynamitePlacementRequested();
 	void PlaceDynamite();
 	void HandleInput();
@@ -86,6 +100,17 @@ namespace Rick
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyFloorAt(int yUnderFeet);
 	bool IsThereAnyCeilingAt();
+	bool IsOnScreen();
+	unsigned int Draw(unsigned char color);
+}
+
+void Rick::Respawn()
+{
+	// temp code, just teleport to hard coded location
+	X = 15;
+	Y = 8;
+	// start in idle state
+	InitIdle();
 }
 
 void Rick::InitIdle()
@@ -122,6 +147,19 @@ void Rick::InitStandUp()
 		X += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
 }
 
+void Rick::InitDeath()
+{
+	State = AnimState::DEATH;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::DEATH_START;
+	CurrentAnimDirection = -1;
+	DeathStartX = X;
+	DeathStartY = Y;
+	StateFrameCounter = 0;
+	// decrease the life counter
+	if (LifeCount > 0)
+		LifeCount--;
+}
+
 bool Rick::IsDynamitePlacementRequested()
 {
 	if ((Input::IsJustPressed(A_BUTTON)) && (DynamiteCount > 0))
@@ -151,10 +189,10 @@ void Rick::UpdateInput()
 	if ((State == AnimState::JUMP) || (State == AnimState::FALL))
 	{
 		// increase the frame counter for the jump, and switch to the next frame when needed
-		JumpAndFallFrameCount++;
-		if (JumpAndFallFrameCount >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED[JumpAndFallAnimSpeedIndex])
+		StateFrameCounter++;
+		if (StateFrameCounter >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED[JumpAndFallAnimSpeedIndex])
 		{
-			JumpAndFallFrameCount = 0;
+			StateFrameCounter = 0;
 			if (State == AnimState::JUMP)
 			{
 				// move up
@@ -305,6 +343,32 @@ void Rick::UpdateInput()
 			}
 		}
 	}
+	else if (State == AnimState::DEATH)
+	{
+		if (arduboy.everyXFrames(DEATH_ANIM_SPEED))
+		{
+			// reverse direction if we reach the end of the loop
+			if ((CurrentAnimFrame == SpriteData::RickAnimFrameId::DEATH_START) ||
+				(CurrentAnimFrame == SpriteData::RickAnimFrameId::DEATH_END))
+				CurrentAnimDirection = -CurrentAnimDirection;
+			// increase the anim frame
+			CurrentAnimFrame += CurrentAnimDirection;
+		}
+		
+		// increase the death timer
+		StateFrameCounter++;
+		
+		// compute the horizontal velocity
+		char velocity_X = IsLookingLeft ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+		
+		// move the main character according to a projectile trajectory
+		X = DeathStartX + (velocity_X * StateFrameCounter) / DEATH_MOVING_SPEED;
+		Y = DeathStartY + ((DEATH_VELOCITY_Y * StateFrameCounter) + (HALF_GRAVITY * StateFrameCounter * StateFrameCounter)) / DEATH_MOVING_SPEED;
+		
+		// check if the X and Y are outside of the screen
+		if (!IsOnScreen())
+			Respawn();
+	}
 	else
 	{
 		// check if we start a the jump
@@ -312,7 +376,7 @@ void Rick::UpdateInput()
 		{
 			State = AnimState::JUMP;
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
-			JumpAndFallFrameCount = 0;
+			StateFrameCounter = 0;
 			JumpAndFallAnimSpeedIndex = 0;
 			AirControlFrameCount = 0;
 		}
@@ -421,11 +485,28 @@ bool Rick::IsThereAnyCeilingAt()
 	return arduboy.CheckWhitePixelsInRow(startX, Y >> 3, SpriteData::RICK_SPRITE_WIDTH) != 0;
 }
 
+bool Rick::IsOnScreen()
+{
+	char spriteWidth = SpriteData::RICK_SPRITE_WIDTH;
+	char spriteHeight = SpriteData::RICK_SPRITE_HEIGHT;
+	if (State == AnimState::CRAWL)
+	{
+		spriteWidth = SpriteData::RICK_CRAWL_SPRITE_WIDTH;
+		spriteHeight = SpriteData::RICK_CRAWL_SPRITE_HEIGHT;
+	}
+	//TODO translate global coord to coord local to the screen
+	return (X + spriteWidth >= 0) && (X < WIDTH) && (Y + spriteHeight >= 0) && (Y < HEIGHT);
+}
+
 /**
  * Check if Rick is colliding with a static wall, floor, and ceiling and prevent him to move.
  */
 void Rick::CheckStaticCollision()
 {
+	// early exit when the main character is dead, we don't need to check the static collision
+	if (State == AnimState::DEATH)
+		return;
+	
 	// first check the floor collisions
 	int yUnderFeet = Y + 13;
 	if (yUnderFeet >= HEIGHT)
@@ -447,7 +528,7 @@ void Rick::CheckStaticCollision()
 		{
 			State = AnimState::FALL;
 			CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
-			JumpAndFallFrameCount = 0;
+			StateFrameCounter = 0;
 			JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
 			AirControlFrameCount = 0;
 		}
@@ -481,15 +562,8 @@ void Rick::CheckStaticCollision()
  */
 void Rick::CheckLethalCollision()
 {
-	bool collisionDetected = Draw(BLACK);
-	
-	if (collisionDetected)
-	{
-		if (LifeCount > 0)
-			LifeCount--;
-		X = 15;
-		Y = 8;
-	}
+	if ((State != AnimState::DEATH) && Draw(BLACK))
+		InitDeath();
 }
 
 /**
@@ -500,6 +574,12 @@ void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
 	if (Draw(BLACK))
 		item->PickUp();
+}
+
+unsigned int Rick::Draw()
+{
+	// for the death animation, draw the main character in invert color
+	return Draw((State == AnimState::DEATH) ? INVERT : WHITE);
 }
 
 unsigned int Rick::Draw(unsigned char color)
