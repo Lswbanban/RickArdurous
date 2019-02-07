@@ -90,6 +90,7 @@ namespace Rick
 	
 	void Respawn();
 	void InitIdle();
+	void InitFall();
 	void InitCrouch();
 	void InitCrawl();
 	void InitStandUp();
@@ -99,8 +100,8 @@ namespace Rick
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
 	void UpdateAirControl(bool towardLeftDirection);
-	bool IsThereAnyFloorAt(int yUnderFeet);
-	bool IsThereAnyCeilingAt();
+	bool IsThereAnyCollisionAt(int y);
+	bool IsThereAnyCeilingAboveCrawl();
 	bool IsOnScreen();
 	unsigned int Draw(unsigned char color);
 }
@@ -119,6 +120,15 @@ void Rick::InitIdle()
 	State = AnimState::IDLE;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
+}
+
+void Rick::InitFall()
+{
+	State = AnimState::FALL;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
+	StateFrameCounter = 0;
+	JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
+	AirControlFrameCount = 0;
 }
 
 void Rick::InitCrouch()
@@ -473,12 +483,12 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
 	}
 }
 
-bool Rick::IsThereAnyFloorAt(int yUnderFeet)
+bool Rick::IsThereAnyCollisionAt(int y)
 {
-	return (arduboy.getPixel(X + 2, yUnderFeet) == WHITE) || (arduboy.getPixel(X + 6, yUnderFeet) == WHITE);
+	return (arduboy.getPixel(X + 2, y) == WHITE) || (arduboy.getPixel(X + 6, y) == WHITE);
 }
 
-bool Rick::IsThereAnyCeilingAt()
+bool Rick::IsThereAnyCeilingAboveCrawl()
 {
 	int startX = X;
 	if (!IsLookingLeft)
@@ -508,30 +518,41 @@ void Rick::CheckStaticCollision()
 	if (State == AnimState::DEATH)
 		return;
 	
-	// first check the floor collisions
-	int yUnderFeet = Y + 13;
-	if (yUnderFeet >= HEIGHT)
-		yUnderFeet = HEIGHT-1;
-	if (IsThereAnyFloorAt(yUnderFeet))
+	// if we jump, check the ceiling, otherwise, check the floor
+	if (State == AnimState::JUMP)
 	{
-		// We found a collision under the feet, so if we are falling, stop falling
-		if (State == AnimState::FALL)
-			State = AnimState::IDLE;
-		
-		// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
-		while (IsThereAnyFloorAt(--yUnderFeet))
-			Y--;
+		int yAboveHead = Y - 1;
+		if (yAboveHead < 0)
+			yAboveHead = 0;
+		if (IsThereAnyCollisionAt(yAboveHead))
+		{
+			// cancel the jump state and enter directly into the fall state, because Rick as collided with the ceilling
+			InitFall();
+			
+			// move down Rick, until it is outside the collision, this can happen if Rick entered deeply in the collision
+			while (IsThereAnyCollisionAt(++yAboveHead))
+				Y++;
+		}
 	}
 	else
 	{
-		// There's no collision under the feet, and not jumping, then we fall
-		if ((State != AnimState::JUMP) && (State != AnimState::FALL))
+		// first check the floor collisions
+		int yUnderFeet = Y + 13;
+		if (yUnderFeet >= HEIGHT)
+			yUnderFeet = HEIGHT-1;
+		if (IsThereAnyCollisionAt(yUnderFeet))
 		{
-			State = AnimState::FALL;
-			CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
-			StateFrameCounter = 0;
-			JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
-			AirControlFrameCount = 0;
+			// We found a collision under the feet, so if we are falling, stop falling
+			if (State == AnimState::FALL)
+				InitIdle();
+			
+			// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
+			while (IsThereAnyCollisionAt(--yUnderFeet))
+				Y--;
+		}
+		else if (State != AnimState::FALL) // There's no collision under the feet, and not jumping, then we fall
+		{
+			InitFall();
 		}
 	}
 	
@@ -555,7 +576,7 @@ void Rick::CheckStaticCollision()
 	
 	// check above the head in craw state
 	if (State == AnimState::CRAWL)
-		IsThereAnyCeilingAboveHead = IsThereAnyCeilingAt();
+		IsThereAnyCeilingAboveHead = IsThereAnyCeilingAboveCrawl();
 }
 
 /**
