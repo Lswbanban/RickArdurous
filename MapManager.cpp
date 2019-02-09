@@ -43,7 +43,7 @@ namespace MapManager
 	void UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
-	void Draw();
+	void Draw(bool drawWall, unsigned char rickFeetOnScreen);
 }
 
 void MapManager::AddItem(Item * item)
@@ -109,12 +109,18 @@ void MapManager::Update()
 	// call the function to check the static collision for the items that need it
 	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET);
 
+	// get the position of the feet of rick in screen coordinate
+	unsigned char rickFeetOnScreen = Rick::GetY() + 12;
+	
 	// animate the camera and draw the static collision
 	AnimateCameraTransition();
-	Draw();
+	Draw(true, rickFeetOnScreen);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
+	
+	// draw the platforms after checking the collision if the player if jumping
+	Draw(false, rickFeetOnScreen);
 	
 	// call the function to check the static collision for the items that need it
 	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
@@ -218,15 +224,19 @@ void MapManager::AnimateCameraTransition()
 /**
  * This function draw the map based on the current position of the camera.
  */
-void MapManager::Draw()
+void MapManager::Draw(bool drawWall, unsigned char rickFeetOnScreen)
 {
 	for (int y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
 		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
 		{
 			unsigned char spriteId = pgm_read_byte(&(Level[y + CameraY][x + CameraX]));
-			if (spriteId != SpriteData::NOTHING)
+			int spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
+			if ((spriteId != SpriteData::NOTHING) && 
+				( (drawWall == (spriteId != SpriteData::PLATFORM)) ||
+				  ((spriteId == SpriteData::PLATFORM) && drawWall && (spriteY > rickFeetOnScreen)) ||
+				  ((spriteId == SpriteData::PLATFORM) && !drawWall && (spriteY <= rickFeetOnScreen)) ) )
 				arduboy.drawBitmap(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
-					(SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY,
+					spriteY,
 					SpriteData::Walls[spriteId],
 					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE);
 		}
