@@ -10,6 +10,9 @@ namespace SpriteData
 		BLOCK_16_8_LEFT,
 		BLOCK_16_8_RIGHT,
 		STATUE_TOP,
+		PLATFORM = 29,
+		PLATFORM_WITH_LADDER,
+		LADDER,
 		NOTHING = 255,
 	};
 	
