@@ -43,7 +43,7 @@ namespace MapManager
 	void UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
-	void Draw(bool drawWall, unsigned char rickFeetOnScreen);
+	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 }
 
 void MapManager::AddItem(Item * item)
@@ -114,16 +114,19 @@ void MapManager::Update()
 	
 	// animate the camera and draw the static collision
 	AnimateCameraTransition();
-	Draw(true, rickFeetOnScreen);
+	Draw(SpriteData::BLOCK_8_8, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
 	
-	// draw the platforms after checking the collision if the player if jumping
-	Draw(false, rickFeetOnScreen);
+	// draw the platforms after checking the collision
+	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
 	
 	// call the function to check the static collision for the items that need it
 	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
+
+	// draw the ladders after checking the collision
+	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
@@ -224,20 +227,35 @@ void MapManager::AnimateCameraTransition()
 /**
  * This function draw the map based on the current position of the camera.
  */
-void MapManager::Draw(bool drawWall, unsigned char rickFeetOnScreen)
+void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen)
 {
 	for (int y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
+	{
+		// compute the sprite y coordinate
+		int spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
+		// determines if we need to draw the platforms.
+		// If we are not specifically drawing the platforms (the min sprite index is not platforms), then we should only draw the platforms below the feet
+		// Otherwise, if we are in the drawing platform step, we only draw those above the feet, since the below ones as already been drawn
+		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_8_8) && (spriteY > rickFeetOnScreen)) ||
+									((minSpriteIndex == SpriteData::PLATFORM) && (spriteY <= rickFeetOnScreen));
 		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
 		{
 			unsigned char spriteId = pgm_read_byte(&(Level[y + CameraY][x + CameraX]));
-			int spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
-			if ((spriteId != SpriteData::NOTHING) && 
-				( (drawWall == (spriteId != SpriteData::PLATFORM)) ||
-				  ((spriteId == SpriteData::PLATFORM) && drawWall && (spriteY > rickFeetOnScreen)) ||
-				  ((spriteId == SpriteData::PLATFORM) && !drawWall && (spriteY <= rickFeetOnScreen)) ) )
+			// special case for the mix of ladder and platform, draw either a platform or a ladder depending on the drawing state
+			if (spriteId == SpriteData::PLATFORM_WITH_LADDER)
+			{
+				if (minSpriteIndex == SpriteData::LADDER)
+					spriteId = SpriteData::LADDER;
+				else
+					spriteId = SpriteData::PLATFORM;
+			}
+			// draw the sprite if we need to
+			if ((spriteId >= minSpriteIndex) && (spriteId <= maxSpriteIndex) &&
+				((spriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
 				arduboy.drawBitmap(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
 					spriteY,
 					SpriteData::Walls[spriteId],
 					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE);
 		}
+	}
 }
