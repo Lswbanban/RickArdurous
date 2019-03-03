@@ -15,6 +15,7 @@ namespace Rick
 	void CheckCollisionWithPickUp(PickUpItem * item);
 	void CheckStaticCollision();
 	void CheckLadderCollision();
+	unsigned char GetFeetYOnScreen();
 	unsigned int Draw();
 	bool IsAlive();
 	

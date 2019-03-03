@@ -112,6 +112,14 @@ namespace Rick
 	unsigned int Draw(unsigned char color);
 }
 
+unsigned char Rick::GetFeetYOnScreen()
+{
+	unsigned char feetOnScreen = GetY() + 12;
+	if (State == AnimState::FALL)
+		feetOnScreen -= JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex] + 1;
+	return feetOnScreen;
+}
+
 void Rick::Respawn()
 {
 	// temp code, just teleport to hard coded location
@@ -446,6 +454,10 @@ void Rick::UpdateInput()
 		{
 			InitCrouch();
 		}
+		else if (Input::IsDown(UP_BUTTON) && IsInFrontOfLadder)
+		{
+			InitClimbLadder();
+		}
 		else if (Input::IsDown(LEFT_BUTTON))
 		{
 			IsLookingLeft = true;
@@ -607,7 +619,8 @@ void Rick::CheckStaticCollision()
 		if (IsThereAnyCollisionAt(yUnderFeet))
 		{
 			// We found a collision under the feet, so if we are falling, stop falling
-			if (State == AnimState::FALL)
+			if ((State == AnimState::FALL) || 
+				((State == AnimState::CLIMB_LADDER) && Input::IsDown(DOWN_BUTTON)))
 				InitIdle();
 			
 			// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
