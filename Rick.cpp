@@ -453,7 +453,10 @@ void Rick::UpdateInput()
 		}
 		else if (Input::IsDown(DOWN_BUTTON))
 		{
-			InitCrouch();
+			if (IsInFrontOfLadder && Input::IsJustPressed(DOWN_BUTTON))
+				InitClimbLadder();
+			else
+				InitCrouch();
 		}
 		else if (Input::IsDown(UP_BUTTON) && IsInFrontOfLadder)
 		{
