@@ -77,6 +77,7 @@ namespace Rick
 	
 	// variable for the climb ladder state
 	bool IsInFrontOfLadder = false;
+	bool IsAboveLadder = false;
 	
 	// variable for death state
 	int DeathStartX = 0;
@@ -108,6 +109,7 @@ namespace Rick
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyCollisionAt(int y);
 	bool IsThereAnyCeilingAboveCrawl();
+	bool CheckPixelColumn(int x, int startY, int endX);
 	bool IsOnScreen();
 	unsigned int Draw(unsigned char color);
 }
@@ -453,7 +455,7 @@ void Rick::UpdateInput()
 		}
 		else if (Input::IsDown(DOWN_BUTTON))
 		{
-			if (IsInFrontOfLadder && Input::IsJustPressed(DOWN_BUTTON))
+			if ((IsInFrontOfLadder || IsAboveLadder) && Input::IsJustPressed(DOWN_BUTTON))
 				InitClimbLadder();
 			else
 				InitCrouch();
@@ -624,7 +626,9 @@ void Rick::CheckStaticCollision()
 		{
 			// We found a collision under the feet, so if we are falling, stop falling
 			if ((State == AnimState::FALL) || 
-				((State == AnimState::CLIMB_LADDER) && (!IsInFrontOfLadder || Input::IsDown(DOWN_BUTTON))))
+				((State == AnimState::CLIMB_LADDER) &&
+					((!Input::IsDown(DOWN_BUTTON) && !IsInFrontOfLadder) ||
+					 (Input::IsDown(DOWN_BUTTON) && !IsAboveLadder))))
 				InitIdle();
 			
 			// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
@@ -679,10 +683,40 @@ void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 		item->PickUp();
 }
 
+/**
+ * Check a column of pixels at the specified x position (in screen coord) and from startY to endY (in screen coord)
+ * This function will check if the specified coordinates are on screen and return false if not.
+ * This function return true for the first white pixel encountered.
+ */
+bool Rick::CheckPixelColumn(int x, int startY, int endX)
+{
+	if ((x >= 0) && (x < WIDTH))
+		for (int y = startY; y <= endX; y++)
+			if ((y >= 0) && (y < HEIGHT))
+			{
+				if (arduboy.getPixel(x, y) == WHITE)
+					return true;
+			}
+	return false;
+}
+
 void Rick::CheckLadderCollision()
 {
+	// get the x coord on scren of the middle of the character
+	unsigned char middleXOnScreen = X + 4;
+	// draw the character in transparent
 	int collisionFlag = Draw(TRANSPARENT);
 	IsInFrontOfLadder = (collisionFlag & 0x10) != 0;
+	// if no collision dectected, check more precisely the two pixels in between the legs
+	if (!IsInFrontOfLadder)
+	{
+		int startSensorUnderFeet = Y + 11;
+		IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
+	}
+
+	// check if there's a ladder under the platform
+	int startSensorUnderFeet = Y + 17;
+	IsAboveLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
 }
 
 unsigned int Rick::Draw()
