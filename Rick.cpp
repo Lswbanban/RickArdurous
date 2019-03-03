@@ -645,8 +645,8 @@ void Rick::CheckStaticCollision()
 		AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 		// declare a variable to know in which direction we should push the main character to exit the collision
 		bool pushToRight = IsLookingLeft;
-		// in crawl state we need to do additionnal test to check if it's the feet which are colliding. If yes then we are pushing in the same direction as the look
-		if ((State == AnimState::CRAWL) && ((wallCollision & 0x07) != 0))
+		// if this is the left part of the sprite that has collision then we should push in the same direction as his look
+		if ((wallCollision & 0x07) != 0)
 			pushToRight = !IsLookingLeft;
 		// push rick in the right direction
 		if (pushToRight)
