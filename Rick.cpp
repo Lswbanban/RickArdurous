@@ -621,7 +621,7 @@ void Rick::CheckStaticCollision()
 		{
 			// We found a collision under the feet, so if we are falling, stop falling
 			if ((State == AnimState::FALL) || 
-				((State == AnimState::CLIMB_LADDER) && Input::IsDown(DOWN_BUTTON)))
+				((State == AnimState::CLIMB_LADDER) && (!IsInFrontOfLadder || Input::IsDown(DOWN_BUTTON))))
 				InitIdle();
 			
 			// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
