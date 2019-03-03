@@ -180,6 +180,7 @@ void Rick::InitClimbLadder()
 	State = AnimState::CLIMB_LADDER;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::CLIMB_START;
 	CurrentAnimDirection = 1;
+	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
 void Rick::InitDeath()
