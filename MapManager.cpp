@@ -74,7 +74,7 @@ ArrowLauncher al(9, 52, 52, 0 /*Item::PropertyFlags::MIRROR_X*/);
 void MapManager::Init()
 {
 	MapManager::AddItem(&dc2);
-	MapManager::AddItem(&al);
+	//MapManager::AddItem(&al);
 }
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags)
@@ -110,7 +110,7 @@ void MapManager::Update()
 	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET);
 
 	// get the position of the feet of rick in screen coordinate
-	unsigned char rickFeetOnScreen = Rick::GetY() + 12;
+	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();
 	
 	// animate the camera and draw the static collision
 	AnimateCameraTransition();
@@ -118,18 +118,18 @@ void MapManager::Update()
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
-	
-	// draw the platforms after checking the collision
-	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
-	
-	// call the function to check the static collision for the items that need it
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 
 	// draw the ladders after checking the collision
 	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckLadderCollision();
+	
+	// draw the platforms after checking the collision
+	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
+	
+	// call the function to check the static collision for the items that need it
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
