@@ -25,6 +25,7 @@ namespace Rick
 	const int FIRE_ANIM_SPEED = 3;
 	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
+	const int CLIMB_LADDER_ANIM_SPEED = 3;
 	const int DEATH_ANIM_SPEED = 4;
 	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
 	const int DEATH_MOVING_SPEED = 16;
@@ -43,6 +44,7 @@ namespace Rick
 		CROUCH_DOWN,
 		STAND_UP,
 		CRAWL,
+		CLIMB_LADDER,
 		DEATH,
 	};
 	
@@ -73,6 +75,9 @@ namespace Rick
 	bool IsThereAnyCeilingAboveHead = false;
 	bool ShouldWePlaceADynamite = false;
 	
+	// variable for the climb ladder state
+	bool IsInFrontOfLadder = false;
+	
 	// variable for death state
 	int DeathStartX = 0;
 	int DeathStartY = 0;
@@ -94,11 +99,12 @@ namespace Rick
 	void InitCrouch();
 	void InitCrawl();
 	void InitStandUp();
+	void InitClimbLadder();
 	void InitDeath();
 	bool IsDynamitePlacementRequested();
 	void PlaceDynamite();
 	void HandleInput();
-	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId);
+	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId, bool isLooping);
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyCollisionAt(int y);
 	bool IsThereAnyCeilingAboveCrawl();
@@ -119,6 +125,7 @@ void Rick::InitIdle()
 {
 	State = AnimState::IDLE;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::IDLE;
+	CurrentAnimDirection = 1;
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
@@ -126,6 +133,7 @@ void Rick::InitFall()
 {
 	State = AnimState::FALL;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
+	CurrentAnimDirection = 1;
 	StateFrameCounter = 0;
 	JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
 	AirControlFrameCount = 0;
@@ -143,6 +151,7 @@ void Rick::InitCrawl()
 	// if the down button is still pressed, go to crawl state
 	State = AnimState::CRAWL;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::CRAWL_START;
+	CurrentAnimDirection = 1;
 	// if the rick is looking right, move x 3 pixel to the left for keeping the hat aligned with the idle animation
 	if (!IsLookingLeft)
 		X -= WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
@@ -156,6 +165,13 @@ void Rick::InitStandUp()
 	// if the rick is looking right, move x 3 pixel to the right for keeping the hat aligned with the idle animation
 	if (!IsLookingLeft)
 		X += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
+}
+
+void Rick::InitClimbLadder()
+{
+	State = AnimState::CLIMB_LADDER;
+	CurrentAnimFrame = SpriteData::RickAnimFrameId::CLIMB_START;
+	CurrentAnimDirection = 1;
 }
 
 void Rick::InitDeath()
@@ -246,6 +262,10 @@ void Rick::UpdateInput()
 					X++;
 			}
 		}
+		
+		// grab the ladder if we are in front of it
+		if (IsInFrontOfLadder)
+			InitClimbLadder();
 	}
 	else if (State == AnimState::FIRE)
 	{
@@ -340,7 +360,7 @@ void Rick::UpdateInput()
 			if (arduboy.everyXFrames(CRAWL_ANIM_SPEED))
 			{
 				X--;
-				SetNextAnimFrame(SpriteData::RickAnimFrameId::CRAWL_START, SpriteData::RickAnimFrameId::CRAWL_END);
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::CRAWL_START, SpriteData::RickAnimFrameId::CRAWL_END, true);
 			}
 		}
 		else if (Input::IsDown(RIGHT_BUTTON))
@@ -350,8 +370,39 @@ void Rick::UpdateInput()
 			if (arduboy.everyXFrames(CRAWL_ANIM_SPEED))
 			{
 				X++;
-				SetNextAnimFrame(SpriteData::RickAnimFrameId::CRAWL_START, SpriteData::RickAnimFrameId::CRAWL_END);
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::CRAWL_START, SpriteData::RickAnimFrameId::CRAWL_END, true);
 			}
+		}
+	}
+	else if (State == AnimState::CLIMB_LADDER)
+	{
+		if (arduboy.everyXFrames(CLIMB_LADDER_ANIM_SPEED))
+		{
+			bool isMoving = false;
+			if (Input::IsDown(UP_BUTTON))
+			{
+				isMoving = true;
+				Y--;
+			}
+			else if (Input::IsDown(DOWN_BUTTON))
+			{
+				isMoving = true;
+				Y++;
+			}
+			else if (Input::IsDown(LEFT_BUTTON))
+			{
+				isMoving = true;
+				X--;
+			}
+			else if (Input::IsDown(RIGHT_BUTTON))
+			{
+				isMoving = true;
+				X++;
+			}
+		
+			// update the animation if moving
+			if (isMoving)
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::CLIMB_START, SpriteData::RickAnimFrameId::CLIMB_END, false);
 		}
 	}
 	else if (State == AnimState::DEATH)
@@ -410,7 +461,7 @@ void Rick::UpdateInput()
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
 				X--;
-				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END, true);
 			}
 		}
 		else if (Input::IsDown(RIGHT_BUTTON))
@@ -427,7 +478,7 @@ void Rick::UpdateInput()
 			if (arduboy.everyXFrames(WALK_ANIM_SPEED))
 			{
 				X++;
-				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END);
+				SetNextAnimFrame(SpriteData::RickAnimFrameId::WALK_START, SpriteData::RickAnimFrameId::WALK_END, true);
 			}
 		}
 		else
@@ -451,13 +502,26 @@ void Rick::UpdateInput()
 	}
 }
 
-void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId)
+void Rick::SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId, bool isLooping)
 {
 	// increase the current frame to the next one
-	CurrentAnimFrame++;
+	CurrentAnimFrame += CurrentAnimDirection;
 	// check if we need to loop the animation
 	if (CurrentAnimFrame > endFrameId)
-		CurrentAnimFrame = startFrameId;
+	{
+		if (isLooping)
+			CurrentAnimFrame = startFrameId;
+		else
+		{
+			CurrentAnimFrame = endFrameId -1;
+			CurrentAnimDirection = -1;
+		}
+	}
+	else if (CurrentAnimFrame < startFrameId)
+	{
+		CurrentAnimFrame = startFrameId + 1;
+		CurrentAnimDirection = 1;
+	}
 }
 
 void Rick::UpdateAirControl(bool towardLeftDirection)
@@ -550,7 +614,7 @@ void Rick::CheckStaticCollision()
 			while (IsThereAnyCollisionAt(--yUnderFeet))
 				Y--;
 		}
-		else if (State != AnimState::FALL) // There's no collision under the feet, and not jumping, then we fall
+		else if ((State != AnimState::FALL) && !IsInFrontOfLadder) // There's no collision under the feet, and not jumping, then we fall
 		{
 			InitFall();
 		}
@@ -596,6 +660,12 @@ void Rick::CheckCollisionWithPickUp(PickUpItem * item)
 {
 	if (Draw(BLACK))
 		item->PickUp();
+}
+
+void Rick::CheckLadderCollision()
+{
+	int collisionFlag = Draw(TRANSPARENT);
+	IsInFrontOfLadder = (collisionFlag & 0x10) != 0;
 }
 
 unsigned int Rick::Draw()

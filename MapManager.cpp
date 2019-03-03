@@ -128,6 +128,9 @@ void MapManager::Update()
 	// draw the ladders after checking the collision
 	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
 
+	// check the collision with the walls, floor and ceilling after the map has been drawn
+	Rick::CheckLadderCollision();
+
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
 
@@ -234,8 +237,10 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// compute the sprite y coordinate
 		int spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
 		// determines if we need to draw the platforms.
-		// If we are not specifically drawing the platforms (the min sprite index is not platforms), then we should only draw the platforms below the feet
-		// Otherwise, if we are in the drawing platform step, we only draw those above the feet, since the below ones as already been drawn
+		// If we are not specifically drawing the platforms (the min sprite index is not platforms),
+		// then we should only draw the platforms below the feet
+		// Otherwise, if we are in the drawing platform step, we only draw those above the feet,
+		// since the below ones as already been drawn
 		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_8_8) && (spriteY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (spriteY <= rickFeetOnScreen));
 		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
