@@ -55,8 +55,8 @@ namespace Rick
 	bool IsAlive() { return State != AnimState::DEATH;}
 	
 	// position of Rick
-	int X = 15;
-	int Y = 40;
+	int X = 140;
+	int Y = 100;
 	int GetX() { return X; }
 	int GetY() { return Y; }
 	
@@ -116,9 +116,11 @@ namespace Rick
 
 unsigned char Rick::GetFeetYOnScreen()
 {
-	unsigned char feetOnScreen = GetY() + 12;
+	int feetOnScreen = MapManager::GetYOnScreen(Y) + 12;
 	if (State == AnimState::FALL)
 		feetOnScreen -= JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex] + 1;
+	if (feetOnScreen >= HEIGHT)
+		feetOnScreen = HEIGHT-1;
 	return feetOnScreen;
 }
 
@@ -565,17 +567,27 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
 	}
 }
 
+/**
+ * Tell if there is any collision at the specified world vertical coordinate.
+ */
 bool Rick::IsThereAnyCollisionAt(int y)
 {
-	return (arduboy.getPixel(X + 2, y) == WHITE) || (arduboy.getPixel(X + 6, y) == WHITE);
+	int xOnScreen = MapManager::GetXOnScreen(X);
+	int yOnScreen = MapManager::GetYOnScreen(y);
+	if ((xOnScreen < 0) || (xOnScreen >= WIDTH) || (yOnScreen < 0) || (yOnScreen >= HEIGHT))
+		return false;
+	return (arduboy.getPixel(xOnScreen + 2, yOnScreen) == WHITE) || (arduboy.getPixel(xOnScreen + 6, yOnScreen) == WHITE);
 }
 
 bool Rick::IsThereAnyCeilingAboveCrawl()
 {
-	int startX = X;
+	int xOnScreen = MapManager::GetXOnScreen(X);
 	if (!IsLookingLeft)
-		startX += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
-	return arduboy.CheckWhitePixelsInRow(startX, Y >> 3, SpriteData::RICK_SPRITE_WIDTH) != 0;
+		xOnScreen += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
+	int yOnScreen = MapManager::GetYOnScreen(Y);
+	if ((xOnScreen < 0) || (xOnScreen >= WIDTH) || (yOnScreen < 0) || (yOnScreen >= HEIGHT))
+		return false;
+	return arduboy.CheckWhitePixelsInRow(xOnScreen, yOnScreen >> 3, SpriteData::RICK_SPRITE_WIDTH) != 0;
 }
 
 bool Rick::IsOnScreen()
@@ -587,8 +599,11 @@ bool Rick::IsOnScreen()
 		spriteWidth = SpriteData::RICK_CRAWL_SPRITE_WIDTH;
 		spriteHeight = SpriteData::RICK_CRAWL_SPRITE_HEIGHT;
 	}
-	//TODO translate global coord to coord local to the screen
-	return (X + spriteWidth >= 0) && (X < WIDTH) && (Y + spriteHeight >= 0) && (Y < HEIGHT);
+	// translate global coord to coord local to the screen
+	int xOnScreen = MapManager::GetXOnScreen(X);
+	int yOnScreen = MapManager::GetYOnScreen(Y);
+	// check that the part of the main character (including the sprite width and height) is inside the screen dimension
+	return (xOnScreen + spriteWidth >= 0) && (xOnScreen < WIDTH) && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
 }
 
 /**
@@ -604,8 +619,6 @@ void Rick::CheckStaticCollision()
 	if (State == AnimState::JUMP)
 	{
 		int yAboveHead = Y - 1;
-		if (yAboveHead < 0)
-			yAboveHead = 0;
 		if (IsThereAnyCollisionAt(yAboveHead))
 		{
 			// cancel the jump state and enter directly into the fall state, because Rick as collided with the ceilling
@@ -620,8 +633,6 @@ void Rick::CheckStaticCollision()
 	{
 		// first check the floor collisions
 		int yUnderFeet = Y + 13;
-		if (yUnderFeet >= HEIGHT)
-			yUnderFeet = HEIGHT-1;
 		if (IsThereAnyCollisionAt(yUnderFeet))
 		{
 			// We found a collision under the feet, so if we are falling, stop falling
@@ -688,13 +699,13 @@ void Rick::CheckCollisionWithPickUp(PickUpItem * item)
  * This function will check if the specified coordinates are on screen and return false if not.
  * This function return true for the first white pixel encountered.
  */
-bool Rick::CheckPixelColumn(int x, int startY, int endX)
+bool Rick::CheckPixelColumn(int xOnScreen, int startYOnScreen, int endYOnScreen)
 {
-	if ((x >= 0) && (x < WIDTH))
-		for (int y = startY; y <= endX; y++)
-			if ((y >= 0) && (y < HEIGHT))
+	if ((xOnScreen >= 0) && (xOnScreen < WIDTH))
+		for (int yOnScreen = startYOnScreen; yOnScreen <= endYOnScreen; yOnScreen++)
+			if ((yOnScreen >= 0) && (yOnScreen < HEIGHT))
 			{
-				if (arduboy.getPixel(x, y) == WHITE)
+				if (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE)
 					return true;
 			}
 	return false;
@@ -703,19 +714,19 @@ bool Rick::CheckPixelColumn(int x, int startY, int endX)
 void Rick::CheckLadderCollision()
 {
 	// get the x coord on scren of the middle of the character
-	unsigned char middleXOnScreen = X + 4;
+	unsigned char middleXOnScreen = MapManager::GetXOnScreen(X + 4);
 	// draw the character in transparent
 	int collisionFlag = Draw(TRANSPARENT);
 	IsInFrontOfLadder = (collisionFlag & 0x10) != 0;
 	// if no collision dectected, check more precisely the two pixels in between the legs
 	if (!IsInFrontOfLadder)
 	{
-		int startSensorUnderFeet = Y + 11;
+		int startSensorUnderFeet = MapManager::GetYOnScreen(Y + 11);
 		IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
 	}
 
 	// check if there's a ladder under the platform
-	int startSensorUnderFeet = Y + 17;
+	int startSensorUnderFeet = MapManager::GetYOnScreen(Y + 17);
 	IsAboveLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
 }
 
@@ -727,8 +738,10 @@ unsigned int Rick::Draw()
 
 unsigned int Rick::Draw(unsigned char color)
 {
+	int xOnScreen = MapManager::GetXOnScreen(X);
+	int yOnScreen = MapManager::GetYOnScreen(Y);
 	if (State == AnimState::CRAWL)
-		return arduboy.drawBitmapExtended(X, Y + 5, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
+		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen + 5, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
 	else
-		return arduboy.drawBitmapExtended(X, Y, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, color, IsLookingLeft);
+		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, color, IsLookingLeft);
 }
