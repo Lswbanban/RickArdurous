@@ -18,12 +18,12 @@ namespace MapManager
 	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
-	int CameraX = 0;
-	int CameraY = 0;
+	int CameraX = 16;
+	int CameraY = 8;
 	
 	// The target camera coordinates
-	int TargetCameraX = 0;
-	int TargetCameraY = 0;
+	int TargetCameraX = 16;
+	int TargetCameraY = 8;
 	
 	// This variable is used to store a temporary shift of the camera during a transition animation
 	char CameraTransitionX = 0;
@@ -136,6 +136,16 @@ void MapManager::Update()
 
 	// update the main character
 	Rick::Draw();
+}
+
+int MapManager::GetXOnScreen(int worldX)
+{
+	return worldX - (CameraX * SpriteData::LEVEL_SPRITE_WIDTH) - CameraTransitionX;
+}
+
+int MapManager::GetYOnScreen(int worldY)
+{
+	return worldY - (CameraY * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraTransitionY;
 }
 
 /**
