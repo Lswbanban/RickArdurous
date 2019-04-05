@@ -574,11 +574,14 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
  */
 bool Rick::IsThereAnyCollisionAt(int y)
 {
-	int xOnScreen = MapManager::GetXOnScreen(X);
+	int leftOnScreen = MapManager::GetXOnScreen(X + 2);
+	int rightOnScreen = MapManager::GetXOnScreen(X + 6);
 	int yOnScreen = MapManager::GetYOnScreen(y);
-	if ((xOnScreen < 0) || (xOnScreen >= WIDTH) || (yOnScreen < 0) || (yOnScreen >= HEIGHT))
+	if (((leftOnScreen < 0) && (rightOnScreen < 0)) || 
+		((leftOnScreen >= WIDTH) && (rightOnScreen >= WIDTH)) ||
+		(yOnScreen < 0) || (yOnScreen >= HEIGHT))
 		return false;
-	return (arduboy.getPixel(xOnScreen + 2, yOnScreen) == WHITE) || (arduboy.getPixel(xOnScreen + 6, yOnScreen) == WHITE);
+	return (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE) || (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE);
 }
 
 bool Rick::IsThereAnyCeilingAboveCrawl()
