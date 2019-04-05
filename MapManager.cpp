@@ -18,12 +18,12 @@ namespace MapManager
 	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
-	int CameraX = 16;
-	int CameraY = 8;
+	int CameraX = 0;
+	int CameraY = 0;
 	
 	// The target camera coordinates
-	int TargetCameraX = 16;
-	int TargetCameraY = 8;
+	int TargetCameraX = 0;
+	int TargetCameraY = 0;
 	
 	// This variable is used to store a temporary shift of the camera during a transition animation
 	char CameraTransitionX = 0;
@@ -136,6 +136,38 @@ void MapManager::Update()
 
 	// update the main character
 	Rick::Draw();
+	
+	// Check if we should start a camera transition (if the main character exit the screen)
+	// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking if equivalent to the computation
+	int screenPuzzleY = CameraY & 0xFFF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
+	if (Rick::GetBottom() < (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
+	{
+		TargetCameraY = screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN;
+	}
+	else
+	{
+		int nextScreenPuzzleY = screenPuzzleY + NB_VERTICAL_SPRITE_PER_SCREEN;
+		if (Rick::GetTop() >= (nextScreenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
+		{
+			TargetCameraY = nextScreenPuzzleY;
+		}
+		else
+		{
+			int screenPuzzleX = CameraX & 0xFFF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
+			if (Rick::GetRight() < (screenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
+			{
+				TargetCameraX = screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN;
+			}
+			else
+			{
+				int nextScreenPuzzleX = screenPuzzleX + NB_HORIZONTAL_SPRITE_PER_SCREEN;
+				if (Rick::GetLeft() >= (nextScreenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
+				{
+					TargetCameraX = nextScreenPuzzleX;
+				}
+			}
+		}
+	}
 }
 
 int MapManager::GetXOnScreen(int worldX)
