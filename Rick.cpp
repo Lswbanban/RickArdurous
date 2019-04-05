@@ -55,10 +55,12 @@ namespace Rick
 	bool IsAlive() { return State != AnimState::DEATH;}
 	
 	// position of Rick
-	int X = 140;
-	int Y = 100;
-	int GetX() { return X; }
-	int GetY() { return Y; }
+	int X = 14;
+	int Y = 10;
+	int GetLeft() { return X; }
+	int GetRight() { if (State == AnimState::CRAWL) return X + SpriteData::RICK_CRAWL_SPRITE_WIDTH; else return X + SpriteData::RICK_SPRITE_WIDTH; }
+	int GetTop() { return Y; }
+	int GetBottom() { if (State == AnimState::CRAWL) return Y + SpriteData::RICK_CRAWL_SPRITE_HEIGHT; else return Y + SpriteData::RICK_SPRITE_HEIGHT; }
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;

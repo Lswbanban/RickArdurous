@@ -32,8 +32,8 @@ bool ArrowLauncher::Update(UpdateStep step)
 			maxX = X + DetectionWidth;
 		}
 		// get the position of the main character
-		int rickY = Rick::GetY();
-		int rickX = Rick::GetX();
+		int rickY = Rick::GetTop();
+		int rickX = Rick::GetLeft();
 		// check if the main character is inside the detection range
 		if (Rick::IsAlive() && (Y > rickY) && (Y < rickY + 13) && (minX < rickX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > rickX))
 		{

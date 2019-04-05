@@ -19,8 +19,11 @@ namespace Rick
 	unsigned int Draw();
 	bool IsAlive();
 	
-	int GetX();
-	int GetY();
+	// function to get the coordinate of the sprite of the main character
+	int GetLeft();
+	int GetRight();
+	int GetTop();
+	int GetBottom();
 	
 	// Rick Inventory
 	extern char LifeCount;
