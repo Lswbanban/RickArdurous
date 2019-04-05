@@ -59,8 +59,8 @@ namespace Rick
 	int Y = 10;
 	int GetLeft() { return X; }
 	int GetRight() { if (State == AnimState::CRAWL) return X + SpriteData::RICK_CRAWL_SPRITE_WIDTH; else return X + SpriteData::RICK_SPRITE_WIDTH; }
-	int GetTop() { return Y; }
-	int GetBottom() { if (State == AnimState::CRAWL) return Y + SpriteData::RICK_CRAWL_SPRITE_HEIGHT; else return Y + SpriteData::RICK_SPRITE_HEIGHT; }
+	int GetTop() { if (State == AnimState::CRAWL) return Y + 5; else return Y; }
+	int GetBottom() { return Y + 12; }
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -637,7 +637,7 @@ void Rick::CheckStaticCollision()
 	else
 	{
 		// first check the floor collisions
-		int yUnderFeet = Y + 13;
+		int yUnderFeet = Y + 13 - MapManager::GetCameraTransitionMoveY();
 		if (IsThereAnyCollisionAt(yUnderFeet))
 		{
 			// We found a collision under the feet, so if we are falling, stop falling

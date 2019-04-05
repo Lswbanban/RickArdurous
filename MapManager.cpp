@@ -44,6 +44,8 @@ namespace MapManager
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
+	
+	int GetCameraTransitionMoveY() { return CameraTransitionY; }
 }
 
 void MapManager::AddItem(Item * item)
