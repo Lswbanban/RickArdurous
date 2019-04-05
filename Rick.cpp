@@ -591,13 +591,15 @@ bool Rick::IsThereAnyCollisionAt(int y)
 	else
 		rightOnScreen = MapManager::GetXOnScreen(X + 6);
 	int yOnScreen = MapManager::GetYOnScreen(y);
-	// check if the coordinates are out of the screen, if yes there's no collision
-	if (((leftOnScreen < 0) && (rightOnScreen < 0)) || 
-		((leftOnScreen >= WIDTH) && (rightOnScreen >= WIDTH)) ||
-		(yOnScreen < 0) || (yOnScreen >= HEIGHT))
+	// check if the Y coordinate is out of the screen, if yes there's no collision
+	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))
 		return false;
+	// for the x coordinate, check individualy and if on screen check the pixel
+	bool isLeftOnScreen = (leftOnScreen >= 0) && (leftOnScreen < WIDTH);
+	bool isRightOnScreen = (rightOnScreen >= 0) && (rightOnScreen < WIDTH);
 	// if the coordinates are on screen, check the frame buffer
-	return (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE) || (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE);
+	return (isLeftOnScreen && (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE)) ||
+			(isRightOnScreen && (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE));
 }
 
 bool Rick::IsThereAnyCeilingAboveCrawl()
@@ -724,11 +726,8 @@ bool Rick::CheckPixelColumn(int xOnScreen, int startYOnScreen, int endYOnScreen)
 {
 	if ((xOnScreen >= 0) && (xOnScreen < WIDTH))
 		for (int yOnScreen = startYOnScreen; yOnScreen <= endYOnScreen; yOnScreen++)
-			if ((yOnScreen >= 0) && (yOnScreen < HEIGHT))
-			{
-				if (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE)
-					return true;
-			}
+			if ((yOnScreen >= 0) && (yOnScreen < HEIGHT) && (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE))
+				return true;
 	return false;
 }
 
@@ -743,7 +742,12 @@ void Rick::CheckLadderCollision()
 	if (!IsInFrontOfLadder)
 	{
 		int startSensorUnderFeet = MapManager::GetYOnScreen(Y + 11);
-		IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
+		// if the feet are below the screen (because Rick is climbing a ladder from the puzzle screen bellow)
+		// then check the pixels on screen instead on the one between his feet
+		if (startSensorUnderFeet >= HEIGHT)
+			IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, HEIGHT-4, HEIGHT-1);
+		else
+			IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
 	}
 
 	// check if there's a ladder under the platform
