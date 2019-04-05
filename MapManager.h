@@ -15,6 +15,9 @@ namespace MapManager
 	// function to get local coordinates
 	int GetXOnScreen(int worldX);
 	int GetYOnScreen(int worldY);
+	
+	// return the number of pixels that the camera moved during the frame
+	int GetCameraTransitionMoveY();
 }
 
 #endif
