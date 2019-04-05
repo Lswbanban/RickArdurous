@@ -32,6 +32,10 @@ namespace Rick
 	const int DEATH_VELOCITY_X = 9;
 	const int DEATH_VELOCITY_Y = -30;
 	const int HALF_GRAVITY = 1;
+	// The standing sprite are stored on 2 bytes vertically, whereas the crawl sprite only use one.
+	// When switching from stand to crawl state, we don't change the Y, but just draw the sprite lower
+	// Thia constant value, store the difference between those two sprites visually speaking
+	const int VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL = 5;
 	
 	// state of Rick
 	enum AnimState
@@ -59,7 +63,7 @@ namespace Rick
 	int Y = 10;
 	int GetLeft() { return X; }
 	int GetRight() { if (State == AnimState::CRAWL) return X + SpriteData::RICK_CRAWL_SPRITE_WIDTH; else return X + SpriteData::RICK_SPRITE_WIDTH; }
-	int GetTop() { if (State == AnimState::CRAWL) return Y + 5; else return Y; }
+	int GetTop() { if (State == AnimState::CRAWL) return Y + VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL; else return Y; }
 	int GetBottom() { return Y + 12; }
 	
 	// orientation of Rick
@@ -145,6 +149,11 @@ void Rick::InitIdle()
 
 void Rick::InitFall()
 {
+	// special case for when I fall from the crawl state and there's ceiling above,
+	// then we should teleport Rick below to avoid his head to collide in the ceiling
+	if ((State == AnimState::CRAWL) && IsThereAnyCeilingAboveHead)
+		Y += VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL;
+	// then change the state and the other parameters
 	State = AnimState::FALL;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
 	CurrentAnimDirection = 1;
@@ -574,13 +583,20 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
  */
 bool Rick::IsThereAnyCollisionAt(int y)
 {
+	// get the coordinates to check on screen
 	int leftOnScreen = MapManager::GetXOnScreen(X + 2);
-	int rightOnScreen = MapManager::GetXOnScreen(X + 6);
+	int rightOnScreen;
+	if (State == AnimState::CRAWL)
+		rightOnScreen = MapManager::GetXOnScreen(X + 9);
+	else
+		rightOnScreen = MapManager::GetXOnScreen(X + 6);
 	int yOnScreen = MapManager::GetYOnScreen(y);
+	// check if the coordinates are out of the screen, if yes there's no collision
 	if (((leftOnScreen < 0) && (rightOnScreen < 0)) || 
 		((leftOnScreen >= WIDTH) && (rightOnScreen >= WIDTH)) ||
 		(yOnScreen < 0) || (yOnScreen >= HEIGHT))
 		return false;
+	// if the coordinates are on screen, check the frame buffer
 	return (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE) || (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE);
 }
 
@@ -746,7 +762,7 @@ unsigned int Rick::Draw(unsigned char color)
 	int xOnScreen = MapManager::GetXOnScreen(X);
 	int yOnScreen = MapManager::GetYOnScreen(Y);
 	if (State == AnimState::CRAWL)
-		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen + 5, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
+		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen + VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
 	else
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::Rick[CurrentAnimFrame], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, color, IsLookingLeft);
 }
