@@ -144,14 +144,14 @@ int Rick::GetRightForScreenTransition()
 int Rick::GetTopForScreenTransition()
 {
 	if (State == AnimState::CRAWL)
-		return Y + VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL;
+		return Y + (VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL + 2);
 	else
-		return Y;
+		return Y + 2;
 }
 
 int Rick::GetBottomForScreenTransition()
 {
-	return Y + 12;
+	return Y + 10;
 }
 
 unsigned char Rick::GetFeetYOnScreen()
