@@ -12,7 +12,7 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
     return false;
 
   int yOffset = abs(y) % 8;
-  int sRow = y >> 3;
+  int sRow = y / 8;
   if (y < 0) {
     sRow--;
     yOffset = 8 - yOffset;
