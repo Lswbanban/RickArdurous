@@ -36,6 +36,10 @@ namespace Rick
 	// When switching from stand to crawl state, we don't change the Y, but just draw the sprite lower
 	// Thia constant value, store the difference between those two sprites visually speaking
 	const int VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL = 5;
+	// The distance from the left edge of the sprite, from which we check the collision under the feet
+	const int LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET = 2;
+	const int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND = 6;
+	const int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL = 9;
 	
 	// state of Rick
 	enum AnimState
@@ -61,10 +65,8 @@ namespace Rick
 	// position of Rick
 	int X = 14;
 	int Y = 10;
-	int GetLeft() { return X; }
-	int GetRight() { if (State == AnimState::CRAWL) return X + SpriteData::RICK_CRAWL_SPRITE_WIDTH; else return X + SpriteData::RICK_SPRITE_WIDTH; }
-	int GetTop() { if (State == AnimState::CRAWL) return Y + VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL; else return Y; }
-	int GetBottom() { return Y + 12; }
+	int GetX() { return X; }
+	int GetY() { return Y; }
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -118,6 +120,38 @@ namespace Rick
 	bool CheckPixelColumn(int x, int startY, int endX);
 	bool IsOnScreen();
 	unsigned int Draw(unsigned char color);
+}
+
+int Rick::GetLeftForScreenTransition()
+{
+	// remove 2, one for being the first pixel of the next screen,
+	// and one because the last pixel of decor sprite is black,
+	// therefore no collision would be detected during the first frame of the transition
+	if (State == AnimState::CRAWL)
+		return X + (LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET + 2);
+	else
+		return X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET;
+}
+
+int Rick::GetRightForScreenTransition()
+{
+	if (State == AnimState::CRAWL)
+		return X + (RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL - 1);
+	else
+		return X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND;
+}
+
+int Rick::GetTopForScreenTransition()
+{
+	if (State == AnimState::CRAWL)
+		return Y + VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL;
+	else
+		return Y;
+}
+
+int Rick::GetBottomForScreenTransition()
+{
+	return Y + 12;
 }
 
 unsigned char Rick::GetFeetYOnScreen()
@@ -584,12 +618,12 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
 bool Rick::IsThereAnyCollisionAt(int y)
 {
 	// get the coordinates to check on screen
-	int leftOnScreen = MapManager::GetXOnScreen(X + 2);
+	int leftOnScreen = MapManager::GetXOnScreen(X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET);
 	int rightOnScreen;
 	if (State == AnimState::CRAWL)
-		rightOnScreen = MapManager::GetXOnScreen(X + 9);
+		rightOnScreen = MapManager::GetXOnScreen(X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL);
 	else
-		rightOnScreen = MapManager::GetXOnScreen(X + 6);
+		rightOnScreen = MapManager::GetXOnScreen(X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND);
 	int yOnScreen = MapManager::GetYOnScreen(y);
 	// check if the Y coordinate is out of the screen, if yes there's no collision
 	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))

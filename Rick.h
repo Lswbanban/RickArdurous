@@ -20,10 +20,13 @@ namespace Rick
 	bool IsAlive();
 	
 	// function to get the coordinate of the sprite of the main character
-	int GetLeft();
-	int GetRight();
-	int GetTop();
-	int GetBottom();
+	int GetX();
+	int GetY();
+	// function to get the coordinate when the screen should do a transition
+	int GetLeftForScreenTransition();
+	int GetRightForScreenTransition();
+	int GetTopForScreenTransition();
+	int GetBottomForScreenTransition();
 	
 	// Rick Inventory
 	extern char LifeCount;
