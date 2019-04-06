@@ -64,7 +64,7 @@ namespace Rick
 	
 	// position of Rick
 	int X = 14;
-	int Y = 10;
+	int Y = 4;
 	int GetX() { return X; }
 	int GetY() { return Y; }
 	
@@ -615,19 +615,23 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
 /**
  * Tell if there is any collision at the specified world vertical coordinate.
  */
-bool Rick::IsThereAnyCollisionAt(int y)
+bool Rick::IsThereAnyCollisionAt(int yWorld)
 {
-	// get the coordinates to check on screen
-	int leftOnScreen = MapManager::GetXOnScreen(X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET);
-	int rightOnScreen;
+	// compute the world coord that we will check for left and right sensor
+	int leftWorld = X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET;
+	int rightWorld;
 	if (State == AnimState::CRAWL)
-		rightOnScreen = MapManager::GetXOnScreen(X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL);
+		rightWorld = X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL;
 	else
-		rightOnScreen = MapManager::GetXOnScreen(X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND);
-	int yOnScreen = MapManager::GetYOnScreen(y);
-	// check if the Y coordinate is out of the screen, if yes there's no collision
+		rightWorld = X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND;
+	// get the coordinates to check on screen
+	int leftOnScreen = MapManager::GetXOnScreen(leftWorld);
+	int rightOnScreen = MapManager::GetXOnScreen(rightWorld);
+	int yOnScreen = MapManager::GetYOnScreen(yWorld);
+	// check if the Y coordinate is out of the screen, if yes ask the map manager if there is a sprite below the scrren
 	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))
-		return false;
+		return MapManager::IsThereStaticCollisionAt(leftWorld, yWorld) || 
+				MapManager::IsThereStaticCollisionAt(rightWorld, yWorld);
 	// for the x coordinate, check individualy and if on screen check the pixel
 	bool isLeftOnScreen = (leftOnScreen >= 0) && (leftOnScreen < WIDTH);
 	bool isRightOnScreen = (rightOnScreen >= 0) && (rightOnScreen < WIDTH);
@@ -689,7 +693,7 @@ void Rick::CheckStaticCollision()
 	else
 	{
 		// first check the floor collisions
-		int yUnderFeet = Y + 13 - MapManager::GetCameraTransitionMoveY();
+		int yUnderFeet = Y + 13;
 		if (IsThereAnyCollisionAt(yUnderFeet))
 		{
 			// We found a collision under the feet, so if we are falling, stop falling
