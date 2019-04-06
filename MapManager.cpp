@@ -44,6 +44,7 @@ namespace MapManager
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
+	unsigned char GetLevelSpriteAt(int xWorld, int yWorld);
 }
 
 void MapManager::AddItem(Item * item)
@@ -153,15 +154,26 @@ int MapManager::GetYOnScreen(int worldY)
 
 bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 {
+	return GetLevelSpriteAt(xWorld, yWorld) < SpriteData::WallId::LADDER;
+}
+
+bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
+{
+	unsigned char spriteId = GetLevelSpriteAt(xWorld, yWorld);
+	return (spriteId == SpriteData::WallId::LADDER) || (spriteId == SpriteData::WallId::PLATFORM_WITH_LADDER);
+}
+
+unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
+{
 	// convert the world coordinate into index for the sprite map
 	int mapX = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
 	int mapY = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
 	if ((mapX < 0) || (mapX >= MapManager::LEVEL_SIZE_X) || (mapY < 0) || (mapY >= MapManager::LEVEL_SIZE_Y))
-		return true;
+		return SpriteData::BLOCK_8_8;
 	// check if the specific sprite id on the map if empty or not
-	return pgm_read_byte(&(Level[mapY][mapX])) < SpriteData::WallId::LADDER;
+	return pgm_read_byte(&(Level[mapY][mapX]));
 }
 
 /**
