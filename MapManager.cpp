@@ -119,15 +119,15 @@ void MapManager::Update()
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
 
+	// draw the platforms after checking the collision
+	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
+
+	// check the collision for the AI
+	// TODO
+	
 	// draw the ladders after checking the collision
 	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
 
-	// check the collision with the walls, floor and ceilling after the map has been drawn
-	Rick::CheckLadderCollision();
-	
-	// draw the platforms after checking the collision
-	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
-	
 	// call the function to check the static collision for the items that need it
 	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 

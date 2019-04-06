@@ -738,6 +738,15 @@ void Rick::CheckStaticCollision()
 	// check above the head in craw state
 	if (State == AnimState::CRAWL)
 		IsThereAnyCeilingAboveHead = IsThereAnyCeilingAboveCrawl();
+	
+	// Now check the collision with the ladder (only use the map level for that, because we don't need a pixel precision)
+	// get the x coord on scren of the middle of the character
+	int middleWorldX = X + 4;
+	// check if we are in front of a ladder
+	IsInFrontOfLadder = MapManager::IsThereLadderAt(middleWorldX, Y + 5) ||
+						MapManager::IsThereLadderAt(middleWorldX, Y + 12);
+	// check if there's a ladder under the platform
+	IsAboveLadder = MapManager::IsThereLadderAt(middleWorldX, Y + 13);
 }
 
 /**
@@ -771,30 +780,6 @@ bool Rick::CheckPixelColumn(int xOnScreen, int startYOnScreen, int endYOnScreen)
 			if ((yOnScreen >= 0) && (yOnScreen < HEIGHT) && (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE))
 				return true;
 	return false;
-}
-
-void Rick::CheckLadderCollision()
-{
-	// get the x coord on scren of the middle of the character
-	int middleWorldX = X + 4;
-	unsigned char middleXOnScreen = MapManager::GetXOnScreen(middleWorldX);
-	// draw the character in transparent
-	int collisionFlag = Draw(TRANSPARENT);
-	IsInFrontOfLadder = (collisionFlag & 0x10) != 0;
-	// if no collision dectected, check more precisely the two pixels in between the legs
-	if (!IsInFrontOfLadder)
-	{
-		int startSensorUnderFeet = MapManager::GetYOnScreen(Y + 11);
-		// if the feet are below the screen (because Rick is climbing a ladder from the puzzle screen bellow)
-		// then check the pixels on screen instead on the one between his feet
-		if (startSensorUnderFeet >= HEIGHT)
-			IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, HEIGHT-4, HEIGHT-1);
-		else
-			IsInFrontOfLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
-	}
-
-	// check if there's a ladder under the platform
-	IsAboveLadder = MapManager::IsThereLadderAt(middleWorldX, Y + 13);
 }
 
 unsigned int Rick::Draw()
