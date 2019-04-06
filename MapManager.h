@@ -16,8 +16,8 @@ namespace MapManager
 	int GetXOnScreen(int worldX);
 	int GetYOnScreen(int worldY);
 	
-	// return the number of pixels that the camera moved during the frame
-	int GetCameraTransitionMoveY();
+	// Check if there's a solid sprite (static collision) at the specified world coodinates
+	bool IsThereStaticCollisionAt(int xWorld, int yWorld);
 }
 
 #endif
