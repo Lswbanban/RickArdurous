@@ -776,7 +776,8 @@ bool Rick::CheckPixelColumn(int xOnScreen, int startYOnScreen, int endYOnScreen)
 void Rick::CheckLadderCollision()
 {
 	// get the x coord on scren of the middle of the character
-	unsigned char middleXOnScreen = MapManager::GetXOnScreen(X + 4);
+	int middleWorldX = X + 4;
+	unsigned char middleXOnScreen = MapManager::GetXOnScreen(middleWorldX);
 	// draw the character in transparent
 	int collisionFlag = Draw(TRANSPARENT);
 	IsInFrontOfLadder = (collisionFlag & 0x10) != 0;
@@ -793,8 +794,7 @@ void Rick::CheckLadderCollision()
 	}
 
 	// check if there's a ladder under the platform
-	int startSensorUnderFeet = MapManager::GetYOnScreen(Y + 17);
-	IsAboveLadder = CheckPixelColumn(middleXOnScreen, startSensorUnderFeet, startSensorUnderFeet + 1);
+	IsAboveLadder = MapManager::IsThereLadderAt(middleWorldX, Y + 13);
 }
 
 unsigned int Rick::Draw()
