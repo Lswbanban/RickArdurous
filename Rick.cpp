@@ -115,7 +115,7 @@ namespace Rick
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId, bool isLooping);
 	void UpdateAirControl(bool towardLeftDirection);
-	bool IsThereAnyCollisionAt(int y);
+	bool IsThereAnyGroundOrCeilingCollisionAt(int y);
 	bool IsThereAnyCeilingAboveCrawl();
 	bool CheckPixelColumn(int x, int startY, int endX);
 	bool IsOnScreen();
@@ -613,9 +613,13 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
 }
 
 /**
- * Tell if there is any collision at the specified world vertical coordinate.
+ * Tell if there is any horizontal collision (i.e. ground or ceiling) at the specified world vertical coordinate.
+ * This function will test two pixels on the left and the right of the current sprite position, a little inside the sprite.
+ * If the specified y coordinate is outside the screen, then this function will ask the MapManager to check if there is
+ * a sprite at that place in the level, to still have accurate collision event if the ground or ceiling is outside the
+ * the screen.
  */
-bool Rick::IsThereAnyCollisionAt(int yWorld)
+bool Rick::IsThereAnyGroundOrCeilingCollisionAt(int yWorld)
 {
 	// compute the world coord that we will check for left and right sensor
 	int leftWorld = X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET;
@@ -680,13 +684,13 @@ void Rick::CheckStaticCollision()
 	if (State == AnimState::JUMP)
 	{
 		int yAboveHead = Y - 1;
-		if (IsThereAnyCollisionAt(yAboveHead))
+		if (IsThereAnyGroundOrCeilingCollisionAt(yAboveHead))
 		{
 			// cancel the jump state and enter directly into the fall state, because Rick as collided with the ceilling
 			InitFall();
 			
 			// move down Rick, until it is outside the collision, this can happen if Rick entered deeply in the collision
-			while (IsThereAnyCollisionAt(++yAboveHead))
+			while (IsThereAnyGroundOrCeilingCollisionAt(++yAboveHead))
 				Y++;
 		}
 	}
@@ -694,7 +698,7 @@ void Rick::CheckStaticCollision()
 	{
 		// first check the floor collisions
 		int yUnderFeet = Y + 13;
-		if (IsThereAnyCollisionAt(yUnderFeet))
+		if (IsThereAnyGroundOrCeilingCollisionAt(yUnderFeet))
 		{
 			// We found a collision under the feet, so if we are falling, stop falling
 			if ((State == AnimState::FALL) || 
@@ -704,7 +708,7 @@ void Rick::CheckStaticCollision()
 				InitIdle();
 			
 			// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
-			while (IsThereAnyCollisionAt(--yUnderFeet))
+			while (IsThereAnyGroundOrCeilingCollisionAt(--yUnderFeet))
 				Y--;
 		}
 		else if ((State != AnimState::FALL) && !IsInFrontOfLadder) // There's no collision under the feet, and not jumping, then we fall
