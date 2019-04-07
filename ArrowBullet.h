@@ -17,7 +17,7 @@ private:
 	const int ARROW_SPEED = 2;
 	const int ARROW_WIDTH = 8;
 	const int SPARKS_ANIM_SPEED = 3;
-	const int NO_PIXEL_FOUND = 1000; // special return value for SearchForPixelColorAlongBulletRay() when no color is found
+	const int NO_PIXEL_FOUND = 60000; // special return value for SearchForPixelColorAlongBulletRay() when no color is found
 	
 	union
 	{
