@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "Spike.h"
 #include "SpriteData.h"
+#include "MapManager.h"
 
 Spike::Spike(int startX, int startY, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::LETHAL)
 {
@@ -24,13 +25,15 @@ bool Spike::Update(UpdateStep step)
 	}
 	
 	// special spikes are horizontal
+	int xOnScreen = MapManager::GetXOnScreen(X);
+	int yOnScreen = MapManager::GetYOnScreen(Y);
 	if (IsPropertySet(PropertyFlags::SPECIAL))
 	{
-		arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
+		arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
 	}
 	else
 	{
-		arduboy.drawBitmapExtended(X, Y, SpriteData::SpikeVertical[AnimFrameId], SpriteData::SPIKE_VERTICAL_SPRITE_WIDTH, SpriteData::SPIKE_VERTICAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
+		arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::SpikeVertical[AnimFrameId], SpriteData::SPIKE_VERTICAL_SPRITE_WIDTH, SpriteData::SPIKE_VERTICAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
 	}
 	
 	return false;

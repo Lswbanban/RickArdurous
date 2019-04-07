@@ -63,11 +63,12 @@ bool Dynamite::Update(UpdateStep step)
 	}
 	
 	// draw the dynamite or explosion
+	int yOnScreen = MapManager::GetYOnScreen(Y);
 	if (DynamiteAnimFrameId > -1)
-		arduboy.drawBitmap(X, Y, SpriteData::Dynamite[DynamiteAnimFrameId], SpriteData::DYNAMITE_SPRITE_WIDTH, SpriteData::DYNAMITE_SPRITE_HEIGHT, WHITE);
+		arduboy.drawBitmap(MapManager::GetXOnScreen(X), yOnScreen, SpriteData::Dynamite[DynamiteAnimFrameId], SpriteData::DYNAMITE_SPRITE_WIDTH, SpriteData::DYNAMITE_SPRITE_HEIGHT, WHITE);
 	// draw the sparks if any
 	if (SparksAnimFrameId > -1)
-		arduboy.drawBitmap(X + (DynamiteAnimFrameId>>1), Y, SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
+		arduboy.drawBitmap(MapManager::GetXOnScreen(X + (DynamiteAnimFrameId>>1)), yOnScreen, SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
 	
 	return !IsPropertySet(Item::PropertyFlags::ALIVE);
 }
