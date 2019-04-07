@@ -11,6 +11,7 @@ public:
 
 protected:
 	void UpdateShineStar(char minX, char maxX, char minY, char maxY);
+	void CheckIfRickPickMeUp(unsigned char width, unsigned char height);
 	
 private:
 	const int ANIM_SPEED = 2;

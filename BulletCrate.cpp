@@ -16,11 +16,11 @@ bool BulletCrate::Update(UpdateStep step)
 {
 	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
 	{
+		// check if the player pick me up
+		CheckIfRickPickMeUp(SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT);
+
 		// draw the crate
 		arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::BulletCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
-
-		// ask the main character to check collision with me
-		Rick::CheckCollisionWithPickUp(this);
 
 		// draw the shiny star
 		UpdateShineStar(-2, 9, 1, 6);

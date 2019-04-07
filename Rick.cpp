@@ -67,6 +67,8 @@ namespace Rick
 	int Y = 4;
 	int GetX() { return X; }
 	int GetY() { return Y; }
+	int GetCenterX() { return X + 4; }
+	int GetCenterY() { return Y + 10; }
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -756,16 +758,6 @@ void Rick::CheckLethalCollision()
 {
 	if ((State != AnimState::DEATH) && Draw(BLACK))
 		InitDeath();
-}
-
-/**
- * Check if Rick collides with any pixel from the frame buffer, and if yes, assume those pixels
- * belongs to the specified Pickup item, and then pick up that specified item.
- */
-void Rick::CheckCollisionWithPickUp(PickUpItem * item)
-{
-	if (Draw(BLACK))
-		item->PickUp();
 }
 
 /**

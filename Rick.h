@@ -1,8 +1,6 @@
 #ifndef _RICK_H_
 #define _RICK_H_
 
-class PickUpItem;
-
 namespace Rick
 {
 	const char MAX_LIFE_COUNT = 6;
@@ -12,7 +10,6 @@ namespace Rick
 	
 	void UpdateInput();
 	void CheckLethalCollision();
-	void CheckCollisionWithPickUp(PickUpItem * item);
 	void CheckStaticCollision();
 	void CheckLadderCollision();
 	unsigned char GetFeetYOnScreen();
@@ -22,6 +19,8 @@ namespace Rick
 	// function to get the coordinate of the sprite of the main character
 	int GetX();
 	int GetY();
+	int GetCenterX();
+	int GetCenterY();
 	// function to get the coordinate when the screen should do a transition
 	int GetLeftForScreenTransition();
 	int GetRightForScreenTransition();

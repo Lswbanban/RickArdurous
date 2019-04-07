@@ -112,35 +112,35 @@ void MapManager::Update()
 	// update the lethal entities
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::PropertyFlags::LETHAL);
 	
+	// Check lethal collision of the ennemies and draw them because they are lethal to the player
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES, Item::PropertyFlags::ENEMIES);
+
 	// check the lethal collision after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
-	// call the function to check the static collision for the items that need it
+	// erase the bullet to avoid the bullet to be considered as static collision
 	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET);
 
 	// get the position of the feet of rick in screen coordinate
 	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();
 	
-	// animate the camera and draw the static collision
+	// Draw the static collision
 	Draw(SpriteData::BLOCK_8_8, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
 
-	// draw the platforms after checking the collision
+	// draw the platforms above the player after checking the collision of the player
 	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
 
-	// check the collision for the AI
-	// TODO
-	
-	// draw the ladders after checking the collision
-	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
-
-	// call the function to check the static collision for the items that need it
+	// call the function to check the static collision for the items that need it, including the Enemies
 	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
+
+	// draw the ladders after checking the collision
+	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
 
 	// update the main character
 	Rick::Draw();

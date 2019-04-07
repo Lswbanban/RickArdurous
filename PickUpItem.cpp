@@ -6,6 +6,21 @@
 #include "SpriteData.h"
 #include "PickUpItem.h"
 #include "MapManager.h"
+#include "Rick.h"
+
+/**
+ * Do a a collision box check with the specified size to see if the Main character is at the same place as this pickup,
+ * and if yes, call the virtual pickup function.
+ * @param width the width of this pickup
+ * @param height the height of this pickup
+ */
+void PickUpItem::CheckIfRickPickMeUp(unsigned char width, unsigned char height)
+{
+	int centerRickX = Rick::GetCenterX();
+	int centerRickY = Rick::GetCenterY();
+	if ((centerRickX >= X) && (centerRickX <= X + width) && (centerRickY >= Y) && (centerRickY <= Y + height))
+		PickUp();
+}
 
 /**
  * Update and Draw a shiny star around the sprite of this Pickup Item according to the specified 

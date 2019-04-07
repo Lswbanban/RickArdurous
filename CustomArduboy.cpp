@@ -9,7 +9,7 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
 {
   // no need to draw at all if we're offscreen
   if (x+w < 0 || x > WIDTH-1 || y+h < 0 || y > HEIGHT-1)
-    return false;
+    return 0;
 
   int yOffset = abs(y) % 8;
   int sRow = y / 8;
