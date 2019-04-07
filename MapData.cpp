@@ -35,8 +35,8 @@ Spike	sp1(116,80, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 Spike	sp2(100,80, Item::PropertyFlags::MIRROR_X);
 Spike	sp3(100,90, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
-DynamiteCrate	dc(200, 40);
-BulletCrate		bc(200, 20);
+DynamiteCrate	dc(140, 50);
+BulletCrate		bc(200, 40);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {

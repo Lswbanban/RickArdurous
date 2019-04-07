@@ -16,12 +16,12 @@ bool Statuette::Update(UpdateStep step)
 {
 	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
 	{
+		// check if the player pick me up
+		CheckIfRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT);
+		
 		// draw the statuette
 		arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Statue, SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT, WHITE);
 		
-		// ask the main character to check collision with me
-		Rick::CheckCollisionWithPickUp(this);
-
 		// draw the shiny star
 		UpdateShineStar(-2, 3, -2, 4);
 	}
