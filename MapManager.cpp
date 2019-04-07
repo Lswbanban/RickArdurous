@@ -69,12 +69,20 @@ void MapManager::RemoveItem(Item * item)
 
 #include "BulletCrate.h"
 #include "ArrowLauncher.h"
-BulletCrate	dc2(60, 50);
+#include "Statuette.h"
+//BulletCrate	dc2(60, 50);
+Statuette	st2(160, 40);
 ArrowLauncher al(9, 52, 52, 0 /*Item::PropertyFlags::MIRROR_X*/);
 
 void MapManager::Init()
 {
-	MapManager::AddItem(&dc2);
+	//MapManager::AddItem(&dc2);
+	MapManager::AddItem(&st2);
+	MapManager::AddItem(Items[0]);
+	MapManager::AddItem(Items[1]);
+	MapManager::AddItem(Items[2]);
+	MapManager::AddItem(Items[4]);
+	MapManager::AddItem(Items[5]);
 	//MapManager::AddItem(&al);
 }
 

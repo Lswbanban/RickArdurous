@@ -26,7 +26,7 @@ private:
 	};
 	
 	unsigned char GetWidth();
-	unsigned char GetBulletRayCastStartX();
+	int GetBulletRayCastStartX();
 	void DrawBulletRay(unsigned char color);
 	int SearchForPixelColorAlongBulletRay(unsigned int color);
 	void KillBulletWithoutSparks();

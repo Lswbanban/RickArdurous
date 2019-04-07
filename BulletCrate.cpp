@@ -6,6 +6,7 @@
 #include "BulletCrate.h"
 #include "SpriteData.h"
 #include "Rick.h"
+#include "MapManager.h"
 
 BulletCrate::BulletCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::IGNORED_BY_ENEMIES)
 {
@@ -16,7 +17,7 @@ bool BulletCrate::Update(UpdateStep step)
 	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
 	{
 		// draw the crate
-		arduboy.drawBitmap(X, Y, SpriteData::BulletCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
+		arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::BulletCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
 
 		// ask the main character to check collision with me
 		Rick::CheckCollisionWithPickUp(this);

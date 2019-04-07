@@ -47,28 +47,32 @@ unsigned char ArrowBullet::GetWidth()
 	return IsPropertySet(Item::PropertyFlags::SPECIAL) ? ARROW_WIDTH : BULLET_WIDTH;
 }
 
-unsigned char ArrowBullet::GetBulletRayCastStartX()
+/**
+ * Return the start x position of the bullet in screen coordinates
+ */
+int ArrowBullet::GetBulletRayCastStartX()
 {
+	int worldStartX = X;
 	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
-		return X - CurrentBulletSpeed;
-	else
-		return X;
+		worldStartX -= CurrentBulletSpeed;
+	return MapManager::GetXOnScreen(worldStartX);
 }
 
 void ArrowBullet::DrawBulletRay(unsigned char color)
 {
 	// draw the line of the ray cast
-	arduboy.drawFastHLine(GetBulletRayCastStartX(), Y, CurrentBulletSpeed + GetWidth(), color);
+	arduboy.drawFastHLine(GetBulletRayCastStartX(), MapManager::GetYOnScreen(Y), CurrentBulletSpeed + GetWidth(), color);
 }
 
 int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned int color)
 {
 	// get the ray cast positions
-	unsigned char startX = GetBulletRayCastStartX();
+	int startXOnScreen = GetBulletRayCastStartX();
+	int yOnScreen = MapManager::GetYOnScreen(Y);
 	// iterate on the frame buffer to check if any pixel is set
 	for (int i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
-		if (arduboy.getPixel(startX + i, Y) == color)
-				return (startX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
+		if (arduboy.getPixel(startXOnScreen + i, yOnScreen) == color)
+				return (startXOnScreen + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
 	// no collision found
 	return NO_PIXEL_FOUND;
 }
@@ -122,7 +126,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				CurrentBulletSpeed = IsPropertySet(Item::PropertyFlags::SPECIAL) ? ARROW_SPEED : BULLET_SPEED;
 				
 				// draw the bullet
-				arduboy.drawFastHLine(X, Y, GetWidth(), WHITE);
+				arduboy.drawFastHLine(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), GetWidth(), WHITE);
 				
 				// check if the bullet collided on the static collision along its movement, if yes prepare the sparks fx for the next frame
 				if (impactPosition != NO_PIXEL_FOUND)
@@ -146,7 +150,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				if (SparksAnimFrameId < SpriteData::SPARKS_SPRITE_FRAME_COUNT)
 				{
 					// draw the sparks
-					arduboy.drawBitmap(X, Y, SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
+					arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
 					// increase the frame id of the sparks
 					if (arduboy.everyXFrames(SPARKS_ANIM_SPEED))
 						SparksAnimFrameId++;

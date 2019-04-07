@@ -31,12 +31,12 @@ const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
 };
 
 // below is the instances of all the Items
-Spike	sp1(120,30, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
-Spike	sp2(110,30, Item::PropertyFlags::MIRROR_X);
-Spike	sp3(100,30, Item::PropertyFlags::NONE);
+Spike	sp1(116,80, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+Spike	sp2(100,80, Item::PropertyFlags::MIRROR_X);
+Spike	sp3(100,90, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
-DynamiteCrate	dc(60, 50);
-BulletCrate		bc(80, 25);
+DynamiteCrate	dc(200, 40);
+BulletCrate		bc(200, 20);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
