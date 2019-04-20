@@ -18,6 +18,7 @@ namespace MapManager
 	
 	// Check if there's a solid sprite (static collision) or ladder at the specified world coodinates
 	bool IsThereStaticCollisionAt(int xWorld, int yWorld);
+	bool IsThereAnyHorizontalCollisionAt(int leftWorld, int rightWorld, int yWorld);
 	bool IsThereLadderAt(int xWorld, int yWorld);
 }
 
