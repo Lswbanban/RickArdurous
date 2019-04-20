@@ -18,8 +18,18 @@ bool Mummy::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::DRAW_ENEMIES:
 		{
-			// draw the statuette
-			arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Mummy[0], SpriteData::MUMMY_SPRITE_WIDTH, SpriteData::MUMMY_SPRITE_HEIGHT, WHITE);
+			// draw the statuette and check the collision with eventual lethal stuff
+			int collision = arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X),
+									MapManager::GetYOnScreen(Y),
+									SpriteData::Mummy[0],
+									SpriteData::MUMMY_SPRITE_WIDTH, SpriteData::MUMMY_SPRITE_HEIGHT,
+									WHITE, false);
+			if (collision != 0)
+			{
+				ClearProperty(Item::PropertyFlags::ALIVE);
+				MapManager::RemoveItem(this);
+				return true;
+			}
 			break;
 		}
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
