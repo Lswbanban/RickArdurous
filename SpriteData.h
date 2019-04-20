@@ -91,6 +91,11 @@ namespace SpriteData
 	extern const unsigned char BulletCrate[];
 	extern const unsigned char DynamiteCrate[];
 	
+	// Mummies
+	const int MUMMY_SPRITE_WIDTH = 9;
+	const int MUMMY_SPRITE_HEIGHT = 16;
+	extern const unsigned char Mummy[][MUMMY_SPRITE_WIDTH * (MUMMY_SPRITE_HEIGHT / 8)];
+
 	// HUD elements
 	const int HUD_SPRITE_WIDTH = 5;
 	const int HUD_BULLET_SPRITE_WIDTH = 7;
