@@ -186,6 +186,32 @@ unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
 }
 
 /**
+ * Tell if there is any horizontal collision (i.e. ground or ceiling) at the specified world vertical coordinate,
+ * and in between specified x world coordinates.
+ * This function will test two pixels on the left and the right as specified in parameter.
+ * If the specified y coordinate is outside the screen, then this function will ask the MapManager to check if there is
+ * a sprite at that place in the level, to still have accurate collision event if the ground or ceiling is outside the
+ * the screen.
+ */
+bool MapManager::IsThereAnyHorizontalCollisionAt(int leftWorld, int rightWorld, int yWorld)
+{
+	// get the coordinates to check on screen
+	int leftOnScreen = MapManager::GetXOnScreen(leftWorld);
+	int rightOnScreen = MapManager::GetXOnScreen(rightWorld);
+	int yOnScreen = MapManager::GetYOnScreen(yWorld);
+	// check if the Y coordinate is out of the screen, if yes ask the map manager if there is a sprite below the scrren
+	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))
+		return MapManager::IsThereStaticCollisionAt(leftWorld, yWorld) || 
+				MapManager::IsThereStaticCollisionAt(rightWorld, yWorld);
+	// for the x coordinate, check individualy and if on screen check the pixel
+	bool isLeftOnScreen = (leftOnScreen >= 0) && (leftOnScreen < WIDTH);
+	bool isRightOnScreen = (rightOnScreen >= 0) && (rightOnScreen < WIDTH);
+	// if the coordinates are on screen, check the frame buffer
+	return (isLeftOnScreen && (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE)) ||
+			(isRightOnScreen && (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE));
+}
+
+/**
  * @param step the current step in the scrolling between 0 and 8
  * @param subStep the current subStep bewteen 0 and 7
  */

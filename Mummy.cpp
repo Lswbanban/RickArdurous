@@ -14,10 +14,21 @@ Mummy::Mummy(int startX, int startY) : Item(startX, startY, Item::PropertyFlags:
 
 bool Mummy::Update(UpdateStep step)
 {
-	if (IsPropertySet(Item::PropertyFlags::ENEMIES))
+	switch (step)
 	{
-		// draw the statuette
-		arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Mummy[0], SpriteData::MUMMY_SPRITE_WIDTH, SpriteData::MUMMY_SPRITE_HEIGHT, WHITE);
+		case Item::UpdateStep::DRAW_ENEMIES:
+		{
+			// draw the statuette
+			arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Mummy[0], SpriteData::MUMMY_SPRITE_WIDTH, SpriteData::MUMMY_SPRITE_HEIGHT, WHITE);
+			break;
+		}
+		case Item::UpdateStep::CHECK_STATIC_COLLISION:
+		{
+			int yUnderFeet = Y + 12;
+			if (!MapManager::IsThereAnyHorizontalCollisionAt(X+1, X+7, yUnderFeet))
+				Y++;
+			break;
+		}
 	}
 	return false;
 }

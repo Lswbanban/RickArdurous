@@ -630,20 +630,8 @@ bool Rick::IsThereAnyGroundOrCeilingCollisionAt(int yWorld)
 		rightWorld = X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL;
 	else
 		rightWorld = X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND;
-	// get the coordinates to check on screen
-	int leftOnScreen = MapManager::GetXOnScreen(leftWorld);
-	int rightOnScreen = MapManager::GetXOnScreen(rightWorld);
-	int yOnScreen = MapManager::GetYOnScreen(yWorld);
-	// check if the Y coordinate is out of the screen, if yes ask the map manager if there is a sprite below the scrren
-	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))
-		return MapManager::IsThereStaticCollisionAt(leftWorld, yWorld) || 
-				MapManager::IsThereStaticCollisionAt(rightWorld, yWorld);
-	// for the x coordinate, check individualy and if on screen check the pixel
-	bool isLeftOnScreen = (leftOnScreen >= 0) && (leftOnScreen < WIDTH);
-	bool isRightOnScreen = (rightOnScreen >= 0) && (rightOnScreen < WIDTH);
-	// if the coordinates are on screen, check the frame buffer
-	return (isLeftOnScreen && (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE)) ||
-			(isRightOnScreen && (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE));
+	// ask the MapManager to check for the collisions
+	return MapManager::IsThereAnyHorizontalCollisionAt(leftWorld, rightWorld, yWorld);
 }
 
 bool Rick::IsThereAnyCeilingAboveCrawl()
