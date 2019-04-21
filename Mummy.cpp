@@ -54,11 +54,12 @@ bool Mummy::Update(UpdateStep step)
 			else
 				AnimState = State::WALK;
 			
-			// check the wall collision
+			// compute the world coordinate of the map level block to test
 			bool isWalkingLeft = IsPropertySet(PropertyFlags::MIRROR_X);
-			int wallX = isWalkingLeft ? X - 1 : X + SpriteData::MUMMY_SPRITE_WIDTH;
-			int wallYOnScreen = MapManager::GetYOnScreen(Y);
-			if (CheckPixelColumn(MapManager::GetXOnScreen(wallX), wallYOnScreen, wallYOnScreen + 12))
+			int wallX = isWalkingLeft ? X - WALL_COLLISION_DETECTION_DISTANCE : X + SpriteData::MUMMY_SPRITE_WIDTH + WALL_COLLISION_DETECTION_DISTANCE;
+			if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
+				MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
+				!MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1)))
 			{
 				if (isWalkingLeft)
 					ClearProperty(PropertyFlags::MIRROR_X);
@@ -68,20 +69,6 @@ bool Mummy::Update(UpdateStep step)
 			break;
 		}
 	}
-	return false;
-}
-
-/**
- * Check a column of pixels at the specified x position (in screen coord) and from startY to endY (in screen coord)
- * This function will check if the specified coordinates are on screen and return false if not.
- * This function return true for the first white pixel encountered.
- */
-bool Mummy::CheckPixelColumn(int xOnScreen, int startYOnScreen, int endYOnScreen)
-{
-	if ((xOnScreen >= 0) && (xOnScreen < WIDTH))
-		for (int yOnScreen = startYOnScreen; yOnScreen <= endYOnScreen; yOnScreen++)
-			if ((yOnScreen >= 0) && (yOnScreen < HEIGHT) && (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE))
-				return true;
 	return false;
 }
 
