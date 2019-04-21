@@ -119,7 +119,6 @@ namespace Rick
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyGroundOrCeilingCollisionAt(int y);
 	bool IsThereAnyCeilingAboveCrawl();
-	bool CheckPixelColumn(int x, int startY, int endX);
 	bool IsOnScreen();
 	unsigned int Draw(unsigned char color);
 }
@@ -746,20 +745,6 @@ void Rick::CheckLethalCollision()
 {
 	if ((State != AnimState::DEATH) && Draw(BLACK))
 		InitDeath();
-}
-
-/**
- * Check a column of pixels at the specified x position (in screen coord) and from startY to endY (in screen coord)
- * This function will check if the specified coordinates are on screen and return false if not.
- * This function return true for the first white pixel encountered.
- */
-bool Rick::CheckPixelColumn(int xOnScreen, int startYOnScreen, int endYOnScreen)
-{
-	if ((xOnScreen >= 0) && (xOnScreen < WIDTH))
-		for (int yOnScreen = startYOnScreen; yOnScreen <= endYOnScreen; yOnScreen++)
-			if ((yOnScreen >= 0) && (yOnScreen < HEIGHT) && (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE))
-				return true;
-	return false;
 }
 
 unsigned int Rick::Draw()
