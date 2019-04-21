@@ -9,7 +9,7 @@
 #include "Dynamite.h"
 #include "DynamiteCrate.h"
 #include "BulletCrate.h"
-#include "Mummy.h"
+#include "Enemy.h"
 #include <avr/pgmspace.h>
 
 const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
@@ -38,7 +38,7 @@ Spike	sp3(100,90, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
 DynamiteCrate	dc(140, 50);
 BulletCrate		bc(200, 40);
-Mummy		mum(80, 15);
+Enemy		mum(80, 15, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {

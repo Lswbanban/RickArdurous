@@ -1,18 +1,20 @@
-#ifndef _MUMMY_H_
-#define _MUMMY_H_
+#ifndef _ENEMY_H_
+#define _ENEMY_H_
 
 #include "Item.h"
 
-class Mummy : public Item
+class Enemy : public Item
 {
 public:
-	Mummy(int startX, int startY);
+	Enemy(int startX, int startY, unsigned char flag);
 	virtual bool Update(UpdateStep step);
 	
 private:
-	const int WALL_COLLISION_DETECTION_DISTANCE = 2;
-	const int HALF_TURN_ANIM_SPEED = 10;
-	
+	const int WALL_COLLISION_DETECTION_DISTANCE = 1;
+	const int MUMMY_HALF_TURN_ANIM_SPEED = 10;
+	const int SKELETON_HALF_TURN_ANIM_SPEED = 5;
+	const int SKELETON_WALK_ANIM_SPEED = 3;
+
 	enum State
 	{
 		WALK = 0,
@@ -29,7 +31,7 @@ private:
 	void UpdateWalk();
 	void UpdateHalfTurn();
 	void UpdateFall();
-	int Draw(unsigned char color);
+	int Draw();
 };
 
 #endif
