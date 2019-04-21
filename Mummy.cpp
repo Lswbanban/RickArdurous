@@ -28,6 +28,9 @@ bool Mummy::Update(UpdateStep step)
 				case State::WALK:
 					UpdateWalk();
 					break;
+				case State::HALF_TURN:
+					UpdateHalfTurn();
+					break;
 				case State::FALL:
 					UpdateFall();
 					break;
@@ -50,26 +53,48 @@ bool Mummy::Update(UpdateStep step)
 			// check the ground collision
 			int yUnderFeet = Y + 13;
 			if (!MapManager::IsThereAnyHorizontalCollisionAt(X+1, X+7, yUnderFeet))
-				AnimState = State::FALL;
-			else
-				AnimState = State::WALK;
-			
-			// compute the world coordinate of the map level block to test
-			bool isWalkingLeft = IsPropertySet(PropertyFlags::MIRROR_X);
-			int wallX = isWalkingLeft ? X - WALL_COLLISION_DETECTION_DISTANCE : X + SpriteData::MUMMY_SPRITE_WIDTH + WALL_COLLISION_DETECTION_DISTANCE;
-			if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
-				MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
-				!MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1)))
 			{
-				if (isWalkingLeft)
-					ClearProperty(PropertyFlags::MIRROR_X);
+				AnimState = State::FALL;
+			}
+			else
+			{
+				// there is ground, check if I was falling
+				if (AnimState == State::FALL)
+				{
+					InitWalk();
+				}
 				else
-					SetProperty(PropertyFlags::MIRROR_X);
+				{
+					// compute the world coordinate of the map level block to test
+					bool isWalkingLeft = IsPropertySet(PropertyFlags::MIRROR_X);
+					int wallX = isWalkingLeft ? X - WALL_COLLISION_DETECTION_DISTANCE : X + SpriteData::MUMMY_SPRITE_WIDTH + WALL_COLLISION_DETECTION_DISTANCE;
+					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
+						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
+						!MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1)))
+					{
+						// reverse the walking direction imediately for the next frame to test the collision at the right place
+						if (isWalkingLeft)
+							ClearProperty(PropertyFlags::MIRROR_X);
+						else
+							SetProperty(PropertyFlags::MIRROR_X);
+						// init the half turn state
+						AnimState = State::HALF_TURN;
+						AnimFrameId = SpriteData::MummyAnimFrameId::MUMMY_HALF_TURN;
+						AnimFrameCount = 0;
+					}
+				}
 			}
 			break;
 		}
 	}
 	return false;
+}
+
+void Mummy::InitWalk()
+{
+	AnimState = State::WALK;
+	AnimFrameId = SpriteData::MummyAnimFrameId::MUMMY_WALK_START;
+	AnimFrameCount = 0;
 }
 
 void Mummy::UpdateWalk()
@@ -86,9 +111,17 @@ void Mummy::UpdateWalk()
 		// go to the next frame id
 		AnimFrameId++;
 		AnimFrameCount = 0;
-		if (AnimFrameId == 4)
-			AnimFrameId = 0;
+		if (AnimFrameId == SpriteData::MummyAnimFrameId::MUMMY_WALK_END)
+			AnimFrameId = SpriteData::MummyAnimFrameId::MUMMY_WALK_START;
 	}
+}
+
+void Mummy::UpdateHalfTurn()
+{
+	// update the animation
+	AnimFrameCount++;
+	if (AnimFrameCount == HALF_TURN_ANIM_SPEED)
+		InitWalk();
 }
 
 void Mummy::UpdateFall()

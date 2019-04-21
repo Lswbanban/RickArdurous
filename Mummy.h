@@ -11,10 +11,12 @@ public:
 	
 private:
 	const int WALL_COLLISION_DETECTION_DISTANCE = 2;
+	const int HALF_TURN_ANIM_SPEED = 10;
 	
 	enum State
 	{
 		WALK = 0,
+		HALF_TURN,
 		FALL,
 		DIE,
 	};
@@ -23,7 +25,9 @@ private:
 	unsigned char AnimFrameCount : 4;
 	unsigned char AnimState = 0;
 	
+	void InitWalk();
 	void UpdateWalk();
+	void UpdateHalfTurn();
 	void UpdateFall();
 	int Draw(unsigned char color);
 };
