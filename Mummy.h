@@ -10,8 +10,21 @@ public:
 	virtual bool Update(UpdateStep step);
 	
 private:
-	unsigned char AnimFrameId : 3;
-	unsigned char AnimFrameCount : 5;
+	enum State
+	{
+		WALK = 0,
+		FALL,
+		DIE,
+	};
+	
+	unsigned char AnimFrameId : 4;
+	unsigned char AnimFrameCount : 4;
+	unsigned char AnimState = 0;
+	
+	bool CheckPixelColumn(int x, int startY, int endX);
+	void UpdateWalk();
+	void UpdateFall();
+	int Draw(unsigned char color);
 };
 
 #endif
