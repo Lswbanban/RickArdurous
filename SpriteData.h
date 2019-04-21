@@ -92,6 +92,12 @@ namespace SpriteData
 	extern const unsigned char DynamiteCrate[];
 	
 	// Mummies
+	enum MummyAnimFrameId
+	{
+		MUMMY_WALK_START = 0,
+		MUMMY_WALK_END = 3,
+		MUMMY_HALF_TURN,
+	};
 	const int MUMMY_SPRITE_WIDTH = 9;
 	const int MUMMY_SPRITE_HEIGHT = 16;
 	extern const unsigned char Mummy[][MUMMY_SPRITE_WIDTH * (MUMMY_SPRITE_HEIGHT / 8)];
