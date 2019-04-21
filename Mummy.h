@@ -10,6 +10,8 @@ public:
 	virtual bool Update(UpdateStep step);
 	
 private:
+	const int WALL_COLLISION_DETECTION_DISTANCE = 2;
+	
 	enum State
 	{
 		WALK = 0,
@@ -21,7 +23,6 @@ private:
 	unsigned char AnimFrameCount : 4;
 	unsigned char AnimState = 0;
 	
-	bool CheckPixelColumn(int x, int startY, int endX);
 	void UpdateWalk();
 	void UpdateFall();
 	int Draw(unsigned char color);
