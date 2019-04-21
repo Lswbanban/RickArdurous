@@ -32,6 +32,8 @@
             <File name="ArrowBullet.cpp" />
             <File name="ArrowLauncher.cpp" />
             <File name="ArrowLauncher.h" />
+            <File name="Enemy.cpp" />
+            <File name="Enemy.h" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />

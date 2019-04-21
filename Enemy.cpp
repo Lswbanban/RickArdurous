@@ -1,23 +1,22 @@
 /*
- * Implement the logic and drawing of the mummy ennemies
+ * Implement the logic and drawing of the Enemies
 */
 
 #include "RickArdurous.h"
-#include "Mummy.h"
+#include "Enemy.h"
 #include "SpriteData.h"
 #include "Rick.h"
 #include "MapManager.h"
 
 const char WALK_ANIM_SPEED[] = { 8, 12, 6, 8 };
 
-Mummy::Mummy(int startX, int startY) : Item(startX, startY, Item::PropertyFlags::ENEMIES | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+Enemy::Enemy(int startX, int startY, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::ENEMIES | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
 {
 	AnimFrameId = 0;
 	AnimFrameCount = 0;
-	SetProperty(PropertyFlags::MIRROR_X);
 };
 
-bool Mummy::Update(UpdateStep step)
+bool Enemy::Update(UpdateStep step)
 {
 	switch (step)
 	{
@@ -37,8 +36,8 @@ bool Mummy::Update(UpdateStep step)
 			}
 			
 			// draw the statuette and check the collision with eventual lethal stuff
-			int collision = Draw(WHITE);
-									
+			int collision = Draw();
+			
 			// if we have a collision, that means we hit a lethal pixel
 			if (collision != 0)
 			{
@@ -52,7 +51,8 @@ bool Mummy::Update(UpdateStep step)
 		{
 			// check the ground collision
 			int yUnderFeet = Y + 13;
-			if (!MapManager::IsThereAnyHorizontalCollisionAt(X+1, X+7, yUnderFeet))
+			unsigned char width = IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
+			if (!MapManager::IsThereAnyHorizontalCollisionAt(X+1, X+width-2, yUnderFeet))
 			{
 				AnimState = State::FALL;
 			}
@@ -67,7 +67,7 @@ bool Mummy::Update(UpdateStep step)
 				{
 					// compute the world coordinate of the map level block to test
 					bool isWalkingLeft = IsPropertySet(PropertyFlags::MIRROR_X);
-					int wallX = isWalkingLeft ? X - WALL_COLLISION_DETECTION_DISTANCE : X + SpriteData::MUMMY_SPRITE_WIDTH + WALL_COLLISION_DETECTION_DISTANCE;
+					int wallX = isWalkingLeft ? X - WALL_COLLISION_DETECTION_DISTANCE : X + width + WALL_COLLISION_DETECTION_DISTANCE;
 					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
 						!MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1)))
@@ -79,7 +79,7 @@ bool Mummy::Update(UpdateStep step)
 							SetProperty(PropertyFlags::MIRROR_X);
 						// init the half turn state
 						AnimState = State::HALF_TURN;
-						AnimFrameId = SpriteData::MummyAnimFrameId::MUMMY_HALF_TURN;
+						AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_HALF_TURN;
 						AnimFrameCount = 0;
 					}
 				}
@@ -90,18 +90,21 @@ bool Mummy::Update(UpdateStep step)
 	return false;
 }
 
-void Mummy::InitWalk()
+void Enemy::InitWalk()
 {
 	AnimState = State::WALK;
-	AnimFrameId = SpriteData::MummyAnimFrameId::MUMMY_WALK_START;
+	AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WALK_START;
 	AnimFrameCount = 0;
 }
 
-void Mummy::UpdateWalk()
+void Enemy::UpdateWalk()
 {
-	// update the animation
+	// update the frame counter
 	AnimFrameCount++;
-	if (AnimFrameCount == WALK_ANIM_SPEED[AnimFrameId])
+	// get the anim speed
+	unsigned char walkAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_WALK_ANIM_SPEED : WALK_ANIM_SPEED[AnimFrameId];
+	// check if it is the time to change the anim frame
+	if (AnimFrameCount == walkAnimSpeed)
 	{
 		// move the X depending on the direction
 		if (IsPropertySet(PropertyFlags::MIRROR_X))
@@ -111,29 +114,39 @@ void Mummy::UpdateWalk()
 		// go to the next frame id
 		AnimFrameId++;
 		AnimFrameCount = 0;
-		if (AnimFrameId == SpriteData::MummyAnimFrameId::MUMMY_WALK_END)
-			AnimFrameId = SpriteData::MummyAnimFrameId::MUMMY_WALK_START;
+		if (AnimFrameId == SpriteData::EnemyAnimFrameId::ENEMY_WALK_END)
+			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WALK_START;
 	}
 }
 
-void Mummy::UpdateHalfTurn()
+void Enemy::UpdateHalfTurn()
 {
-	// update the animation
+	// update the frame counter
 	AnimFrameCount++;
-	if (AnimFrameCount == HALF_TURN_ANIM_SPEED)
+	// get the anim speed
+	unsigned char halfTurnAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_HALF_TURN_ANIM_SPEED : MUMMY_HALF_TURN_ANIM_SPEED;
+	if (AnimFrameCount == halfTurnAnimSpeed)
 		InitWalk();
 }
 
-void Mummy::UpdateFall()
+void Enemy::UpdateFall()
 {
 	Y++;
 }
 
-int Mummy::Draw(unsigned char color)
+int Enemy::Draw()
 {
-	return arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X),
-									MapManager::GetYOnScreen(Y),
+	int xOnScreen = MapManager::GetXOnScreen(X);
+	int yOnScreen = MapManager::GetYOnScreen(Y);
+	bool isMirror = IsPropertySet(PropertyFlags::MIRROR_X);
+	if (IsPropertySet(PropertyFlags::SPECIAL))
+		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
+									SpriteData::Skeleton[AnimFrameId],
+									SpriteData::SKELETON_SPRITE_WIDTH, SpriteData::SKELETON_SPRITE_HEIGHT,
+									WHITE, isMirror);
+	else
+		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
 									SpriteData::Mummy[AnimFrameId],
 									SpriteData::MUMMY_SPRITE_WIDTH, SpriteData::MUMMY_SPRITE_HEIGHT,
-									color, IsPropertySet(PropertyFlags::MIRROR_X));
+									WHITE, isMirror);
 }
