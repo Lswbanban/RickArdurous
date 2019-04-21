@@ -32,8 +32,9 @@ public:
 	Item(int startX, int startY, unsigned char flag);
 	virtual bool Update(UpdateStep step) = 0;
 	
-	bool SetProperty(unsigned char flag) { Property |= flag; }
-	bool ClearProperty(unsigned char flag) { Property &= ~flag; }
+	void SetProperty(unsigned char flag) { Property |= flag; }
+	void ClearProperty(unsigned char flag) { Property &= ~flag; }
+	void InverseProperty(unsigned char flag) { Property = (Property & ~flag) | (~Property & flag); }
 	bool IsPropertySet(unsigned char flag) { return (Property & flag) != 0; }
 
 protected:

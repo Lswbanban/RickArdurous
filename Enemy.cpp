@@ -8,12 +8,11 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-const char WALK_ANIM_SPEED[] = { 8, 12, 6, 8 };
+const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
 Enemy::Enemy(int startX, int startY, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::ENEMIES | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
 {
-	AnimFrameId = 0;
-	AnimFrameCount = 0;
+	InitWalk();
 };
 
 bool Enemy::Update(UpdateStep step)
@@ -22,6 +21,9 @@ bool Enemy::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::DRAW_ENEMIES:
 		{
+			// update the frame counter (need to be done in any state)
+			AnimFrameCount++;
+			// then call the corect update according to the current state
 			switch (AnimState)
 			{
 				case State::WALK:
@@ -29,6 +31,9 @@ bool Enemy::Update(UpdateStep step)
 					break;
 				case State::HALF_TURN:
 					UpdateHalfTurn();
+					break;
+				case State::WAIT:
+					UpdateWait();
 					break;
 				case State::FALL:
 					UpdateFall();
@@ -50,7 +55,7 @@ bool Enemy::Update(UpdateStep step)
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
 		{
 			// check the ground collision
-			int yUnderFeet = Y + 13;
+			int yUnderFeet = Y + 14;
 			unsigned char width = IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
 			if (!MapManager::IsThereAnyHorizontalCollisionAt(X+1, X+width-2, yUnderFeet))
 			{
@@ -66,17 +71,13 @@ bool Enemy::Update(UpdateStep step)
 				else
 				{
 					// compute the world coordinate of the map level block to test
-					bool isWalkingLeft = IsPropertySet(PropertyFlags::MIRROR_X);
-					int wallX = isWalkingLeft ? X - WALL_COLLISION_DETECTION_DISTANCE : X + width + WALL_COLLISION_DETECTION_DISTANCE;
+					int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + width + WALL_COLLISION_DETECTION_DISTANCE;
 					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
 						!MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1)))
 					{
 						// reverse the walking direction imediately for the next frame to test the collision at the right place
-						if (isWalkingLeft)
-							ClearProperty(PropertyFlags::MIRROR_X);
-						else
-							SetProperty(PropertyFlags::MIRROR_X);
+						InverseProperty(PropertyFlags::MIRROR_X);
 						// init the half turn state
 						AnimState = State::HALF_TURN;
 						AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_HALF_TURN;
@@ -99,10 +100,8 @@ void Enemy::InitWalk()
 
 void Enemy::UpdateWalk()
 {
-	// update the frame counter
-	AnimFrameCount++;
 	// get the anim speed
-	unsigned char walkAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_WALK_ANIM_SPEED : WALK_ANIM_SPEED[AnimFrameId];
+	unsigned char walkAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_WALK_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId];
 	// check if it is the time to change the anim frame
 	if (AnimFrameCount == walkAnimSpeed)
 	{
@@ -111,22 +110,37 @@ void Enemy::UpdateWalk()
 			X--;
 		else
 			X++;
-		// go to the next frame id
-		AnimFrameId++;
+		// reset the frame counter
 		AnimFrameCount = 0;
+		// go to the next frame id
 		if (AnimFrameId == SpriteData::EnemyAnimFrameId::ENEMY_WALK_END)
 			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WALK_START;
+		else
+			AnimFrameId++;
 	}
 }
 
 void Enemy::UpdateHalfTurn()
 {
-	// update the frame counter
-	AnimFrameCount++;
 	// get the anim speed
 	unsigned char halfTurnAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_HALF_TURN_ANIM_SPEED : MUMMY_HALF_TURN_ANIM_SPEED;
 	if (AnimFrameCount == halfTurnAnimSpeed)
 		InitWalk();
+}
+
+void Enemy::UpdateWait()
+{
+	// check if we need to change the frame id
+	if (AnimFrameCount == WALK_AND_WAIT_ANIM_SPEED[AnimFrameId - SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START])
+	{
+		// reset the frame counter
+		AnimFrameCount = 0;
+		// change the anim id (only two ids in wait, but will make 3 frame with the mirror)
+		if (AnimFrameId == SpriteData::EnemyAnimFrameId::ENEMY_WAIT_END)
+			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
+		else
+			AnimFrameId++;
+	}
 }
 
 void Enemy::UpdateFall()

@@ -99,7 +99,7 @@ namespace SpriteData
 		ENEMY_HALF_TURN,
 		ENEMY_JUMP,
 		ENEMY_WAIT_START,
-		ENEMY_WAIT_END,
+		ENEMY_WAIT_END = 9,
 	};
 	const int MUMMY_SPRITE_WIDTH = 9;
 	const int MUMMY_SPRITE_HEIGHT = 16;

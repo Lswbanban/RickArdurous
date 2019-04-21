@@ -11,7 +11,7 @@ public:
 	
 private:
 	const int WALL_COLLISION_DETECTION_DISTANCE = 1;
-	const int MUMMY_HALF_TURN_ANIM_SPEED = 10;
+	const int MUMMY_HALF_TURN_ANIM_SPEED = 14;
 	const int SKELETON_HALF_TURN_ANIM_SPEED = 5;
 	const int SKELETON_WALK_ANIM_SPEED = 3;
 
@@ -19,6 +19,7 @@ private:
 	{
 		WALK = 0,
 		HALF_TURN,
+		WAIT,
 		FALL,
 		DIE,
 	};
@@ -30,6 +31,7 @@ private:
 	void InitWalk();
 	void UpdateWalk();
 	void UpdateHalfTurn();
+	void UpdateWait();
 	void UpdateFall();
 	int Draw();
 };
