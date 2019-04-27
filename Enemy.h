@@ -26,7 +26,8 @@ private:
 	
 	unsigned char AnimFrameId : 4;
 	unsigned char AnimFrameCount : 4;
-	unsigned char AnimState = 0;
+	unsigned char AnimState : 4;
+	unsigned char FallAnimSpeedIndex :4;
 	
 	void InitWalk();
 	void UpdateWalk();

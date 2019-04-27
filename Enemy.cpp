@@ -7,6 +7,7 @@
 #include "SpriteData.h"
 #include "Rick.h"
 #include "MapManager.h"
+#include "Physics.h"
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
@@ -56,16 +57,28 @@ bool Enemy::Update(UpdateStep step)
 		{
 			// check the ground collision
 			int yUnderFeet = Y + 14;
-			unsigned char width = IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
-			if (!MapManager::IsThereAnyHorizontalCollisionAt(X+1, X+width-2, yUnderFeet))
+			bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
+			unsigned char width = isSkeleton ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
+			int leftWorldX = X + 1;
+			int rightWorldX = X + width - 2;
+			if (!MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, yUnderFeet))
 			{
-				AnimState = State::FALL;
+				if (AnimState != State::FALL)
+				{
+					AnimState = State::FALL;
+					FallAnimSpeedIndex = Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
+					AnimFrameCount = 0;
+					if (isSkeleton)
+						AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
+				}
 			}
 			else
 			{
 				// there is ground, check if I was falling
 				if (AnimState == State::FALL)
 				{
+					//while (MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, --yUnderFeet))
+					//	Y--;
 					InitWalk();
 				}
 				else
@@ -74,7 +87,7 @@ bool Enemy::Update(UpdateStep step)
 					int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + width + WALL_COLLISION_DETECTION_DISTANCE;
 					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
-						!MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1)))
+						(!isSkeleton && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))))
 					{
 						// reverse the walking direction imediately for the next frame to test the collision at the right place
 						InverseProperty(PropertyFlags::MIRROR_X);
@@ -145,7 +158,16 @@ void Enemy::UpdateWait()
 
 void Enemy::UpdateFall()
 {
-	Y++;
+	if (AnimFrameCount >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED[FallAnimSpeedIndex])
+	{
+		// reset the frame counter
+		AnimFrameCount = 0;
+		// in fall state, move down
+		Y += Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex];
+		// decrease the jump counter
+		if (FallAnimSpeedIndex > Physics::FALL_VERTICAL_MIN_INDEX)
+			FallAnimSpeedIndex--;
+	}
 }
 
 int Enemy::Draw()
