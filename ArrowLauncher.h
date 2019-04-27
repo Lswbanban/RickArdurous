@@ -10,8 +10,8 @@ public:
 	virtual bool Update(UpdateStep step);
 
 private:
-	const int LAUNCH_PERIOD = 180;
-	const int CAN_LAUNCH_ARROW = 255;
+	static constexpr int LAUNCH_PERIOD = 180;
+	static constexpr int CAN_LAUNCH_ARROW = 255;
 	
 	ArrowBullet * Arrow;
 	unsigned char LastLaunchTime = CAN_LAUNCH_ARROW;

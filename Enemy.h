@@ -10,10 +10,10 @@ public:
 	virtual bool Update(UpdateStep step);
 	
 private:
-	const int WALL_COLLISION_DETECTION_DISTANCE = 1;
-	const int MUMMY_HALF_TURN_ANIM_SPEED = 14;
-	const int SKELETON_HALF_TURN_ANIM_SPEED = 5;
-	const int SKELETON_WALK_ANIM_SPEED = 3;
+	static constexpr int WALL_COLLISION_DETECTION_DISTANCE = 1;
+	static constexpr int MUMMY_HALF_TURN_ANIM_SPEED = 14;
+	static constexpr int SKELETON_HALF_TURN_ANIM_SPEED = 5;
+	static constexpr int SKELETON_WALK_ANIM_SPEED = 3;
 
 	enum State
 	{
