@@ -56,12 +56,9 @@ bool Enemy::Update(UpdateStep step)
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
 		{
 			// check the ground collision
-			int yUnderFeet = Y + 14;
+			int yUnderFeet = GetYUnderFeet();
 			bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
-			unsigned char width = isSkeleton ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
-			int leftWorldX = X + 1;
-			int rightWorldX = X + width - 2;
-			if (!MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, yUnderFeet))
+			if (!IsThereAnyGroundCollisionAt(yUnderFeet))
 			{
 				if (AnimState != State::FALL)
 				{
@@ -77,14 +74,12 @@ bool Enemy::Update(UpdateStep step)
 				// there is ground, check if I was falling
 				if (AnimState == State::FALL)
 				{
-					//while (MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, --yUnderFeet))
-					//	Y--;
 					InitWalk();
 				}
 				else
 				{
 					// compute the world coordinate of the map level block to test
-					int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + width + WALL_COLLISION_DETECTION_DISTANCE;
+					int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
 					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
 						(!isSkeleton && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))))
@@ -102,6 +97,25 @@ bool Enemy::Update(UpdateStep step)
 		}
 	}
 	return false;
+}
+
+int Enemy::GetYUnderFeet()
+{
+	return Y + 14;
+}
+
+unsigned char Enemy::GetWidth()
+{
+	return IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
+}
+
+bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
+{
+	// compute the world coord that we will check for left and right sensor
+	int leftWorldX = X + 1;
+	int rightWorldX = X + GetWidth() - 2;
+	// ask the MapManager to check for the collisions
+	return MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, yWorld);
 }
 
 void Enemy::InitWalk()
@@ -164,6 +178,10 @@ void Enemy::UpdateFall()
 		AnimFrameCount = 0;
 		// in fall state, move down
 		Y += Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex];
+		// move out of the ground
+		int yUnderFeet = GetYUnderFeet();
+		while (IsThereAnyGroundCollisionAt(--yUnderFeet))
+			Y--;
 		// decrease the jump counter
 		if (FallAnimSpeedIndex > Physics::FALL_VERTICAL_MIN_INDEX)
 			FallAnimSpeedIndex--;
