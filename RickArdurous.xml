@@ -13,6 +13,8 @@
         <File name="CustomArduboy.cpp" />
         <File name="HUD.h" />
         <File name="HUD.cpp" />
+        <File name="Physics.h" />
+        <File name="Physics.cpp" />
         <Folder name="Items">
             <File name="Item.h" />
             <File name="Item.cpp" />
@@ -30,8 +32,8 @@
             <File name="BulletCrate.cpp" />
             <File name="ArrowBullet.h" />
             <File name="ArrowBullet.cpp" />
-            <File name="ArrowLauncher.cpp" />
             <File name="ArrowLauncher.h" />
+            <File name="ArrowLauncher.cpp" />
             <File name="Enemy.cpp" />
             <File name="Enemy.h" />
         </Folder>

@@ -11,6 +11,7 @@
 #include "MapData.h"
 #include "PickUpItem.h"
 #include "MapManager.h"
+#include "Physics.h"
 
 namespace Rick
 {
@@ -18,10 +19,6 @@ namespace Rick
 	const int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
 	const int MIN_AIR_CONTROL_ANIM_SPEED = 3;
 	const int MAX_AIR_CONTROL_ANIM_SPEED = 8;
-	const char JUMP_AND_FALL_VERTICAL_MOVE[] 		= { 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1 };
-	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[]	= { 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6 };
-	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = sizeof(JUMP_AND_FALL_VERTICAL_ANIM_SPEED);
-	const int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
 	const int FIRE_ANIM_SPEED = 3;
 	const int CROUCH_STAND_ANIM_SPEED = 3;
 	const int CRAWL_ANIM_SPEED = 3;
@@ -159,7 +156,7 @@ unsigned char Rick::GetFeetYOnScreen()
 {
 	int feetOnScreen = MapManager::GetYOnScreen(Y) + 12;
 	if (State == AnimState::FALL)
-		feetOnScreen -= JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex] + 1;
+		feetOnScreen -= Physics::JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex] + 1;
 	if (feetOnScreen >= HEIGHT)
 		feetOnScreen = HEIGHT-1;
 	return feetOnScreen;
@@ -193,7 +190,7 @@ void Rick::InitFall()
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::JUMP;
 	CurrentAnimDirection = 1;
 	StateFrameCounter = 0;
-	JumpAndFallAnimSpeedIndex = JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
+	JumpAndFallAnimSpeedIndex = Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
 	AirControlFrameCount = 0;
 }
 
@@ -276,16 +273,16 @@ void Rick::UpdateInput()
 	{
 		// increase the frame counter for the jump, and switch to the next frame when needed
 		StateFrameCounter++;
-		if (StateFrameCounter >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED[JumpAndFallAnimSpeedIndex])
+		if (StateFrameCounter >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED[JumpAndFallAnimSpeedIndex])
 		{
 			StateFrameCounter = 0;
 			if (State == AnimState::JUMP)
 			{
 				// move up
-				Y -= JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex];
+				Y -= Physics::JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex];
 				// increase the jump frame counter and check if we need to change state to fall
 				JumpAndFallAnimSpeedIndex++;
-				if (JumpAndFallAnimSpeedIndex >= JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT)
+				if (JumpAndFallAnimSpeedIndex >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT)
 				{
 					State = AnimState::FALL;
 					JumpAndFallAnimSpeedIndex--;
@@ -294,9 +291,9 @@ void Rick::UpdateInput()
 			else
 			{
 				// in fall state, move down
-				Y += JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex];
+				Y += Physics::JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex];
 				// decrease the jump counter
-				if (JumpAndFallAnimSpeedIndex > FALL_VERTICAL_MIN_INDEX)
+				if (JumpAndFallAnimSpeedIndex > Physics::FALL_VERTICAL_MIN_INDEX)
 					JumpAndFallAnimSpeedIndex--;
 			}
 		}
