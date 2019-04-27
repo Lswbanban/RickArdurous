@@ -109,6 +109,15 @@ unsigned char Enemy::GetWidth()
 	return IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
 }
 
+void Enemy::MoveAccordingToOrientation()
+{
+	// move the X depending on the direction
+	if (IsPropertySet(PropertyFlags::MIRROR_X))
+		X--;
+	else
+		X++;
+}
+
 bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
 {
 	// compute the world coord that we will check for left and right sensor
@@ -132,11 +141,8 @@ void Enemy::UpdateWalk()
 	// check if it is the time to change the anim frame
 	if (AnimFrameCount == walkAnimSpeed)
 	{
-		// move the X depending on the direction
-		if (IsPropertySet(PropertyFlags::MIRROR_X))
-			X--;
-		else
-			X++;
+		// move the X
+		MoveAccordingToOrientation();
 		// reset the frame counter
 		AnimFrameCount = 0;
 		// go to the next frame id
@@ -182,6 +188,9 @@ void Enemy::UpdateFall()
 		int yUnderFeet = GetYUnderFeet();
 		while (IsThereAnyGroundCollisionAt(--yUnderFeet))
 			Y--;
+		// move a little bit on X during the first frame of the animation
+		if (FallAnimSpeedIndex >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - WALL_COLLISION_DETECTION_DISTANCE - 1)
+			MoveAccordingToOrientation();
 		// decrease the jump counter
 		if (FallAnimSpeedIndex > Physics::FALL_VERTICAL_MIN_INDEX)
 			FallAnimSpeedIndex--;
