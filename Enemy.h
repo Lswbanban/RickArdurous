@@ -29,6 +29,10 @@ private:
 	unsigned char AnimState : 4;
 	unsigned char FallAnimSpeedIndex :4;
 	
+	int GetYUnderFeet();
+	unsigned char GetWidth();
+	bool IsThereAnyGroundCollisionAt(int yWorld);
+	
 	void InitWalk();
 	void UpdateWalk();
 	void UpdateHalfTurn();
