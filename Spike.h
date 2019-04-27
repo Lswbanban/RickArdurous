@@ -10,8 +10,8 @@ public:
 	virtual bool Update(UpdateStep step);
 
 private:
-	const int ANIM_SPEED = 4;
-	const int PAUSE_TIME = 90;
+	static constexpr int ANIM_SPEED = 4;
+	static constexpr int PAUSE_TIME = 90;
 	unsigned char AnimFrameId = 0;
 };
 

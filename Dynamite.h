@@ -12,9 +12,9 @@ public:
 	void LightUp(int x, int y);
 
 private:
-	const int DYNAMITE_ANIM_SPEED = 20;
-	const int EXPLOSION_ANIM_SPEED = 6;
-	const int SPARKS_ANIM_SPEED = 5;
+	static constexpr int DYNAMITE_ANIM_SPEED = 20;
+	static constexpr int EXPLOSION_ANIM_SPEED = 6;
+	static constexpr int SPARKS_ANIM_SPEED = 5;
 	char DynamiteAnimFrameId = -1;
 	char SparksAnimFrameId = -1;
 };

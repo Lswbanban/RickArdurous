@@ -14,9 +14,9 @@ protected:
 	void CheckIfRickPickMeUp(unsigned char width, unsigned char height);
 	
 private:
-	const int ANIM_SPEED = 2;
-	const int MIN_PAUSE_TIMES = 10;
-	const int MAX_PAUSE_TIMES = 150;
+	static constexpr int ANIM_SPEED = 2;
+	static constexpr int MIN_PAUSE_TIMES = 10;
+	static constexpr int MAX_PAUSE_TIMES = 150;
 	
 	// the current time to wait before playing the next shining star
 	char PauseTime = 0;

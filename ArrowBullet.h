@@ -12,12 +12,12 @@ public:
 	void Fire(int x, int y, bool isMovingToLeft);
 
 private:
-	const int BULLET_SPEED = 4;
-	const int BULLET_WIDTH = 3;
-	const int ARROW_SPEED = 2;
-	const int ARROW_WIDTH = 8;
-	const int SPARKS_ANIM_SPEED = 3;
-	const int NO_PIXEL_FOUND = 60000; // special return value for SearchForPixelColorAlongBulletRay() when no color is found
+	static constexpr int BULLET_SPEED = 4;
+	static constexpr int BULLET_WIDTH = 3;
+	static constexpr int ARROW_SPEED = 2;
+	static constexpr int ARROW_WIDTH = 8;
+	static constexpr int SPARKS_ANIM_SPEED = 3;
+	static constexpr int NO_PIXEL_FOUND = 60000; // special return value for SearchForPixelColorAlongBulletRay() when no color is found
 	
 	union
 	{
