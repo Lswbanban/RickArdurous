@@ -32,6 +32,7 @@ private:
 	int GetYUnderFeet();
 	unsigned char GetWidth();
 	bool IsThereAnyGroundCollisionAt(int yWorld);
+	void MoveAccordingToOrientation();
 	
 	void InitWalk();
 	void UpdateWalk();
