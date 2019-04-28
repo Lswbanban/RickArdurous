@@ -246,33 +246,36 @@ int MapManager::GetCameraSpeed(int step, int subStep)
  */
 void MapManager::AnimateCameraTransition()
 {
-	// Check if we should start a camera transition (if the main character exit the screen)
-	// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking if equivalent to the computation
-	int screenPuzzleY = CameraY & 0xFFF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
-	if (Rick::GetBottomForScreenTransition() <= (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
+	if (Rick::IsAlive())
 	{
-		TargetCameraY = screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN;
-	}
-	else
-	{
-		int nextScreenPuzzleY = screenPuzzleY + NB_VERTICAL_SPRITE_PER_SCREEN;
-		if (Rick::GetTopForScreenTransition() >= (nextScreenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT) - CAMERA_VERTICAL_SHIFT)
+		// Check if we should start a camera transition (if the main character exit the screen)
+		// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking if equivalent to the computation
+		int screenPuzzleY = CameraY & 0xFFF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
+		if (Rick::GetBottomForScreenTransition() <= (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
 		{
-			TargetCameraY = nextScreenPuzzleY;
+			TargetCameraY = screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN;
 		}
 		else
 		{
-			int screenPuzzleX = CameraX & 0xFFF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
-			if (Rick::GetRightForScreenTransition() <= (screenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
+			int nextScreenPuzzleY = screenPuzzleY + NB_VERTICAL_SPRITE_PER_SCREEN;
+			if (Rick::GetTopForScreenTransition() >= (nextScreenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT) - CAMERA_VERTICAL_SHIFT)
 			{
-				TargetCameraX = screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN;
+				TargetCameraY = nextScreenPuzzleY;
 			}
 			else
 			{
-				int nextScreenPuzzleX = screenPuzzleX + NB_HORIZONTAL_SPRITE_PER_SCREEN;
-				if (Rick::GetLeftForScreenTransition() >= (nextScreenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
+				int screenPuzzleX = CameraX & 0xFFF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
+				if (Rick::GetRightForScreenTransition() <= (screenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
 				{
-					TargetCameraX = nextScreenPuzzleX;
+					TargetCameraX = screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN;
+				}
+				else
+				{
+					int nextScreenPuzzleX = screenPuzzleX + NB_HORIZONTAL_SPRITE_PER_SCREEN;
+					if (Rick::GetLeftForScreenTransition() >= (nextScreenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
+					{
+						TargetCameraX = nextScreenPuzzleX;
+					}
 				}
 			}
 		}
