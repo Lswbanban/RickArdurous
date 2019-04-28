@@ -25,10 +25,7 @@ namespace Rick
 	const int CLIMB_LADDER_ANIM_SPEED = 3;
 	const int DEATH_ANIM_SPEED = 4;
 	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
-	const int DEATH_MOVING_SPEED = 16;
 	const int DEATH_VELOCITY_X = 9;
-	const int DEATH_VELOCITY_Y = -30;
-	const int HALF_GRAVITY = 1;
 	// The standing sprite are stored on 2 bytes vertically, whereas the crawl sprite only use one.
 	// When switching from stand to crawl state, we don't change the Y, but just draw the sprite lower
 	// Thia constant value, store the difference between those two sprites visually speaking
@@ -87,8 +84,7 @@ namespace Rick
 	bool IsAboveLadder = false;
 	
 	// variable for death state
-	int DeathStartX = 0;
-	int DeathStartY = 0;
+	unsigned char DeathParabolicId = 0;
 	
 	// Inventory
 	char LifeCount = MAX_LIFE_COUNT;
@@ -167,6 +163,8 @@ void Rick::Respawn()
 	// temp code, just teleport to hard coded location
 	X = 15;
 	Y = 8;
+	// stop the parabolic trajectory
+	Physics::StopParabolicTrajectory(DeathParabolicId);
 	// start in idle state
 	InitIdle();
 }
@@ -235,9 +233,12 @@ void Rick::InitDeath()
 	State = AnimState::DEATH;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::DEATH_START;
 	CurrentAnimDirection = -1;
-	DeathStartX = X;
-	DeathStartY = Y;
 	StateFrameCounter = 0;
+
+	// compute the horizontal velocity
+	char velocityX = IsLookingLeft ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+	DeathParabolicId = Physics::StartParabolicTrajectory(X, Y, velocityX);
+
 	// decrease the life counter
 	if (LifeCount > 0)
 		LifeCount--;
@@ -473,15 +474,10 @@ void Rick::UpdateInput()
 			CurrentAnimFrame += CurrentAnimDirection;
 		}
 		
-		// increase the death timer
 		StateFrameCounter++;
 		
-		// compute the horizontal velocity
-		char velocity_X = IsLookingLeft ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
-		
-		// move the main character according to a projectile trajectory
-		X = DeathStartX + (velocity_X * StateFrameCounter) / DEATH_MOVING_SPEED;
-		Y = DeathStartY + ((DEATH_VELOCITY_Y * StateFrameCounter) + (HALF_GRAVITY * StateFrameCounter * StateFrameCounter)) / DEATH_MOVING_SPEED;
+		// update the trajectory
+		Physics::UpdateParabolicTrajectory(DeathParabolicId, X, Y);
 		
 		// check if the X and Y are outside of the screen
 		if (!IsOnScreen())
