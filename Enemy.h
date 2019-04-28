@@ -14,6 +14,7 @@ private:
 	static constexpr int MUMMY_HALF_TURN_ANIM_SPEED = 14;
 	static constexpr int SKELETON_HALF_TURN_ANIM_SPEED = 5;
 	static constexpr int SKELETON_WALK_ANIM_SPEED = 3;
+	static constexpr int DEATH_VELOCITY_X = 9;
 
 	enum State
 	{
@@ -21,7 +22,7 @@ private:
 		HALF_TURN,
 		WAIT,
 		FALL,
-		DIE,
+		DEATH,
 	};
 	
 	unsigned char AnimFrameId : 4;
@@ -31,6 +32,7 @@ private:
 	
 	int GetYUnderFeet();
 	unsigned char GetWidth();
+	unsigned char GetHeight();
 	bool IsThereAnyGroundCollisionAt(int yWorld);
 	void MoveAccordingToOrientation();
 	
@@ -40,7 +42,8 @@ private:
 	void UpdateHalfTurn();
 	void UpdateWait();
 	void UpdateFall();
-	int Draw();
+	bool UpdateDeath();
+	int Draw(unsigned char color);
 };
 
 #endif

@@ -233,7 +233,6 @@ void Rick::InitDeath()
 	State = AnimState::DEATH;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::DEATH_START;
 	CurrentAnimDirection = -1;
-	StateFrameCounter = 0;
 
 	// compute the horizontal velocity
 	char velocityX = IsLookingLeft ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
@@ -474,8 +473,6 @@ void Rick::UpdateInput()
 			CurrentAnimFrame += CurrentAnimDirection;
 		}
 		
-		StateFrameCounter++;
-		
 		// update the trajectory
 		Physics::UpdateParabolicTrajectory(DeathParabolicId, X, Y);
 		
@@ -639,6 +636,7 @@ bool Rick::IsThereAnyCeilingAboveCrawl()
 
 bool Rick::IsOnScreen()
 {
+	// compute my width and height depending if I'm crawling or not
 	char spriteWidth = SpriteData::RICK_SPRITE_WIDTH;
 	char spriteHeight = SpriteData::RICK_SPRITE_HEIGHT;
 	if (State == AnimState::CRAWL)
@@ -646,11 +644,8 @@ bool Rick::IsOnScreen()
 		spriteWidth = SpriteData::RICK_CRAWL_SPRITE_WIDTH;
 		spriteHeight = SpriteData::RICK_CRAWL_SPRITE_HEIGHT;
 	}
-	// translate global coord to coord local to the screen
-	int xOnScreen = MapManager::GetXOnScreen(X);
-	int yOnScreen = MapManager::GetYOnScreen(Y);
-	// check that the part of the main character (including the sprite width and height) is inside the screen dimension
-	return (xOnScreen + spriteWidth >= 0) && (xOnScreen < WIDTH) && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
+	// ask the map manager if I'm on screen
+	return MapManager::IsOnScreen(X, Y, spriteWidth, spriteHeight);
 }
 
 /**

@@ -42,16 +42,24 @@ bool Enemy::Update(UpdateStep step)
 			}
 			
 			// draw the statuette and check the collision with eventual lethal stuff
-			int collision = Draw();
+			int collision = Draw(WHITE);
 			
 			// if we have a collision, that means we hit a lethal pixel
 			if (collision != 0)
 			{
-				ClearProperty(Item::PropertyFlags::ALIVE);
-				MapManager::RemoveItem(this);
-				return true;
+				// compute the horizontal velocity for the death trajectory
+				char velocityX = IsPropertySet(PropertyFlags::MIRROR_X) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
+				AnimState = State::DEATH;
+				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
+				SetProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
 			}
 			break;
+		}
+		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+		{
+			Draw(INVERT);
+			return UpdateDeath();
 		}
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
 		{
@@ -116,6 +124,11 @@ int Enemy::GetYUnderFeet()
 unsigned char Enemy::GetWidth()
 {
 	return IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
+}
+
+unsigned char Enemy::GetHeight()
+{
+	return SpriteData::SKELETON_SPRITE_HEIGHT;
 }
 
 void Enemy::MoveAccordingToOrientation()
@@ -211,7 +224,26 @@ void Enemy::UpdateFall()
 	}
 }
 
-int Enemy::Draw()
+bool Enemy::UpdateDeath()
+{
+	// update the trajectory
+	Physics::UpdateParabolicTrajectory(FallAnimSpeedIndex, X, Y);
+	
+	// check if I'm still on screen
+	if (!MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
+	{
+		// stop the parabolic trajectory
+		Physics::StopParabolicTrajectory(FallAnimSpeedIndex);
+		// clear alive property
+		ClearProperty(Item::PropertyFlags::ALIVE);
+		MapManager::RemoveItem(this);
+		return true;
+	}
+	
+	return false;
+}
+
+int Enemy::Draw(unsigned char color)
 {
 	int xOnScreen = MapManager::GetXOnScreen(X);
 	int yOnScreen = MapManager::GetYOnScreen(Y);
@@ -220,10 +252,10 @@ int Enemy::Draw()
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
 									SpriteData::Skeleton[AnimFrameId],
 									SpriteData::SKELETON_SPRITE_WIDTH, SpriteData::SKELETON_SPRITE_HEIGHT,
-									WHITE, isMirror);
+									color, isMirror);
 	else
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
 									SpriteData::Mummy[AnimFrameId],
 									SpriteData::MUMMY_SPRITE_WIDTH, SpriteData::MUMMY_SPRITE_HEIGHT,
-									WHITE, isMirror);
+									color, isMirror);
 }

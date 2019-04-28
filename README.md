@@ -11,7 +11,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 # To do
 
 ## Enemy
-- The death state for both type of Enemy (Mummy and Skeleton)
 - Implement the logic for the Skeleton to wait and follow Rick
 
 # New items to come
