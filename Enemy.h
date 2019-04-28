@@ -35,6 +35,7 @@ private:
 	void MoveAccordingToOrientation();
 	
 	void InitWalk();
+	void InitFall();
 	void UpdateWalk();
 	void UpdateHalfTurn();
 	void UpdateWait();

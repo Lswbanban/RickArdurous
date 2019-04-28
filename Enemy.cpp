@@ -57,16 +57,24 @@ bool Enemy::Update(UpdateStep step)
 		{
 			// check the ground collision
 			int yUnderFeet = GetYUnderFeet();
-			bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
 			if (!IsThereAnyGroundCollisionAt(yUnderFeet))
 			{
-				if (AnimState != State::FALL)
+				// check if we are already falling or not
+				if (AnimState == State::FALL)
 				{
-					AnimState = State::FALL;
-					FallAnimSpeedIndex = Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
-					AnimFrameCount = 0;
-					if (isSkeleton)
-						AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
+					// If we are falling, check the ground several pixel below, depending on my current
+					// fall speed, to see if I will touch the ground during next frame.
+					// If yes, reduce my falling speed to avoid penetrating in the ground during next frame
+					for (int i = Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex]; i > 1; i--)
+						if (IsThereAnyGroundCollisionAt(yUnderFeet + i))
+							while (Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex] > 
+									Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex + 1] )
+								FallAnimSpeedIndex++;
+				}
+				else
+				{
+					// if we are not falling init the fall
+					InitFall();
 				}
 			}
 			else
@@ -79,6 +87,7 @@ bool Enemy::Update(UpdateStep step)
 				else
 				{
 					// compute the world coordinate of the map level block to test
+					bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
 					int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
 					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
@@ -125,6 +134,15 @@ bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
 	int rightWorldX = X + GetWidth() - 2;
 	// ask the MapManager to check for the collisions
 	return MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, yWorld);
+}
+
+void Enemy::InitFall()
+{
+	AnimState = State::FALL;
+	FallAnimSpeedIndex = Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
+	AnimFrameCount = 0;
+	if (IsPropertySet(PropertyFlags::SPECIAL))
+		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
 }
 
 void Enemy::InitWalk()
@@ -184,10 +202,6 @@ void Enemy::UpdateFall()
 		AnimFrameCount = 0;
 		// in fall state, move down
 		Y += Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex];
-		// move out of the ground
-		int yUnderFeet = GetYUnderFeet();
-		while (IsThereAnyGroundCollisionAt(--yUnderFeet))
-			Y--;
 		// move a little bit on X during the first frame of the animation
 		if (FallAnimSpeedIndex >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - WALL_COLLISION_DETECTION_DISTANCE - 1)
 			MoveAccordingToOrientation();
