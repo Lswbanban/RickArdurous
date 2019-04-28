@@ -15,6 +15,7 @@ namespace MapManager
 	// function to get local coordinates
 	int GetXOnScreen(int worldX);
 	int GetYOnScreen(int worldY);
+	bool IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned char spriteHeight);
 	
 	// Check if there's a solid sprite (static collision) or ladder at the specified world coodinates
 	bool IsThereStaticCollisionAt(int xWorld, int yWorld);

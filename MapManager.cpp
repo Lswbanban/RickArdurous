@@ -161,6 +161,15 @@ int MapManager::GetYOnScreen(int worldY)
 	return worldY - (CameraY * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraTransitionY + CAMERA_VERTICAL_SHIFT;
 }
 
+bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned char spriteHeight)
+{
+	// translate global coord to coord local to the screen
+	int xOnScreen = MapManager::GetXOnScreen(x);
+	int yOnScreen = MapManager::GetYOnScreen(y);
+	// check that the part of the main character (including the sprite width and height) is inside the screen dimension
+	return (xOnScreen + spriteWidth >= 0) && (xOnScreen < WIDTH) && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
+}
+
 bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 {
 	return GetLevelSpriteAt(xWorld, yWorld) < SpriteData::WallId::LADDER;
