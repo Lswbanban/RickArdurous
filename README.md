@@ -7,7 +7,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 # Bug list
 - Bug: check why the bullet is not killed when hitting a enemy
 - Potential bug: an Enemy can kill another one if they cross each other: is it ok with level design?
-- Bug: during the death anim, Rick (and probably also Enemy can go outside the level, letting the camera to draw the memory)
 
 # To do
 
