@@ -38,7 +38,7 @@ Spike	sp3(100,90, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
 DynamiteCrate	dc(140, 50);
 BulletCrate		bc(200, 40);
-Enemy		mum(84, 15, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+Enemy		mum(70, 1, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
