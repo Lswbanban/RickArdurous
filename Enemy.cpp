@@ -109,14 +109,7 @@ bool Enemy::Update(UpdateStep step)
 					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
 						(!isSkeleton && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))))
-					{
-						// reverse the walking direction imediately for the next frame to test the collision at the right place
-						InverseProperty(PropertyFlags::MIRROR_X);
-						// init the half turn state
-						AnimState = State::HALF_TURN;
-						AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_HALF_TURN;
-						AnimFrameCount = 0;
-					}
+						InitHalfTurn();
 				}
 			}
 			break;
@@ -181,15 +174,26 @@ void Enemy::InitWalk()
 	AnimFrameCount = 0;
 }
 
+void Enemy::InitHalfTurn()
+{
+	// reverse the walking direction imediately for the next frame to test the collision at the right place
+	InverseProperty(PropertyFlags::MIRROR_X);
+	// init the half turn state
+	AnimState = State::HALF_TURN;
+	AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_HALF_TURN;
+	AnimFrameCount = 0;
+}
+
 void Enemy::UpdateWalk()
 {
+	// the walk will have different logic for Skeleton or other type
+	bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
+	
 	// get the anim speed
-	unsigned char walkAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_WALK_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId];
+	unsigned char walkAnimSpeed = isSkeleton ? SKELETON_WALK_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId];
 	// check if it is the time to change the anim frame
 	if (AnimFrameCount == walkAnimSpeed)
 	{
-		// move the X
-		MoveAccordingToOrientation();
 		// reset the frame counter
 		AnimFrameCount = 0;
 		// go to the next frame id
@@ -197,6 +201,25 @@ void Enemy::UpdateWalk()
 			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WALK_START;
 		else
 			AnimFrameId++;
+
+		// move the X according to the orientation for a ping pong trajectory
+		MoveAccordingToOrientation();
+	
+		// special case for skeleton who may switch to wait state
+		if (isSkeleton)
+		{
+			int rickX = Rick::GetX();
+			bool isLookingLeft = IsPropertySet(MIRROR_X);
+			if (((X < rickX) && isLookingLeft) || ((X > rickX) && !isLookingLeft))
+			{
+				InitHalfTurn();
+			}
+			else if (X == rickX)
+			{
+				AnimState = WAIT;
+				AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
+			}
+		}
 	}
 }
 
@@ -220,6 +243,11 @@ void Enemy::UpdateWait()
 			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
 		else
 			AnimFrameId++;
+		
+		// check if we need to stop waiting and go back to walk
+		int rickX = Rick::GetX();
+		if (X != rickX)
+			InitWalk();
 	}
 }
 

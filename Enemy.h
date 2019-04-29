@@ -38,6 +38,7 @@ private:
 	
 	void InitWalk();
 	void InitFall();
+	void InitHalfTurn();
 	void UpdateWalk();
 	void UpdateHalfTurn();
 	void UpdateWait();
