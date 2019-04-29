@@ -5,7 +5,6 @@ Rick Ardurous
 Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
 
 # Bug list
-- Rick can walk on enemies
 
 # To do
 - Move the remove of the item inside the MapManager when the update return true
