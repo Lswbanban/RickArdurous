@@ -121,6 +121,13 @@ bool Enemy::Update(UpdateStep step)
 			}
 			break;
 		}
+		case Item::UpdateStep::RESPAWN:
+		{
+			SetProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
+			ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+			InitWalk();
+			break;
+		}
 	}
 	return false;
 }

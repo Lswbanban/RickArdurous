@@ -28,6 +28,7 @@ public:
 		DRAW_ENEMIES,
 		CHECK_STATIC_COLLISION,
 		DRAW_IGNORED_BY_ENEMIES,
+		RESPAWN,
 	};
 	
 	Item(int startX, int startY, unsigned char flag);
