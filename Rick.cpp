@@ -162,7 +162,7 @@ void Rick::Respawn()
 {
 	// temp code, just teleport to hard coded location
 	X = 15;
-	Y = 8;
+	Y = 2;
 	// stop the parabolic trajectory
 	Physics::StopParabolicTrajectory(DeathParabolicId);
 	// start in idle state
@@ -660,38 +660,46 @@ void Rick::CheckStaticCollision()
 	// if we jump, check the ceiling, otherwise, check the floor
 	if (State == AnimState::JUMP)
 	{
-		int yAboveHead = Y - 1;
-		if (IsThereAnyGroundOrCeilingCollisionAt(yAboveHead))
+		int yHead = Y;
+		if (IsThereAnyGroundOrCeilingCollisionAt(yHead))
 		{
+			// move down Rick, until it is outside the collision, this can happen if Rick entered deeply in the collision
+			Y++;
+			while (IsThereAnyGroundOrCeilingCollisionAt(++yHead))
+				Y++;
 			// cancel the jump state and enter directly into the fall state, because Rick as collided with the ceilling
 			InitFall();
-			
-			// move down Rick, until it is outside the collision, this can happen if Rick entered deeply in the collision
-			while (IsThereAnyGroundOrCeilingCollisionAt(++yAboveHead))
-				Y++;
+		}
+	}
+	else if (State == AnimState::FALL)
+	{
+		// check the floor collisions but inside the feet to avoid walking on arrow or Enemies
+		int yFeet = Y + 12;
+		if (IsThereAnyGroundOrCeilingCollisionAt(yFeet))
+		{
+			// move up if Rick entered deeply in the ground (at least one pixel because we check collision on the feet)
+			// Also this can happen if Rick moves more than 1 pixel per frame
+			Y--;
+			while (IsThereAnyGroundOrCeilingCollisionAt(--yFeet))
+				Y--;
+			// We found a collision under the feet, so if we are falling, stop falling
+			InitIdle();
 		}
 	}
 	else
 	{
-		// first check the floor collisions
+		// here we are not jumping or falling, so check the collision under the feet
+		// There's no collision under the feet, and not jumping, then we fall
 		int yUnderFeet = Y + 13;
-		if (IsThereAnyGroundOrCeilingCollisionAt(yUnderFeet))
+		if (!IsThereAnyGroundOrCeilingCollisionAt(yUnderFeet))
 		{
-			// We found a collision under the feet, so if we are falling, stop falling
-			if ((State == AnimState::FALL) || 
-				((State == AnimState::CLIMB_LADDER) &&
-					((!Input::IsDown(DOWN_BUTTON) && !IsInFrontOfLadder) ||
-					 (Input::IsDown(DOWN_BUTTON) && !IsAboveLadder))))
+			if (!IsInFrontOfLadder)
+				InitFall();
+		}
+		else if (((State == AnimState::CLIMB_LADDER) &&
+				((!Input::IsDown(DOWN_BUTTON) && !IsInFrontOfLadder) ||
+				 (Input::IsDown(DOWN_BUTTON) && !IsAboveLadder))))
 				InitIdle();
-			
-			// move up if Rick entered deeply in the ground (this can happen if Rick moves more than 1 pixel per frame)
-			while (IsThereAnyGroundOrCeilingCollisionAt(--yUnderFeet))
-				Y--;
-		}
-		else if ((State != AnimState::FALL) && !IsInFrontOfLadder) // There's no collision under the feet, and not jumping, then we fall
-		{
-			InitFall();
-		}
 	}
 	
 	// draw rick sprite to check the wall collisions
