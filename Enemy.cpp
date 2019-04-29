@@ -140,6 +140,13 @@ unsigned char Enemy::GetHeight()
 	return SpriteData::SKELETON_SPRITE_HEIGHT;
 }
 
+bool Enemy::IsRickAlignedWithMe()
+{
+	int rickX = Rick::GetCenterX();
+	int myCenterX = X + (GetWidth() >> 1);
+	return (rickX > (myCenterX - SKELETON_SENSOR)) && (rickX < (myCenterX + SKELETON_SENSOR));
+}
+
 void Enemy::MoveAccordingToOrientation()
 {
 	// move the X depending on the direction
@@ -208,13 +215,13 @@ void Enemy::UpdateWalk()
 		// special case for skeleton who may switch to wait state
 		if (isSkeleton)
 		{
-			int rickX = Rick::GetX();
+			int rickX = Rick::GetCenterX();
 			bool isLookingLeft = IsPropertySet(MIRROR_X);
 			if (((X < rickX) && isLookingLeft) || ((X > rickX) && !isLookingLeft))
 			{
 				InitHalfTurn();
 			}
-			else if (X == rickX)
+			else if (IsRickAlignedWithMe())
 			{
 				AnimState = WAIT;
 				AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
@@ -245,8 +252,7 @@ void Enemy::UpdateWait()
 			AnimFrameId++;
 		
 		// check if we need to stop waiting and go back to walk
-		int rickX = Rick::GetX();
-		if (X != rickX)
+		if (!IsRickAlignedWithMe())
 			InitWalk();
 	}
 }
