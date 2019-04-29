@@ -5,13 +5,14 @@ Rick Ardurous
 Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
 
 # Bug list
-- Bug: check why the bullet is not killed when hitting a enemy
-- Potential bug: an Enemy can kill another one if they cross each other: is it ok with level design?
+- Rick can walk on enemies
 
 # To do
+- Move the remove of the item inside the MapManager when the update return true
 
 ## Enemy
 - Implement the logic for the Skeleton to wait and follow Rick
+- Implement the respawn update step
 
 # New items to come
 - The destroyable blocks (with the dynamite to create a path)
