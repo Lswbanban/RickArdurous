@@ -24,10 +24,12 @@ bool Enemy::Update(UpdateStep step)
 		{
 			// if we have a collision, that means we hit a lethal pixel
 			// Draw in black to delete the bullet in case we are hit by a bullet
-			if (Draw(BLACK))
+			int collision = Draw(BLACK);
+			if (collision != 0)
 			{
 				// compute the horizontal velocity for the death trajectory
-				char velocityX = IsPropertySet(PropertyFlags::MIRROR_X) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+				bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
+				char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
 				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
 				AnimState = State::DEATH;
 				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);

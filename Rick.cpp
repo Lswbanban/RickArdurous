@@ -63,6 +63,8 @@ namespace Rick
 	int GetY() { return Y; }
 	int GetCenterX() { return X + 4; }
 	int GetCenterY() { return Y + 10; }
+	unsigned char GetWidth() { return (State == AnimState::CRAWL) ? SpriteData::RICK_CRAWL_SPRITE_WIDTH : SpriteData::RICK_SPRITE_WIDTH; }
+	unsigned char GetHeight() { return (State == AnimState::CRAWL) ? 8 : 12; }
 	
 	// orientation of Rick
 	bool IsLookingLeft = true;
@@ -104,7 +106,7 @@ namespace Rick
 	void InitCrawl();
 	void InitStandUp();
 	void InitClimbLadder();
-	void InitDeath();
+	void InitDeath(int collision);
 	bool IsDynamitePlacementRequested();
 	void PlaceDynamite();
 	void HandleInput();
@@ -112,7 +114,6 @@ namespace Rick
 	void UpdateAirControl(bool towardLeftDirection);
 	bool IsThereAnyGroundOrCeilingCollisionAt(int y);
 	bool IsThereAnyCeilingAboveCrawl();
-	bool IsOnScreen();
 	unsigned int Draw(unsigned char color);
 }
 
@@ -228,14 +229,15 @@ void Rick::InitClimbLadder()
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
-void Rick::InitDeath()
+void Rick::InitDeath(int collision)
 {
 	State = AnimState::DEATH;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::DEATH_START;
 	CurrentAnimDirection = -1;
 
 	// compute the horizontal velocity
-	char velocityX = IsLookingLeft ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+	bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
+	char velocityX = (IsLookingLeft != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
 	DeathParabolicId = Physics::StartParabolicTrajectory(X, Y, velocityX);
 
 	// decrease the life counter
@@ -477,7 +479,7 @@ void Rick::UpdateInput()
 		Physics::UpdateParabolicTrajectory(DeathParabolicId, X, Y);
 		
 		// check if the X and Y are outside of the screen
-		if (!IsOnScreen())
+		if (!MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
 			Respawn();
 	}
 	else
@@ -634,20 +636,6 @@ bool Rick::IsThereAnyCeilingAboveCrawl()
 	return arduboy.CheckWhitePixelsInRow(xOnScreen, yOnScreen >> 3, SpriteData::RICK_SPRITE_WIDTH) != 0;
 }
 
-bool Rick::IsOnScreen()
-{
-	// compute my width and height depending if I'm crawling or not
-	char spriteWidth = SpriteData::RICK_SPRITE_WIDTH;
-	char spriteHeight = SpriteData::RICK_SPRITE_HEIGHT;
-	if (State == AnimState::CRAWL)
-	{
-		spriteWidth = SpriteData::RICK_CRAWL_SPRITE_WIDTH;
-		spriteHeight = SpriteData::RICK_CRAWL_SPRITE_HEIGHT;
-	}
-	// ask the map manager if I'm on screen
-	return MapManager::IsOnScreen(X, Y, spriteWidth, spriteHeight);
-}
-
 /**
  * Check if Rick is colliding with a static wall, floor, and ceiling and prevent him to move.
  */
@@ -739,8 +727,12 @@ void Rick::CheckStaticCollision()
  */
 void Rick::CheckLethalCollision()
 {
-	if ((State != AnimState::DEATH) && Draw(BLACK))
-		InitDeath();
+	if (State != AnimState::DEATH)
+	{
+		int collision = Draw(BLACK);
+		if (collision != 0)
+			InitDeath(collision);
+	}
 }
 
 unsigned int Rick::Draw()
