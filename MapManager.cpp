@@ -84,6 +84,7 @@ void MapManager::Init()
 	MapManager::AddItem(Items[4]);
 	MapManager::AddItem(Items[5]);
 	MapManager::AddItem(Items[6]);
+	MapManager::AddItem(Items[7]);
 	//MapManager::AddItem(&al);
 }
 
@@ -112,15 +113,22 @@ void MapManager::Update()
 	
 	// update the lethal entities
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::PropertyFlags::LETHAL);
-	
-	// Check lethal collision of the ennemies and draw them because they are lethal to the player
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES, Item::PropertyFlags::ENEMIES);
 
-	// check the lethal collision after drawing the lethal items
+	// Check the lethal collision for Rick after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
+	// Check lethal collision also for the ennemies (they should draw in black to erase the bullets)
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::ENEMIES);
+	
 	// erase the bullet to avoid the bullet to be considered as static collision
+	// also this will kill the bullet that hit Rick or an Enemy
 	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET);
+
+	// Draw the ennemies
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES, Item::PropertyFlags::ENEMIES);
+
+	// Check again the lethal collision for Rick because enemies are lethal to the player
+	Rick::CheckLethalCollision();
 
 	// get the position of the feet of rick in screen coordinate
 	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();

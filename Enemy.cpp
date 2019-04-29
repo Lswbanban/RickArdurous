@@ -20,6 +20,22 @@ bool Enemy::Update(UpdateStep step)
 {
 	switch (step)
 	{
+		case Item::UpdateStep::CHECK_LETHAL:
+		{
+			// if we have a collision, that means we hit a lethal pixel
+			// Draw in black to delete the bullet in case we are hit by a bullet
+			if (Draw(BLACK))
+			{
+				// compute the horizontal velocity for the death trajectory
+				char velocityX = IsPropertySet(PropertyFlags::MIRROR_X) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
+				AnimState = State::DEATH;
+				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
+				SetProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+			}
+			break;
+		}
+		
 		case Item::UpdateStep::DRAW_ENEMIES:
 		{
 			// update the frame counter (need to be done in any state)
@@ -41,26 +57,17 @@ bool Enemy::Update(UpdateStep step)
 					break;
 			}
 			
-			// draw the statuette and check the collision with eventual lethal stuff
-			int collision = Draw(WHITE);
-			
-			// if we have a collision, that means we hit a lethal pixel
-			if (collision != 0)
-			{
-				// compute the horizontal velocity for the death trajectory
-				char velocityX = IsPropertySet(PropertyFlags::MIRROR_X) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
-				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
-				AnimState = State::DEATH;
-				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
-				SetProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
-			}
+			// draw the enemy in white
+			Draw(WHITE);
 			break;
 		}
+		
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
 			Draw(INVERT);
 			return UpdateDeath();
 		}
+		
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
 		{
 			// check the ground collision

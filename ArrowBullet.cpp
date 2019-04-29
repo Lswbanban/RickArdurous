@@ -1,5 +1,5 @@
 /*
- * Implement the logic and drawing of the bullet
+ * Implement the logic and drawing of the Bullet fired by Rick or an Arrow thrown by the Arrow Launcher
 */
 
 #include "RickArdurous.h"
