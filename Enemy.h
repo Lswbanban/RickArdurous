@@ -35,7 +35,7 @@ private:
 	unsigned char GetWidth();
 	unsigned char GetHeight();
 	bool IsThereAnyGroundCollisionAt(int yWorld);
-	bool IsThereWallCollisionOrGap();
+	bool IsThereWallCollisionOrGap(bool shouldCheckGap);
 	void MoveAccordingToOrientation();
 	
 	void InitWait();
