@@ -37,6 +37,7 @@ bool Enemy::Update(UpdateStep step)
 					UpdateHalfTurn();
 					break;
 				case State::WAIT:
+				case State::WAIT_AGAIN:
 					UpdateWait();
 					break;
 				case State::FALL:
@@ -241,9 +242,16 @@ void Enemy::UpdateWalk()
 	
 		// Update the special behavior of the skeleton or by default make half turn
 		if (IsSkeleton)
+		{
 			UpdateSkeletonBehavior();
+		}
 		else if (IsThereWallCollisionOrGap(true))
-			InitHalfTurn();
+		{
+			if (IsScorpion())
+				InitWait();
+			else
+				InitHalfTurn();
+		}
 	}
 }
 
@@ -257,14 +265,25 @@ void Enemy::UpdateHalfTurn()
 
 void Enemy::UpdateWait()
 {
+	// get the wait anim speed
+	unsigned char waitAnimSpeed = IsScorpion() ? SCORPION_WAIT_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId - SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START];
 	// check if we need to change the frame id
-	if (AnimFrameCount == WALK_AND_WAIT_ANIM_SPEED[AnimFrameId - SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START])
+	if (AnimFrameCount == waitAnimSpeed)
 	{
 		// reset the frame counter
 		AnimFrameCount = 0;
 		// change the anim id (only two ids in wait, but will make 3 frame with the mirror)
 		if (AnimFrameId == SpriteData::EnemyAnimFrameId::ENEMY_WAIT_END)
+		{
 			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
+			if (IsScorpion())
+			{
+				if (AnimState == State::WAIT)
+					AnimState = State::WAIT_AGAIN;
+				else
+					InitHalfTurn();
+			}
+		}
 		else
 			AnimFrameId++;
 		
