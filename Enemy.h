@@ -6,7 +6,7 @@
 class Enemy : public Item
 {
 public:
-	Enemy(int startX, int startY, unsigned char flag);
+	Enemy(int startX, int startY, unsigned char flag, bool isSkeleton);
 	virtual bool Update(UpdateStep step);
 	
 private:
@@ -14,6 +14,7 @@ private:
 	static constexpr int MUMMY_HALF_TURN_ANIM_SPEED = 14;
 	static constexpr int SKELETON_HALF_TURN_ANIM_SPEED = 5;
 	static constexpr int SKELETON_WALK_ANIM_SPEED = 3;
+	static constexpr int SCORPION_WALK_ANIM_SPEED = 1;
 	static constexpr int DEATH_VELOCITY_X = 9;
 	static constexpr int SKELETON_SENSOR = 4;
 
@@ -28,9 +29,11 @@ private:
 	
 	unsigned char AnimFrameId : 4;
 	unsigned char AnimFrameCount : 4;
-	unsigned char AnimState : 4;
+	unsigned char AnimState : 3;
+	unsigned char IsSkeleton : 1;
 	unsigned char FallAnimSpeedIndex :4;
 	
+	inline bool IsScorpion() { return IsPropertySet(PropertyFlags::SPECIAL); }
 	int GetYUnderFeet();
 	unsigned char GetWidth();
 	unsigned char GetHeight();
