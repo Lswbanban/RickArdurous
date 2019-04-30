@@ -97,9 +97,9 @@ namespace SpriteData
 		ENEMY_WALK_START = 0,
 		ENEMY_WALK_END = 3,
 		ENEMY_HALF_TURN,
-		ENEMY_FALL,
 		ENEMY_WAIT_START,
-		ENEMY_WAIT_END = 9,
+		ENEMY_WAIT_END = 8,
+		ENEMY_FALL,
 	};
 	const int MUMMY_SPRITE_WIDTH = 9;
 	const int MUMMY_SPRITE_HEIGHT = 16;
@@ -109,6 +109,11 @@ namespace SpriteData
 	const int SKELETON_SPRITE_WIDTH = 6;
 	const int SKELETON_SPRITE_HEIGHT = 16;
 	extern const unsigned char Skeleton[][SKELETON_SPRITE_WIDTH * (SKELETON_SPRITE_HEIGHT / 8)];
+
+	// Scorpions
+	const int SCORPION_SPRITE_WIDTH = 9;
+	const int SCORPION_SPRITE_HEIGHT = 8;
+	extern const unsigned char Scorpion[][SCORPION_SPRITE_WIDTH * (SCORPION_SPRITE_HEIGHT / 8)];
 
 	// HUD elements
 	const int HUD_SPRITE_WIDTH = 5;
