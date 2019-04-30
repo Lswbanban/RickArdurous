@@ -11,8 +11,9 @@
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
-Enemy::Enemy(int startX, int startY, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::ENEMIES | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+Enemy::Enemy(int startX, int startY, unsigned char flag, bool isSkeleton) : Item(startX, startY, flag | Item::PropertyFlags::ENEMIES | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
 {
+	IsSkeleton = isSkeleton;
 	InitWalk();
 };
 
@@ -118,17 +119,18 @@ bool Enemy::Update(UpdateStep step)
 
 int Enemy::GetYUnderFeet()
 {
-	return Y + 14;
+	return IsScorpion() ? Y + 6 : Y + 14;
 }
 
 unsigned char Enemy::GetWidth()
 {
-	return IsPropertySet(PropertyFlags::SPECIAL) ? SpriteData::SKELETON_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH;
+	return IsSkeleton ? SpriteData::SKELETON_SPRITE_WIDTH : 
+			(IsScorpion() ? SpriteData::SCORPION_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH);
 }
 
 unsigned char Enemy::GetHeight()
 {
-	return SpriteData::SKELETON_SPRITE_HEIGHT;
+	return IsScorpion() ? 6 : 12;
 }
 
 void Enemy::MoveAccordingToOrientation()
@@ -143,9 +145,10 @@ void Enemy::MoveAccordingToOrientation()
 bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 {
 	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
+	unsigned char gapHeightShift = IsScorpion() ? 0 : 1;
 	return (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
-		MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
-		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))));
+		(!IsScorpion() && MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT)) ||
+		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << gapHeightShift))));
 }
 
 bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
@@ -189,7 +192,7 @@ void Enemy::InitFall()
 	AnimState = State::FALL;
 	FallAnimSpeedIndex = Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
 	AnimFrameCount = 0;
-	if (IsPropertySet(PropertyFlags::SPECIAL))
+	if (IsSkeleton)
 		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
 }
 
@@ -219,11 +222,9 @@ void Enemy::InitHalfTurn()
 
 void Enemy::UpdateWalk()
 {
-	// the walk will have different logic for Skeleton or other type
-	bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
-	
 	// get the anim speed
-	unsigned char walkAnimSpeed = isSkeleton ? SKELETON_WALK_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId];
+	unsigned char walkAnimSpeed = IsSkeleton ? SKELETON_WALK_ANIM_SPEED : 
+				(IsScorpion() ? SCORPION_WALK_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId]);
 	// check if it is the time to change the anim frame
 	if (AnimFrameCount == walkAnimSpeed)
 	{
@@ -239,7 +240,7 @@ void Enemy::UpdateWalk()
 		MoveAccordingToOrientation();
 	
 		// Update the special behavior of the skeleton or by default make half turn
-		if (isSkeleton)
+		if (IsSkeleton)
 			UpdateSkeletonBehavior();
 		else if (IsThereWallCollisionOrGap(true))
 			InitHalfTurn();
@@ -249,7 +250,7 @@ void Enemy::UpdateWalk()
 void Enemy::UpdateHalfTurn()
 {
 	// get the anim speed
-	unsigned char halfTurnAnimSpeed = IsPropertySet(PropertyFlags::SPECIAL) ? SKELETON_HALF_TURN_ANIM_SPEED : MUMMY_HALF_TURN_ANIM_SPEED;
+	unsigned char halfTurnAnimSpeed = IsSkeleton ? SKELETON_HALF_TURN_ANIM_SPEED : MUMMY_HALF_TURN_ANIM_SPEED;
 	if (AnimFrameCount == halfTurnAnimSpeed)
 		InitWalk();
 }
@@ -268,7 +269,7 @@ void Enemy::UpdateWait()
 			AnimFrameId++;
 		
 		// check if we need to stop waiting and go back to walk
-		if (IsPropertySet(PropertyFlags::SPECIAL))
+		if (IsSkeleton)
 			UpdateSkeletonBehavior();
 	}
 }
@@ -314,10 +315,15 @@ int Enemy::Draw(unsigned char color)
 	int xOnScreen = MapManager::GetXOnScreen(X);
 	int yOnScreen = MapManager::GetYOnScreen(Y);
 	bool isMirror = IsPropertySet(PropertyFlags::MIRROR_X);
-	if (IsPropertySet(PropertyFlags::SPECIAL))
+	if (IsSkeleton)
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
 									SpriteData::Skeleton[AnimFrameId],
 									SpriteData::SKELETON_SPRITE_WIDTH, SpriteData::SKELETON_SPRITE_HEIGHT,
+									color, isMirror);
+	else if (IsScorpion())
+		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
+									SpriteData::Scorpion[AnimFrameId],
+									SpriteData::SCORPION_SPRITE_WIDTH, SpriteData::SCORPION_SPRITE_HEIGHT,
 									color, isMirror);
 	else
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,

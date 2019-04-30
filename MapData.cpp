@@ -38,12 +38,13 @@ Spike	sp3(100,90, Item::PropertyFlags::NONE);
 Statuette	st(40,25);
 DynamiteCrate	dc(140, 50);
 BulletCrate		bc(200, 40);
-Enemy		mum(100, 40, Item::PropertyFlags::NONE);
-Enemy		skl(85, 15, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+Enemy		mum(100, 40, Item::PropertyFlags::NONE, false);
+Enemy		skl(85, 15, Item::PropertyFlags::MIRROR_X, true);
+Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL, false);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
-	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl,
+	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl, &scor,
 	};
 
 // compute the number of items
