@@ -22,24 +22,8 @@ bool Enemy::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::CHECK_LETHAL:
 		{
-			// if we have a collision, that means we hit a lethal pixel
-			// Draw in black to delete the bullet in case we are hit by a bullet
-			int collision = Draw(BLACK);
-			if (collision != 0)
-			{
-				// compute the horizontal velocity for the death trajectory
-				bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
-				char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
-				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
-				AnimState = State::DEATH;
-				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
-				SetProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
-			}
-			break;
-		}
-		
-		case Item::UpdateStep::DRAW_ENEMIES:
-		{
+			// first update the logic of the AI to determine its state and animation,
+			// so that we draw the same frame in black and white
 			// update the frame counter (need to be done in any state)
 			AnimFrameCount++;
 			// then call the corect update according to the current state
@@ -59,6 +43,24 @@ bool Enemy::Update(UpdateStep step)
 					break;
 			}
 			
+			// if we have a collision, that means we hit a lethal pixel
+			// Draw in black to delete the bullet in case we are hit by a bullet
+			int collision = Draw(BLACK);
+			if (collision != 0)
+			{
+				// compute the horizontal velocity for the death trajectory
+				bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
+				char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
+				AnimState = State::DEATH;
+				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
+				SetProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+			}
+			break;
+		}
+		
+		case Item::UpdateStep::DRAW_ENEMIES:
+		{
 			// draw the enemy in white
 			Draw(WHITE);
 			break;
@@ -66,6 +68,7 @@ bool Enemy::Update(UpdateStep step)
 		
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
+			// special case, the Enemy is in that update step only when he is dead
 			Draw(INVERT);
 			return UpdateDeath();
 		}
@@ -137,13 +140,12 @@ void Enemy::MoveAccordingToOrientation()
 		X++;
 }
 
-bool Enemy::IsThereWallCollisionOrGap()
+bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 {
-	bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
 	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
 	return (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
 		MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
-		(!isSkeleton && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))));
+		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))));
 }
 
 bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
@@ -169,7 +171,7 @@ void Enemy::UpdateSkeletonBehavior()
 	else 
 	{
 		// check if rick is aligned with me, or if I'm blocked by collision
-		if ((!isRickOnMyLeft && !isRickOnMyRight) || IsThereWallCollisionOrGap())
+		if ((!isRickOnMyLeft && !isRickOnMyRight) || IsThereWallCollisionOrGap(false))
 		{
 			if (AnimState != State::WAIT)
 				InitWait();
@@ -239,7 +241,7 @@ void Enemy::UpdateWalk()
 		// Update the special behavior of the skeleton or by default make half turn
 		if (isSkeleton)
 			UpdateSkeletonBehavior();
-		else if (IsThereWallCollisionOrGap())
+		else if (IsThereWallCollisionOrGap(true))
 			InitHalfTurn();
 	}
 }
