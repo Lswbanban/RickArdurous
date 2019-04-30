@@ -35,9 +35,10 @@ private:
 	unsigned char GetWidth();
 	unsigned char GetHeight();
 	bool IsThereAnyGroundCollisionAt(int yWorld);
+	bool IsThereWallCollisionOrGap();
 	void MoveAccordingToOrientation();
-	bool IsRickAlignedWithMe();
 	
+	void InitWait();
 	void InitWalk();
 	void InitFall();
 	void InitHalfTurn();
@@ -46,6 +47,7 @@ private:
 	void UpdateWait();
 	void UpdateFall();
 	bool UpdateDeath();
+	void UpdateSkeletonBehavior();
 	int Draw(unsigned char color);
 };
 

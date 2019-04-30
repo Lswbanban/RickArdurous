@@ -83,7 +83,7 @@ void MapManager::Init()
 	MapManager::AddItem(Items[2]);
 	MapManager::AddItem(Items[4]);
 	MapManager::AddItem(Items[5]);
-	//MapManager::AddItem(Items[6]);
+	MapManager::AddItem(Items[6]);
 	MapManager::AddItem(Items[7]);
 	//MapManager::AddItem(&al);
 }

@@ -98,19 +98,7 @@ bool Enemy::Update(UpdateStep step)
 			{
 				// there is ground, check if I was falling
 				if (AnimState == State::FALL)
-				{
 					InitWalk();
-				}
-				else
-				{
-					// compute the world coordinate of the map level block to test
-					bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
-					int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
-					if (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
-						MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
-						(!isSkeleton && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))))
-						InitHalfTurn();
-				}
 			}
 			break;
 		}
@@ -140,13 +128,6 @@ unsigned char Enemy::GetHeight()
 	return SpriteData::SKELETON_SPRITE_HEIGHT;
 }
 
-bool Enemy::IsRickAlignedWithMe()
-{
-	int rickX = Rick::GetCenterX();
-	int myCenterX = X + (GetWidth() >> 1);
-	return (rickX > (myCenterX - SKELETON_SENSOR)) && (rickX < (myCenterX + SKELETON_SENSOR));
-}
-
 void Enemy::MoveAccordingToOrientation()
 {
 	// move the X depending on the direction
@@ -154,6 +135,15 @@ void Enemy::MoveAccordingToOrientation()
 		X--;
 	else
 		X++;
+}
+
+bool Enemy::IsThereWallCollisionOrGap()
+{
+	bool isSkeleton = IsPropertySet(PropertyFlags::SPECIAL);
+	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
+	return (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
+		MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT) ||
+		(!isSkeleton && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << 1))));
 }
 
 bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
@@ -165,6 +155,33 @@ bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
 	return MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, yWorld);
 }
 
+void Enemy::UpdateSkeletonBehavior()
+{
+	int rickX = Rick::GetCenterX();
+	int myCenterX = X + (SpriteData::SKELETON_SPRITE_WIDTH >> 1);
+	bool isRickOnMyLeft = rickX < (myCenterX - SKELETON_SENSOR);
+	bool isRickOnMyRight = rickX > (myCenterX + SKELETON_SENSOR);
+	bool amILookingLeft = IsPropertySet(MIRROR_X);
+	if ((isRickOnMyRight && amILookingLeft) || (isRickOnMyLeft && !amILookingLeft))
+	{
+		InitHalfTurn();
+	}
+	else 
+	{
+		// check if rick is aligned with me, or if I'm blocked by collision
+		if ((!isRickOnMyLeft && !isRickOnMyRight) || IsThereWallCollisionOrGap())
+		{
+			if (AnimState != State::WAIT)
+				InitWait();
+		}
+		else
+		{
+			if (AnimState != State::WALK)
+				InitWalk();
+		}
+	}
+}
+
 void Enemy::InitFall()
 {
 	AnimState = State::FALL;
@@ -172,6 +189,13 @@ void Enemy::InitFall()
 	AnimFrameCount = 0;
 	if (IsPropertySet(PropertyFlags::SPECIAL))
 		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
+}
+
+void Enemy::InitWait()
+{
+	AnimState = WAIT;
+	AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
+	AnimFrameCount = 0;
 }
 
 void Enemy::InitWalk()
@@ -212,21 +236,11 @@ void Enemy::UpdateWalk()
 		// move the X according to the orientation for a ping pong trajectory
 		MoveAccordingToOrientation();
 	
-		// special case for skeleton who may switch to wait state
+		// Update the special behavior of the skeleton or by default make half turn
 		if (isSkeleton)
-		{
-			int rickX = Rick::GetCenterX();
-			bool isLookingLeft = IsPropertySet(MIRROR_X);
-			if (((X < rickX) && isLookingLeft) || ((X > rickX) && !isLookingLeft))
-			{
-				InitHalfTurn();
-			}
-			else if (IsRickAlignedWithMe())
-			{
-				AnimState = WAIT;
-				AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
-			}
-		}
+			UpdateSkeletonBehavior();
+		else if (IsThereWallCollisionOrGap())
+			InitHalfTurn();
 	}
 }
 
@@ -252,8 +266,8 @@ void Enemy::UpdateWait()
 			AnimFrameId++;
 		
 		// check if we need to stop waiting and go back to walk
-		if (!IsRickAlignedWithMe())
-			InitWalk();
+		if (IsPropertySet(PropertyFlags::SPECIAL))
+			UpdateSkeletonBehavior();
 	}
 }
 
