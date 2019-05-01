@@ -111,7 +111,7 @@ namespace SpriteData
 	extern const unsigned char Skeleton[][SKELETON_SPRITE_WIDTH * (SKELETON_SPRITE_HEIGHT / 8)];
 
 	// Scorpions
-	const int SCORPION_SPRITE_WIDTH = 9;
+	const int SCORPION_SPRITE_WIDTH = 8;
 	const int SCORPION_SPRITE_HEIGHT = 8;
 	extern const unsigned char Scorpion[][SCORPION_SPRITE_WIDTH * (SCORPION_SPRITE_HEIGHT / 8)];
 
