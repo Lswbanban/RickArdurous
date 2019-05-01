@@ -115,6 +115,23 @@ namespace SpriteData
 	const int SCORPION_SPRITE_HEIGHT = 8;
 	extern const unsigned char Scorpion[][SCORPION_SPRITE_WIDTH * (SCORPION_SPRITE_HEIGHT / 8)];
 
+	// Destroyable block sprite
+	const int DESTROYABLE_BLOCK_SPRITE_WIDTH = 15;
+	const int DESTROYABLE_BLOCK_SPRITE_HEIGHT = 8;
+	extern const unsigned char DestroyableBlock[];
+
+	const int DESTROYABLE_BLOCK_PIECE_SPRITE_WIDTH = 5;
+	const int DESTROYABLE_BLOCK_PIECE_SPRITE_HEIGHT = 8;
+	extern const unsigned char DestroyableBlockPiece[];
+
+	// Stalactite and Stalagmite
+	const int STALACTITE_SPRITE_WIDTH = 3;
+	const int STALACTITE_SPRITE_HEIGHT = 8;
+	extern const unsigned char Stalactite[];
+	const int STALAGMITE_SPRITE_WIDTH = 3;
+	const int STALAGMITE_SPRITE_HEIGHT = 8;
+	extern const unsigned char Stalagmite[];
+
 	// HUD elements
 	const int HUD_SPRITE_WIDTH = 5;
 	const int HUD_BULLET_SPRITE_WIDTH = 7;
