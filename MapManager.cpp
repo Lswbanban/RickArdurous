@@ -125,7 +125,7 @@ void MapManager::Update()
 	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::ENEMIES, true);
 	
 	// Check the lethal collision for the destroyable blocks
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::DECOR_BLOCK, false);
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::DESTROYABLE_BLOCK, false);
 
 	// erase the bullet to avoid the bullet to be considered as static collision
 	// also this will kill the bullet that hit Rick or an Enemy
@@ -212,7 +212,7 @@ unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
 bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY, unsigned char spriteId)
 {
 	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DECOR_BLOCK))
+		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DESTROYABLE_BLOCK))
 		{
 			DestroyableBlock * block = (DestroyableBlock*)ItemsToUpdate[i];
 			if (block->IsLocatedAt(spriteLevelX, spriteLevelY, spriteId))
