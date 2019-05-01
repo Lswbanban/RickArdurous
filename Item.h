@@ -13,6 +13,7 @@ public:
 		BULLET = 1 << 2,
 		STATIC_COLLISION_NEEDED = 1 << 3,
 		IGNORED_BY_ENEMIES = 1 << 4,
+		DECOR_BLOCK = LETHAL | ENEMIES | BULLET | IGNORED_BY_ENEMIES, // special case for static collision
 		// these are other properties
 		MIRROR_X = 1 << 5,
 		ALIVE = 1 << 6,
@@ -26,6 +27,7 @@ public:
 		CHECK_LETHAL,
 		ERASE_BULLET,
 		DRAW_ENEMIES,
+		DRAW_DECOR_BLOCK,
 		CHECK_STATIC_COLLISION,
 		DRAW_IGNORED_BY_ENEMIES,
 		RESPAWN,

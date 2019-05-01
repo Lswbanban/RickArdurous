@@ -10,6 +10,8 @@ namespace SpriteData
 		BLOCK_16_8_LEFT,
 		BLOCK_16_8_RIGHT,
 		STATUE_TOP,
+		DESTROYABLE_BLOCK_LEFT = 8,
+		DESTROYABLE_BLOCK_RIGHT = 9,
 		PLATFORM = 29,
 		LADDER,
 		PLATFORM_WITH_LADDER,
@@ -116,10 +118,6 @@ namespace SpriteData
 	extern const unsigned char Scorpion[][SCORPION_SPRITE_WIDTH * (SCORPION_SPRITE_HEIGHT / 8)];
 
 	// Destroyable block sprite
-	const int DESTROYABLE_BLOCK_SPRITE_WIDTH = 15;
-	const int DESTROYABLE_BLOCK_SPRITE_HEIGHT = 8;
-	extern const unsigned char DestroyableBlock[];
-
 	const int DESTROYABLE_BLOCK_PIECE_SPRITE_WIDTH = 5;
 	const int DESTROYABLE_BLOCK_PIECE_SPRITE_HEIGHT = 8;
 	extern const unsigned char DestroyableBlockPiece[];
