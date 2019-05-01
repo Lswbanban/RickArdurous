@@ -7,6 +7,7 @@
 #include "SpriteData.h"
 #include "Rick.h"
 #include "PickUpItem.h"
+#include "DestroyableBlock.h"
 #include <avr/pgmspace.h>
 #include "Input.h"
 
@@ -40,11 +41,12 @@ namespace MapManager
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
 	
-	void UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags);
+	void UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags, bool shouldFlagsBeSet);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAt(int xWorld, int yWorld);
+	bool IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY, unsigned char spriteId);
 }
 
 void MapManager::AddItem(Item * item)
@@ -86,17 +88,18 @@ void MapManager::Init()
 	MapManager::AddItem(Items[6]);
 	MapManager::AddItem(Items[7]);
 	MapManager::AddItem(Items[8]);
+	MapManager::AddItem(Items[9]);
 	//MapManager::AddItem(&al);
 }
 
-void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags)
+void MapManager::UpdateItems(Item::UpdateStep updateStep, Item::PropertyFlags itemPropertyFlags, bool shouldFlagsBeSet)
 {
 	// debug early exit
 	if (updateStep > DebugDrawStep)
 		return;
 	
 	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (ItemsToUpdate[i]->IsPropertySet(itemPropertyFlags))
+		if (ItemsToUpdate[i]->IsPropertySet(itemPropertyFlags) == shouldFlagsBeSet)
 			if (ItemsToUpdate[i]->Update(updateStep))
 				i--;
 }
@@ -113,20 +116,23 @@ void MapManager::Update()
 	Rick::UpdateInput();
 	
 	// update the lethal entities
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::PropertyFlags::LETHAL);
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::PropertyFlags::LETHAL, true);
 
 	// Check the lethal collision for Rick after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
 	// Check lethal collision also for the ennemies (they should draw in black to erase the bullets)
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::ENEMIES);
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::ENEMIES, true);
 	
+	// Check the lethal collision for the destroyable blocks
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::PropertyFlags::DECOR_BLOCK, false);
+
 	// erase the bullet to avoid the bullet to be considered as static collision
 	// also this will kill the bullet that hit Rick or an Enemy
-	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET);
+	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::PropertyFlags::BULLET, true);
 
 	// Draw the ennemies
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES, Item::PropertyFlags::ENEMIES);
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES, Item::PropertyFlags::ENEMIES, true);
 
 	// Check again the lethal collision for Rick because enemies are lethal to the player
 	Rick::CheckLethalCollision();
@@ -134,8 +140,11 @@ void MapManager::Update()
 	// get the position of the feet of rick in screen coordinate
 	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();
 	
-	// Draw the static collision
+	// Draw the static collision of the map
 	Draw(SpriteData::BLOCK_8_8, SpriteData::PLATFORM, rickFeetOnScreen);
+
+	// Draw static collision items
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_DECOR_BLOCK, Item::PropertyFlags::DECOR_BLOCK, false);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
@@ -144,10 +153,10 @@ void MapManager::Update()
 	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// call the function to check the static collision for the items that need it, including the Enemies
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::PropertyFlags::STATIC_COLLISION_NEEDED, true);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES);
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::PropertyFlags::IGNORED_BY_ENEMIES, true);
 
 	// draw the ladders after checking the collision
 	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
@@ -201,6 +210,18 @@ unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
 		return SpriteData::BLOCK_8_8;
 	// check if the specific sprite id on the map if empty or not
 	return pgm_read_byte(&(Level[mapY][mapX]));
+}
+
+bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY, unsigned char spriteId)
+{
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (!ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DECOR_BLOCK))
+		{
+			DestroyableBlock * block = (DestroyableBlock*)ItemsToUpdate[i];
+			if (block->IsLocatedAt(spriteLevelX, spriteLevelY, spriteId))
+				return block->IsAlive();
+		}
+	return false;
 }
 
 /**
@@ -374,7 +395,9 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 									((minSpriteIndex == SpriteData::PLATFORM) && (spriteY <= rickFeetOnScreen));
 		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
 		{
-			unsigned char spriteId = pgm_read_byte(&(Level[y + CameraY][x + CameraX]));
+			unsigned char spriteLevelX = x + CameraX;
+			unsigned char spriteLevelY = y + CameraY;
+			unsigned char spriteId = pgm_read_byte(&(Level[spriteLevelY][spriteLevelX]));
 			// special case for the mix of ladder and platform, draw either a platform or a ladder depending on the drawing state
 			if (spriteId == SpriteData::PLATFORM_WITH_LADDER)
 			{
@@ -383,6 +406,12 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				else
 					spriteId = SpriteData::PLATFORM;
 			}
+
+			// check if we need to draw or not the destroyable block (in case they have been destroyed)
+			if (((spriteId == SpriteData::DESTROYABLE_BLOCK_LEFT) || (spriteId == SpriteData::DESTROYABLE_BLOCK_RIGHT)) && 
+				!IsDestroyableBlockAlive(spriteLevelX, spriteLevelY, spriteId))
+				continue;
+
 			// draw the sprite if we need to
 			if ((spriteId >= minSpriteIndex) && (spriteId <= maxSpriteIndex) &&
 				((spriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
