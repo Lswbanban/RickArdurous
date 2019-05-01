@@ -120,7 +120,7 @@ bool Enemy::Update(UpdateStep step)
 
 int Enemy::GetYUnderFeet()
 {
-	return IsScorpion() ? Y + 6 : Y + 14;
+	return IsScorpion() ? Y + 4 : Y + 14;
 }
 
 unsigned char Enemy::GetWidth()
@@ -131,7 +131,7 @@ unsigned char Enemy::GetWidth()
 
 unsigned char Enemy::GetHeight()
 {
-	return IsScorpion() ? 6 : 12;
+	return IsScorpion() ? 4 : 12;
 }
 
 void Enemy::MoveAccordingToOrientation()
@@ -266,7 +266,7 @@ void Enemy::UpdateHalfTurn()
 void Enemy::UpdateWait()
 {
 	// get the wait anim speed
-	unsigned char waitAnimSpeed = IsScorpion() ? SCORPION_WAIT_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId - SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START];
+	unsigned char waitAnimSpeed = WALK_AND_WAIT_ANIM_SPEED[AnimFrameId - SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START];
 	// check if we need to change the frame id
 	if (AnimFrameCount == waitAnimSpeed)
 	{
