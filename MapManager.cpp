@@ -85,9 +85,9 @@ void MapManager::Init()
 	MapManager::AddItem(Items[2]);
 	MapManager::AddItem(Items[4]);
 	MapManager::AddItem(Items[5]);
-	MapManager::AddItem(Items[6]);
-	MapManager::AddItem(Items[7]);
-	MapManager::AddItem(Items[8]);
+	//MapManager::AddItem(Items[6]);
+	//MapManager::AddItem(Items[7]);
+	//MapManager::AddItem(Items[8]);
 	MapManager::AddItem(Items[9]);
 	//MapManager::AddItem(&al);
 }
@@ -142,9 +142,6 @@ void MapManager::Update()
 	
 	// Draw the static collision of the map
 	Draw(SpriteData::BLOCK_8_8, SpriteData::PLATFORM, rickFeetOnScreen);
-
-	// Draw static collision items
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_DECOR_BLOCK, Item::PropertyFlags::DECOR_BLOCK, false);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
