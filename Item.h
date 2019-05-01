@@ -13,7 +13,8 @@ public:
 		BULLET = 1 << 2,
 		STATIC_COLLISION_NEEDED = 1 << 3,
 		IGNORED_BY_ENEMIES = 1 << 4,
-		DECOR_BLOCK = LETHAL | ENEMIES | BULLET | IGNORED_BY_ENEMIES, // special case for static collision
+		// special case for destroyable blocks: if none of these flags are set, that means it is destroyable block
+		DESTROYABLE_BLOCK = LETHAL | ENEMIES | BULLET | IGNORED_BY_ENEMIES,
 		// these are other properties
 		MIRROR_X = 1 << 5,
 		ALIVE = 1 << 6,

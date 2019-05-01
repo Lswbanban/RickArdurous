@@ -32,7 +32,6 @@ bool DestroyableBlock::Update(UpdateStep step)
 			break;
 		}
 	}
-
 	return false;
 }
 
@@ -43,10 +42,12 @@ void DestroyableBlock::InitDeath()
 
 bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId)
 {
-	int x = X;
-	if (spriteId == SpriteData::WallId::DESTROYABLE_BLOCK_RIGHT)
-		x += SpriteData::LEVEL_SPRITE_WIDTH;
-	return (mapX == (x >> 3)) && (mapY == (Y >> 3));
+	if (mapY == (Y >> 3))
+	{
+		int x = (spriteId == SpriteData::WallId::DESTROYABLE_BLOCK_RIGHT) ? X + SpriteData::LEVEL_SPRITE_WIDTH : X;
+		return (mapX == (x >> 3));
+	}
+	return false;
 }
 
 bool DestroyableBlock::IsAlive()
