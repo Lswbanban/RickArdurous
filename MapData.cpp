@@ -20,7 +20,7 @@ const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
 	{ 0, 255, 255, 255, 30, 255, 255, 255, 255, 255, 255, 255, 255, 2, 3, 1, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 	{ 1, 255, 255, 255, 30, 29, 29, 255, 255, 255, 29, 29, 29, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 	{ 2, 255, 255, 29, 31, 29, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
-	{ SpriteData::BLOCK_8_8_SPLIT, 30, 255, 255, 30, 255, 255, 255, 255, 255, 255, 255, 255, 255, 8, 9, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
+	{ SpriteData::BLOCK_8_8_SPLIT, 30, 255, 255, 30, 255, 255, 255, 255, 255, 255, 255, 8, 9, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
 	{ SpriteData::BLOCK_16_8_LEFT, 30, 29, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_16_8_LEFT, SpriteData::BLOCK_16_8_RIGHT, 255, 255, SpriteData::BLOCK_16_8_LEFT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_16_8_LEFT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_16_8_LEFT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_16_8_LEFT, SpriteData::BLOCK_16_8_RIGHT, 0, 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 0,},
 	{ 0, 30, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0,},
 	{ 0, 30, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 29, 31, 29, 0,},
@@ -42,7 +42,7 @@ BulletCrate		bc(200, 40);
 Enemy		mum(100, 40, Item::PropertyFlags::NONE, false);
 Enemy		skl(85, 15, Item::PropertyFlags::MIRROR_X, true);
 Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL, false);
-DestroyableBlock		block(112, 48, Item::PropertyFlags::NONE);
+DestroyableBlock		block(96, 48, Item::PropertyFlags::NONE);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {

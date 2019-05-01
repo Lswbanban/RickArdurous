@@ -15,13 +15,30 @@ bool DestroyableBlock::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case Item::UpdateStep::DRAW_DECOR_BLOCK:
+		case Item::UpdateStep::CHECK_LETHAL:
 		{
+			// get my coordinate on screen
+			int xOnScreen = MapManager::GetXOnScreen(X);
+			int yOnScreen = MapManager::GetYOnScreen(Y);
+			// check on the left
+			for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
+				if (arduboy.getPixel(xOnScreen - i, yOnScreen) == WHITE)
+					InitDeath();
+			// check on the right
+			xOnScreen += SpriteData::LEVEL_SPRITE_WIDTH << 1;
+			for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
+				if (arduboy.getPixel(xOnScreen + i, yOnScreen) == WHITE)
+					InitDeath();
 			break;
 		}
 	}
 
 	return false;
+}
+
+void DestroyableBlock::InitDeath()
+{
+	ClearProperty(Item::PropertyFlags::ALIVE);
 }
 
 bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId)
