@@ -14,12 +14,11 @@
  * @param width the width of this pickup
  * @param height the height of this pickup
  */
-void PickUpItem::CheckIfRickPickMeUp(unsigned char width, unsigned char height)
+bool PickUpItem::DoesRickPickMeUp(unsigned char width, unsigned char height)
 {
 	int centerRickX = Rick::GetCenterX();
 	int centerRickY = Rick::GetCenterY();
-	if ((centerRickX >= X) && (centerRickX <= X + width) && (centerRickY >= Y) && (centerRickY <= Y + height))
-		PickUp();
+	return ((centerRickX >= X) && (centerRickX <= X + width) && (centerRickY >= Y) && (centerRickY <= Y + height));
 }
 
 /**

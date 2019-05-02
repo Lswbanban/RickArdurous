@@ -20,8 +20,12 @@ bool BulletCrate::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// check if the player pick me up
-				CheckIfRickPickMeUp(SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT);
-
+				if (DoesRickPickMeUp(SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT))
+				{
+					ClearProperty(Item::PropertyFlags::ALIVE);
+					Rick::BulletCount = Rick::MAX_BULLET_COUNT;
+				}
+				
 				// draw the crate
 				arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::BulletCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
 
@@ -31,10 +35,4 @@ bool BulletCrate::Update(UpdateStep step)
 			break;
 	}
 	return false;
-}
-
-void BulletCrate::PickUp()
-{
-	ClearProperty(Item::PropertyFlags::ALIVE);
-	Rick::BulletCount = Rick::MAX_BULLET_COUNT;
 }

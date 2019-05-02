@@ -7,11 +7,10 @@ class PickUpItem : public Item
 {
 public:
 	PickUpItem(int startX, int startY) : Item(startX, startY, PropertyFlags::ALIVE) {}
-	virtual void PickUp() = 0;
 
 protected:
 	void UpdateShineStar(char minX, char maxX, char minY, char maxY);
-	void CheckIfRickPickMeUp(unsigned char width, unsigned char height);
+	bool DoesRickPickMeUp(unsigned char width, unsigned char height);
 	
 private:
 	static constexpr int ANIM_SPEED = 2;
