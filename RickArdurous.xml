@@ -38,6 +38,8 @@
             <File name="Enemy.cpp" />
             <File name="DestroyableBlock.h" />
             <File name="DestroyableBlock.cpp" />
+            <File name="BlockFragment.h" />
+            <File name="BlockFragment.cpp" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />
