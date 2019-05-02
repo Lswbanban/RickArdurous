@@ -20,7 +20,11 @@ bool Statuette::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// check if the player pick me up
-				CheckIfRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT);
+				if (DoesRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT))
+				{
+					ClearProperty(Item::PropertyFlags::ALIVE);
+					Rick::StatuetteCount++;
+				}
 				
 				// draw the statuette
 				arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Statue, SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT, WHITE);
@@ -31,10 +35,4 @@ bool Statuette::Update(UpdateStep step)
 			break;
 	}
 	return false;
-}
-
-void Statuette::PickUp()
-{
-	ClearProperty(Item::PropertyFlags::ALIVE);
-	Rick::StatuetteCount++;
 }
