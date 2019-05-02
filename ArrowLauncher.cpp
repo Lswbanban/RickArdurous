@@ -7,7 +7,7 @@
 #include "Rick.h"
 #include "SpriteData.h"
 
-ArrowLauncher::ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flags) : Item(startX, startY, Item::ItemType::LETHAL, flags)
+ArrowLauncher::ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flags) : Item(startX, startY, flags)
 {
 	DetectionWidth = detectionWidth;
 	// instantiate my arrow
@@ -16,37 +16,39 @@ ArrowLauncher::ArrowLauncher(int startX, int startY, unsigned char detectionWidt
 
 bool ArrowLauncher::Update(UpdateStep step)
 {
-	if (LastLaunchTime == CAN_LAUNCH_ARROW)
+	if (step == UpdateStep::DRAW_LETHAL)
 	{
-		int minX;
-		int maxX;
-		bool isShootingTowardLeft = IsPropertySet(Item::PropertyFlags::MIRROR_X);
-		if (isShootingTowardLeft)
+		if (LastLaunchTime == CAN_LAUNCH_ARROW)
 		{
-			minX = X - DetectionWidth;
-			maxX = X;
+			int minX;
+			int maxX;
+			bool isShootingTowardLeft = IsPropertySet(Item::PropertyFlags::MIRROR_X);
+			if (isShootingTowardLeft)
+			{
+				minX = X - DetectionWidth;
+				maxX = X;
+			}
+			else
+			{
+				minX = X;
+				maxX = X + DetectionWidth;
+			}
+			// get the position of the main character
+			int rickX = Rick::GetX();
+			int rickY = Rick::GetY();
+			// check if the main character is inside the detection range
+			if (Rick::IsAlive() && (Y > rickY) && (Y < rickY + 13) && (minX < rickX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > rickX))
+			{
+				Arrow->Fire(X, Y, isShootingTowardLeft);
+				LastLaunchTime = 0;
+			}
 		}
 		else
 		{
-			minX = X;
-			maxX = X + DetectionWidth;
-		}
-		// get the position of the main character
-		int rickX = Rick::GetX();
-		int rickY = Rick::GetY();
-		// check if the main character is inside the detection range
-		if (Rick::IsAlive() && (Y > rickY) && (Y < rickY + 13) && (minX < rickX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > rickX))
-		{
-			Arrow->Fire(X, Y, isShootingTowardLeft);
-			LastLaunchTime = 0;
+			LastLaunchTime++;
+			if (LastLaunchTime >= LAUNCH_PERIOD)
+				LastLaunchTime = CAN_LAUNCH_ARROW;
 		}
 	}
-	else
-	{
-		LastLaunchTime++;
-		if (LastLaunchTime >= LAUNCH_PERIOD)
-			LastLaunchTime = CAN_LAUNCH_ARROW;
-	}
-	
 	return false;
 }

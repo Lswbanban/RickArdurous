@@ -41,7 +41,7 @@ namespace MapManager
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
 	
-	void UpdateItems(Item::UpdateStep updateStep, unsigned char itemType, unsigned char itemPropertyFlags);
+	void UpdateItems(Item::UpdateStep updateStep);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
@@ -85,23 +85,22 @@ void MapManager::Init()
 	MapManager::AddItem(Items[2]);
 	MapManager::AddItem(Items[4]);
 	MapManager::AddItem(Items[5]);
-	MapManager::AddItem(Items[6]);
-	MapManager::AddItem(Items[7]);
-	MapManager::AddItem(Items[8]);
+	//MapManager::AddItem(Items[6]);
+	//MapManager::AddItem(Items[7]);
+	//MapManager::AddItem(Items[8]);
 	MapManager::AddItem(Items[9]);
 	//MapManager::AddItem(&al);
 }
 
-void MapManager::UpdateItems(Item::UpdateStep updateStep, unsigned char itemType, unsigned char itemPropertyFlags)
+void MapManager::UpdateItems(Item::UpdateStep updateStep)
 {
 	// debug early exit
 	if (updateStep > DebugDrawStep)
 		return;
 	
 	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if ((ItemsToUpdate[i]->GetType() == itemType) || ItemsToUpdate[i]->IsPropertySet(itemPropertyFlags))
-			if (ItemsToUpdate[i]->Update(updateStep))
-				i--;
+		if (ItemsToUpdate[i]->Update(updateStep))
+			i--;
 }
 
 void MapManager::Update()
@@ -116,24 +115,20 @@ void MapManager::Update()
 	Rick::UpdateInput();
 	
 	// update the lethal entities
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::ItemType::LETHAL, Item::PropertyFlags::NONE);
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL, Item::ItemType::BULLET, Item::PropertyFlags::NONE);
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL);
 
 	// Check the lethal collision for Rick after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
-	// Check lethal collision also for the ennemies (they should draw in black to erase the bullets)
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::ItemType::ENEMIES, Item::PropertyFlags::NONE);
-	
-	// Check the lethal collision for the destroyable blocks
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL, Item::ItemType::DESTROYABLE_BLOCK, Item::PropertyFlags::NONE);
+	// Check lethal collision also for the ennemies (they should draw in black to erase the bullets) or destroyable blocks
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL);
 
 	// erase the bullet to avoid the bullet to be considered as static collision
 	// also this will kill the bullet that hit Rick or an Enemy
-	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET, Item::ItemType::BULLET, Item::PropertyFlags::NONE);
+	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET);
 
 	// Draw the ennemies
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES, Item::ItemType::ENEMIES, Item::PropertyFlags::NONE);
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES);
 
 	// Check again the lethal collision for Rick because enemies are lethal to the player
 	Rick::CheckLethalCollision();
@@ -151,10 +146,10 @@ void MapManager::Update()
 	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// call the function to check the static collision for the items that need it, including the Enemies
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION, Item::ItemType::NO_TYPE, Item::PropertyFlags::STATIC_COLLISION_NEEDED);
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES, Item::ItemType::IGNORED_BY_ENEMIES, Item::PropertyFlags::NONE);
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES);
 
 	// draw the ladders after checking the collision
 	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
@@ -213,7 +208,7 @@ unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
 bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY, unsigned char spriteId)
 {
 	for (int i = 0; i < ItemsToUpdateCount; i++)
-		if (ItemsToUpdate[i]->GetType() == Item::ItemType::DESTROYABLE_BLOCK)
+		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DESTROYABLE_BLOCK))
 		{
 			DestroyableBlock * block = (DestroyableBlock*)ItemsToUpdate[i];
 			if (block->IsLocatedAt(spriteLevelX, spriteLevelY, spriteId))

@@ -14,22 +14,27 @@ Statuette::Statuette(int startX, int startY) : PickUpItem(startX, startY)
 
 bool Statuette::Update(UpdateStep step)
 {
-	if (GetType() == Item::ItemType::IGNORED_BY_ENEMIES)
+	switch (step)
 	{
-		// check if the player pick me up
-		CheckIfRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT);
-		
-		// draw the statuette
-		arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Statue, SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT, WHITE);
-		
-		// draw the shiny star
-		UpdateShineStar(-2, 3, -2, 4);
+		case UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				// check if the player pick me up
+				CheckIfRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT);
+				
+				// draw the statuette
+				arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Statue, SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT, WHITE);
+				
+				// draw the shiny star
+				UpdateShineStar(-2, 3, -2, 4);
+			}
+			break;
 	}
 	return false;
 }
 
 void Statuette::PickUp()
 {
-	SetType(Item::ItemType::NO_TYPE);
+	ClearProperty(Item::PropertyFlags::ALIVE);
 	Rick::StatuetteCount++;
 }

@@ -7,11 +7,11 @@
 #include "MapManager.h"
 #include "SpriteData.h"
 
-ArrowBullet::ArrowBullet() : Item(0, 0, Item::ItemType::BULLET, Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+ArrowBullet::ArrowBullet() : Item(0, 0, Item::PropertyFlags::NONE)
 {
 }
 
-ArrowBullet::ArrowBullet(bool isArrow) : Item(0, 0, Item::ItemType::BULLET, Item::PropertyFlags::STATIC_COLLISION_NEEDED | (isArrow ? PropertyFlags::SPECIAL : 0))
+ArrowBullet::ArrowBullet(bool isArrow) : Item(0, 0, (isArrow ? PropertyFlags::SPECIAL : 0))
 {
 }
 
@@ -24,7 +24,6 @@ ArrowBullet::ArrowBullet(bool isArrow) : Item(0, 0, Item::ItemType::BULLET, Item
 void ArrowBullet::Fire(int x, int y, bool isMovingToLeft)
 {
 	// make the bullet alive
-	SetType(Item::ItemType::BULLET);
 	SetProperty(Item::PropertyFlags::ALIVE);
 	// set the starting position and orienatation
 	if (isMovingToLeft)
@@ -91,7 +90,6 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned int color)
 
 void ArrowBullet::KillBulletWithoutSparks()
 {
-	SetType(Item::ItemType::NO_TYPE);
 	ClearProperty(Item::PropertyFlags::ALIVE);
 	MapManager::RemoveItem(this);
 }
@@ -146,7 +144,6 @@ bool ArrowBullet::Update(UpdateStep step)
 				if (impactPosition != NO_PIXEL_FOUND)
 				{
 					// the bullet hit the wall, so kill it
-					SetType(Item::ItemType::NO_TYPE);
 					ClearProperty(Item::PropertyFlags::ALIVE);
 					// init the postion for the sparks sprite, and reset the sparks animation frame id
 					X = impactPosition;

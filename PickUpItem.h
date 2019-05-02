@@ -6,7 +6,7 @@
 class PickUpItem : public Item
 {
 public:
-	PickUpItem(int startX, int startY) : Item(startX, startY, ItemType::IGNORED_BY_ENEMIES, PropertyFlags::NONE) {}
+	PickUpItem(int startX, int startY) : Item(startX, startY, PropertyFlags::ALIVE) {}
 	virtual void PickUp() = 0;
 
 protected:
