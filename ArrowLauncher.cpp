@@ -7,7 +7,7 @@
 #include "Rick.h"
 #include "SpriteData.h"
 
-ArrowLauncher::ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::LETHAL)
+ArrowLauncher::ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flags) : Item(startX, startY, Item::ItemType::LETHAL, flags)
 {
 	DetectionWidth = detectionWidth;
 	// instantiate my arrow

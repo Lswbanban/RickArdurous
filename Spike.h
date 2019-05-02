@@ -6,7 +6,7 @@
 class Spike : public Item
 {
 public:
-	Spike(int startX, int startY, unsigned char flag);
+	Spike(int startX, int startY, unsigned char flags);
 	virtual bool Update(UpdateStep step);
 
 private:

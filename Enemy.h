@@ -6,7 +6,7 @@
 class Enemy : public Item
 {
 public:
-	Enemy(int startX, int startY, unsigned char flag, bool isSkeleton);
+	Enemy(int startX, int startY, unsigned char flags, bool isSkeleton);
 	virtual bool Update(UpdateStep step);
 	
 private:

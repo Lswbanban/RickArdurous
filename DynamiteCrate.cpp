@@ -8,13 +8,13 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::IGNORED_BY_ENEMIES)
+DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY)
 {
 };
 
 bool DynamiteCrate::Update(UpdateStep step)
 {
-	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
+	if (GetType() == Item::ItemType::IGNORED_BY_ENEMIES)
 	{
 		// check if the player pick me up
 		CheckIfRickPickMeUp(SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT);
@@ -30,6 +30,6 @@ bool DynamiteCrate::Update(UpdateStep step)
 
 void DynamiteCrate::PickUp()
 {
-	ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+	SetType(Item::ItemType::NO_TYPE);
 	Rick::DynamiteCount = Rick::MAX_DYNAMITE_COUNT;
 }

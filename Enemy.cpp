@@ -11,7 +11,7 @@
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
-Enemy::Enemy(int startX, int startY, unsigned char flag, bool isSkeleton) : Item(startX, startY, flag | Item::PropertyFlags::ENEMIES | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+Enemy::Enemy(int startX, int startY, unsigned char flags, bool isSkeleton) : Item(startX, startY, Item::ItemType::ENEMIES, flags | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
 {
 	IsSkeleton = isSkeleton;
 	InitWalk();
@@ -55,8 +55,8 @@ bool Enemy::Update(UpdateStep step)
 				char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
 				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
 				AnimState = State::DEATH;
-				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
-				SetProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED);
+				SetType(Item::ItemType::IGNORED_BY_ENEMIES);
 			}
 			break;
 		}
@@ -109,8 +109,8 @@ bool Enemy::Update(UpdateStep step)
 		}
 		case Item::UpdateStep::RESPAWN:
 		{
-			SetProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED | Item::PropertyFlags::ENEMIES);
-			ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+			SetProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED);
+			SetType(Item::ItemType::ENEMIES);
 			InitWalk();
 			break;
 		}

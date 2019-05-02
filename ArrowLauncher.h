@@ -6,7 +6,7 @@
 class ArrowLauncher : public Item
 {
 public:
-	ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flag);
+	ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flags);
 	virtual bool Update(UpdateStep step);
 
 private:

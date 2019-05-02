@@ -4,17 +4,22 @@
 class Item
 {
 public:
+	enum ItemType
+	{
+		NO_TYPE = 0,
+		LETHAL, // spikes, stalactite, dynamite
+		ENEMIES,
+		BULLET,
+		DESTROYABLE_BLOCK,
+		IGNORED_BY_ENEMIES,
+	};
+	
 	enum PropertyFlags
 	{
 		NONE = 0,
-		// these flags will impact the update step
-		LETHAL = 1,
-		ENEMIES = 1 << 1,
-		BULLET = 1 << 2,
-		STATIC_COLLISION_NEEDED = 1 << 3,
-		IGNORED_BY_ENEMIES = 1 << 4,
-		// special case for destroyable blocks: if none of these flags are set, that means it is destroyable block
-		DESTROYABLE_BLOCK = LETHAL | ENEMIES | BULLET | IGNORED_BY_ENEMIES,
+		// the first 3 bits are reserved for the Type
+		// this flags will impact the update step
+		STATIC_COLLISION_NEEDED = 1 << 4,
 		// these are other properties
 		MIRROR_X = 1 << 5,
 		ALIVE = 1 << 6,
@@ -33,18 +38,20 @@ public:
 		RESPAWN,
 	};
 	
-	Item(int startX, int startY, unsigned char flag);
+	Item(int startX, int startY, unsigned char itemType, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;
 	
-	void SetProperty(unsigned char flag) { Property |= flag; }
-	void ClearProperty(unsigned char flag) { Property &= ~flag; }
-	void InverseProperty(unsigned char flag) { Property = (Property & ~flag) | (~Property & flag); }
-	bool IsPropertySet(unsigned char flag) { return (Property & flag) != 0; }
+	unsigned char GetType() { return (TypeAndProperty & 0x07); }
+	void SetType(unsigned char itemType) { TypeAndProperty = (TypeAndProperty & 0xF8) | itemType; }
+	void SetProperty(unsigned char flag) { TypeAndProperty |= flag; }
+	void ClearProperty(unsigned char flag) { TypeAndProperty &= ~flag; }
+	void InverseProperty(unsigned char flag) { TypeAndProperty = (TypeAndProperty & ~flag) | (~TypeAndProperty & flag); }
+	bool IsPropertySet(unsigned char flag) { return (TypeAndProperty & flag) != 0; }
 
 protected:
 	int X;
 	int Y;
-	unsigned char Property = 0;
+	unsigned char TypeAndProperty = 0;
 };
 
 #endif
