@@ -12,6 +12,9 @@ public:
 
 	bool IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId);
 	bool IsAlive();
+	
+	static void Init();
+
 private:
 	static constexpr int EXPLOSION_DETECTION_DISTANCE = 5;
 	static constexpr int FRAGMENT_COUNT = 3;

@@ -8,10 +8,16 @@
 #include "MapManager.h"
 #include "BlockFragment.h"
 
-BlockFragment * DestroyableBlock::Fragments[] = { new BlockFragment(), new BlockFragment(), new BlockFragment() };
+BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
 DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
 {
+}
+
+void DestroyableBlock::Init()
+{
+	for (int i = 0; i < FRAGMENT_COUNT; ++i)
+		Fragments[i] = new BlockFragment();
 }
 
 bool DestroyableBlock::Update(UpdateStep step)

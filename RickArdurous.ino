@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "MapManager.h"
 #include "HUD.h"
+#include "DestroyableBlock.h"
 
 // instance of the arduboy class
 CustomArduboy arduboy;
@@ -20,8 +21,12 @@ void setup()
 //	arduboy.begin();
 	arduboy.clear();
 	
+	// init the random generator
+	arduboy.initRandomSeed();
+	
 	// call init function of some managers
 	MapManager::Init();
+	DestroyableBlock::Init();
 }
 
 void loop()
