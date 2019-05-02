@@ -38,12 +38,12 @@ bool BlockFragment::Update(UpdateStep step)
 			int xOnScreen = MapManager::GetXOnScreen(X);
 			int yOnScreen = MapManager::GetYOnScreen(Y);
 			arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
-								SpriteData::DestroyableBlockPiece,
-								SpriteData::DESTROYABLE_BLOCK_PIECE_SPRITE_WIDTH, SpriteData::DESTROYABLE_BLOCK_PIECE_SPRITE_HEIGHT,
+								SpriteData::BlockFragment,
+								SpriteData::BLOCK_FRAGMENT_SPRITE_WIDTH, SpriteData::BLOCK_FRAGMENT_SPRITE_HEIGHT,
 								INVERT, IsPropertySet(Item::PropertyFlags::MIRROR_X));
 
 			// check if I'm still on screen
-			if (!MapManager::IsOnScreen(X, Y, SpriteData::DESTROYABLE_BLOCK_PIECE_SPRITE_WIDTH, SpriteData::DESTROYABLE_BLOCK_PIECE_SPRITE_HEIGHT))
+			if (!MapManager::IsOnScreen(X, Y, SpriteData::BLOCK_FRAGMENT_SPRITE_WIDTH, SpriteData::BLOCK_FRAGMENT_SPRITE_HEIGHT))
 			{
 				// stop the parabolic trajectory
 				Physics::StopParabolicTrajectory(StoneFallIndex);
