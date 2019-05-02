@@ -8,13 +8,13 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-Statuette::Statuette(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::IGNORED_BY_ENEMIES)
+Statuette::Statuette(int startX, int startY) : PickUpItem(startX, startY)
 {
 };
 
 bool Statuette::Update(UpdateStep step)
 {
-	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
+	if (GetType() == Item::ItemType::IGNORED_BY_ENEMIES)
 	{
 		// check if the player pick me up
 		CheckIfRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT);
@@ -30,6 +30,6 @@ bool Statuette::Update(UpdateStep step)
 
 void Statuette::PickUp()
 {
-	ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+	SetType(Item::ItemType::NO_TYPE);
 	Rick::StatuetteCount++;
 }

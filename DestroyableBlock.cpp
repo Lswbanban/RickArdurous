@@ -7,7 +7,7 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flag) : Item(startX, startY, flag | Item::PropertyFlags::ALIVE)
+DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : Item(startX, startY, Item::ItemType::DESTROYABLE_BLOCK, flags | Item::PropertyFlags::ALIVE)
 {
 }
 

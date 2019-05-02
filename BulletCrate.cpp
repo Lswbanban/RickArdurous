@@ -8,13 +8,13 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-BulletCrate::BulletCrate(int startX, int startY) : PickUpItem(startX, startY, Item::PropertyFlags::IGNORED_BY_ENEMIES)
+BulletCrate::BulletCrate(int startX, int startY) : PickUpItem(startX, startY)
 {
 };
 
 bool BulletCrate::Update(UpdateStep step)
 {
-	if (IsPropertySet(Item::PropertyFlags::IGNORED_BY_ENEMIES))
+	if (GetType() == Item::ItemType::IGNORED_BY_ENEMIES)
 	{
 		// check if the player pick me up
 		CheckIfRickPickMeUp(SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT);
@@ -30,6 +30,6 @@ bool BulletCrate::Update(UpdateStep step)
 
 void BulletCrate::PickUp()
 {
-	ClearProperty(Item::PropertyFlags::IGNORED_BY_ENEMIES);
+	SetType(Item::ItemType::NO_TYPE);
 	Rick::BulletCount = Rick::MAX_BULLET_COUNT;
 }
