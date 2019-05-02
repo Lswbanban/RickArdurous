@@ -53,6 +53,11 @@ bool DestroyableBlock::Update(UpdateStep step)
 			}
 			break;
 		}
+		case Item::UpdateStep::RESPAWN:
+		{
+			SetProperty(Item::PropertyFlags::ALIVE);
+			break;
+		}
 	}
 	return false;
 }

@@ -260,7 +260,9 @@ void Rick::PlaceDynamite()
 	for (int i = DynamiteCount-1; i >= 0; --i)
 		if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 		{
-			AllDynamites[i].LightUp(X, Y + 5);
+			// determines where to place the dynamite depending on our witdh and orientation
+			int dynamiteX = IsLookingLeft ? X - 1: (X + GetWidth() - SpriteData::DYNAMITE_SPRITE_WIDTH - 1);
+			AllDynamites[i].LightUp(dynamiteX, Y + 5);
 			DynamiteCount--;
 			break;
 		}

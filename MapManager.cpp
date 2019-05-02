@@ -43,6 +43,7 @@ namespace MapManager
 	
 	void RemoveItem(int index);
 	void UpdateItems(Item::UpdateStep updateStep);
+	void Respawn();
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
@@ -114,6 +115,17 @@ void MapManager::UpdateItems(Item::UpdateStep updateStep)
 		}
 }
 
+void MapManager::Respawn()
+{
+	// debug code for now, reinit the item count, and readd every thing
+	ItemsToUpdateCount = 0;
+	Init();
+	
+	// iterate on all the items, to call the respawn step
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		ItemsToUpdate[i]->Update(Item::UpdateStep::RESPAWN);
+}
+
 void MapManager::Update()
 {
 	// debug code
@@ -121,6 +133,9 @@ void MapManager::Update()
 		DebugDrawStep++;
 	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(DOWN_BUTTON))
 		DebugDrawStep--;
+	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(LEFT_BUTTON))
+		Respawn();
+	
 	
 	// update the input of the main character
 	Rick::UpdateInput();
