@@ -1,0 +1,18 @@
+#ifndef _BLOCK_FRAGMENT_H_
+#define _BLOCK_FRAGMENT_H_
+
+#include "Item.h"
+
+class BlockFragment : public Item
+{
+public:
+	BlockFragment();
+	virtual bool Update(UpdateStep step);
+	
+	void Spawn(int startX, int startY);
+
+private:
+	unsigned char StoneFallIndex = 0;
+};
+
+#endif
