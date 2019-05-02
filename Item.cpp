@@ -5,9 +5,9 @@
 #include "RickArdurous.h"
 #include "Item.h"
 
-Item::Item(int startX, int startY, unsigned char itemType, unsigned char flags)
+Item::Item(int startX, int startY, unsigned char flags)
 {
 	X = startX;
 	Y = startY;
-	TypeAndProperty = itemType | flags;
+	Property = flags;
 }

@@ -7,7 +7,7 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : Item(startX, startY, Item::ItemType::DESTROYABLE_BLOCK, flags | Item::PropertyFlags::ALIVE)
+DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
 {
 }
 
@@ -17,18 +17,21 @@ bool DestroyableBlock::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::CHECK_LETHAL:
 		{
-			// get my coordinate on screen
-			int xOnScreen = MapManager::GetXOnScreen(X);
-			int yOnScreen = MapManager::GetYOnScreen(Y);
-			// check on the left
-			for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
-				if (arduboy.getPixel(xOnScreen - i, yOnScreen) == WHITE)
-					InitDeath();
-			// check on the right
-			xOnScreen += SpriteData::LEVEL_SPRITE_WIDTH << 1;
-			for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
-				if (arduboy.getPixel(xOnScreen + i, yOnScreen) == WHITE)
-					InitDeath();
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				// get my coordinate on screen
+				int xOnScreen = MapManager::GetXOnScreen(X);
+				int yOnScreen = MapManager::GetYOnScreen(Y);
+				// check on the left
+				for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
+					if (arduboy.getPixel(xOnScreen - i, yOnScreen) == WHITE)
+						InitDeath();
+				// check on the right
+				xOnScreen += SpriteData::LEVEL_SPRITE_WIDTH << 1;
+				for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
+					if (arduboy.getPixel(xOnScreen + i, yOnScreen) == WHITE)
+						InitDeath();
+			}
 			break;
 		}
 	}

@@ -17,6 +17,8 @@ private:
 	static constexpr int SPARKS_ANIM_SPEED = 5;
 	char DynamiteAnimFrameId = -1;
 	char SparksAnimFrameId = -1;
+	
+	void Draw();
 };
 
 #endif

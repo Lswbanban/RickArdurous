@@ -11,7 +11,7 @@
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
-Enemy::Enemy(int startX, int startY, unsigned char flags, bool isSkeleton) : Item(startX, startY, Item::ItemType::ENEMIES, flags | Item::PropertyFlags::STATIC_COLLISION_NEEDED)
+Enemy::Enemy(int startX, int startY, unsigned char flags, bool isSkeleton) : Item(startX, startY, flags | Item::PropertyFlags::ALIVE)
 {
 	IsSkeleton = isSkeleton;
 	InitWalk();
@@ -23,94 +23,103 @@ bool Enemy::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::CHECK_LETHAL:
 		{
-			// first update the logic of the AI to determine its state and animation,
-			// so that we draw the same frame in black and white
-			// update the frame counter (need to be done in any state)
-			AnimFrameCount++;
-			// then call the corect update according to the current state
-			switch (AnimState)
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				case State::WALK:
-					UpdateWalk();
-					break;
-				case State::HALF_TURN:
-					UpdateHalfTurn();
-					break;
-				case State::WAIT:
-				case State::WAIT_AGAIN:
-					UpdateWait();
-					break;
-				case State::FALL:
-					UpdateFall();
-					break;
-			}
-			
-			// if we have a collision, that means we hit a lethal pixel
-			// Draw in black to delete the bullet in case we are hit by a bullet
-			int collision = Draw(BLACK);
-			if (collision != 0)
-			{
-				// compute the horizontal velocity for the death trajectory
-				bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
-				char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
-				FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
-				AnimState = State::DEATH;
-				ClearProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED);
-				SetType(Item::ItemType::IGNORED_BY_ENEMIES);
+				// first update the logic of the AI to determine its state and animation,
+				// so that we draw the same frame in black and white
+				// update the frame counter (need to be done in any state)
+				AnimFrameCount++;
+				// then call the corect update according to the current state
+				switch (AnimState)
+				{
+					case State::WALK:
+						UpdateWalk();
+						break;
+					case State::HALF_TURN:
+						UpdateHalfTurn();
+						break;
+					case State::WAIT:
+					case State::WAIT_AGAIN:
+						UpdateWait();
+						break;
+					case State::FALL:
+						UpdateFall();
+						break;
+				}
+				
+				// if we have a collision, that means we hit a lethal pixel
+				// Draw in black to delete the bullet in case we are hit by a bullet
+				int collision = Draw(BLACK);
+				if (collision != 0)
+				{
+					// compute the horizontal velocity for the death trajectory
+					bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
+					char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+					FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
+					AnimState = State::DEATH;
+					ClearProperty(Item::PropertyFlags::ALIVE);
+				}
 			}
 			break;
 		}
 		
 		case Item::UpdateStep::DRAW_ENEMIES:
 		{
-			// draw the enemy in white
-			Draw(WHITE);
+			// draw the enemy in white if he's alive
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+				Draw(WHITE);
 			break;
 		}
 		
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
 			// special case, the Enemy is in that update step only when he is dead
-			Draw(INVERT);
-			return UpdateDeath();
+			if (!IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				Draw(INVERT);
+				return UpdateDeath();
+			}
+			break;
 		}
 		
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
 		{
-			// check the ground collision
-			int yUnderFeet = GetYUnderFeet();
-			if (!IsThereAnyGroundCollisionAt(yUnderFeet))
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				// check if we are already falling or not
-				if (AnimState == State::FALL)
+				// check the ground collision
+				int yUnderFeet = GetYUnderFeet();
+				if (!IsThereAnyGroundCollisionAt(yUnderFeet))
 				{
-					// If we are falling, check the ground several pixel below, depending on my current
-					// fall speed, to see if I will touch the ground during next frame.
-					// If yes, reduce my falling speed to avoid penetrating in the ground during next frame
-					for (int i = Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex]; i > 1; i--)
-						if (IsThereAnyGroundCollisionAt(yUnderFeet + i))
-							while (Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex] > 
-									Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex + 1] )
-								FallAnimSpeedIndex++;
+					// check if we are already falling or not
+					if (AnimState == State::FALL)
+					{
+						// If we are falling, check the ground several pixel below, depending on my current
+						// fall speed, to see if I will touch the ground during next frame.
+						// If yes, reduce my falling speed to avoid penetrating in the ground during next frame
+						for (int i = Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex]; i > 1; i--)
+							if (IsThereAnyGroundCollisionAt(yUnderFeet + i))
+								while (Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex] > 
+										Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex + 1] )
+									FallAnimSpeedIndex++;
+					}
+					else
+					{
+						// if we are not falling init the fall
+						InitFall();
+					}
 				}
 				else
 				{
-					// if we are not falling init the fall
-					InitFall();
+					// there is ground, check if I was falling
+					if (AnimState == State::FALL)
+						InitWalk();
 				}
-			}
-			else
-			{
-				// there is ground, check if I was falling
-				if (AnimState == State::FALL)
-					InitWalk();
 			}
 			break;
 		}
 		case Item::UpdateStep::RESPAWN:
 		{
-			SetProperty(Item::PropertyFlags::STATIC_COLLISION_NEEDED);
-			SetType(Item::ItemType::ENEMIES);
+			SetProperty(Item::PropertyFlags::ALIVE);
 			InitWalk();
 			break;
 		}
