@@ -9,7 +9,7 @@ public:
 	BlockFragment();
 	virtual bool Update(UpdateStep step);
 	
-	void Spawn(int startX, int startY);
+	void Spawn(int startX, int startY, int id);
 
 private:
 	unsigned char StoneFallIndex = 0;

@@ -12,15 +12,10 @@ BlockFragment::BlockFragment() : Item(0, 0, Item::PropertyFlags::NONE)
 {
 }
 
-void BlockFragment::Spawn(int startX, int startY)
+void BlockFragment::Spawn(int startX, int startY, int id)
 {
-	// init the coordinate with the starting positions
-	X = startX;
-	Y = startY;
 	// choose a random velocity
-	unsigned char velocityX = random(6, 12);
-	if (random(2))
-		velocityX = -velocityX;
+	unsigned char velocityX = (id == 0) ? random(-16, -10) : ((id == 1) ? random(-6, 6) : random(10, 16));
 	// randomize the mirror flag
 	if (random(2))
 		SetProperty(Item::PropertyFlags::MIRROR_X);

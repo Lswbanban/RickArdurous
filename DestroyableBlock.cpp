@@ -61,7 +61,7 @@ void DestroyableBlock::InitDeath()
 {
 	ClearProperty(Item::PropertyFlags::ALIVE);
 	for (int i = 0; i < FRAGMENT_COUNT; ++i)
-		Fragments[i]->Spawn(X, Y);
+		Fragments[i]->Spawn(X + (i*6), Y, i);
 }
 
 bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId)
