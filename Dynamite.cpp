@@ -41,7 +41,7 @@ bool Dynamite::Update(UpdateStep step)
 				{
 					DynamiteAnimFrameId = -1;
 					ClearProperty(Item::PropertyFlags::ALIVE);
-					MapManager::RemoveItem(this);
+					return true;
 				}
 				else
 				{
@@ -73,7 +73,7 @@ bool Dynamite::Update(UpdateStep step)
 			}
 			break;
 	}
-	return !IsPropertySet(Item::PropertyFlags::ALIVE);
+	return false;
 }
 
 void Dynamite::Draw()

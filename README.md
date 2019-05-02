@@ -8,7 +8,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 - Bug with death trajectory
 
 # To do
-- Move the remove of the item inside the MapManager when the update return true
 
 ## Enemy
 

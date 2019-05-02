@@ -91,7 +91,6 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned int color)
 void ArrowBullet::KillBulletWithoutSparks()
 {
 	ClearProperty(Item::PropertyFlags::ALIVE);
-	MapManager::RemoveItem(this);
 }
 
 bool ArrowBullet::Update(UpdateStep step)
@@ -169,8 +168,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				}
 				else
 				{
-					// we reach the end of the sparks animation, so remove this bullet from the manager
-					MapManager::RemoveItem(this);
+					// we reach the end of the sparks animation, so return true to be removed from the manager
 					return true;
 				}
 			}

@@ -41,6 +41,7 @@ namespace MapManager
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
 	
+	void RemoveItem(int index);
 	void UpdateItems(Item::UpdateStep updateStep);
 	void AnimateCameraTransition();
 	int GetCameraSpeed(int step, int subStep);
@@ -60,13 +61,19 @@ void MapManager::RemoveItem(Item * item)
 	for (int i = 0; i < ItemsToUpdateCount; ++i)
 		if (ItemsToUpdate[i] == item)
 		{
-			// decrease the item count
-			ItemsToUpdateCount--;
-			// if the array is not empty, move the last item to the empty place
-			ItemsToUpdate[i] = ItemsToUpdate[ItemsToUpdateCount];
+			// remove the item found
+			RemoveItem(i);
 			// exit the loop when we have found and removed the item
 			break;
 		}
+}
+
+void MapManager::RemoveItem(int index)
+{
+	// decrease the item count
+	ItemsToUpdateCount--;
+	// if the array is not empty, move the last item to the empty place
+	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
 }
 
 #include "BulletCrate.h"
@@ -98,9 +105,13 @@ void MapManager::UpdateItems(Item::UpdateStep updateStep)
 	if (updateStep > DebugDrawStep)
 		return;
 	
+	// iterate on all the items, and if one return true, we remove it from the update array
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->Update(updateStep))
+		{
+			RemoveItem(i);
 			i--;
+		}
 }
 
 void MapManager::Update()

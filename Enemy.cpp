@@ -331,10 +331,10 @@ bool Enemy::UpdateDeath()
 		Physics::StopParabolicTrajectory(FallAnimSpeedIndex);
 		// clear alive property
 		ClearProperty(Item::PropertyFlags::ALIVE);
-		MapManager::RemoveItem(this);
+		// we are now out of the screen we can be removed from the MapManager
 		return true;
 	}
-	
+	// not exited from the screen yet, so we should stayed updated
 	return false;
 }
 
