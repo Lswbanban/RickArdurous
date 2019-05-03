@@ -40,6 +40,8 @@
             <File name="DestroyableBlock.cpp" />
             <File name="BlockFragment.h" />
             <File name="BlockFragment.cpp" />
+            <File name="Stalactite.h" />
+            <File name="Stalactite.cpp" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />
