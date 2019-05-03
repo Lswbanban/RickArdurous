@@ -9,6 +9,7 @@ public:
 		NONE = 0,
 		// this flag is necessary for the MapManager
 		DESTROYABLE_BLOCK = 1 << 0,
+		TRAP_TRIGERER  = 1 << 1,
 		// these are other properties
 		MIRROR_X = 1 << 5,
 		ALIVE = 1 << 6,
@@ -34,6 +35,9 @@ public:
 	void ClearProperty(unsigned char flag) { Property &= ~flag; }
 	void InverseProperty(unsigned char flag) { Property = (Property & ~flag) | (~Property & flag); }
 	bool IsPropertySet(unsigned char flag) { return (Property & flag) != 0; }
+
+	int GetX() { return X; }
+	int GetY() { return Y; }
 
 protected:
 	int X;

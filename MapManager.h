@@ -3,6 +3,9 @@
 
 class Item;
 
+// define the type of pointer on member function of Item, for callback purpose
+typedef void (*ItemCallback)(Item* caller, Item* trigerer);
+
 namespace MapManager
 {
 	void Init();
@@ -21,6 +24,9 @@ namespace MapManager
 	bool IsThereStaticCollisionAt(int xWorld, int yWorld);
 	bool IsThereAnyHorizontalCollisionAt(int leftWorld, int rightWorld, int yWorld);
 	bool IsThereLadderAt(int xWorld, int yWorld);
+	
+	// function to iterate on items
+	void CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callback);
 }
 
 #endif

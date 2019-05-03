@@ -69,6 +69,13 @@ void MapManager::RemoveItem(Item * item)
 		}
 }
 
+void MapManager::CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callback)
+{
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::TRAP_TRIGERER))
+			(*callback)(caller, ItemsToUpdate[i]);
+}
+
 void MapManager::RemoveItem(int index)
 {
 	// decrease the item count
@@ -82,7 +89,7 @@ void MapManager::RemoveItem(int index)
 #include "Statuette.h"
 //BulletCrate	dc2(60, 50);
 Statuette	st2(160, 40);
-ArrowLauncher al(9, 52, 52, 0 /*Item::PropertyFlags::MIRROR_X*/);
+ArrowLauncher al(9, 52, 80, 0 /*Item::PropertyFlags::MIRROR_X*/);
 
 void MapManager::Init()
 {
@@ -93,11 +100,11 @@ void MapManager::Init()
 	MapManager::AddItem(Items[2]);
 	MapManager::AddItem(Items[4]);
 	MapManager::AddItem(Items[5]);
-	//MapManager::AddItem(Items[6]);
-	//MapManager::AddItem(Items[7]);
-	//MapManager::AddItem(Items[8]);
+	MapManager::AddItem(Items[6]);
+	MapManager::AddItem(Items[7]);
+	MapManager::AddItem(Items[8]);
 	MapManager::AddItem(Items[9]);
-	//MapManager::AddItem(&al);
+	MapManager::AddItem(&al);
 }
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep)
