@@ -11,6 +11,7 @@
 #include "BulletCrate.h"
 #include "Enemy.h"
 #include "DestroyableBlock.h"
+#include "Stalactite.h"
 #include <avr/pgmspace.h>
 
 const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
@@ -43,10 +44,11 @@ Enemy		mum(100, 40, Item::PropertyFlags::NONE, false);
 Enemy		skl(85, 15, Item::PropertyFlags::MIRROR_X, true);
 Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL, false);
 DestroyableBlock		block(96, 48, Item::PropertyFlags::NONE);
+Stalactite		sta(80, 10, Item::PropertyFlags::NONE);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
-	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl, &scor, &block,
+	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl, &scor, &block, &sta,
 	};
 
 // compute the number of items
