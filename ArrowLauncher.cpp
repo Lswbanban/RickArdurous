@@ -6,6 +6,7 @@
 #include "ArrowLauncher.h"
 #include "Rick.h"
 #include "SpriteData.h"
+#include "MapManager.h"
 
 ArrowLauncher::ArrowLauncher(int startX, int startY, unsigned char detectionWidth, unsigned char flags) : Item(startX, startY, flags)
 {
@@ -20,28 +21,10 @@ bool ArrowLauncher::Update(UpdateStep step)
 	{
 		if (LastLaunchTime == CAN_LAUNCH_ARROW)
 		{
-			int minX;
-			int maxX;
-			bool isShootingTowardLeft = IsPropertySet(Item::PropertyFlags::MIRROR_X);
-			if (isShootingTowardLeft)
-			{
-				minX = X - DetectionWidth;
-				maxX = X;
-			}
-			else
-			{
-				minX = X;
-				maxX = X + DetectionWidth;
-			}
-			// get the position of the main character
-			int rickX = Rick::GetX();
-			int rickY = Rick::GetY();
-			// check if the main character is inside the detection range
-			if (Rick::IsAlive() && (Y > rickY) && (Y < rickY + 13) && (minX < rickX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > rickX))
-			{
-				Arrow->Fire(X, Y, isShootingTowardLeft);
-				LastLaunchTime = 0;
-			}
+			// check if the main character is triggering me
+			CheckTrigerer(Rick::IsAlive(), Rick::GetX(), Rick::GetY());
+			// check if the other trap trigerer is triggering me
+			MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
 		}
 		else
 		{
@@ -51,4 +34,36 @@ bool ArrowLauncher::Update(UpdateStep step)
 		}
 	}
 	return false;
+}
+
+void ArrowLauncher::CheckTrigererCallback(Item * me, Item * trigerer)
+{
+	((ArrowLauncher *)me)->CheckTrigerer(trigerer->IsPropertySet(Item::PropertyFlags::ALIVE), trigerer->GetX(), trigerer->GetY());
+}
+
+void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
+{
+	if (LastLaunchTime == CAN_LAUNCH_ARROW)
+	{
+		int minX;
+		int maxX;
+		bool isShootingTowardLeft = IsPropertySet(Item::PropertyFlags::MIRROR_X);
+		if (isShootingTowardLeft)
+		{
+			minX = X - DetectionWidth;
+			maxX = X;
+		}
+		else
+		{
+			minX = X;
+			maxX = X + DetectionWidth;
+		}
+
+		// check if the main character is inside the detection range
+		if (isAlive && (Y > trigererY) && (Y < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
+		{
+			Arrow->Fire(X, Y, isShootingTowardLeft);
+			LastLaunchTime = 0;
+		}
+	}
 }

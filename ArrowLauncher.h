@@ -16,6 +16,9 @@ private:
 	ArrowBullet * Arrow;
 	unsigned char LastLaunchTime = CAN_LAUNCH_ARROW;
 	unsigned char DetectionWidth;
+	
+	static void CheckTrigererCallback(Item * me, Item * trigerer);
+	void CheckTrigerer(bool isAlive, int trigererX, int trigererY);
 };
 
 #endif
