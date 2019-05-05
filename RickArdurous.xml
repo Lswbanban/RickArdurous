@@ -38,12 +38,16 @@
             <File name="ArrowLauncher.cpp" />
             <File name="Enemy.h" />
             <File name="Enemy.cpp" />
+            <File name="DestroyableItem.h" />
+            <File name="DestroyableItem.cpp" />
             <File name="DestroyableBlock.h" />
             <File name="DestroyableBlock.cpp" />
             <File name="BlockFragment.h" />
             <File name="BlockFragment.cpp" />
             <File name="Stalactite.h" />
             <File name="Stalactite.cpp" />
+            <File name="Stalagmite.h" />
+            <File name="Stalagmite.cpp" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />
