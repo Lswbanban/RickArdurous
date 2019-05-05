@@ -18,12 +18,24 @@ bool Stalactite::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::DRAW_LETHAL:
 		{
+			int shakeX = 0;
+
 			if (AnimState == State::WAIT)
 			{
 				// check if the main character is triggering me
 				CheckTrigerer(Rick::IsAlive(), Rick::GetX(), Rick::GetY());
 				// check if the other trap trigerer is triggering me
 				MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
+
+				// compute a shaking x variation
+				int SHAKING_SPEED = 120;
+				char shakingMove[] = {1, -1, 2, -2, 1, -1};
+				for (int i = 0; i < 6; ++i)
+					if (arduboy.everyXFrames(SHAKING_SPEED + (i*2)))
+					{
+						shakeX = shakingMove[i];
+						break;
+					}
 			}
 			else if (AnimState == State::FALL)
 			{
@@ -36,10 +48,13 @@ bool Stalactite::Update(UpdateStep step)
 			}
 
 			// draw the stalactite
-			arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y),
-									SpriteData::Stalactite,
-									SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT,
-									WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
+			for (int i = 0; i < 2; ++i)
+				arduboy.drawBitmapExtended(
+							MapManager::GetXOnScreen(X + (i * (SpriteData::STALACTITE_SPRITE_WIDTH + 1)) + shakeX),
+							MapManager::GetYOnScreen(Y + i),
+							SpriteData::Stalactite,
+							SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT,
+							WHITE, i);
 
 			break;
 		}
