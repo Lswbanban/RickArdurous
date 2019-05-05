@@ -5,12 +5,11 @@
 #include "RickArdurous.h"
 #include "DestroyableBlock.h"
 #include "SpriteData.h"
-#include "MapManager.h"
 #include "BlockFragment.h"
 
 BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
-DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
+DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : DestroyableItem(startX, startY, flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
 {
 }
 
@@ -28,24 +27,8 @@ bool DestroyableBlock::Update(UpdateStep step)
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				// get my coordinate on screen
-				int xOnScreen = MapManager::GetXOnScreen(X);
-				int yOnScreen = MapManager::GetYOnScreen(Y);
-				
-				// check on the left
-				bool isDead = false;
-				for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
-					if (arduboy.getPixel(xOnScreen - i, yOnScreen) == WHITE)
-						isDead = true;
-				
-				// check on the right
-				xOnScreen += SpriteData::LEVEL_SPRITE_WIDTH << 1;
-				for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
-					if (arduboy.getPixel(xOnScreen + i, yOnScreen) == WHITE)
-						isDead = true;
-					
 				// spawn block fragment and remove myself from the manager
-				if (isDead)
+				if (CheckLethalDynamite(SpriteData::LEVEL_SPRITE_WIDTH << 1))
 				{
 					InitDeath();
 					return true;

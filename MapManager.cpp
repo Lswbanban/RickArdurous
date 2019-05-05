@@ -105,7 +105,8 @@ void MapManager::Init()
 	//MapManager::AddItem(Items[7]); //skeleton
 	//MapManager::AddItem(Items[8]); //scorpion
 	MapManager::AddItem(Items[9]);
-	MapManager::AddItem(Items[10]);
+	//MapManager::AddItem(Items[10]);
+	MapManager::AddItem(Items[11]);
 	//MapManager::AddItem(&al);
 }
 

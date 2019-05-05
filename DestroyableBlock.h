@@ -1,10 +1,10 @@
 #ifndef _DESTROYABLE_BLOCK_H_
 #define _DESTROYABLE_BLOCK_H_
 
-#include "Item.h"
+#include "DestroyableItem.h"
 class BlockFragment;
 
-class DestroyableBlock : public Item
+class DestroyableBlock : public DestroyableItem
 {
 public:
 	DestroyableBlock(int startX, int startY, unsigned char flags);
@@ -16,7 +16,6 @@ public:
 	static void Init();
 
 private:
-	static constexpr int EXPLOSION_DETECTION_DISTANCE = 5;
 	static constexpr int FRAGMENT_COUNT = 3;
 	
 	static BlockFragment * Fragments[FRAGMENT_COUNT];
