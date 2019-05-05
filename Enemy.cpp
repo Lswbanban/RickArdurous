@@ -99,11 +99,11 @@ bool Enemy::Update(UpdateStep step)
 						// If we are falling, check the ground several pixel below, depending on my current
 						// fall speed, to see if I will touch the ground during next frame.
 						// If yes, reduce my falling speed to avoid penetrating in the ground during next frame
-						for (int i = Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex]; i > 1; i--)
+						unsigned char fallSpeed = Physics::GetCurrentFallSpeed(FallAnimSpeedIndex);
+						for (int i = fallSpeed; i > 1; i--)
 							if (IsThereAnyGroundCollisionAt(yUnderFeet + i))
-								while (Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex] > 
-										Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex + 1] )
-									FallAnimSpeedIndex++;
+								fallSpeed--;
+						Physics::LimitFallSpeed(FallAnimSpeedIndex, fallSpeed);
 					}
 					else
 					{
@@ -115,7 +115,10 @@ bool Enemy::Update(UpdateStep step)
 				{
 					// there is ground, check if I was falling
 					if (AnimState == State::FALL)
+					{
 						InitWalk();
+						Physics::StopFall(FallAnimSpeedIndex);
+					}
 				}
 			}
 			break;
@@ -203,8 +206,7 @@ void Enemy::UpdateSkeletonBehavior()
 void Enemy::InitFall()
 {
 	AnimState = State::FALL;
-	FallAnimSpeedIndex = Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - 1;
-	AnimFrameCount = 0;
+	FallAnimSpeedIndex = Physics::StartFall();
 	if (IsSkeleton)
 		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
 }
@@ -307,19 +309,11 @@ void Enemy::UpdateWait()
 
 void Enemy::UpdateFall()
 {
-	if (AnimFrameCount >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED[FallAnimSpeedIndex])
-	{
-		// reset the frame counter
-		AnimFrameCount = 0;
-		// in fall state, move down
-		Y += Physics::JUMP_AND_FALL_VERTICAL_MOVE[FallAnimSpeedIndex];
-		// move a little bit on X during the first frame of the animation
-		if (FallAnimSpeedIndex >= Physics::JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT - WALL_COLLISION_DETECTION_DISTANCE - 1)
-			MoveAccordingToOrientation();
-		// decrease the jump counter
-		if (FallAnimSpeedIndex > Physics::FALL_VERTICAL_MIN_INDEX)
-			FallAnimSpeedIndex--;
-	}
+	// update the fall
+	unsigned char fallMoveCount = Physics::UpdateFall(FallAnimSpeedIndex, Y);
+	// move a little bit on X during the first frame of the animation
+	if ((fallMoveCount > 0) && (fallMoveCount < 3))
+		MoveAccordingToOrientation();
 }
 
 bool Enemy::UpdateDeath()
