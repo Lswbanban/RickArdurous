@@ -101,12 +101,12 @@ void MapManager::Init()
 	MapManager::AddItem(Items[2]);
 	MapManager::AddItem(Items[4]);
 	MapManager::AddItem(Items[5]);
-	//MapManager::AddItem(Items[6]); // mummy
+	MapManager::AddItem(Items[6]); // mummy
 	//MapManager::AddItem(Items[7]); //skeleton
 	//MapManager::AddItem(Items[8]); //scorpion
 	MapManager::AddItem(Items[9]);
-	//MapManager::AddItem(Items[10]);
-	MapManager::AddItem(Items[11]);
+	MapManager::AddItem(Items[10]); // stalactite
+	MapManager::AddItem(Items[11]); // stalagmite
 	//MapManager::AddItem(&al);
 }
 

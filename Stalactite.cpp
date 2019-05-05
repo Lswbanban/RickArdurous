@@ -7,6 +7,7 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 #include "Rick.h"
+#include "Physics.h"
 
 Stalactite::Stalactite(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::ALIVE)
 {
@@ -18,43 +19,43 @@ bool Stalactite::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::DRAW_LETHAL:
 		{
-			int shakeX = 0;
-
-			if (AnimState == State::WAIT)
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				// check if the main character is triggering me
-				CheckTrigerer(Rick::IsAlive(), Rick::GetX(), Rick::GetY());
-				// check if the other trap trigerer is triggering me
-				MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
-
-				// compute a shaking x variation
-				char shakingMove[] = {1, -1, 0, 2, 0, -2, 1, -1};
-				for (int i = 0; i < sizeof(shakingMove); ++i)
-					if (arduboy.everyXFrames(SHAKING_SPEED + i))
-					{
-						shakeX = shakingMove[i];
-						break;
-					}
-			}
-			else if (AnimState == State::FALL)
-			{
-				// make the stalactite fall
-				Y++;
-				if (MapManager::IsThereStaticCollisionAt(X, Y + SpriteData::STALACTITE_SPRITE_HEIGHT))
+				int shakeX = 0;
+				// use the special flag as an anim state: if special is set then the stalactite is falling,
+				// otherwise it is waiting
+				if (!IsPropertySet(Item::PropertyFlags::SPECIAL))
 				{
-					AnimState = State::BREAKING;
-				}
-			}
+					// check if the main character is triggering me
+					CheckTrigerer(Rick::IsAlive(), Rick::GetX(), Rick::GetY());
+					// check if the other trap trigerer is triggering me
+					MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
 
-			// draw the stalactite
-			if (AnimState != State::BREAKING)
+					// compute a shaking x variation
+					char shakingMove[] = {1, -1, 0, 2, 0, -2, 1, -1};
+					for (int i = 0; i < sizeof(shakingMove); ++i)
+						if (arduboy.everyXFrames(SHAKING_SPEED + i))
+						{
+							shakeX = shakingMove[i];
+							break;
+						}
+				}
+				else
+				{
+					// make the stalactite fall
+					Physics::UpdateFall(FallAnimSpeedIndex, Y);
+					if (MapManager::IsThereStaticCollisionAt(X, Y + SpriteData::STALACTITE_SPRITE_HEIGHT))
+						ClearProperty(Item::PropertyFlags::ALIVE);
+				}
+				// draw the stalactite
 				Draw(shakeX);
+			}
 			break;
 		}
 		
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
-			if (AnimState == State::BREAKING)
+			if (!IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// increase the sparks frame counter
 				if (arduboy.everyXFrames(SPARKS_ANIM_SPEED))
@@ -86,7 +87,10 @@ bool Stalactite::Update(UpdateStep step)
 		case Item::UpdateStep::RESPAWN:
 		{
 			Y = 10; // DEBUG CODE
-			AnimState = State::WAIT;
+			ClearProperty(Item::PropertyFlags::SPECIAL);
+			SetProperty(Item::PropertyFlags::ALIVE);
+			Physics::StopFall(FallAnimSpeedIndex);
+			FallAnimSpeedIndex = 0;
 			SparksAnimFrameId = 0;
 			break;
 		}
@@ -103,11 +107,12 @@ void Stalactite::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 {
 	// check if the trigerer is alive and inside the detection range,
 	// and that the stalactite is not alreay falling
-	if ((AnimState == State::WAIT) && isAlive && (Y < trigererY) && 
+	if (isAlive && (Y < trigererY) && 
 		(X < trigererX + SpriteData::RICK_SPRITE_WIDTH) && 
 		(X + (SpriteData::STALACTITE_SPRITE_WIDTH * 3) > trigererX))
 	{
-		AnimState = State::FALL;
+		SetProperty(Item::PropertyFlags::SPECIAL);
+		FallAnimSpeedIndex = Physics::StartFall();
 	}
 }
 
