@@ -28,10 +28,9 @@ bool Stalactite::Update(UpdateStep step)
 				MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
 
 				// compute a shaking x variation
-				int SHAKING_SPEED = 120;
-				char shakingMove[] = {1, -1, 2, -2, 1, -1};
-				for (int i = 0; i < 6; ++i)
-					if (arduboy.everyXFrames(SHAKING_SPEED + (i*2)))
+				char shakingMove[] = {1, -1, 0, 2, 0, -2, 1, -1};
+				for (int i = 0; i < sizeof(shakingMove); ++i)
+					if (arduboy.everyXFrames(SHAKING_SPEED + i))
 					{
 						shakeX = shakingMove[i];
 						break;
@@ -43,25 +42,52 @@ bool Stalactite::Update(UpdateStep step)
 				Y++;
 				if (MapManager::IsThereStaticCollisionAt(X, Y + SpriteData::STALACTITE_SPRITE_HEIGHT))
 				{
-					AnimState = State::DEAD;
+					AnimState = State::BREAKING;
 				}
 			}
 
 			// draw the stalactite
-			for (int i = 0; i < 2; ++i)
-				arduboy.drawBitmapExtended(
-							MapManager::GetXOnScreen(X + (i * (SpriteData::STALACTITE_SPRITE_WIDTH + 1)) + shakeX),
-							MapManager::GetYOnScreen(Y + i),
-							SpriteData::Stalactite,
-							SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT,
-							WHITE, i);
-
+			if (AnimState != State::BREAKING)
+				Draw(shakeX);
 			break;
 		}
+		
+		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+		{
+			if (AnimState == State::BREAKING)
+			{
+				// increase the sparks frame counter
+				if (arduboy.everyXFrames(SPARKS_ANIM_SPEED))
+				{
+					Y++;
+					SparksAnimFrameId++;
+				}
+
+				// remove from update once the sparks anim is finished
+				if (SparksAnimFrameId == SpriteData::SPARKS_SPRITE_FRAME_COUNT)
+					return true;
+				
+				// draw the Stalactite
+				if (SparksAnimFrameId < 3)
+					Draw(0);
+				
+				// draw the sparks
+				for (int i = 0; i < 2; ++i)
+					arduboy.drawBitmap(MapManager::GetXOnScreen(X + (i*4)),
+						MapManager::GetYOnScreen(Y + 2 - SparksAnimFrameId),
+						SpriteData::Sparks[SparksAnimFrameId],
+						SpriteData::SPARKS_SPRITE_WIDTH,
+						SpriteData::SPARKS_SPRITE_HEIGHT,
+						INVERT);
+			}
+			break;
+		}
+		
 		case Item::UpdateStep::RESPAWN:
 		{
 			Y = 10; // DEBUG CODE
 			AnimState = State::WAIT;
+			SparksAnimFrameId = 0;
 			break;
 		}
 	}
@@ -83,4 +109,15 @@ void Stalactite::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 	{
 		AnimState = State::FALL;
 	}
+}
+
+void Stalactite::Draw(int shakeX)
+{
+	for (int i = 0; i < 2; ++i)
+		arduboy.drawBitmapExtended(
+					MapManager::GetXOnScreen(X + (i * (SpriteData::STALACTITE_SPRITE_WIDTH + 1)) + shakeX),
+					MapManager::GetYOnScreen(Y + i),
+					SpriteData::Stalactite,
+					SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT,
+					WHITE, i);
 }
