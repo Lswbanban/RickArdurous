@@ -12,6 +12,7 @@
 #include "Enemy.h"
 #include "DestroyableBlock.h"
 #include "Stalactite.h"
+#include "Stalagmite.h"
 #include <avr/pgmspace.h>
 
 const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
@@ -45,10 +46,11 @@ Enemy		skl(85, 15, Item::PropertyFlags::MIRROR_X, true);
 Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL, false);
 DestroyableBlock		block(96, 48, Item::PropertyFlags::NONE);
 Stalactite		sta(75, 10, Item::PropertyFlags::NONE);
+Stalagmite		mite(85, 48, Item::PropertyFlags::NONE);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
-	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl, &scor, &block, &sta,
+	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl, &scor, &block, &sta, &mite,
 	};
 
 // compute the number of items
