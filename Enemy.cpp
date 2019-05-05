@@ -58,7 +58,10 @@ bool Enemy::Update(UpdateStep step)
 					// compute the horizontal velocity for the death trajectory
 					bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
 					char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
-					FallAnimSpeedIndex = Physics::StartParabolicTrajectory(X, Y, velocityX);
+					// if we are falling stop the fall before reusing the physics id
+					if (AnimState == State::FALL)
+						Physics::StopFall(PhysicsId);
+					PhysicsId = Physics::StartParabolicTrajectory(X, Y, velocityX);
 					AnimState = State::DEATH;
 					ClearProperty(Item::PropertyFlags::ALIVE);
 				}
@@ -99,11 +102,11 @@ bool Enemy::Update(UpdateStep step)
 						// If we are falling, check the ground several pixel below, depending on my current
 						// fall speed, to see if I will touch the ground during next frame.
 						// If yes, reduce my falling speed to avoid penetrating in the ground during next frame
-						unsigned char fallSpeed = Physics::GetCurrentFallSpeed(FallAnimSpeedIndex);
+						unsigned char fallSpeed = Physics::GetCurrentFallSpeed(PhysicsId);
 						for (int i = fallSpeed; i > 1; i--)
 							if (IsThereAnyGroundCollisionAt(yUnderFeet + i))
 								fallSpeed--;
-						Physics::LimitFallSpeed(FallAnimSpeedIndex, fallSpeed);
+						Physics::LimitFallSpeed(PhysicsId, fallSpeed);
 					}
 					else
 					{
@@ -117,7 +120,7 @@ bool Enemy::Update(UpdateStep step)
 					if (AnimState == State::FALL)
 					{
 						InitWalk();
-						Physics::StopFall(FallAnimSpeedIndex);
+						Physics::StopFall(PhysicsId);
 					}
 				}
 			}
@@ -206,7 +209,7 @@ void Enemy::UpdateSkeletonBehavior()
 void Enemy::InitFall()
 {
 	AnimState = State::FALL;
-	FallAnimSpeedIndex = Physics::StartFall();
+	PhysicsId = Physics::StartFall();
 	if (IsSkeleton)
 		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
 }
@@ -310,7 +313,7 @@ void Enemy::UpdateWait()
 void Enemy::UpdateFall()
 {
 	// update the fall
-	unsigned char fallMoveCount = Physics::UpdateFall(FallAnimSpeedIndex, Y);
+	unsigned char fallMoveCount = Physics::UpdateFall(PhysicsId, Y);
 	// move a little bit on X during the first frame of the animation
 	if ((fallMoveCount > 0) && (fallMoveCount < 3))
 		MoveAccordingToOrientation();
@@ -319,13 +322,13 @@ void Enemy::UpdateFall()
 bool Enemy::UpdateDeath()
 {
 	// update the trajectory
-	Physics::UpdateParabolicTrajectory(FallAnimSpeedIndex, X, Y);
+	Physics::UpdateParabolicTrajectory(PhysicsId, X, Y);
 	
 	// check if I'm still on screen
 	if (!MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
 	{
 		// stop the parabolic trajectory
-		Physics::StopParabolicTrajectory(FallAnimSpeedIndex);
+		Physics::StopParabolicTrajectory(PhysicsId);
 		// clear alive property
 		ClearProperty(Item::PropertyFlags::ALIVE);
 		// we are now out of the screen we can be removed from the MapManager
