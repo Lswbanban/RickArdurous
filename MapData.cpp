@@ -44,7 +44,7 @@ Enemy		mum(100, 40, Item::PropertyFlags::NONE, false);
 Enemy		skl(85, 15, Item::PropertyFlags::MIRROR_X, true);
 Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL, false);
 DestroyableBlock		block(96, 48, Item::PropertyFlags::NONE);
-Stalactite		sta(80, 10, Item::PropertyFlags::NONE);
+Stalactite		sta(75, 10, Item::PropertyFlags::NONE);
 
 // The array that contains all the items
 Item * MapManager::Items[] = {
