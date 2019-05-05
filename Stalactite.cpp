@@ -18,15 +18,35 @@ bool Stalactite::Update(UpdateStep step)
 	{
 		case Item::UpdateStep::DRAW_LETHAL:
 		{
-			// check if the main character is triggering me
-			//CheckTrigerer(Rick::IsAlive(), Rick::GetX(), Rick::GetY());
-			// check if the other trap trigerer is triggering me
-			//MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
+			if (AnimState == State::WAIT)
+			{
+				// check if the main character is triggering me
+				CheckTrigerer(Rick::IsAlive(), Rick::GetX(), Rick::GetY());
+				// check if the other trap trigerer is triggering me
+				MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
+			}
+			else if (AnimState == State::FALL)
+			{
+				// make the stalactite fall
+				Y++;
+				if (MapManager::IsThereStaticCollisionAt(X, Y + SpriteData::STALACTITE_SPRITE_HEIGHT))
+				{
+					AnimState = State::DEAD;
+				}
+			}
+
 			// draw the stalactite
 			arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y),
 									SpriteData::Stalactite,
 									SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT,
 									WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
+
+			break;
+		}
+		case Item::UpdateStep::RESPAWN:
+		{
+			Y = 10; // DEBUG CODE
+			AnimState = State::WAIT;
 			break;
 		}
 	}
@@ -40,12 +60,12 @@ void Stalactite::CheckTrigererCallback(Item * me, Item * trigerer)
 
 void Stalactite::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 {
-	if (AnimState == State::WAIT)
+	// check if the trigerer is alive and inside the detection range,
+	// and that the stalactite is not alreay falling
+	if ((AnimState == State::WAIT) && isAlive && (Y < trigererY) && 
+		(X < trigererX + SpriteData::RICK_SPRITE_WIDTH) && 
+		(X + (SpriteData::STALACTITE_SPRITE_WIDTH * 3) > trigererX))
 	{
-		// check if the main character is inside the detection range
-		if (isAlive && (Y < trigererY) && (X < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (X > trigererX))
-		{
-			AnimState = State::FALL;
-		}
+		AnimState = State::FALL;
 	}
 }
