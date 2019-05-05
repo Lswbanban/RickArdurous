@@ -6,7 +6,7 @@
 class Enemy : public Item
 {
 public:
-	Enemy(int startX, int startY, unsigned char flags, bool isSkeleton);
+	Enemy(int startX, int startY, unsigned char flags);
 	virtual bool Update(UpdateStep step);
 	
 private:
@@ -28,13 +28,13 @@ private:
 		WAIT_AGAIN,
 	};
 	
-	unsigned char AnimFrameId : 4;
-	unsigned char AnimFrameCount : 4;
-	unsigned char AnimState : 3;
-	unsigned char IsSkeleton : 1;
-	unsigned char PhysicsId : 4;
+	unsigned char AnimFrameId;
+	unsigned char AnimFrameCount;
+	unsigned char AnimState;
+	unsigned char PhysicsId;
 	
-	inline bool IsScorpion() { return IsPropertySet(PropertyFlags::SPECIAL); }
+	inline bool IsScorpion() { return IsPropertySet(Item::PropertyFlags::SPECIAL); }
+	inline bool IsSkeleton() { return IsPropertySet(Item::PropertyFlags::SPECIAL_2); }
 	int GetYUnderFeet();
 	unsigned char GetWidth();
 	unsigned char GetHeight();

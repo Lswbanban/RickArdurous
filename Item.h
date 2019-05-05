@@ -11,10 +11,11 @@ public:
 		DESTROYABLE_BLOCK = 1 << 0,
 		TRAP_TRIGERER  = 1 << 1,
 		// these are other properties
-		MIRROR_X = 1 << 5,
-		ALIVE = 1 << 6,
+		MIRROR_X = 1 << 4,
+		ALIVE = 1 << 5,
 		// specific flag let to the derivated class for handling what they want
-		SPECIAL = 1 << 7,
+		SPECIAL = 1 << 6,
+		SPECIAL_2 = 1 << 7,
 	};
 	
 	enum UpdateStep
