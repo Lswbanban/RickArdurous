@@ -32,7 +32,7 @@ private:
 	unsigned char AnimFrameCount : 4;
 	unsigned char AnimState : 3;
 	unsigned char IsSkeleton : 1;
-	unsigned char FallAnimSpeedIndex : 4;
+	unsigned char PhysicsId : 4;
 	
 	inline bool IsScorpion() { return IsPropertySet(PropertyFlags::SPECIAL); }
 	int GetYUnderFeet();
