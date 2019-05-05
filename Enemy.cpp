@@ -11,12 +11,11 @@
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
-Enemy::Enemy(int startX, int startY, unsigned char flags, bool isSkeleton) : Item(startX, startY, flags | Item::PropertyFlags::ALIVE)
+Enemy::Enemy(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::ALIVE)
 {
 	// mummy and Skeleton are trap trigerer but not the scorpion
 	if (!IsScorpion())
 		SetProperty(Item::PropertyFlags::TRAP_TRIGERER);
-	IsSkeleton = isSkeleton;
 	InitWalk();
 };
 
@@ -143,7 +142,7 @@ int Enemy::GetYUnderFeet()
 
 unsigned char Enemy::GetWidth()
 {
-	return IsSkeleton ? SpriteData::SKELETON_SPRITE_WIDTH : 
+	return IsSkeleton() ? SpriteData::SKELETON_SPRITE_WIDTH : 
 			(IsScorpion() ? SpriteData::SCORPION_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH);
 }
 
@@ -210,7 +209,7 @@ void Enemy::InitFall()
 {
 	AnimState = State::FALL;
 	PhysicsId = Physics::StartFall();
-	if (IsSkeleton)
+	if (IsSkeleton())
 		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
 }
 
@@ -241,7 +240,7 @@ void Enemy::InitHalfTurn()
 void Enemy::UpdateWalk()
 {
 	// get the anim speed
-	unsigned char walkAnimSpeed = IsSkeleton ? SKELETON_WALK_ANIM_SPEED : 
+	unsigned char walkAnimSpeed = IsSkeleton() ? SKELETON_WALK_ANIM_SPEED : 
 				(IsScorpion() ? SCORPION_WALK_ANIM_SPEED : WALK_AND_WAIT_ANIM_SPEED[AnimFrameId]);
 	// check if it is the time to change the anim frame
 	if (AnimFrameCount == walkAnimSpeed)
@@ -258,7 +257,7 @@ void Enemy::UpdateWalk()
 		MoveAccordingToOrientation();
 	
 		// Update the special behavior of the skeleton or by default make half turn
-		if (IsSkeleton)
+		if (IsSkeleton())
 		{
 			UpdateSkeletonBehavior();
 		}
@@ -275,7 +274,7 @@ void Enemy::UpdateWalk()
 void Enemy::UpdateHalfTurn()
 {
 	// get the anim speed
-	unsigned char halfTurnAnimSpeed = IsSkeleton ? SKELETON_HALF_TURN_ANIM_SPEED : MUMMY_HALF_TURN_ANIM_SPEED;
+	unsigned char halfTurnAnimSpeed = IsSkeleton() ? SKELETON_HALF_TURN_ANIM_SPEED : MUMMY_HALF_TURN_ANIM_SPEED;
 	if (AnimFrameCount == halfTurnAnimSpeed)
 		InitWalk();
 }
@@ -305,7 +304,7 @@ void Enemy::UpdateWait()
 			AnimFrameId++;
 		
 		// check if we need to stop waiting and go back to walk
-		if (IsSkeleton)
+		if (IsSkeleton())
 			UpdateSkeletonBehavior();
 	}
 }
@@ -343,7 +342,7 @@ int Enemy::Draw(unsigned char color)
 	int xOnScreen = MapManager::GetXOnScreen(X);
 	int yOnScreen = MapManager::GetYOnScreen(Y);
 	bool isMirror = IsPropertySet(PropertyFlags::MIRROR_X);
-	if (IsSkeleton)
+	if (IsSkeleton())
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
 									SpriteData::Skeleton[AnimFrameId],
 									SpriteData::SKELETON_SPRITE_WIDTH, SpriteData::SKELETON_SPRITE_HEIGHT,
