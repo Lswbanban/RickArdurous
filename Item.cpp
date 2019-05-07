@@ -14,4 +14,6 @@ void Item::Init(int startX, int startY)
 {
 	X = startX;
 	Y = startY;
+	// call the update virtual function with the Respawn step, for specific data init
+	Update(Item::UpdateStep::RESPAWN);
 }

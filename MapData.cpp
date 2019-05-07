@@ -98,7 +98,7 @@ void InitScreen3(bool init)
 	
 	if (init)
 	{
-		st.Init(40,25);
+		st.Init(40, 25);
 		dc.Init(140, 50);
 		bc.Init(200, 40);
 	}
