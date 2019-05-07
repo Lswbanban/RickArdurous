@@ -109,10 +109,6 @@ void MapManager::Respawn()
 	// debug code for now, reinit the item count, and readd every thing
 	ItemsToUpdateCount = 0;
 	Init(true);
-	
-	// iterate on all the items, to call the respawn step
-	for (int i = 0; i < ItemsToUpdateCount; i++)
-		ItemsToUpdate[i]->Update(Item::UpdateStep::RESPAWN);
 }
 
 void MapManager::Update()
