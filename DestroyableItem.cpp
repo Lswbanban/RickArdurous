@@ -6,7 +6,7 @@
 #include "DestroyableItem.h"
 #include "MapManager.h"
 
-DestroyableItem::DestroyableItem(int startX, int startY, unsigned char flags) : Item(startX, startY, flags)
+DestroyableItem::DestroyableItem(unsigned char flags) : Item(flags)
 {
 }
 

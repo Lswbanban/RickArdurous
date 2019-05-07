@@ -7,7 +7,6 @@ class Dynamite : public Item
 {
 public:
 	Dynamite();
-	Dynamite(int startX, int startY);
 	virtual bool Update(UpdateStep step);
 	void LightUp(int x, int y);
 

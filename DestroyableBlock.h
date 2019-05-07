@@ -7,7 +7,7 @@ class BlockFragment;
 class DestroyableBlock : public DestroyableItem
 {
 public:
-	DestroyableBlock(int startX, int startY, unsigned char flags);
+	DestroyableBlock(unsigned char flags);
 	virtual bool Update(UpdateStep step);
 
 	bool IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId);

@@ -11,7 +11,7 @@
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
-Enemy::Enemy(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::ALIVE)
+Enemy::Enemy(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE)
 {
 	// mummy and Skeleton are trap trigerer but not the scorpion
 	if (!IsScorpion())
