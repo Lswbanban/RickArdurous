@@ -3,8 +3,6 @@
         <File name="README.md" />
         <File name="RickArdurous.ino" />
         <File name="RickArdurous.h" />
-        <File name="SpriteData.cpp" />
-        <File name="SpriteData.h" />
         <File name="Rick.cpp" />
         <File name="Rick.h" />
         <File name="Input.h" />
@@ -54,6 +52,8 @@
             <File name="MapManager.cpp" />
             <File name="MapData.h" />
             <File name="MapData.cpp" />
+            <File name="SpriteData.h" />
+            <File name="SpriteData.cpp" />
         </Folder>
     </Project>
 </NotepadPlus>

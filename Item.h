@@ -30,6 +30,7 @@ public:
 	};
 	
 	Item(int startX, int startY, unsigned char flags);
+	void Init(int startX, int startY);
 	virtual bool Update(UpdateStep step) = 0;
 	
 	void SetProperty(unsigned char flag) { Property |= flag; }
