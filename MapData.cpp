@@ -4,6 +4,8 @@
 
 #include "MapData.h"
 #include "SpriteData.h"
+#include "MapManager.h"
+#include "ArrowLauncher.h"
 #include "Spike.h"
 #include "Statuette.h"
 #include "Dynamite.h"
@@ -14,6 +16,7 @@
 #include "Stalactite.h"
 #include "Stalagmite.h"
 #include <avr/pgmspace.h>
+
 
 const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
 	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 1, 2, 3, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
@@ -47,11 +50,33 @@ Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL);
 DestroyableBlock		block(96, 48, Item::PropertyFlags::NONE);
 Stalactite		sta(75, 10, Item::PropertyFlags::NONE);
 Stalagmite		mite(85, 48, Item::PropertyFlags::NONE);
+Statuette	st2(160, 40);
+ArrowLauncher al(9, 52, 80, 0 /*Item::PropertyFlags::MIRROR_X*/);
+
+void InitScreen1(bool init)
+{
+	MapManager::AddItem(&mum);
+	MapManager::AddItem(&skl);
+	MapManager::AddItem(&scor);
+	MapManager::AddItem(&block);
+	MapManager::AddItem(&sta);
+	MapManager::AddItem(&mite);
+	
+	if (init)
+	{
+		mum.Init(100, 40);
+		skl.Init(85, 15);
+		scor.Init(85, 15);
+		block.Init(96, 48);
+		sta.Init(75, 10);
+		mite.Init(85, 48);
+	}
+}
 
 // The array that contains all the items
-Item * MapManager::Items[] = {
-	&sp1, &sp2, &sp3, &st, &dc, &bc, &mum, &skl, &scor, &block, &sta, &mite,
+ItemInitFunction MapManager::ItemInitFunctions[] = {
+	&InitScreen1,
 	};
 
 // compute the number of items
-const unsigned int MapManager::ITEM_COUNT = sizeof(MapManager::Items) >> 1;
+const unsigned int MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);

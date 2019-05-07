@@ -8,7 +8,7 @@ typedef void (*ItemCallback)(Item* caller, Item* trigerer);
 
 namespace MapManager
 {
-	void Init();
+	void Init(bool shouldRespawn);
 	void Update();
 	
 	// function to add or remove the items currently updated

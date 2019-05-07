@@ -25,8 +25,8 @@ void setup()
 	arduboy.initRandomSeed();
 	
 	// call init function of some managers
-	MapManager::Init();
-	DestroyableBlock::Init();
+	MapManager::Init(true);
+	DestroyableBlock::StaticInit();
 }
 
 void loop()

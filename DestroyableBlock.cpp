@@ -13,7 +13,7 @@ DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) 
 {
 }
 
-void DestroyableBlock::Init()
+void DestroyableBlock::StaticInit()
 {
 	for (int i = 0; i < FRAGMENT_COUNT; ++i)
 		Fragments[i] = new BlockFragment();

@@ -11,3 +11,9 @@ Item::Item(int startX, int startY, unsigned char flags)
 	Y = startY;
 	Property = flags;
 }
+
+void Item::Init(int startX, int startY)
+{
+	X = startX;
+	Y = startY;
+}

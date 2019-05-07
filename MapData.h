@@ -1,7 +1,8 @@
 #ifndef _MAP_DATA_H_
 #define _MAP_DATA_H_
 
-#include "Item.h"
+// define the type of pointer on member function of Item, for callback purpose
+typedef void (*ItemInitFunction)(bool init);
 
 namespace MapManager
 {
@@ -12,9 +13,9 @@ namespace MapManager
 	// all the map sprite ids of the full level
 	extern const unsigned char Level[LEVEL_SIZE_Y][LEVEL_SIZE_X];
 	
-	// all the items in the level
-	extern Item * Items[];
-	extern const unsigned int ITEM_COUNT;
+	// all the function to init the items in the level split per puzzle screen
+	extern ItemInitFunction ItemInitFunctions[];
+	extern const unsigned int PUZZLE_SCREEN_COUNT;
 };
 
 #endif

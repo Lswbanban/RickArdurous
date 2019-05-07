@@ -84,30 +84,9 @@ void MapManager::RemoveItem(int index)
 	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
 }
 
-#include "BulletCrate.h"
-#include "ArrowLauncher.h"
-#include "Statuette.h"
-
-//BulletCrate	dc2(60, 50);
-Statuette	st2(160, 40);
-ArrowLauncher al(9, 52, 80, 0 /*Item::PropertyFlags::MIRROR_X*/);
-
-void MapManager::Init()
+void MapManager::Init(bool shouldRespawn)
 {
-	//MapManager::AddItem(&dc2);
-	MapManager::AddItem(&st2);
-	MapManager::AddItem(Items[0]);
-	MapManager::AddItem(Items[1]);
-	MapManager::AddItem(Items[2]);
-	MapManager::AddItem(Items[4]);
-	MapManager::AddItem(Items[5]);
-	MapManager::AddItem(Items[6]); // mummy
-	//MapManager::AddItem(Items[7]); //skeleton
-	//MapManager::AddItem(Items[8]); //scorpion
-	MapManager::AddItem(Items[9]);
-	MapManager::AddItem(Items[10]); // stalactite
-	MapManager::AddItem(Items[11]); // stalagmite
-	//MapManager::AddItem(&al);
+	(*MapManager::ItemInitFunctions[0])(shouldRespawn);
 }
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep)
@@ -129,7 +108,7 @@ void MapManager::Respawn()
 {
 	// debug code for now, reinit the item count, and readd every thing
 	ItemsToUpdateCount = 0;
-	Init();
+	Init(true);
 	
 	// iterate on all the items, to call the respawn step
 	for (int i = 0; i < ItemsToUpdateCount; i++)
