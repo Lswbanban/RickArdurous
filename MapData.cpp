@@ -38,20 +38,13 @@ const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
 };
 
 // below is the instances of all the Items
-Spike	sp1(116,80, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
-Spike	sp2(100,80, Item::PropertyFlags::MIRROR_X);
-Spike	sp3(100,90, Item::PropertyFlags::NONE);
-Statuette	st(40,25);
-DynamiteCrate	dc(140, 50);
-BulletCrate		bc(200, 40);
-Enemy		mum(100, 40, Item::PropertyFlags::NONE);
-Enemy		skl(85, 15, Item::PropertyFlags::SPECIAL_2 | Item::PropertyFlags::MIRROR_X);
-Enemy		scor(85, 15, Item::PropertyFlags::SPECIAL);
-DestroyableBlock		block(96, 48, Item::PropertyFlags::NONE);
-Stalactite		sta(75, 10, Item::PropertyFlags::NONE);
-Stalagmite		mite(85, 48, Item::PropertyFlags::NONE);
-Statuette	st2(160, 40);
-ArrowLauncher al(9, 52, 80, 0 /*Item::PropertyFlags::MIRROR_X*/);
+Enemy		mum(Item::PropertyFlags::NONE);
+Enemy		skl(Item::PropertyFlags::SPECIAL_2 | Item::PropertyFlags::MIRROR_X);
+Enemy		scor(Item::PropertyFlags::SPECIAL);
+DestroyableBlock		block(Item::PropertyFlags::NONE);
+Stalactite		sta(Item::PropertyFlags::NONE);
+Stalagmite		mite(Item::PropertyFlags::NONE);
+ArrowLauncher al(80, 0 /*Item::PropertyFlags::MIRROR_X*/);
 
 void InitScreen1(bool init)
 {
@@ -61,6 +54,7 @@ void InitScreen1(bool init)
 	MapManager::AddItem(&block);
 	MapManager::AddItem(&sta);
 	MapManager::AddItem(&mite);
+	MapManager::AddItem(&al);
 	
 	if (init)
 	{
@@ -70,12 +64,49 @@ void InitScreen1(bool init)
 		block.Init(96, 48);
 		sta.Init(75, 10);
 		mite.Init(85, 48);
+		al.Init(9, 52);
+	}
+}
+
+Spike	sp1(Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+Spike	sp2(Item::PropertyFlags::MIRROR_X);
+Spike	sp3(Item::PropertyFlags::NONE);
+
+void InitScreen2(bool init)
+{
+	MapManager::AddItem(&sp1);
+	MapManager::AddItem(&sp2);
+	MapManager::AddItem(&sp3);
+	
+	if (init)
+	{
+		sp1.Init(116,80);
+		sp2.Init(100,80);
+		sp3.Init(100,90);
+	}
+}
+
+Statuette	st;
+DynamiteCrate	dc;
+BulletCrate		bc;
+
+void InitScreen3(bool init)
+{
+	MapManager::AddItem(&st);
+	MapManager::AddItem(&dc);
+	MapManager::AddItem(&bc);
+	
+	if (init)
+	{
+		st.Init(40,25);
+		dc.Init(140, 50);
+		bc.Init(200, 40);
 	}
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen1,
+	&InitScreen1, &InitScreen2, &InitScreen3,
 	};
 
 // compute the number of items

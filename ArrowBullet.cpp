@@ -7,11 +7,11 @@
 #include "MapManager.h"
 #include "SpriteData.h"
 
-ArrowBullet::ArrowBullet() : Item(0, 0, Item::PropertyFlags::NONE)
+ArrowBullet::ArrowBullet() : Item(Item::PropertyFlags::NONE)
 {
 }
 
-ArrowBullet::ArrowBullet(bool isArrow) : Item(0, 0, (isArrow ? PropertyFlags::SPECIAL : 0))
+ArrowBullet::ArrowBullet(bool isArrow) : Item(isArrow ? PropertyFlags::SPECIAL : 0)
 {
 }
 

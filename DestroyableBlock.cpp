@@ -9,7 +9,7 @@
 
 BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
-DestroyableBlock::DestroyableBlock(int startX, int startY, unsigned char flags) : DestroyableItem(startX, startY, flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
+DestroyableBlock::DestroyableBlock(unsigned char flags) : DestroyableItem(flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
 {
 }
 

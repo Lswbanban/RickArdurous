@@ -29,7 +29,7 @@ public:
 		RESPAWN,
 	};
 	
-	Item(int startX, int startY, unsigned char flags);
+	Item(unsigned char flags);
 	void Init(int startX, int startY);
 	virtual bool Update(UpdateStep step) = 0;
 	

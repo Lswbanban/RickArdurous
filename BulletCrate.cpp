@@ -8,7 +8,7 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-BulletCrate::BulletCrate(int startX, int startY) : PickUpItem(startX, startY)
+BulletCrate::BulletCrate() : PickUpItem()
 {
 };
 

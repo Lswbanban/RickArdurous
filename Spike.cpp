@@ -7,7 +7,7 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-Spike::Spike(int startX, int startY, unsigned char flags) : Item(startX, startY, flags)
+Spike::Spike(unsigned char flags) : Item(flags)
 {
 }
 

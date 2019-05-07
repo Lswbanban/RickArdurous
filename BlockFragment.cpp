@@ -8,7 +8,7 @@
 #include "Physics.h"
 #include "MapManager.h"
 
-BlockFragment::BlockFragment() : Item(0, 0, Item::PropertyFlags::NONE)
+BlockFragment::BlockFragment() : Item(Item::PropertyFlags::NONE)
 {
 }
 

@@ -8,7 +8,7 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-Statuette::Statuette(int startX, int startY) : PickUpItem(startX, startY)
+Statuette::Statuette() : PickUpItem()
 {
 };
 

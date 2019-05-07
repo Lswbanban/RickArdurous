@@ -8,7 +8,7 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-DynamiteCrate::DynamiteCrate(int startX, int startY) : PickUpItem(startX, startY)
+DynamiteCrate::DynamiteCrate() : PickUpItem()
 {
 };
 

@@ -9,7 +9,7 @@
 #include "Rick.h"
 #include "Physics.h"
 
-Stalactite::Stalactite(int startX, int startY, unsigned char flags) : Item(startX, startY, flags | Item::PropertyFlags::ALIVE)
+Stalactite::Stalactite(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE)
 {
 }
 
