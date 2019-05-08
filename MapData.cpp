@@ -54,7 +54,7 @@ void InitScreen1(bool init)
 	MapManager::AddItem(&block);
 	MapManager::AddItem(&sta);
 	MapManager::AddItem(&mite);
-	MapManager::AddItem(&al);
+	//MapManager::AddItem(&al);
 	
 	if (init)
 	{
@@ -86,11 +86,23 @@ void InitScreen2(bool init)
 	}
 }
 
+void InitScreen3(bool init)
+{
+	MapManager::AddItem(&sp1);
+	MapManager::AddItem(&sp2);
+	
+	if (init)
+	{
+		sp1.Init(200,80);
+		sp2.Init(220,80);
+	}
+}
+
 Statuette	st;
 DynamiteCrate	dc;
 BulletCrate		bc;
 
-void InitScreen3(bool init)
+void InitScreen4(bool init)
 {
 	MapManager::AddItem(&st);
 	MapManager::AddItem(&dc);
@@ -104,9 +116,10 @@ void InitScreen3(bool init)
 	}
 }
 
+
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen1, &InitScreen2, &InitScreen3,
+	&InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4,
 	};
 
 // compute the number of items
