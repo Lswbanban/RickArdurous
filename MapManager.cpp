@@ -334,7 +334,15 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 void MapManager::EndSwitchPuzzleScreen()
 {
 	// remove items outside of the screen
-	
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+	{
+		Item * currentItem = ItemsToUpdate[i];
+		if (!IsOnScreen(currentItem->GetX(), currentItem->GetY(), 8, 8))
+		{
+			RemoveItem(i);
+			i--;
+		}
+	}
 }
 
 /**
