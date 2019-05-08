@@ -57,8 +57,8 @@ namespace Rick
 	bool IsAlive() { return State != AnimState::DEATH;}
 	
 	// position of Rick
-	int X = 14;
-	int Y = 4;
+	int X = 15;
+	int Y = 2;
 	int GetX() { return X; }
 	int GetY() { return Y; }
 	int GetCenterX() { return X + 4; }

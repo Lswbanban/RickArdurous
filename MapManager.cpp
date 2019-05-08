@@ -17,6 +17,7 @@ namespace MapManager
 	const int CAMERA_VERTICAL_SHIFT = 6;
 	const int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
 	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
+	const int PUZZLE_SCREEN_GATE_MARGIN = 8;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
 	int CameraX = 0;
@@ -38,6 +39,13 @@ namespace MapManager
 	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
 	unsigned char ItemsToUpdateCount = 0;
 	
+	// variable for managing puzzle screen
+	unsigned char CurrentPuzzleScreenId = 0; // the id of the puzzle screen currently player by the player
+	unsigned char FarestPuzzleScreenIdReached = 0;
+	char PuzzleScreenMoveDirection = 1;
+	int PuzzleScreenGateX = 15;
+	int PuzzleScreenGateY = 2;
+	
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
 	
@@ -45,6 +53,8 @@ namespace MapManager
 	void UpdateItems(Item::UpdateStep updateStep);
 	void Respawn();
 	void AnimateCameraTransition();
+	void BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY);
+	void EndSwitchPuzzleScreen();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAt(int xWorld, int yWorld);
@@ -86,7 +96,8 @@ void MapManager::RemoveItem(int index)
 
 void MapManager::Init(bool shouldRespawn)
 {
-	(*MapManager::ItemInitFunctions[0])(shouldRespawn);
+	if ((CurrentPuzzleScreenId >= 0) && (CurrentPuzzleScreenId < PUZZLE_SCREEN_COUNT))
+		(*MapManager::ItemInitFunctions[CurrentPuzzleScreenId])(shouldRespawn);
 }
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep)
@@ -281,6 +292,51 @@ int MapManager::GetCameraSpeed(int step, int subStep)
 	}
 }
 
+void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY)
+{
+	if ((newTargetCameraX != TargetCameraX) || (newTargetCameraY != TargetCameraY))
+	{
+		// set the new target camera
+		TargetCameraX = newTargetCameraX;
+		TargetCameraY = newTargetCameraY;
+
+		// compare the position of Rick with the last gate position
+		int newGateX = Rick::GetCenterX();
+		int newGateY = Rick::GetCenterX();
+		int gateDiffX = newGateX - PuzzleScreenGateX;
+		int gateDiffY = newGateY - PuzzleScreenGateY;
+		bool isRickReturning = (gateDiffX > -PUZZLE_SCREEN_GATE_MARGIN) &&
+								(gateDiffX < PUZZLE_SCREEN_GATE_MARGIN) && 
+								(gateDiffY > -PUZZLE_SCREEN_GATE_MARGIN) &&
+								(gateDiffY < PUZZLE_SCREEN_GATE_MARGIN);
+
+		// memorise the new gate position
+		PuzzleScreenGateX = newGateX;
+		PuzzleScreenGateY = newGateY;
+
+		// if the player return to the previous screen, inverse the direction
+		if (isRickReturning)
+			PuzzleScreenMoveDirection = -PuzzleScreenMoveDirection;
+		
+		// increase the puzzle screen according to the direction
+		CurrentPuzzleScreenId += PuzzleScreenMoveDirection;
+		
+		// check if the player reach a new puzzle, and if yes, memorize it
+		bool isRickReachedANewPuzzle = CurrentPuzzleScreenId > FarestPuzzleScreenIdReached;
+		if (isRickReachedANewPuzzle)
+			FarestPuzzleScreenIdReached = CurrentPuzzleScreenId;
+		
+		// init the items of the new puzzle screen
+		Init(isRickReachedANewPuzzle);
+	}
+}
+
+void MapManager::EndSwitchPuzzleScreen()
+{
+	// remove items outside of the screen
+	
+}
+
 /**
  * this function first check if the main charactert has exited the screen.
  * If yes, that means we need to start an animation of the camera to switch to the next puzzle screen.
@@ -296,28 +352,28 @@ void MapManager::AnimateCameraTransition()
 		int screenPuzzleY = CameraY & 0xFFF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
 		if (Rick::GetBottomForScreenTransition() <= (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
 		{
-			TargetCameraY = screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN;
+			BeginSwitchPuzzleScreen(TargetCameraX, screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN);
 		}
 		else
 		{
 			int nextScreenPuzzleY = screenPuzzleY + NB_VERTICAL_SPRITE_PER_SCREEN;
 			if (Rick::GetTopForScreenTransition() >= (nextScreenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT) - CAMERA_VERTICAL_SHIFT)
 			{
-				TargetCameraY = nextScreenPuzzleY;
+				BeginSwitchPuzzleScreen(TargetCameraX, nextScreenPuzzleY);
 			}
 			else
 			{
 				int screenPuzzleX = CameraX & 0xFFF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
 				if (Rick::GetRightForScreenTransition() <= (screenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
 				{
-					TargetCameraX = screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN;
+					BeginSwitchPuzzleScreen(screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN, TargetCameraY);
 				}
 				else
 				{
 					int nextScreenPuzzleX = screenPuzzleX + NB_HORIZONTAL_SPRITE_PER_SCREEN;
 					if (Rick::GetLeftForScreenTransition() >= (nextScreenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
 					{
-						TargetCameraX = nextScreenPuzzleX;
+						BeginSwitchPuzzleScreen(nextScreenPuzzleX, TargetCameraY);
 					}
 				}
 			}
@@ -335,6 +391,9 @@ void MapManager::AnimateCameraTransition()
 		{
 			CameraTransitionX -= SpriteData::LEVEL_SPRITE_WIDTH;
 			CameraX++;
+			// check if we reach the end of the transition
+			if (TargetCameraX == CameraX)
+				EndSwitchPuzzleScreen();
 		}
 	}
 	else if (xDiff < 0)
@@ -346,6 +405,9 @@ void MapManager::AnimateCameraTransition()
 		{
 			CameraTransitionX += SpriteData::LEVEL_SPRITE_WIDTH;
 			CameraX--;
+			// check if we reach the end of the transition
+			if (TargetCameraX == CameraX)
+				EndSwitchPuzzleScreen();
 		}
 	}
 	else
@@ -363,6 +425,9 @@ void MapManager::AnimateCameraTransition()
 		{
 			CameraTransitionY -= SpriteData::LEVEL_SPRITE_HEIGHT;
 			CameraY++;
+			// check if we reach the end of the transition
+			if (TargetCameraY == CameraY)
+				EndSwitchPuzzleScreen();
 		}
 	}
 	else if (yDiff < 0)
@@ -373,6 +438,9 @@ void MapManager::AnimateCameraTransition()
 		{
 			CameraTransitionY += SpriteData::LEVEL_SPRITE_HEIGHT;
 			CameraY--;
+			// check if we reach the end of the transition
+			if (TargetCameraY == CameraY)
+				EndSwitchPuzzleScreen();
 		}
 	}
 	else
