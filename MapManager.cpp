@@ -43,10 +43,10 @@ namespace MapManager
 	unsigned char CurrentPuzzleScreenId = 0; // the id of the puzzle screen currently player by the player
 	unsigned char FarestPuzzleScreenIdReached = 0;
 	char PuzzleScreenMoveDirection = 1;
-	int LastPuzzleScreenEdgeCoord = 10;
-	int LastCheckPointPuzzleScreenEdgeCoord = 10;
-	bool IsLastPuzzleScreenEdgeHorisontal = false;
-	bool IsLastCheckPointPuzzleScreenEdgeHorisontal = false;
+	int LastPuzzleScreenEdgeCoordX = 0;
+	int LastPuzzleScreenEdgeCoordY = 0;
+	int LastCheckPointPuzzleScreenEdgeCoordX = 0;
+	int LastCheckPointPuzzleScreenEdgeCoordY = 0;
 	
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
@@ -275,8 +275,8 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 		// memore the current screen id
 		LastCheckPointPuzzleScreenId = CurrentPuzzleScreenId;
 		// memorize also the edge transition from the previous screen
-		LastCheckPointPuzzleScreenEdgeCoord = LastPuzzleScreenEdgeCoord;
-		IsLastCheckPointPuzzleScreenEdgeHorisontal = IsLastPuzzleScreenEdgeHorisontal;
+		LastCheckPointPuzzleScreenEdgeCoordX = LastPuzzleScreenEdgeCoordX;
+		LastCheckPointPuzzleScreenEdgeCoordY = LastPuzzleScreenEdgeCoordY;
 	}
 	//Serial.println("memo checkpoint:");
 	//Serial.println(CurrentPuzzleScreenId);
@@ -301,13 +301,15 @@ void MapManager::RestartToLastCheckpoint()
 	PuzzleScreenMoveDirection = 1;
 	
 	// reset the edge transition to the previous screen before last checkpoint
-	LastPuzzleScreenEdgeCoord = LastCheckPointPuzzleScreenEdgeCoord;
-	IsLastPuzzleScreenEdgeHorisontal = IsLastCheckPointPuzzleScreenEdgeHorisontal;
+	LastPuzzleScreenEdgeCoordX = LastCheckPointPuzzleScreenEdgeCoordX;
+	LastPuzzleScreenEdgeCoordY = LastCheckPointPuzzleScreenEdgeCoordY;
 
 	// teleport the camera to avoid a transition when restarting to last checkpoint
-	//TargetCameraX = ;
-	//TargetCameraY = ;
-
+	TargetCameraX = LastCheckPointPuzzleScreenEdgeCoordX;
+	TargetCameraY = LastCheckPointPuzzleScreenEdgeCoordY;
+	CameraX = LastCheckPointPuzzleScreenEdgeCoordX;
+	CameraY = LastCheckPointPuzzleScreenEdgeCoordY;
+	
 	// call the init
 	Init(true);
 }
@@ -345,20 +347,17 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 	bool isVerticalTransition = (newTargetCameraY != TargetCameraY);
 	if (isHorizontalTransition || isVerticalTransition)
 	{
-		// compare the position of Rick with the last gate position
-		int newEdgeCoord;
-		if (isHorizontalTransition)
-			newEdgeCoord = (newTargetCameraX > TargetCameraX) ? newTargetCameraX : TargetCameraX;
-		else
-			newEdgeCoord = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
+		// get the edge of the transition (which is the max of the two target camera)
+		int newEdgeCoordX = (newTargetCameraX > TargetCameraX) ? newTargetCameraX : TargetCameraX;
+		int newEdgeCoordY = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
 		
 		// if Rick just crossed the same edge as before, he is returning back
-		bool isRickReturning = (IsLastPuzzleScreenEdgeHorisontal == isHorizontalTransition) &&
-								(LastPuzzleScreenEdgeCoord == newEdgeCoord);
+		bool isRickReturning = (isHorizontalTransition && (LastPuzzleScreenEdgeCoordX == newEdgeCoordX)) ||
+								(!isHorizontalTransition && (LastPuzzleScreenEdgeCoordY == newEdgeCoordY));
 
 		// memorise the new gate position
-		LastPuzzleScreenEdgeCoord = newEdgeCoord;
-		IsLastPuzzleScreenEdgeHorisontal = isHorizontalTransition;
+		LastPuzzleScreenEdgeCoordX = newEdgeCoordX;
+		LastPuzzleScreenEdgeCoordY = newEdgeCoordY;
 
 		// set the new target camera
 		TargetCameraX = newTargetCameraX;
