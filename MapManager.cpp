@@ -43,8 +43,8 @@ namespace MapManager
 	unsigned char CurrentPuzzleScreenId = 0; // the id of the puzzle screen currently player by the player
 	unsigned char FarestPuzzleScreenIdReached = 0;
 	char PuzzleScreenMoveDirection = 1;
-	int PuzzleScreenGateX = 15;
-	int PuzzleScreenGateY = 2;
+	int LastPuzzleScreenEdgeCoord = 10;
+	bool IsLastPuzzleScreenEdgeHorisontal = false;
 	
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
@@ -294,25 +294,28 @@ int MapManager::GetCameraSpeed(int step, int subStep)
 
 void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY)
 {
-	if ((newTargetCameraX != TargetCameraX) || (newTargetCameraY != TargetCameraY))
+	bool isHorizontalTransition = (newTargetCameraX != TargetCameraX);
+	bool isVerticalTransition = (newTargetCameraY != TargetCameraY);
+	if (isHorizontalTransition || isVerticalTransition)
 	{
+		// compare the position of Rick with the last gate position
+		int newEdgeCoord;
+		if (isHorizontalTransition)
+			newEdgeCoord = (newTargetCameraX > TargetCameraX) ? newTargetCameraX : TargetCameraX;
+		else
+			newEdgeCoord = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
+		
+		// if Rick just crossed the same edge as before, he is returning back
+		bool isRickReturning = (IsLastPuzzleScreenEdgeHorisontal == isHorizontalTransition) &&
+								(LastPuzzleScreenEdgeCoord == newEdgeCoord);
+
+		// memorise the new gate position
+		LastPuzzleScreenEdgeCoord = newEdgeCoord;
+		IsLastPuzzleScreenEdgeHorisontal = isHorizontalTransition;
+
 		// set the new target camera
 		TargetCameraX = newTargetCameraX;
 		TargetCameraY = newTargetCameraY;
-
-		// compare the position of Rick with the last gate position
-		int newGateX = Rick::GetCenterX();
-		int newGateY = Rick::GetCenterX();
-		int gateDiffX = newGateX - PuzzleScreenGateX;
-		int gateDiffY = newGateY - PuzzleScreenGateY;
-		bool isRickReturning = (gateDiffX > -PUZZLE_SCREEN_GATE_MARGIN) &&
-								(gateDiffX < PUZZLE_SCREEN_GATE_MARGIN) && 
-								(gateDiffY > -PUZZLE_SCREEN_GATE_MARGIN) &&
-								(gateDiffY < PUZZLE_SCREEN_GATE_MARGIN);
-
-		// memorise the new gate position
-		PuzzleScreenGateX = newGateX;
-		PuzzleScreenGateY = newGateY;
 
 		// if the player return to the previous screen, inverse the direction
 		if (isRickReturning)
