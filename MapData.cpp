@@ -48,6 +48,7 @@ ArrowLauncher al(80, 0 /*Item::PropertyFlags::MIRROR_X*/);
 
 void InitScreen1(bool init)
 {
+	MapManager::MemorizeCheckPoint(15, 2);
 	MapManager::AddItem(&mum);
 	MapManager::AddItem(&skl);
 	MapManager::AddItem(&scor);
@@ -88,13 +89,14 @@ void InitScreen2(bool init)
 
 void InitScreen3(bool init)
 {
+	MapManager::MemorizeCheckPoint(180, 100);
 	MapManager::AddItem(&sp1);
 	MapManager::AddItem(&sp2);
 	
 	if (init)
 	{
-		sp1.Init(200,80);
-		sp2.Init(220,80);
+		sp1.Init(200,100);
+		sp2.Init(220,100);
 	}
 }
 
