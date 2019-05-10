@@ -27,6 +27,10 @@ namespace MapManager
 	
 	// function to iterate on items
 	void CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callback);
+	
+	// checkpoint functions
+	void MemorizeCheckPoint(int rickX, int rickY);
+	void RestartToLastCheckpoint();
 }
 
 #endif

@@ -17,7 +17,6 @@ namespace MapManager
 	const int CAMERA_VERTICAL_SHIFT = 6;
 	const int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
 	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
-	const int PUZZLE_SCREEN_GATE_MARGIN = 8;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
 	int CameraX = 0;
@@ -40,11 +39,14 @@ namespace MapManager
 	unsigned char ItemsToUpdateCount = 0;
 	
 	// variable for managing puzzle screen
+	unsigned char LastCheckPointPuzzleScreenId = 0;
 	unsigned char CurrentPuzzleScreenId = 0; // the id of the puzzle screen currently player by the player
 	unsigned char FarestPuzzleScreenIdReached = 0;
 	char PuzzleScreenMoveDirection = 1;
 	int LastPuzzleScreenEdgeCoord = 10;
+	int LastCheckPointPuzzleScreenEdgeCoord = 10;
 	bool IsLastPuzzleScreenEdgeHorisontal = false;
+	bool IsLastCheckPointPuzzleScreenEdgeHorisontal = false;
 	
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
@@ -92,12 +94,6 @@ void MapManager::RemoveItem(int index)
 	ItemsToUpdateCount--;
 	// if the array is not empty, move the last item to the empty place
 	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
-}
-
-void MapManager::Init(bool shouldRespawn)
-{
-	if ((CurrentPuzzleScreenId >= 0) && (CurrentPuzzleScreenId < PUZZLE_SCREEN_COUNT))
-		(*MapManager::ItemInitFunctions[CurrentPuzzleScreenId])(shouldRespawn);
 }
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep)
@@ -263,6 +259,57 @@ bool MapManager::IsThereAnyHorizontalCollisionAt(int leftWorld, int rightWorld, 
 	// if the coordinates are on screen, check the frame buffer
 	return (isLeftOnScreen && (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE)) ||
 			(isRightOnScreen && (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE));
+}
+
+void MapManager::Init(bool shouldRespawn)
+{
+	if ((CurrentPuzzleScreenId >= 0) && (CurrentPuzzleScreenId < PUZZLE_SCREEN_COUNT))
+		(*MapManager::ItemInitFunctions[CurrentPuzzleScreenId])(shouldRespawn);
+}
+
+void MapManager::MemorizeCheckPoint(int rickX, int rickY)
+{
+	// check if we reach a NEW checkpoint (farer than the last one memorized)
+	if (CurrentPuzzleScreenId > LastCheckPointPuzzleScreenId)
+	{
+		// memore the current screen id
+		LastCheckPointPuzzleScreenId = CurrentPuzzleScreenId;
+		// memorize also the edge transition from the previous screen
+		LastCheckPointPuzzleScreenEdgeCoord = LastPuzzleScreenEdgeCoord;
+		IsLastCheckPointPuzzleScreenEdgeHorisontal = IsLastPuzzleScreenEdgeHorisontal;
+	}
+	//Serial.println("memo checkpoint:");
+	//Serial.println(CurrentPuzzleScreenId);
+	//Serial.println("last checkpoint:");
+	//Serial.println(LastCheckPointPuzzleScreenId);
+	//Serial.println("last edge coord:");
+	//Serial.println(LastCheckPointPuzzleScreenEdgeCoord);
+	//Serial.println("last edge horiz:");
+	//Serial.println(IsLastCheckPointPuzzleScreenEdgeHorisontal);
+	
+	// respawn the player at the correct location
+	Rick::Respawn(rickX, rickY);
+}
+
+void MapManager::RestartToLastCheckpoint()
+{
+	//Serial.println("Restart to screen id:");
+	//Serial.println(LastCheckPointPuzzleScreenId);
+	// set the current puzzle id to the last checkpoint puzzle id
+	CurrentPuzzleScreenId = LastCheckPointPuzzleScreenId;
+	FarestPuzzleScreenIdReached = LastCheckPointPuzzleScreenId;
+	PuzzleScreenMoveDirection = 1;
+	
+	// reset the edge transition to the previous screen before last checkpoint
+	LastPuzzleScreenEdgeCoord = LastCheckPointPuzzleScreenEdgeCoord;
+	IsLastPuzzleScreenEdgeHorisontal = IsLastCheckPointPuzzleScreenEdgeHorisontal;
+
+	// teleport the camera to avoid a transition when restarting to last checkpoint
+	//TargetCameraX = ;
+	//TargetCameraY = ;
+
+	// call the init
+	Init(true);
 }
 
 /**

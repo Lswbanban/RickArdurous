@@ -99,7 +99,6 @@ namespace Rick
 	// all the bullet instances
 	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
-	void Respawn();
 	void InitIdle();
 	void InitFall();
 	void InitCrouch();
@@ -159,15 +158,16 @@ unsigned char Rick::GetFeetYOnScreen()
 	return feetOnScreen;
 }
 
-void Rick::Respawn()
+void Rick::Respawn(int respawnWorldX, int respawnWorldY)
 {
-	// temp code, just teleport to hard coded location
-	X = 15;
-	Y = 2;
-	// stop the parabolic trajectory
-	Physics::StopParabolicTrajectory(DeathParabolicId);
-	// start in idle state
-	InitIdle();
+	if (State == AnimState::DEATH)
+	{
+		// teleport to the specified position
+		X = respawnWorldX;
+		Y = respawnWorldY;
+		// start in idle state
+		InitIdle();
+	}
 }
 
 void Rick::InitIdle()
@@ -482,7 +482,12 @@ void Rick::UpdateInput()
 		
 		// check if the X and Y are outside of the screen
 		if (!MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
-			Respawn();
+		{
+			// stop the parabolic trajectory
+			Physics::StopParabolicTrajectory(DeathParabolicId);
+			// ask the MapManager to respawn me to the last checkpoint
+			MapManager::RestartToLastCheckpoint();
+		}
 	}
 	else
 	{
