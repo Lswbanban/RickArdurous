@@ -17,6 +17,7 @@ namespace MapManager
 	const int CAMERA_VERTICAL_SHIFT = 6;
 	const int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
 	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
+	const int SHUTTER_SPEED = 5;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
 	int CameraX = 0;
@@ -54,14 +55,19 @@ namespace MapManager
 	int LastCheckPointPuzzleScreenEdgeCoordY = 0;
 	bool WasLastTransitionHorizontal = false;
 	
+	// variable use the draw the Shutter animation after a Respawn
+	char ShutterHeight = 0;
+	char ShutterDirection = 1;
+	
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
 	
 	void RemoveItem(int index);
 	void RemoveAllItemsOutsideOfTheScreen();
 	void UpdateItems(Item::UpdateStep updateStep);
-	void Respawn();
+	void TeleportAndRespawnToLastCheckpoint();
 	void AnimateCameraTransition();
+	void AnimateShutterTransition();
 	void BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY);
 	void EndSwitchPuzzleScreen();
 	int GetCameraSpeed(int step, int subStep);
@@ -82,8 +88,8 @@ void MapManager::AddItem(Item * item)
 		ItemsToUpdate[ItemsToUpdateCount++] = item;
 	}
 	
-	Serial.print("Item Added, Count:");
-	Serial.println(ItemsToUpdateCount);
+	//Serial.print("Item Added, Count:");
+	//Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(int index)
@@ -93,8 +99,8 @@ void MapManager::RemoveItem(int index)
 	// if the array is not empty, move the last item to the empty place
 	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
 	
-	Serial.print("Item Removed, Count:");
-	Serial.println(ItemsToUpdateCount);
+	//Serial.print("Item Removed, Count:");
+	//Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(Item * item)
@@ -145,13 +151,6 @@ void MapManager::UpdateItems(Item::UpdateStep updateStep)
 		}
 }
 
-void MapManager::Respawn()
-{
-	// debug code for now, reinit the item count, and readd every thing
-	ItemsToUpdateCount = 0;
-	Init(true);
-}
-
 void MapManager::Update()
 {
 	// debug code
@@ -159,9 +158,6 @@ void MapManager::Update()
 		DebugDrawStep++;
 	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(DOWN_BUTTON))
 		DebugDrawStep--;
-	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(LEFT_BUTTON))
-		Respawn();
-	
 	
 	// update the input of the main character
 	Rick::UpdateInput();
@@ -212,6 +208,9 @@ void MapManager::Update()
 	// animate the camera (in case the target as changed).
 	// Should be done before or after all the drawing to have a consistent conversion from world coord to screen coord
 	AnimateCameraTransition();
+	
+	// animate the shutter transition (at the beginning of the game, or after a checkpoint respawn)
+	AnimateShutterTransition();
 }
 
 int MapManager::GetXOnScreen(int worldX)
@@ -325,8 +324,8 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 		LastCheckPointPuzzleScreenEdgeCoordX = LastPuzzleScreenEdgeCoordX;
 		LastCheckPointPuzzleScreenEdgeCoordY = LastPuzzleScreenEdgeCoordY;
 	}
-	Serial.print("memo checkpoint:");
-	Serial.println(CurrentPuzzleScreenId);
+	//Serial.print("memo checkpoint:");
+	//Serial.println(CurrentPuzzleScreenId);
 	//Serial.print("last checkpoint:");
 	//Serial.println(LastCheckPointPuzzleScreenId);
 	//Serial.print("last edge coord:");
@@ -345,8 +344,15 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
  */
 void MapManager::RestartToLastCheckpoint()
 {
-	Serial.print("Restart to screen id:");
-	Serial.println(LastCheckPointPuzzleScreenId);
+	// start the shutter animation by giving a non zero value
+	ShutterHeight = SHUTTER_SPEED;
+	ShutterDirection = SHUTTER_SPEED;
+}
+
+void MapManager::TeleportAndRespawnToLastCheckpoint()
+{
+	//Serial.print("Restart to screen id:");
+	//Serial.println(LastCheckPointPuzzleScreenId);
 	
 	// set the current puzzle id to the last checkpoint puzzle id
 	CurrentPuzzleScreenId = LastCheckPointPuzzleScreenId;
@@ -368,6 +374,28 @@ void MapManager::RestartToLastCheckpoint()
 	
 	// call the init
 	Init(true);
+}
+
+void MapManager::AnimateShutterTransition()
+{
+	if (ShutterHeight > 0)
+	{
+		// draw the two shutter parts
+		arduboy.fillRect(0, 0, WIDTH, ShutterHeight, BLACK);
+		arduboy.fillRect(0, HEIGHT - ShutterHeight, WIDTH, ShutterHeight, BLACK);
+		
+		// increase the shutter height
+		ShutterHeight += ShutterDirection;
+		
+		// check if the shutter is closed
+		if (ShutterHeight >= (HEIGHT / 2))
+		{
+			// if the shutter is closed, call the teleport
+			TeleportAndRespawnToLastCheckpoint();
+			// reverse the shutter direction to reopen it
+			ShutterDirection = -SHUTTER_SPEED;
+		}
+	}
 }
 
 /**
@@ -433,9 +461,9 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 		if (isRickReachedANewPuzzle)
 			FarestPuzzleScreenIdReached = CurrentPuzzleScreenId;
 		
-		Serial.println("---------------------");
-		Serial.print("Switch to screen id:");
-		Serial.println(CurrentPuzzleScreenId);
+		//Serial.println("---------------------");
+		//Serial.print("Switch to screen id:");
+		//Serial.println(CurrentPuzzleScreenId);
 		//Serial.print("Current screen dir:");
 		//Serial.println((int)PuzzleScreenMoveDirection);
 
