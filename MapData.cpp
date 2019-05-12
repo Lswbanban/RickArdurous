@@ -78,13 +78,16 @@ void InitScreen2(bool init)
 	MapManager::AddItem(&sp1);
 	MapManager::AddItem(&sp2);
 	MapManager::AddItem(&sp3);
+
+	// init of the reusable items
+	sp1.Init(116,80);
+	sp2.Init(100,80);
+	sp3.Init(100,90);
 	
-	if (init)
-	{
-		sp1.Init(116,80);
-		sp2.Init(100,80);
-		sp3.Init(100,90);
-	}
+	// init of the killable items
+	//if (init)
+	//{
+	//}
 }
 
 void InitScreen3(bool init)
@@ -92,12 +95,14 @@ void InitScreen3(bool init)
 	MapManager::MemorizeCheckPoint(180, 100);
 	MapManager::AddItem(&sp1);
 	MapManager::AddItem(&sp2);
+
+	sp1.Init(200,100);
+	sp2.Init(220,100);
 	
-	if (init)
-	{
-		sp1.Init(200,100);
-		sp2.Init(220,100);
-	}
+	// init of the killable items
+	//if (init)
+	//{
+	//}
 }
 
 Statuette	st;
