@@ -72,10 +72,17 @@ namespace MapManager
 void MapManager::AddItem(Item * item)
 {
 	if (ItemsToUpdateCount < MAX_UPDATABLE_ITEM_COUNT)
+	{
+		// search if the item is not already inside the array
+		for (int i = 0; i < ItemsToUpdateCount; ++i)
+			if (ItemsToUpdate[i] == item)
+				return;
+		// add the item to the last position of the array
 		ItemsToUpdate[ItemsToUpdateCount++] = item;
+	}
 	
-	//Serial.print("Item Added, Count:");
-	//Serial.println(ItemsToUpdateCount);
+	Serial.print("Item Added, Count:");
+	Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(int index)
@@ -85,8 +92,8 @@ void MapManager::RemoveItem(int index)
 	// if the array is not empty, move the last item to the empty place
 	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
 	
-	//Serial.print("Item Removed, Count:");
-	//Serial.println(ItemsToUpdateCount);
+	Serial.print("Item Removed, Count:");
+	Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(Item * item)
@@ -411,8 +418,8 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 		Serial.println("---------------------");
 		Serial.print("Switch to screen id:");
 		Serial.println(CurrentPuzzleScreenId);
-		Serial.print("Current screen dir:");
-		Serial.println((int)PuzzleScreenMoveDirection);
+		//Serial.print("Current screen dir:");
+		//Serial.println((int)PuzzleScreenMoveDirection);
 
 		// init the items of the new puzzle screen
 		Init(isRickReachedANewPuzzle);
