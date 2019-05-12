@@ -48,13 +48,14 @@ namespace Rick
 		CRAWL,
 		CLIMB_LADDER,
 		DEATH,
+		WAIT_FOR_RESPAWN,
 	};
 	
 	// the current state of Rick
 	AnimState State = AnimState::IDLE;
 	unsigned char CurrentAnimFrame = 0;
 	char CurrentAnimDirection = 1;
-	bool IsAlive() { return State != AnimState::DEATH;}
+	bool IsAlive() { return (State < AnimState::DEATH);}
 	
 	// position of Rick
 	int X = 15;
@@ -168,7 +169,7 @@ unsigned char Rick::GetFeetYOnScreen()
  */
 void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
 {
-	if (State == AnimState::DEATH)
+	if (!IsAlive())
 	{
 		// teleport to the specified position
 		X = respawnWorldX;
@@ -493,11 +494,13 @@ void Rick::UpdateInput()
 		{
 			// stop the parabolic trajectory
 			Physics::StopParabolicTrajectory(DeathParabolicId);
+			// change my state to wait for respawn
+			State = WAIT_FOR_RESPAWN;
 			// ask the MapManager to respawn me to the last checkpoint
 			MapManager::RestartToLastCheckpoint();
 		}
 	}
-	else
+	else if (IsAlive())
 	{
 		// check if we start a the jump
 		if (Input::IsJustPressed(B_BUTTON))
@@ -657,7 +660,7 @@ bool Rick::IsThereAnyCeilingAboveCrawl()
 void Rick::CheckStaticCollision()
 {
 	// early exit when the main character is dead, we don't need to check the static collision
-	if (State == AnimState::DEATH)
+	if (!IsAlive())
 		return;
 	
 	// if we jump, check the ceiling, otherwise, check the floor
@@ -742,7 +745,7 @@ void Rick::CheckStaticCollision()
  */
 void Rick::CheckLethalCollision()
 {
-	if (State != AnimState::DEATH)
+	if (IsAlive())
 	{
 		int collision = Draw(BLACK);
 		if (collision != 0)
