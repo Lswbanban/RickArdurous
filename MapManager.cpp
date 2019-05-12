@@ -52,6 +52,7 @@ namespace MapManager
 	int LastPuzzleScreenEdgeCoordY = 0;
 	int LastCheckPointPuzzleScreenEdgeCoordX = 0;
 	int LastCheckPointPuzzleScreenEdgeCoordY = 0;
+	bool WasLastTransitionHorizontal = false;
 	
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
@@ -72,6 +73,20 @@ void MapManager::AddItem(Item * item)
 {
 	if (ItemsToUpdateCount < MAX_UPDATABLE_ITEM_COUNT)
 		ItemsToUpdate[ItemsToUpdateCount++] = item;
+	
+	//Serial.print("Item Added, Count:");
+	//Serial.println(ItemsToUpdateCount);
+}
+
+void MapManager::RemoveItem(int index)
+{
+	// decrease the item count
+	ItemsToUpdateCount--;
+	// if the array is not empty, move the last item to the empty place
+	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
+	
+	//Serial.print("Item Removed, Count:");
+	//Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(Item * item)
@@ -91,14 +106,6 @@ void MapManager::CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callb
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::TRAP_TRIGERER))
 			(*callback)(caller, ItemsToUpdate[i]);
-}
-
-void MapManager::RemoveItem(int index)
-{
-	// decrease the item count
-	ItemsToUpdateCount--;
-	// if the array is not empty, move the last item to the empty place
-	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
 }
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep)
@@ -290,19 +297,19 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 	// check if we reach a NEW checkpoint (farer than the last one memorized)
 	if (CurrentPuzzleScreenId > LastCheckPointPuzzleScreenId)
 	{
-		// memore the current screen id
+		// memorize the current screen id
 		LastCheckPointPuzzleScreenId = CurrentPuzzleScreenId;
 		// memorize also the edge transition from the previous screen
 		LastCheckPointPuzzleScreenEdgeCoordX = LastPuzzleScreenEdgeCoordX;
 		LastCheckPointPuzzleScreenEdgeCoordY = LastPuzzleScreenEdgeCoordY;
 	}
-	//Serial.println("memo checkpoint:");
-	//Serial.println(CurrentPuzzleScreenId);
-	//Serial.println("last checkpoint:");
+	Serial.print("memo checkpoint:");
+	Serial.println(CurrentPuzzleScreenId);
+	//Serial.print("last checkpoint:");
 	//Serial.println(LastCheckPointPuzzleScreenId);
-	//Serial.println("last edge coord:");
+	//Serial.print("last edge coord:");
 	//Serial.println(LastCheckPointPuzzleScreenEdgeCoord);
-	//Serial.println("last edge horiz:");
+	//Serial.print("last edge horiz:");
 	//Serial.println(IsLastCheckPointPuzzleScreenEdgeHorisontal);
 	
 	// respawn the player at the correct location
@@ -316,8 +323,9 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
  */
 void MapManager::RestartToLastCheckpoint()
 {
-	//Serial.println("Restart to screen id:");
-	//Serial.println(LastCheckPointPuzzleScreenId);
+	Serial.print("Restart to screen id:");
+	Serial.println(LastCheckPointPuzzleScreenId);
+	
 	// set the current puzzle id to the last checkpoint puzzle id
 	CurrentPuzzleScreenId = LastCheckPointPuzzleScreenId;
 	FarestPuzzleScreenIdReached = LastCheckPointPuzzleScreenId;
@@ -375,13 +383,15 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 		int newEdgeCoordY = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
 		
 		// if Rick just crossed the same edge as before, he is returning back
-		bool isRickReturning = (isHorizontalTransition && (LastPuzzleScreenEdgeCoordX == newEdgeCoordX)) ||
-								(isVerticalTransition && (LastPuzzleScreenEdgeCoordY == newEdgeCoordY));
+		bool isRickReturning = (WasLastTransitionHorizontal == isHorizontalTransition) && 
+								(LastPuzzleScreenEdgeCoordX == newEdgeCoordX) &&
+								(LastPuzzleScreenEdgeCoordY == newEdgeCoordY);
 
 		// memorise the new edge coordinates
 		LastPuzzleScreenEdgeCoordX = newEdgeCoordX;
 		LastPuzzleScreenEdgeCoordY = newEdgeCoordY;
-
+		WasLastTransitionHorizontal = isHorizontalTransition;
+		
 		// set the new target camera
 		TargetCameraX = newTargetCameraX;
 		TargetCameraY = newTargetCameraY;
@@ -398,6 +408,12 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 		if (isRickReachedANewPuzzle)
 			FarestPuzzleScreenIdReached = CurrentPuzzleScreenId;
 		
+		Serial.println("---------------------");
+		Serial.print("Switch to screen id:");
+		Serial.println(CurrentPuzzleScreenId);
+		Serial.print("Current screen dir:");
+		Serial.println((int)PuzzleScreenMoveDirection);
+
 		// init the items of the new puzzle screen
 		Init(isRickReachedANewPuzzle);
 	}
