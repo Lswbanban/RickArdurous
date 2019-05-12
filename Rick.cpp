@@ -158,7 +158,15 @@ unsigned char Rick::GetFeetYOnScreen()
 	return feetOnScreen;
 }
 
-void Rick::Respawn(int respawnWorldX, int respawnWorldY)
+/**
+ * This function can be called in two different case, either the first time when Rick reach a checkpoint,
+ * or later on when Rick die and he should respawn at the specified location.
+ * Therefore this function will do nothing if the player is not dead, but will actually teleport and revive
+ * the player at the specified location if he's dead.
+ * @param respawnWorldX the X coord where we should respawn in world coordinate
+ * @param respawnWorldY the Y coord where we should respawn in world coordinate
+ */
+void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
 {
 	if (State == AnimState::DEATH)
 	{
