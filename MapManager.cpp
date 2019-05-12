@@ -34,7 +34,7 @@ namespace MapManager
 	char StartDrawSpriteY = 0;
 	
 	// the items to currently update
-	static const unsigned int MAX_UPDATABLE_ITEM_COUNT = 100;
+	static const unsigned int MAX_UPDATABLE_ITEM_COUNT = 20;
 	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
 	unsigned char ItemsToUpdateCount = 0;
 	
@@ -58,6 +58,7 @@ namespace MapManager
 	unsigned char DebugDrawStep = 255;
 	
 	void RemoveItem(int index);
+	void RemoveAllItemsOutsideOfTheScreen();
 	void UpdateItems(Item::UpdateStep updateStep);
 	void Respawn();
 	void AnimateCameraTransition();
@@ -106,6 +107,20 @@ void MapManager::RemoveItem(Item * item)
 			// exit the loop when we have found and removed the item
 			break;
 		}
+}
+
+void MapManager::RemoveAllItemsOutsideOfTheScreen()
+{
+	// remove items outside of the screen
+	for (int i = 0; i < ItemsToUpdateCount; i++)
+	{
+		Item * currentItem = ItemsToUpdate[i];
+		if (!IsOnScreen(currentItem->GetX(), currentItem->GetY(), 8, 8))
+		{
+			RemoveItem(i);
+			i--;
+		}
+	}
 }
 
 void MapManager::CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callback)
@@ -347,6 +362,9 @@ void MapManager::RestartToLastCheckpoint()
 	TargetCameraY = LastCheckPointPuzzleScreenEdgeCoordY;
 	CameraX = LastCheckPointPuzzleScreenEdgeCoordX;
 	CameraY = LastCheckPointPuzzleScreenEdgeCoordY;
+
+	// remove all the items outside of the screen, those items that were on the screen where the player died
+	RemoveAllItemsOutsideOfTheScreen();
 	
 	// call the init
 	Init(true);
@@ -428,16 +446,7 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 
 void MapManager::EndSwitchPuzzleScreen()
 {
-	// remove items outside of the screen
-	for (int i = 0; i < ItemsToUpdateCount; i++)
-	{
-		Item * currentItem = ItemsToUpdate[i];
-		if (!IsOnScreen(currentItem->GetX(), currentItem->GetY(), 8, 8))
-		{
-			RemoveItem(i);
-			i--;
-		}
-	}
+	RemoveAllItemsOutsideOfTheScreen();
 }
 
 /**

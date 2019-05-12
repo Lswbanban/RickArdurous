@@ -46,13 +46,13 @@ Stalactite		sta(Item::PropertyFlags::NONE);
 Stalagmite		mite(Item::PropertyFlags::NONE);
 ArrowLauncher al(80, 0 /*Item::PropertyFlags::MIRROR_X*/);
 
-void InitScreen1(bool init)
+void InitScreen0(bool init)
 {
 	MapManager::MemorizeCheckPoint(15, 2);
-	MapManager::AddItem(&mum);
-	MapManager::AddItem(&skl);
+	//MapManager::AddItem(&mum);
+	//MapManager::AddItem(&skl);
 	MapManager::AddItem(&scor);
-	MapManager::AddItem(&block);
+	//MapManager::AddItem(&block);
 	MapManager::AddItem(&sta);
 	MapManager::AddItem(&mite);
 	//MapManager::AddItem(&al);
@@ -73,7 +73,7 @@ Spike	sp1(Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 Spike	sp2(Item::PropertyFlags::MIRROR_X);
 Spike	sp3(Item::PropertyFlags::NONE);
 
-void InitScreen2(bool init)
+void InitScreen1(bool init)
 {
 	MapManager::AddItem(&sp1);
 	MapManager::AddItem(&sp2);
@@ -90,7 +90,7 @@ void InitScreen2(bool init)
 	//}
 }
 
-void InitScreen3(bool init)
+void InitScreen2(bool init)
 {
 	MapManager::MemorizeCheckPoint(180, 100);
 	MapManager::AddItem(&sp1);
@@ -109,7 +109,7 @@ Statuette	st;
 DynamiteCrate	dc;
 BulletCrate		bc;
 
-void InitScreen4(bool init)
+void InitScreen3(bool init)
 {
 	MapManager::AddItem(&st);
 	MapManager::AddItem(&dc);
@@ -126,7 +126,7 @@ void InitScreen4(bool init)
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4,
+	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3,
 	};
 
 // compute the number of items

@@ -42,7 +42,7 @@ bool Stalagmite::Update(UpdateStep step)
 					SparksAnimFrameId++;
 
 				// remove from update once the sparks anim is finished
-				if (SparksAnimFrameId == SpriteData::SPARKS_SPRITE_FRAME_COUNT)
+				if (SparksAnimFrameId >= SpriteData::SPARKS_SPRITE_FRAME_COUNT)
 					return true;
 				
 				// draw the Stalactite

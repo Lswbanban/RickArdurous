@@ -65,7 +65,7 @@ bool Stalactite::Update(UpdateStep step)
 				}
 
 				// remove from update once the sparks anim is finished
-				if (SparksAnimFrameId == SpriteData::SPARKS_SPRITE_FRAME_COUNT)
+				if (SparksAnimFrameId >= SpriteData::SPARKS_SPRITE_FRAME_COUNT)
 					return true;
 				
 				// draw the Stalactite
@@ -86,7 +86,6 @@ bool Stalactite::Update(UpdateStep step)
 		
 		case Item::UpdateStep::RESPAWN:
 		{
-			Y = 10; // DEBUG CODE
 			ClearProperty(Item::PropertyFlags::SPECIAL);
 			SetProperty(Item::PropertyFlags::ALIVE);
 			Physics::StopFall(FallAnimSpeedIndex);
