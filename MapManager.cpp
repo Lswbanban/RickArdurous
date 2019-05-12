@@ -39,10 +39,15 @@ namespace MapManager
 	unsigned char ItemsToUpdateCount = 0;
 	
 	// variable for managing puzzle screen
+	// the id of the puzzle screen where the last checkpoint is
 	unsigned char LastCheckPointPuzzleScreenId = 0;
-	unsigned char CurrentPuzzleScreenId = 0; // the id of the puzzle screen currently player by the player
+	// the id of the puzzle screen currently player by the player
+	unsigned char CurrentPuzzleScreenId = 0;
+	// the id of the farest puzzle screen reached by the player
 	unsigned char FarestPuzzleScreenIdReached = 0;
+	// a variable to indicate in which direction the player goes when traversing the puzzle screens
 	char PuzzleScreenMoveDirection = 1;
+	// coordinates of the edge between the current puzzle screen and the previous screen
 	int LastPuzzleScreenEdgeCoordX = 0;
 	int LastPuzzleScreenEdgeCoordY = 0;
 	int LastCheckPointPuzzleScreenEdgeCoordX = 0;
@@ -261,12 +266,25 @@ bool MapManager::IsThereAnyHorizontalCollisionAt(int leftWorld, int rightWorld, 
 			(isRightOnScreen && (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE));
 }
 
-void MapManager::Init(bool shouldRespawn)
+/**
+ * Init the current puzzle screen id, by adding all the items of this screen into the array of items to update.
+ * This function will call the pointer on the specific Init function for the correct screen.
+ * You can specify if you want the items to be initialized or not. If the player goes back in previous screen, you
+ * don't want to respawn all the items, just add them to the list to update.
+ * @param shouldInitItem if true all the items in the current screen will be initialized (so respwaned)
+ */
+void MapManager::Init(bool shouldInitItem)
 {
 	if ((CurrentPuzzleScreenId >= 0) && (CurrentPuzzleScreenId < PUZZLE_SCREEN_COUNT))
-		(*MapManager::ItemInitFunctions[CurrentPuzzleScreenId])(shouldRespawn);
+		(*MapManager::ItemInitFunctions[CurrentPuzzleScreenId])(shouldInitItem);
 }
 
+/**
+ * This function is called from the Map Data init functions, to indicated that the current screen initialized
+ * should become the new checkpoint. This function specifies the coordinates of where Rick should respawn if he dies.
+ * @param rickX the X location where Rick should respawn in world coordinate
+ * @param rickY the Y location where Rick should respawn in world coordinate
+ */
 void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 {
 	// check if we reach a NEW checkpoint (farer than the last one memorized)
@@ -288,9 +306,14 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 	//Serial.println(IsLastCheckPointPuzzleScreenEdgeHorisontal);
 	
 	// respawn the player at the correct location
-	Rick::Respawn(rickX, rickY);
+	Rick::CheckPointRespawn(rickX, rickY);
 }
 
+/**
+ * This function is called when the player as finished his death animation, and that the game should restart
+ * from the last checkpoint. This function will teleport the camera to skip the transition, and will call
+ * a Init with full initialization to respawn the dead enemies
+ */
 void MapManager::RestartToLastCheckpoint()
 {
 	//Serial.println("Restart to screen id:");
@@ -353,9 +376,9 @@ void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCame
 		
 		// if Rick just crossed the same edge as before, he is returning back
 		bool isRickReturning = (isHorizontalTransition && (LastPuzzleScreenEdgeCoordX == newEdgeCoordX)) ||
-								(!isHorizontalTransition && (LastPuzzleScreenEdgeCoordY == newEdgeCoordY));
+								(isVerticalTransition && (LastPuzzleScreenEdgeCoordY == newEdgeCoordY));
 
-		// memorise the new gate position
+		// memorise the new edge coordinates
 		LastPuzzleScreenEdgeCoordX = newEdgeCoordX;
 		LastPuzzleScreenEdgeCoordY = newEdgeCoordY;
 

@@ -15,7 +15,7 @@ namespace Rick
 	unsigned char GetFeetYOnScreen();
 	unsigned int Draw();
 	bool IsAlive();
-	void Respawn(int respawnWorldX, int respawnWorldY);
+	void CheckPointRespawn(int respawnWorldX, int respawnWorldY);
 
 	// function to get the coordinate of the sprite of the main character
 	int GetX();
