@@ -54,6 +54,7 @@ namespace MapManager
 	int LastCheckPointPuzzleScreenEdgeCoordX = 0;
 	int LastCheckPointPuzzleScreenEdgeCoordY = 0;
 	bool WasLastTransitionHorizontal = false;
+	bool WasLastCheckPointLastTransitionHorizontal = false;
 	
 	// variable use the draw the Shutter animation after a Respawn
 	char ShutterHeight = 0;
@@ -323,6 +324,7 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 		// memorize also the edge transition from the previous screen
 		LastCheckPointPuzzleScreenEdgeCoordX = LastPuzzleScreenEdgeCoordX;
 		LastCheckPointPuzzleScreenEdgeCoordY = LastPuzzleScreenEdgeCoordY;
+		WasLastCheckPointLastTransitionHorizontal = WasLastTransitionHorizontal;
 	}
 	//Serial.print("memo checkpoint:");
 	//Serial.println(CurrentPuzzleScreenId);
@@ -362,6 +364,7 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 	// reset the edge transition to the previous screen before last checkpoint
 	LastPuzzleScreenEdgeCoordX = LastCheckPointPuzzleScreenEdgeCoordX;
 	LastPuzzleScreenEdgeCoordY = LastCheckPointPuzzleScreenEdgeCoordY;
+	WasLastTransitionHorizontal = WasLastCheckPointLastTransitionHorizontal;
 
 	// teleport the camera to avoid a transition when restarting to last checkpoint
 	TargetCameraX = LastCheckPointPuzzleScreenEdgeCoordX;
