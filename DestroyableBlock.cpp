@@ -39,6 +39,9 @@ bool DestroyableBlock::Update(UpdateStep step)
 		case Item::UpdateStep::RESPAWN:
 		{
 			SetProperty(Item::PropertyFlags::ALIVE);
+			// kill all the fragments
+			for (int i = 0; i < FRAGMENT_COUNT; ++i)
+				Fragments[i]->Kill();
 			break;
 		}
 	}
@@ -60,9 +63,4 @@ bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY, unsig
 		return (mapX == (x >> 3));
 	}
 	return false;
-}
-
-bool DestroyableBlock::IsAlive()
-{
-	return IsPropertySet(Item::PropertyFlags::ALIVE);
 }

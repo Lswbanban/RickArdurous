@@ -17,7 +17,7 @@ namespace Physics
 		unsigned char FrameCounter = 0;
 		unsigned char FallAnimSpeedIndex = INVALID_FALL_ANIM_SPEED_INDEX;
 	};
-	const int MAX_FALL_PARAMETER = 4;
+	const int MAX_FALL_PARAMETER = INVALID_FALL_ID;
 	FallParameter FallParameterBuffer[MAX_FALL_PARAMETER];
 
 	// values for the parabolic trajectory
@@ -35,7 +35,7 @@ namespace Physics
 		char VelocityX = 0;
 	};
 	
-	const int MAX_PARABOLIC_PARAMETER = 4;
+	const int MAX_PARABOLIC_PARAMETER = INVALID_PARABOLIC_ID;
 	ParabolicParameter ParabolicParameterBuffer[MAX_PARABOLIC_PARAMETER];
 }
 
@@ -59,10 +59,11 @@ unsigned char Physics::StartFall()
 	return returnId;
 }
 
-void Physics::StopFall(unsigned char id)
+unsigned char Physics::StopFall(unsigned char id)
 {
 	if (id < MAX_FALL_PARAMETER)
 		FallParameterBuffer[id].FallAnimSpeedIndex = INVALID_FALL_ANIM_SPEED_INDEX;
+	return MAX_FALL_PARAMETER;
 }
 
 /**
@@ -135,10 +136,11 @@ unsigned char Physics::StartParabolicTrajectory(int startX, int startY, char vel
 	return returnId;
 }
 
-void Physics::StopParabolicTrajectory(unsigned char id)
+unsigned char Physics::StopParabolicTrajectory(unsigned char id)
 {
 	if (id < MAX_PARABOLIC_PARAMETER)
 		ParabolicParameterBuffer[id].StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
+	return MAX_PARABOLIC_PARAMETER;
 }
 
 void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, int &y)

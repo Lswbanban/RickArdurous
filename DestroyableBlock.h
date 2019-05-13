@@ -11,7 +11,7 @@ public:
 	virtual bool Update(UpdateStep step);
 
 	bool IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId);
-	bool IsAlive();
+	bool IsAlive() { return IsPropertySet(Item::PropertyFlags::ALIVE); }
 	
 	static void StaticInit();
 
