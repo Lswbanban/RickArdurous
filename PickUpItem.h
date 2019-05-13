@@ -1,5 +1,5 @@
-#ifndef _PICKUP_H_
-#define _PICKUP_H_
+#ifndef _PICKUP_ITEM_H_
+#define _PICKUP_ITEM_H_
 
 #include "Item.h"
 

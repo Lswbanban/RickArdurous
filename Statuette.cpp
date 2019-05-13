@@ -20,18 +20,23 @@ bool Statuette::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// check if the player pick me up
-				if (DoesRickPickMeUp(SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT))
+				if (DoesRickPickMeUp(SpriteData::STATUETTE_SPRITE_WIDTH, SpriteData::STATUETTE_SPRITE_HEIGHT))
 				{
 					ClearProperty(Item::PropertyFlags::ALIVE);
 					Rick::StatuetteCount++;
+					return true;
 				}
 				
 				// draw the statuette
-				arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Statue, SpriteData::STATUE_SPRITE_WIDTH, SpriteData::STATUE_SPRITE_HEIGHT, WHITE);
+				arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Statuette, SpriteData::STATUETTE_SPRITE_WIDTH, SpriteData::STATUETTE_SPRITE_HEIGHT, WHITE);
 				
 				// draw the shiny star
 				UpdateShineStar(-2, 3, -2, 4);
 			}
+			break;
+			
+		case UpdateStep::RESPAWN:
+			SetProperty(Item::PropertyFlags::ALIVE);
 			break;
 	}
 	return false;
