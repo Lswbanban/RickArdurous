@@ -372,8 +372,8 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 	CameraX = LastCheckPointPuzzleScreenEdgeCoordX;
 	CameraY = LastCheckPointPuzzleScreenEdgeCoordY;
 
-	// remove all the items outside of the screen, those items that were on the screen where the player died
-	RemoveAllItemsOutsideOfTheScreen();
+	// remove all the items, by clearing the whole array
+	ItemsToUpdateCount = 0;
 	
 	// call the init
 	Init(true);

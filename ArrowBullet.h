@@ -10,6 +10,7 @@ public:
 	ArrowBullet(bool isArrow);
 	virtual bool Update(UpdateStep step);
 	void Fire(int x, int y, bool isMovingToLeft);
+	void KillBulletWithoutSparks();
 
 private:
 	static constexpr int BULLET_SPEED = 4;
@@ -29,7 +30,6 @@ private:
 	int GetBulletRayCastStartX();
 	void DrawBulletRay(unsigned char color);
 	int SearchForPixelColorAlongBulletRay(unsigned int color);
-	void KillBulletWithoutSparks();
 };
 
 #endif
