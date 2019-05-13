@@ -35,8 +35,7 @@ bool Dynamite::Update(UpdateStep step)
 				// if we reach the end of the dynamite explosion, disable the dynamite
 				if (DynamiteAnimFrameId == SpriteData::DYNAMITE_SPRITE_FRAME_COUNT)
 				{
-					DynamiteAnimFrameId = -1;
-					ClearProperty(Item::PropertyFlags::ALIVE);
+					Kill();
 					return true;
 				}
 				else
@@ -70,6 +69,12 @@ bool Dynamite::Update(UpdateStep step)
 			break;
 	}
 	return false;
+}
+
+void Dynamite::Kill()
+{
+	DynamiteAnimFrameId = -1;
+	ClearProperty(Item::PropertyFlags::ALIVE);
 }
 
 void Dynamite::Draw()

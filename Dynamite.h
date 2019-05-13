@@ -9,6 +9,7 @@ public:
 	Dynamite();
 	virtual bool Update(UpdateStep step);
 	void LightUp(int x, int y);
+	void Kill();
 
 private:
 	static constexpr int DYNAMITE_ANIM_SPEED = 20;

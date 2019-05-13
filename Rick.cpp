@@ -182,6 +182,12 @@ void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
 		StatuetteCount = StatuetteCountAtLastCheckpoint;
 		BulletCount = MAX_BULLET_COUNT;
 		DynamiteCount = MAX_DYNAMITE_COUNT;
+		// kill all the dynamites
+		for (int i = 0; i < MAX_DYNAMITE_COUNT; ++i)
+			AllDynamites[i].Kill();
+		// kill all the bullets
+		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+			AllBullets[i].KillBulletWithoutSparks();
 		// start in idle state
 		InitIdle();
 	}
