@@ -83,9 +83,9 @@ namespace SpriteData
 	extern const unsigned char ShineStar[][SHINE_STAR_SPRITE_WIDTH * (SHINE_STAR_SPRITE_HEIGHT / 8)];
 	
 	// statue sprite
-	const int STATUE_SPRITE_WIDTH = 5;
-	const int STATUE_SPRITE_HEIGHT = 8;
-	extern const unsigned char Statue[];
+	const int STATUETTE_SPRITE_WIDTH = 5;
+	const int STATUETTE_SPRITE_HEIGHT = 8;
+	extern const unsigned char Statuette[];
 	
 	// dynamite and bullet bonus sprite
 	const int CRATE_SPRITE_WIDTH = 11;

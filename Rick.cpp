@@ -100,6 +100,9 @@ namespace Rick
 	// all the bullet instances
 	ArrowBullet AllBullets[MAX_BULLET_COUNT];
 	
+	// variable for checkpoint
+	unsigned char StatuetteCountAtLastCheckpoint = 0;
+	
 	void InitIdle();
 	void InitFall();
 	void InitCrouch();
@@ -169,13 +172,23 @@ unsigned char Rick::GetFeetYOnScreen()
  */
 void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
 {
+	// if we are not alive we should respawn, otherwise this is a checkpoint, we should memorize some stuffs
 	if (!IsAlive())
 	{
 		// teleport to the specified position
 		X = respawnWorldX;
 		Y = respawnWorldY;
+		// reinit the statuette count with the one memorized during the last checkpoint, and reset the bullet and dynamite count
+		StatuetteCount = StatuetteCountAtLastCheckpoint;
+		BulletCount = MAX_BULLET_COUNT;
+		DynamiteCount = MAX_DYNAMITE_COUNT;
 		// start in idle state
 		InitIdle();
+	}
+	else
+	{
+		// memorize the number of statuette collected so far
+		StatuetteCountAtLastCheckpoint = StatuetteCount;
 	}
 }
 

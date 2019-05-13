@@ -72,12 +72,14 @@ void InitScreen0(bool init)
 Spike	sp1(Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 Spike	sp2(Item::PropertyFlags::MIRROR_X);
 Spike	sp3(Item::PropertyFlags::NONE);
+Statuette	st0;
 
 void InitScreen1(bool init)
 {
 	MapManager::AddItem(&sp1);
 	MapManager::AddItem(&sp2);
 	MapManager::AddItem(&sp3);
+	MapManager::AddItem(&st0);
 
 	// init of the reusable items
 	sp1.Init(116,80);
@@ -85,9 +87,10 @@ void InitScreen1(bool init)
 	sp3.Init(100,90);
 	
 	// init of the killable items
-	//if (init)
-	//{
-	//}
+	if (init)
+	{
+		st0.Init(20, 110);
+	}
 }
 
 void InitScreen2(bool init)
@@ -117,9 +120,9 @@ void InitScreen3(bool init)
 	
 	if (init)
 	{
-		st.Init(40, 25);
-		dc.Init(140, 50);
-		bc.Init(200, 40);
+		st.Init(160, 40);
+		dc.Init(140, 42);
+		bc.Init(200, 42);
 	}
 }
 
