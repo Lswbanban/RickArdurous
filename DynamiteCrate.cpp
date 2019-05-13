@@ -24,6 +24,7 @@ bool DynamiteCrate::Update(UpdateStep step)
 				{
 					ClearProperty(Item::PropertyFlags::ALIVE);
 					Rick::DynamiteCount = Rick::MAX_DYNAMITE_COUNT;
+					return true;
 				}
 
 				// draw the crate
@@ -32,6 +33,10 @@ bool DynamiteCrate::Update(UpdateStep step)
 				// draw the shiny star
 				UpdateShineStar(-2, 9, 1, 6);
 			}
+			break;
+			
+		case UpdateStep::RESPAWN:
+			SetProperty(Item::PropertyFlags::ALIVE);
 			break;
 	}
 	return false;
