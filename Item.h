@@ -11,6 +11,7 @@ public:
 		DESTROYABLE_BLOCK = 1 << 0,
 		TRAP_TRIGERER  = 1 << 1,
 		// these are other properties
+		IS_VISIBLE = 1 << 3,
 		MIRROR_X = 1 << 4,
 		ALIVE = 1 << 5,
 		// specific flag let to the derivated class for handling what they want
@@ -36,7 +37,7 @@ public:
 	void SetProperty(unsigned char flag) { Property |= flag; }
 	void ClearProperty(unsigned char flag) { Property &= ~flag; }
 	void InverseProperty(unsigned char flag) { Property = (Property & ~flag) | (~Property & flag); }
-	bool IsPropertySet(unsigned char flag) { return (Property & flag) != 0; }
+	bool IsPropertySet(unsigned char flag) { return (Property & flag) == flag; }
 
 	int GetX() { return X; }
 	int GetY() { return Y; }

@@ -69,7 +69,7 @@ bool Stalactite::Update(UpdateStep step)
 				if (SparksAnimFrameId >= SpriteData::SPARKS_SPRITE_FRAME_COUNT)
 				{
 					// stop the fall
-					FallAnimSpeedIndex = Physics::StopFall(FallAnimSpeedIndex);
+					Physics::StopFall(FallAnimSpeedIndex);
 					return true;
 				}
 				

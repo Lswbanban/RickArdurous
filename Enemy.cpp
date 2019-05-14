@@ -11,12 +11,12 @@
 
 const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 
-Enemy::Enemy(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE)
+Enemy::Enemy(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE),
+PhysicsId(Physics::INVALID_FALL_ID)
 {
 	// mummy and Skeleton are trap trigerer but not the scorpion
 	if (!IsScorpion())
 		SetProperty(Item::PropertyFlags::TRAP_TRIGERER);
-	InitWalk();
 };
 
 bool Enemy::Update(UpdateStep step)
@@ -27,42 +27,52 @@ bool Enemy::Update(UpdateStep step)
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				// first update the logic of the AI to determine its state and animation,
-				// so that we draw the same frame in black and white
-				// update the frame counter (need to be done in any state)
-				AnimFrameCount++;
-				// then call the corect update according to the current state
-				switch (AnimState)
+				if (MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
 				{
-					case State::WALK:
-						UpdateWalk();
-						break;
-					case State::HALF_TURN:
-						UpdateHalfTurn();
-						break;
-					case State::WAIT:
-					case State::WAIT_AGAIN:
-						UpdateWait();
-						break;
-					case State::FALL:
-						UpdateFall();
-						break;
+					// set the visible flag if we are on screen and update the logic normally
+					SetProperty(Item::PropertyFlags::IS_VISIBLE);
+					
+					// first update the logic of the AI to determine its state and animation,
+					// so that we draw the same frame in black and white
+					// update the frame counter (need to be done in any state)
+					AnimFrameCount++;
+					// then call the corect update according to the current state
+					switch (AnimState)
+					{
+						case State::WALK:
+							UpdateWalk();
+							break;
+						case State::HALF_TURN:
+							UpdateHalfTurn();
+							break;
+						case State::WAIT:
+						case State::WAIT_AGAIN:
+							UpdateWait();
+							break;
+						case State::FALL:
+							UpdateFall();
+							break;
+					}
+					
+					// if we have a collision, that means we hit a lethal pixel
+					// Draw in black to delete the bullet in case we are hit by a bullet
+					int collision = Draw(BLACK);
+					if (collision != 0)
+					{
+						// compute the horizontal velocity for the death trajectory
+						bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
+						char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
+						// if we are falling stop the fall before reusing the physics id
+						if (AnimState == State::FALL)
+							Physics::StopFall(PhysicsId);
+						PhysicsId = Physics::StartParabolicTrajectory(X, Y, velocityX);
+						AnimState = State::DEATH;
+						ClearProperty(Item::PropertyFlags::ALIVE);
+					}
 				}
-				
-				// if we have a collision, that means we hit a lethal pixel
-				// Draw in black to delete the bullet in case we are hit by a bullet
-				int collision = Draw(BLACK);
-				if (collision != 0)
+				else
 				{
-					// compute the horizontal velocity for the death trajectory
-					bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
-					char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
-					// if we are falling stop the fall before reusing the physics id
-					if (AnimState == State::FALL)
-						Physics::StopFall(PhysicsId);
-					PhysicsId = Physics::StartParabolicTrajectory(X, Y, velocityX);
-					AnimState = State::DEATH;
-					ClearProperty(Item::PropertyFlags::ALIVE);
+					ClearProperty(Item::PropertyFlags::IS_VISIBLE);
 				}
 			}
 			break;
@@ -71,7 +81,7 @@ bool Enemy::Update(UpdateStep step)
 		case Item::UpdateStep::DRAW_ENEMIES:
 		{
 			// draw the enemy in white if he's alive
-			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			if (IsPropertySet(Item::PropertyFlags::ALIVE | Item::PropertyFlags::IS_VISIBLE))
 				Draw(WHITE);
 			break;
 		}
@@ -89,7 +99,7 @@ bool Enemy::Update(UpdateStep step)
 		
 		case Item::UpdateStep::CHECK_STATIC_COLLISION:
 		{
-			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			if (IsPropertySet(Item::PropertyFlags::ALIVE | Item::PropertyFlags::IS_VISIBLE))
 			{
 				// check the ground collision
 				int yUnderFeet = GetYUnderFeet();
