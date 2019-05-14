@@ -11,6 +11,9 @@ namespace Physics
 	static constexpr int INVALID_FALL_ID = 4;
 	static constexpr int INVALID_PARABOLIC_ID = 4;
 
+	// init
+	void ResetAll();
+	
 	// function for the fall
 	unsigned char StartFall();
 	unsigned char UpdateFall(unsigned char id, int &y);

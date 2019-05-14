@@ -39,6 +39,21 @@ namespace Physics
 	ParabolicParameter ParabolicParameterBuffer[MAX_PARABOLIC_PARAMETER];
 }
 
+/**
+ * Clear and reset all the fall and parabolic parameter instances.
+ * This function should be call after a respawn of the main character.
+ */
+void Physics::ResetAll()
+{
+	// reset all the fall params
+	for (int i = 0; i < MAX_FALL_PARAMETER; ++i)
+		FallParameterBuffer[i].FallAnimSpeedIndex = INVALID_FALL_ANIM_SPEED_INDEX;
+	// reset all the parabolic params
+	for (int i = 0; i < MAX_PARABOLIC_PARAMETER; ++i)
+		ParabolicParameterBuffer[i].StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
+}
+
+
 unsigned char Physics::StartFall()
 {
 	// search for a free parameter 

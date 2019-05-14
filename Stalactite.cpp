@@ -9,7 +9,8 @@
 #include "Rick.h"
 #include "Physics.h"
 
-Stalactite::Stalactite(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE)
+Stalactite::Stalactite(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE),
+FallAnimSpeedIndex(Physics::INVALID_FALL_ID)
 {
 }
 
@@ -66,7 +67,11 @@ bool Stalactite::Update(UpdateStep step)
 
 				// remove from update once the sparks anim is finished
 				if (SparksAnimFrameId >= SpriteData::SPARKS_SPRITE_FRAME_COUNT)
+				{
+					// stop the fall
+					FallAnimSpeedIndex = Physics::StopFall(FallAnimSpeedIndex);
 					return true;
+				}
 				
 				// draw the Stalactite
 				if (SparksAnimFrameId < 3)
@@ -88,8 +93,6 @@ bool Stalactite::Update(UpdateStep step)
 		{
 			ClearProperty(Item::PropertyFlags::SPECIAL);
 			SetProperty(Item::PropertyFlags::ALIVE);
-			Physics::StopFall(FallAnimSpeedIndex);
-			FallAnimSpeedIndex = 0;
 			SparksAnimFrameId = 0;
 			break;
 		}

@@ -8,7 +8,8 @@
 #include "Physics.h"
 #include "MapManager.h"
 
-BlockFragment::BlockFragment() : Item(Item::PropertyFlags::NONE)
+BlockFragment::BlockFragment() : Item(Item::PropertyFlags::NONE),
+StoneFallIndex(Physics::INVALID_FALL_ID)
 {
 }
 
@@ -45,8 +46,8 @@ bool BlockFragment::Update(UpdateStep step)
 			// check if I'm still on screen
 			if (!MapManager::IsOnScreen(X, Y, SpriteData::BLOCK_FRAGMENT_SPRITE_WIDTH, SpriteData::BLOCK_FRAGMENT_SPRITE_HEIGHT))
 			{
-				// kill the fragment
-				Kill();
+				// stop the parabolic trajectory
+				StoneFallIndex = Physics::StopParabolicTrajectory(StoneFallIndex);
 				// we are now out of the screen we can be removed from the MapManager
 				return true;
 			}
@@ -54,10 +55,4 @@ bool BlockFragment::Update(UpdateStep step)
 		break;
 	}
 	return false;
-}
-
-void BlockFragment::Kill()
-{
-	// stop the parabolic trajectory
-	StoneFallIndex = Physics::StopParabolicTrajectory(StoneFallIndex);
 }
