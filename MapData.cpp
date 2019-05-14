@@ -49,17 +49,17 @@ ArrowLauncher al(80, 0 /*Item::PropertyFlags::MIRROR_X*/);
 void InitScreen0(bool init)
 {
 	MapManager::MemorizeCheckPoint(15, 2);
-	//MapManager::AddItem(&mum);
+	MapManager::AddItem(&mum);
 	//MapManager::AddItem(&skl);
-	MapManager::AddItem(&scor);
-	//MapManager::AddItem(&block);
-	MapManager::AddItem(&sta);
-	MapManager::AddItem(&mite);
+	//MapManager::AddItem(&scor);
+	MapManager::AddItem(&block);
+	//MapManager::AddItem(&sta);
+	//MapManager::AddItem(&mite);
 	//MapManager::AddItem(&al);
 	
 	if (init)
 	{
-		mum.Init(100, 40);
+		mum.Init(80, 40);
 		skl.Init(85, 15);
 		scor.Init(85, 15);
 		block.Init(96, 48);

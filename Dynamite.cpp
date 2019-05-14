@@ -63,7 +63,7 @@ bool Dynamite::Update(UpdateStep step)
 					// draw the dynamite
 					Draw();
 					// draw the sparks
-					arduboy.drawBitmap(MapManager::GetXOnScreen(X + (DynamiteAnimFrameId>>1)), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
+					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (DynamiteAnimFrameId>>1)), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT, false);
 				}
 			}
 			break;
@@ -80,5 +80,5 @@ void Dynamite::Kill()
 void Dynamite::Draw()
 {
 	// draw the dynamite or explosion
-	arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Dynamite[DynamiteAnimFrameId], SpriteData::DYNAMITE_SPRITE_WIDTH, SpriteData::DYNAMITE_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Dynamite[DynamiteAnimFrameId], SpriteData::DYNAMITE_SPRITE_WIDTH, SpriteData::DYNAMITE_SPRITE_HEIGHT, WHITE, false);
 }

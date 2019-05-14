@@ -8,8 +8,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 - Bug with death trajectory
 
 # To do
-- Implement the Respawn for all the Items
-- Test to Replace all drawBitmap with drawBitmapExtended
 
 ## Enemy
 

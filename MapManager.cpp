@@ -639,10 +639,10 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 			// draw the sprite if we need to
 			if ((spriteId >= minSpriteIndex) && (spriteId <= maxSpriteIndex) &&
 				((spriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
-				arduboy.drawBitmap(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
+				arduboy.drawBitmapExtended(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
 					spriteY,
 					SpriteData::Walls[spriteId],
-					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE);
+					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, false);
 		}
 	}
 }

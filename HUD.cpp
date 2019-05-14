@@ -25,21 +25,21 @@ void HUD::Update()
 	
 	// draw each sprites from the HUD
 	// draw the life count
-	arduboy.drawBitmap(LIFE_POS, 0, SpriteData::HUDHeart, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE);
-	arduboy.drawBitmap(LIFE_POS + SpriteData::HUD_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, 0, SpriteData::Numbers[Rick::LifeCount], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(LIFE_POS, 0, SpriteData::HUDHeart, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE, false);
+	arduboy.drawBitmapExtended(LIFE_POS + SpriteData::HUD_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, 0, SpriteData::Numbers[Rick::LifeCount], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE, false);
 	
 	// draw the bullet count
-	arduboy.drawBitmap(BULLET_POS, 0, SpriteData::HUDBullet, SpriteData::HUD_BULLET_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE);
-	arduboy.drawBitmap(BULLET_POS + SpriteData::HUD_BULLET_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, 0, SpriteData::Numbers[Rick::BulletCount], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(BULLET_POS, 0, SpriteData::HUDBullet, SpriteData::HUD_BULLET_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE, false);
+	arduboy.drawBitmapExtended(BULLET_POS + SpriteData::HUD_BULLET_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, 0, SpriteData::Numbers[Rick::BulletCount], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE, false);
 
 	// draw the dynamite count
-	arduboy.drawBitmap(DYNAMITE_POS, 0, SpriteData::HUDDynamite, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE);
-	arduboy.drawBitmap(DYNAMITE_POS + SpriteData::HUD_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, 0, SpriteData::Numbers[Rick::DynamiteCount], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(DYNAMITE_POS, 0, SpriteData::HUDDynamite, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE, false);
+	arduboy.drawBitmapExtended(DYNAMITE_POS + SpriteData::HUD_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, 0, SpriteData::Numbers[Rick::DynamiteCount], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE, false);
 	
 	// draw the statuette count
-	arduboy.drawBitmap(STATUETTE_POS, 0, SpriteData::HUDStatuette, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(STATUETTE_POS, 0, SpriteData::HUDStatuette, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE, false);
 	unsigned char posX = drawNumber(STATUETTE_POS + SpriteData::HUD_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, Rick::StatuetteCount);
-	arduboy.drawBitmap(posX + 1, 0, SpriteData::HUDSlash, SpriteData::HUD_SLASH_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE);
+	arduboy.drawBitmapExtended(posX + 1, 0, SpriteData::HUDSlash, SpriteData::HUD_SLASH_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE, false);
 	drawNumber(posX + SpriteData::HUD_SLASH_SPRITE_WIDTH + 3, Rick::MAX_STATUETTE_COUNT);
 }
 
@@ -55,7 +55,7 @@ unsigned char HUD::drawNumber(unsigned char posX, unsigned char num)
 		// shift the position
 		x -= SpriteData::NUMBERS_SPRITE_WIDTH + 1;
 		// draw the modulo
-		arduboy.drawBitmap(x, 0, SpriteData::Numbers[num % 10], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE);
+		arduboy.drawBitmapExtended(x, 0, SpriteData::Numbers[num % 10], SpriteData::NUMBERS_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE, false);
 		// divide the num to draw the next number
 		num = num / 10;
 	}

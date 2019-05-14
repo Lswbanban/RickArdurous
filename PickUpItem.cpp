@@ -73,10 +73,10 @@ void PickUpItem::UpdateShineStar(char minX, char maxX, char minY, char maxY)
 	
 	//draw the star if needed
 	if (AnimFrameId > -1)
-		arduboy.drawBitmap(MapManager::GetXOnScreen(X + ShineStarShiftX),
+		arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + ShineStarShiftX),
 							MapManager::GetYOnScreen(Y + ShineStarShiftY),
 							SpriteData::ShineStar[AnimFrameId],
 							SpriteData::SHINE_STAR_SPRITE_WIDTH,
 							SpriteData::SHINE_STAR_SPRITE_HEIGHT,
-							INVERT);
+							INVERT, false);
 }
