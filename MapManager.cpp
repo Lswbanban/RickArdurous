@@ -10,6 +10,7 @@
 #include "DestroyableBlock.h"
 #include <avr/pgmspace.h>
 #include "Input.h"
+#include "Physics.h"
 
 namespace MapManager
 {
@@ -374,6 +375,9 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 
 	// remove all the items, by clearing the whole array
 	ItemsToUpdateCount = 0;
+	
+	// reset all the physics
+	Physics::ResetAll();
 	
 	// call the init
 	Init(true);
