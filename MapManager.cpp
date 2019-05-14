@@ -236,7 +236,12 @@ bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned ch
 
 bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 {
-	return GetLevelSpriteAt(xWorld, yWorld) < SpriteData::WallId::LADDER;
+	unsigned char spriteId = GetLevelSpriteAt(xWorld, yWorld);
+	// if the sprite is a destroyable block, check if it is destroyed
+	if ((spriteId == SpriteData::DESTROYABLE_BLOCK_LEFT) || (spriteId == SpriteData::DESTROYABLE_BLOCK_RIGHT))
+		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT, spriteId);
+	// otherwise it depends on the type of sprite
+	return (spriteId < SpriteData::WallId::LADDER);
 }
 
 bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
