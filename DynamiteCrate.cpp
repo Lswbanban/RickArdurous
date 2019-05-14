@@ -28,7 +28,7 @@ bool DynamiteCrate::Update(UpdateStep step)
 				}
 
 				// draw the crate
-				arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::DynamiteCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE);
+				arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::DynamiteCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE, false);
 				
 				// draw the shiny star
 				UpdateShineStar(-2, 9, 1, 6);

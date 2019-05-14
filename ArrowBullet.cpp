@@ -161,7 +161,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				if (SparksAnimFrameId < SpriteData::SPARKS_SPRITE_FRAME_COUNT)
 				{
 					// draw the sparks
-					arduboy.drawBitmap(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT);
+					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT, IsPropertySet(Item::PropertyFlags::MIRROR_X));
 					// increase the frame id of the sparks
 					if (arduboy.everyXFrames(SPARKS_ANIM_SPEED))
 						SparksAnimFrameId++;

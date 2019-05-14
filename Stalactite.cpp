@@ -79,12 +79,12 @@ bool Stalactite::Update(UpdateStep step)
 				
 				// draw the sparks
 				for (int i = 0; i < 2; ++i)
-					arduboy.drawBitmap(MapManager::GetXOnScreen(X + (i*4)),
+					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (i*4)),
 						MapManager::GetYOnScreen(Y + 2 - SparksAnimFrameId),
 						SpriteData::Sparks[SparksAnimFrameId],
 						SpriteData::SPARKS_SPRITE_WIDTH,
 						SpriteData::SPARKS_SPRITE_HEIGHT,
-						INVERT);
+						INVERT, false);
 			}
 			break;
 		}
