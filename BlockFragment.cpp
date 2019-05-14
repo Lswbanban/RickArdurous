@@ -47,7 +47,7 @@ bool BlockFragment::Update(UpdateStep step)
 			if (!MapManager::IsOnScreen(X, Y, SpriteData::BLOCK_FRAGMENT_SPRITE_WIDTH, SpriteData::BLOCK_FRAGMENT_SPRITE_HEIGHT))
 			{
 				// stop the parabolic trajectory
-				StoneFallIndex = Physics::StopParabolicTrajectory(StoneFallIndex);
+				Physics::StopParabolicTrajectory(StoneFallIndex);
 				// we are now out of the screen we can be removed from the MapManager
 				return true;
 			}

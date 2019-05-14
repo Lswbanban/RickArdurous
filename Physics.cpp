@@ -74,11 +74,10 @@ unsigned char Physics::StartFall()
 	return returnId;
 }
 
-unsigned char Physics::StopFall(unsigned char id)
+void Physics::StopFall(unsigned char id)
 {
 	if (id < MAX_FALL_PARAMETER)
 		FallParameterBuffer[id].FallAnimSpeedIndex = INVALID_FALL_ANIM_SPEED_INDEX;
-	return MAX_FALL_PARAMETER;
 }
 
 /**
@@ -151,11 +150,10 @@ unsigned char Physics::StartParabolicTrajectory(int startX, int startY, char vel
 	return returnId;
 }
 
-unsigned char Physics::StopParabolicTrajectory(unsigned char id)
+void Physics::StopParabolicTrajectory(unsigned char id)
 {
 	if (id < MAX_PARABOLIC_PARAMETER)
 		ParabolicParameterBuffer[id].StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
-	return MAX_PARABOLIC_PARAMETER;
 }
 
 void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, int &y)
