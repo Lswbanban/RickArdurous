@@ -772,10 +772,10 @@ void Rick::CheckLethalCollision()
 	}
 }
 
-unsigned int Rick::Draw()
+void Rick::Draw()
 {
 	// for the death animation, draw the main character in invert color
-	return Draw((State == AnimState::DEATH) ? INVERT : WHITE);
+	Draw((State == AnimState::DEATH) ? INVERT : WHITE);
 }
 
 unsigned int Rick::Draw(unsigned char color)
