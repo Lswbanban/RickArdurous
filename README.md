@@ -5,11 +5,25 @@ Rick Ardurous
 Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
 
 # Bug list
-- Bug with death trajectory
 
 # To do
-
-## Enemy
+- The Map data compression
+- The main menu
+- The Game Over (+ return to main menu when the life reach zero or when we reach the end of the map)
+- Sound FX
+	- Fire a bullet
+	- Jump
+	- Place a dynamite / dynamite fuse?
+	- for picking up an item
+- LED FX
+	- for when the Arrow launcher launch an arrow
+	- for picking up a Statuette?
+	- For Rick Death
+- Save on the flash drive?
+	- Save of the progression?
+	- Save of the time for speed run?
+	- Save of the Music on/off
+- Music ?
 
 # New items to come
 - The rolling boulder

@@ -13,7 +13,7 @@ namespace Rick
 	void CheckStaticCollision();
 	void CheckLadderCollision();
 	unsigned char GetFeetYOnScreen();
-	unsigned int Draw();
+	void Draw();
 	bool IsAlive();
 	void CheckPointRespawn(int respawnWorldX, int respawnWorldY);
 
