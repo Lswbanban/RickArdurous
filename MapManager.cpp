@@ -639,13 +639,18 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				!IsDestroyableBlockAlive(spriteLevelX, spriteLevelY, spriteId))
 				continue;
 
+			// choose the mirror flag
+			bool isMirror = false;
+			if (spriteId < SpriteData::LEFT_STAIR)
+				isMirror = (spriteLevelX * spriteLevelY) % 2;
+				
 			// draw the sprite if we need to
 			if ((spriteId >= minSpriteIndex) && (spriteId <= maxSpriteIndex) &&
 				((spriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
 				arduboy.drawBitmapExtended(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
 					spriteY,
 					SpriteData::Walls[spriteId],
-					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, false);
+					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, isMirror);
 		}
 	}
 }
