@@ -187,7 +187,10 @@ void MapManager::Update()
 	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();
 	
 	// Draw the static collision of the map
-	Draw(SpriteData::BLOCK_8_8, SpriteData::PLATFORM, rickFeetOnScreen);
+	Draw(SpriteData::BLOCK_16_8_RIGHT, SpriteData::PLATFORM, rickFeetOnScreen);
+
+	// Draw static collision items
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_STATIC_COLLISION);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
@@ -258,7 +261,7 @@ unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
 	if ((mapX < 0) || (mapX >= MapManager::LEVEL_SIZE_X) || (mapY < 0) || (mapY >= MapManager::LEVEL_SIZE_Y))
-		return SpriteData::BLOCK_8_8;
+		return SpriteData::BLOCK_16_8_RIGHT;
 	// check if the specific sprite id on the map if empty or not
 	return pgm_read_byte(&(Level[mapY][mapX]));
 }
@@ -615,7 +618,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// then we should only draw the platforms below the feet
 		// Otherwise, if we are in the drawing platform step, we only draw those above the feet,
 		// since the below ones as already been drawn
-		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_8_8) && (spriteY > rickFeetOnScreen)) ||
+		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_16_8_RIGHT) && (spriteY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (spriteY <= rickFeetOnScreen));
 		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
 		{

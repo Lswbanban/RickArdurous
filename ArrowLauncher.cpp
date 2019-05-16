@@ -35,6 +35,11 @@ bool ArrowLauncher::Update(UpdateStep step)
 			}
 			break;
 		
+		case UpdateStep::DRAW_STATIC_COLLISION:
+			// draw the statue that launch the arrow
+			arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::ArrowLauncherFace, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_WIDTH, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_HEIGHT, WHITE, IsPropertySet(Item::PropertyFlags::MIRROR_X));
+			break;
+			
 		case UpdateStep::RESPAWN:
 			LastLaunchTime = CAN_LAUNCH_ARROW;
 			Arrow->KillBulletWithoutSparks();
