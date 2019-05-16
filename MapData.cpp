@@ -44,7 +44,8 @@ Enemy		scor(Item::PropertyFlags::SPECIAL);
 DestroyableBlock		block(Item::PropertyFlags::NONE);
 Stalactite		sta(Item::PropertyFlags::NONE);
 Stalagmite		mite(Item::PropertyFlags::NONE);
-ArrowLauncher al(80, 0 /*Item::PropertyFlags::MIRROR_X*/);
+ArrowLauncher al(80, Item::PropertyFlags::NONE);
+ArrowLauncher al2(80, Item::PropertyFlags::MIRROR_X);
 
 void InitScreen0(bool init)
 {
@@ -55,7 +56,8 @@ void InitScreen0(bool init)
 	MapManager::AddItem(&block);
 	//MapManager::AddItem(&sta);
 	//MapManager::AddItem(&mite);
-	//MapManager::AddItem(&al);
+	MapManager::AddItem(&al);
+	MapManager::AddItem(&al2);
 	
 	if (init)
 	{
@@ -65,7 +67,8 @@ void InitScreen0(bool init)
 		block.Init(96, 48);
 		sta.Init(75, 10);
 		mite.Init(85, 48);
-		al.Init(9, 52);
+		al.Init(9, 36);
+		al2.Init(80, 30);
 	}
 }
 
