@@ -56,8 +56,8 @@ void InitScreen0(bool init)
 	MapManager::AddItem(&block);
 	//MapManager::AddItem(&sta);
 	//MapManager::AddItem(&mite);
-	MapManager::AddItem(&al);
-	MapManager::AddItem(&al2);
+	//MapManager::AddItem(&al);
+	//MapManager::AddItem(&al2);
 	
 	if (init)
 	{
@@ -67,8 +67,8 @@ void InitScreen0(bool init)
 		block.Init(96, 48);
 		sta.Init(75, 10);
 		mite.Init(85, 48);
-		al.Init(9, 36);
-		al2.Init(80, 30);
+		//al.Init(9, 36);
+		//al2.Init(80, 30);
 	}
 }
 
