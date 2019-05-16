@@ -5,16 +5,22 @@ namespace SpriteData
 {
 	enum WallId
 	{
-		BLOCK_8_8 = 0,
+		BLOCK_16_8_RIGHT = 0,
+		ROCK,
+		ROCK_GROUND,
+		LEFT_STAIR,
+		RIGHT_STAIR,
+		BLOCK_8_8,
 		BLOCK_8_8_SPLIT,
-		BLOCK_16_8_LEFT,
-		BLOCK_16_8_RIGHT,
-		STATUE_TOP,
+		SMALL_STATUE,
 		DESTROYABLE_BLOCK_LEFT = 8,
 		DESTROYABLE_BLOCK_RIGHT = 9,
-		PLATFORM = 29,
+		BIG_STATUE_TOP,
+		BIG_STATUE_BOTTOM,
+		PLATFORM,
 		LADDER,
 		PLATFORM_WITH_LADDER,
+		ARROW_LAUNCHER,
 		NOTHING = 255,
 	};
 	
@@ -81,6 +87,11 @@ namespace SpriteData
 	const int SHINE_STAR_SPRITE_WIDTH = 5;
 	const int SHINE_STAR_SPRITE_HEIGHT = 8;
 	extern const unsigned char ShineStar[][SHINE_STAR_SPRITE_WIDTH * (SHINE_STAR_SPRITE_HEIGHT / 8)];
+	
+	// arrow launcher
+	const int ARROW_LAUNCHER_FACE_SPRITE_WIDTH = 4;
+	const int ARROW_LAUNCHER_FACE_SPRITE_HEIGHT = 8;
+	extern const unsigned char ArrowLauncherFace[];
 	
 	// statue sprite
 	const int STATUETTE_SPRITE_WIDTH = 5;
