@@ -7,8 +7,8 @@ namespace SpriteData
 	{
 		BLOCK_16_8_RIGHT = 0,
 		ROCK,
+		ROCK_2,
 		ROCK_GROUND,
-		FREE_SPACE_TODO,
 		LEFT_STAIR,
 		RIGHT_STAIR,
 		BLOCK_8_8,

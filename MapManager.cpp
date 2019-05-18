@@ -641,7 +641,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				// choose a random mirror flag for some sprite that can be mirrored, for display variation
 				// and for the big statue, they are mirror if they are the right one (i.e. if there is the same sprite on their left)
 				bool isMirror = false;
-				if (spriteId < SpriteData::LEFT_STAIR)
+				if (spriteId <= SpriteData::ROCK_GROUND)
 					isMirror = (spriteLevelX * spriteLevelY) % 2;
 				else if ((spriteId == SpriteData::BIG_STATUE_TOP) || (spriteId == SpriteData::BIG_STATUE_BOTTOM))
 					isMirror = (pgm_read_byte(&(Level[spriteLevelY][spriteLevelX - 1])) == spriteId);

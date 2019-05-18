@@ -26,14 +26,14 @@ const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
 	{ SpriteData::BLOCK_8_8_SPLIT, 255, 255, 255, SpriteData::LADDER, SpriteData::PLATFORM, SpriteData::PLATFORM, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM, SpriteData::PLATFORM, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 	{ 2, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 255, SpriteData::SMALL_STATUE, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
 	{ SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, SpriteData::DESTROYABLE_BLOCK, SpriteData::DESTROYABLE_BLOCK, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER, SpriteData::PLATFORM, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, 255, 255, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, 0, 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 0,},
-	{ 0, SpriteData::LADDER, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0,},
-	{ 0, SpriteData::LADDER, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 0,},
-	{ 0, SpriteData::LADDER, 255, 255, 255, 0, 255, 255, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, SpriteData::LADDER, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
+	{ SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER, SpriteData::PLATFORM, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, 255, 255, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, 7, 0, 6, 0, 0, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 0,},
+	{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 7, 1, 2, 1, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0,},
+	{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 6, 1, 1, 2, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 0,},
+	{ 0, SpriteData::LADDER, 255, 255, 255, 7, 255, 255, 6, 2, 2, 1, 2, 1, 1, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, SpriteData::LADDER, 255, 0,},
+	{ 0, SpriteData::LADDER, 255, SpriteData::LADDER, 255, 255, 255, 255, 0, 6, 7, 6, 0, 6, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
 	{ 0, 0, 0, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
-	{ 0, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BIG_STATUE_BOTTOM, SpriteData::BIG_STATUE_BOTTOM, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, SpriteData::LADDER, 255, SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 255, 255, 255, 255, SpriteData::BIG_STATUE_BOTTOM, SpriteData::BIG_STATUE_BOTTOM, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},
 };
 
@@ -85,9 +85,9 @@ void InitScreen1(bool init)
 	MapManager::AddItem(&st0);
 
 	// init of the reusable items
-	sp1.Init(116,80);
-	sp2.Init(100,80);
-	sp3.Init(100,90);
+	sp1.Init(80,94);
+	sp2.Init(100,94);
+	sp3.Init(116,105);
 	
 	// init of the killable items
 	if (init)
