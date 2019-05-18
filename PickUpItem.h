@@ -18,7 +18,7 @@ private:
 	static constexpr int MAX_PAUSE_TIMES = 150;
 	
 	// the current time to wait before playing the next shining star
-	char PauseTime = 0;
+	char PauseTime = 1;
 	
 	// current frame id and direction of the shinning star
 	char AnimFrameId = -1;
