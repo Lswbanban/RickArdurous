@@ -6,6 +6,7 @@
 #include "DestroyableBlock.h"
 #include "SpriteData.h"
 #include "BlockFragment.h"
+#include "MapManager.h"
 
 BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
@@ -36,6 +37,14 @@ bool DestroyableBlock::Update(UpdateStep step)
 			}
 			break;
 		}
+
+		case UpdateStep::DRAW_STATIC_COLLISION:
+		{
+			// if we are updated, that means we are alive, so no need to check the property flag
+			arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::DestroyableBlock, SpriteData::DESTROYABLE_BLOCK_SPRITE_WIDTH, SpriteData::DESTROYABLE_BLOCK_SPRITE_HEIGHT, WHITE, false);
+		}
+		break;
+
 		case Item::UpdateStep::RESPAWN:
 		{
 			SetProperty(Item::PropertyFlags::ALIVE);
@@ -52,12 +61,7 @@ void DestroyableBlock::InitDeath()
 		Fragments[i]->Spawn(X + (i*6), Y, i);
 }
 
-bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY, unsigned char spriteId)
+bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY)
 {
-	if (mapY == (Y >> 3))
-	{
-		int x = (spriteId == SpriteData::WallId::DESTROYABLE_BLOCK_RIGHT) ? X + SpriteData::LEVEL_SPRITE_WIDTH : X;
-		return (mapX == (x >> 3));
-	}
-	return false;
+	return (mapY == (Y >> 3)) && ((mapX == (X >> 3)) || (mapX == ((X + SpriteData::LEVEL_SPRITE_WIDTH) >> 3)));
 }

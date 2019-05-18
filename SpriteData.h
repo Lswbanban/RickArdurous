@@ -8,19 +8,19 @@ namespace SpriteData
 		BLOCK_16_8_RIGHT = 0,
 		ROCK,
 		ROCK_GROUND,
+		FREE_SPACE_TODO,
 		LEFT_STAIR,
 		RIGHT_STAIR,
 		BLOCK_8_8,
 		BLOCK_8_8_SPLIT,
 		SMALL_STATUE,
-		DESTROYABLE_BLOCK_LEFT = 8,
-		DESTROYABLE_BLOCK_RIGHT = 9,
 		BIG_STATUE_TOP,
 		BIG_STATUE_BOTTOM,
 		PLATFORM,
 		LADDER,
 		PLATFORM_WITH_LADDER,
 		ARROW_LAUNCHER,
+		DESTROYABLE_BLOCK,
 		NOTHING = 255,
 	};
 	
@@ -29,6 +29,11 @@ namespace SpriteData
 	const int LEVEL_SPRITE_WIDTH = 8;
 	const int LEVEL_SPRITE_HEIGHT = 8;
 	extern const unsigned char Walls[][LEVEL_SPRITE_WIDTH * (LEVEL_SPRITE_HEIGHT / 8)];
+	
+	// destroyable Blocks
+	const int DESTROYABLE_BLOCK_SPRITE_WIDTH = 15;
+	const int DESTROYABLE_BLOCK_SPRITE_HEIGHT = 8;
+	extern const unsigned char DestroyableBlock[];
 	
 	enum RickAnimFrameId
 	{

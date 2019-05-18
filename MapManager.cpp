@@ -75,7 +75,7 @@ namespace MapManager
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAt(int xWorld, int yWorld);
-	bool IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY, unsigned char spriteId);
+	bool IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY);
 }
 
 void MapManager::AddItem(Item * item)
@@ -241,10 +241,10 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 {
 	unsigned char spriteId = GetLevelSpriteAt(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
-	if ((spriteId == SpriteData::DESTROYABLE_BLOCK_LEFT) || (spriteId == SpriteData::DESTROYABLE_BLOCK_RIGHT))
-		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT, spriteId);
+	if (spriteId == SpriteData::DESTROYABLE_BLOCK)
+		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
 	// otherwise it depends on the type of sprite
-	return (spriteId < SpriteData::WallId::LADDER);
+	return (spriteId < SpriteData::WallId::LADDER) || ((spriteId > SpriteData::WallId::PLATFORM_WITH_LADDER) && (spriteId != 255)); // temp code need refactor when packing the map data
 }
 
 bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
@@ -266,13 +266,13 @@ unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
 	return pgm_read_byte(&(Level[mapY][mapX]));
 }
 
-bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY, unsigned char spriteId)
+bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY)
 {
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DESTROYABLE_BLOCK))
 		{
 			DestroyableBlock * block = (DestroyableBlock*)ItemsToUpdate[i];
-			if (block->IsLocatedAt(spriteLevelX, spriteLevelY, spriteId))
+			if (block->IsLocatedAt(spriteLevelX, spriteLevelY))
 				return block->IsAlive();
 		}
 	return false;
@@ -634,23 +634,21 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 					spriteId = SpriteData::PLATFORM;
 			}
 
-			// check if we need to draw or not the destroyable block (in case they have been destroyed)
-			if (((spriteId == SpriteData::DESTROYABLE_BLOCK_LEFT) || (spriteId == SpriteData::DESTROYABLE_BLOCK_RIGHT)) && 
-				!IsDestroyableBlockAlive(spriteLevelX, spriteLevelY, spriteId))
-				continue;
-
-			// choose the mirror flag
-			bool isMirror = false;
-			if (spriteId < SpriteData::LEFT_STAIR)
-				isMirror = (spriteLevelX * spriteLevelY) % 2;
-				
 			// draw the sprite if we need to
 			if ((spriteId >= minSpriteIndex) && (spriteId <= maxSpriteIndex) &&
 				((spriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
+			{
+				// choose a random mirror flag for some sprite that can be mirrored, for display variation
+				bool isMirror = false;
+				if (spriteId < SpriteData::LEFT_STAIR)
+					isMirror = (spriteLevelX * spriteLevelY) % 2;
+
+				// call the draw function
 				arduboy.drawBitmapExtended(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
 					spriteY,
 					SpriteData::Walls[spriteId],
 					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, isMirror);
+			}
 		}
 	}
 }
