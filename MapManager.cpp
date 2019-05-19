@@ -244,7 +244,7 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 	if (spriteId == SpriteData::DESTROYABLE_BLOCK)
 		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
 	// otherwise it depends on the type of sprite
-	return (spriteId < SpriteData::WallId::LADDER) || ((spriteId > SpriteData::WallId::PLATFORM_WITH_LADDER) && (spriteId != 255)); // temp code need refactor when packing the map data
+	return (spriteId < SpriteData::WallId::LADDER) || ((spriteId > SpriteData::WallId::PLATFORM_WITH_LADDER) && (spriteId != SpriteData::NOTHING));
 }
 
 bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
@@ -643,6 +643,8 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				bool isMirror = false;
 				if (spriteId <= SpriteData::ROCK_GROUND)
 					isMirror = (spriteLevelX * spriteLevelY) % 2;
+				else if (spriteId == SpriteData::STAIR)
+					isMirror = (pgm_read_byte(&(Level[spriteLevelY][spriteLevelX - 1])) == SpriteData::NOTHING);
 				else if ((spriteId == SpriteData::BIG_STATUE_TOP) || (spriteId == SpriteData::BIG_STATUE_BOTTOM))
 					isMirror = (pgm_read_byte(&(Level[spriteLevelY][spriteLevelX - 1])) == spriteId);
 
