@@ -9,8 +9,7 @@ namespace SpriteData
 		ROCK,
 		ROCK_2,
 		ROCK_GROUND,
-		LEFT_STAIR,
-		RIGHT_STAIR,
+		STAIR,
 		BLOCK_8_8,
 		BLOCK_8_8_SPLIT,
 		SMALL_STATUE,
@@ -21,7 +20,7 @@ namespace SpriteData
 		PLATFORM_WITH_LADDER,
 		ARROW_LAUNCHER,
 		DESTROYABLE_BLOCK,
-		NOTHING = 255,
+		NOTHING = 255, // todo replace when optimizing the map
 	};
 	
 	// sprite of the walls

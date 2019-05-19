@@ -19,10 +19,10 @@
 
 
 const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
-	{ SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8, SpriteData::BLOCK_8_8_SPLIT, 2, 3, SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8_SPLIT, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 2, 3, SpriteData::BLOCK_8_8, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8, 2, 3, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8_SPLIT, 2, 3, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8, 255, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 2, 3, SpriteData::BLOCK_8_8_SPLIT, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
+	{ SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8, SpriteData::BLOCK_8_8_SPLIT, 2, 1, SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
+	{ SpriteData::BLOCK_8_8_SPLIT, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 2, 1, SpriteData::BLOCK_8_8, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
+	{ SpriteData::BLOCK_8_8, 2, 1, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8_SPLIT, 2, 1, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
+	{ SpriteData::BLOCK_8_8, 255, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 2, 1, SpriteData::BLOCK_8_8_SPLIT, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
 	{ SpriteData::BLOCK_8_8_SPLIT, 255, 255, 255, SpriteData::LADDER, SpriteData::PLATFORM, SpriteData::PLATFORM, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM, SpriteData::PLATFORM, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 	{ 2, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 255, SpriteData::SMALL_STATUE, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
 	{ SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, SpriteData::DESTROYABLE_BLOCK, SpriteData::DESTROYABLE_BLOCK, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
@@ -31,8 +31,8 @@ const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
 	{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 6, 1, 1, 2, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 0,},
 	{ 0, SpriteData::LADDER, 255, 255, 255, 7, 255, 255, 6, 2, 2, 1, 2, 1, 1, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, SpriteData::LADDER, 255, 0,},
 	{ 0, SpriteData::LADDER, 255, SpriteData::LADDER, 255, 255, 255, 255, 0, 6, 7, 6, 0, 6, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, 0, 0, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, 255, 255, SpriteData::LADDER, 255, SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
+	{ 0, 0, 0, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 3, SpriteData::STAIR, 255, 255, 255, 255, 255, 255, SpriteData::STAIR, 3, 255, 255, SpriteData::LADDER, 255, 0,},
+	{ 0, 255, 255, SpriteData::LADDER, 255, SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 1, 2, SpriteData::STAIR, 255, 255, 255, 255, SpriteData::STAIR, 1, 2, 255, 255, 255, 255, 0,},
 	{ 0, 255, 255, 255, 255, SpriteData::BIG_STATUE_BOTTOM, SpriteData::BIG_STATUE_BOTTOM, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},
 };
