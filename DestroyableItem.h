@@ -7,7 +7,7 @@ class DestroyableItem : public Item
 {
 public:
 	DestroyableItem(unsigned char flags);
-	bool CheckLethalDynamite(int width);
+	bool CheckLethalDynamite(unsigned char width);
 	
 private:
 	static constexpr int EXPLOSION_DETECTION_DISTANCE = 5;

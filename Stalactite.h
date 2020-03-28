@@ -18,7 +18,7 @@ protected:
 
 	static void CheckTrigererCallback(Item * me, Item * trigerer);
 	void CheckTrigerer(bool isAlive, int trigererX, int trigererY);
-	void Draw(int shakeX);
+	void Draw(char shakeX);
 };
 
 #endif

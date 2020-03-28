@@ -74,7 +74,7 @@ void ArrowBullet::DrawBulletRay(unsigned char color)
  * If that pixel of that color is found, return the world position of that pixel,
  * otherwise return the specific value NO_PIXEL_FOUND (60000)
  */
-int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned int color)
+int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 {
 	// get the ray cast positions
 	int worldStartX = GetBulletRayCastStartX();

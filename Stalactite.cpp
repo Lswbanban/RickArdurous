@@ -22,7 +22,7 @@ bool Stalactite::Update(UpdateStep step)
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				int shakeX = 0;
+				char shakeX = 0;
 				// use the special flag as an anim state: if special is set then the stalactite is falling,
 				// otherwise it is waiting
 				if (!IsPropertySet(Item::PropertyFlags::SPECIAL))
@@ -118,7 +118,7 @@ void Stalactite::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 	}
 }
 
-void Stalactite::Draw(int shakeX)
+void Stalactite::Draw(char shakeX)
 {
 	for (int i = 0; i < 2; ++i)
 		arduboy.drawBitmapExtended(
