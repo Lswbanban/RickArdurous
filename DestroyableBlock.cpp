@@ -16,7 +16,7 @@ DestroyableBlock::DestroyableBlock(unsigned char flags) : DestroyableItem(flags 
 
 void DestroyableBlock::StaticInit()
 {
-	for (int i = 0; i < FRAGMENT_COUNT; ++i)
+	for (unsigned char i = 0; i < FRAGMENT_COUNT; ++i)
 		Fragments[i] = new BlockFragment();
 }
 
@@ -57,7 +57,7 @@ bool DestroyableBlock::Update(UpdateStep step)
 void DestroyableBlock::InitDeath()
 {
 	ClearProperty(Item::PropertyFlags::ALIVE);
-	for (int i = 0; i < FRAGMENT_COUNT; ++i)
+	for (unsigned char i = 0; i < FRAGMENT_COUNT; ++i)
 		Fragments[i]->Spawn(X + (i*6), Y, i);
 }
 

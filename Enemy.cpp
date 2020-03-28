@@ -112,7 +112,7 @@ bool Enemy::Update(UpdateStep step)
 						// fall speed, to see if I will touch the ground during next frame.
 						// If yes, reduce my falling speed to avoid penetrating in the ground during next frame
 						unsigned char fallSpeed = Physics::GetCurrentFallSpeed(PhysicsId);
-						for (int i = fallSpeed; i > 1; i--)
+						for (unsigned char i = fallSpeed; i > 1; --i)
 							if (IsThereAnyGroundCollisionAt(yUnderFeet + i))
 								fallSpeed--;
 						Physics::LimitFallSpeed(PhysicsId, fallSpeed);

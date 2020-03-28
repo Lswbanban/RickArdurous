@@ -22,8 +22,8 @@ private:
 	
 	union
 	{
-		char CurrentBulletSpeed; // the current speed (which could be null on the first frame)
-		char SparksAnimFrameId; // the frame id to play sparks when the bullet hit the wall
+		unsigned char CurrentBulletSpeed; // the current speed (which could be null on the first frame)
+		unsigned char SparksAnimFrameId; // the frame id to play sparks when the bullet hit the wall
 	};
 	
 	unsigned char GetWidth();

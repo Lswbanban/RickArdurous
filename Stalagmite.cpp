@@ -50,7 +50,7 @@ bool Stalagmite::Update(UpdateStep step)
 					Draw();
 				
 				// draw the sparks
-				for (int i = 0; i < 3; ++i)
+				for (unsigned char i = 0; i < 3; ++i)
 					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (i*3) -1),
 						MapManager::GetYOnScreen(Y + 1),
 						SpriteData::Sparks[(SparksAnimFrameId + i) % SpriteData::SPARKS_SPRITE_FRAME_COUNT],
@@ -73,11 +73,11 @@ bool Stalagmite::Update(UpdateStep step)
 
 void Stalagmite::Draw()
 {
-	for (int i = 0; i < 2; ++i)
-	arduboy.drawBitmapExtended(
-		MapManager::GetXOnScreen(X + (i * (SpriteData::STALAGMITE_SPRITE_WIDTH + 1))),
-		MapManager::GetYOnScreen(Y),
-		SpriteData::Stalagmite,
-		SpriteData::STALAGMITE_SPRITE_WIDTH, SpriteData::STALAGMITE_SPRITE_HEIGHT,
-		WHITE, i);
+	for (unsigned char i = 0; i < 2; ++i)
+		arduboy.drawBitmapExtended(
+			MapManager::GetXOnScreen(X + (i * (SpriteData::STALAGMITE_SPRITE_WIDTH + 1))),
+			MapManager::GetYOnScreen(Y),
+			SpriteData::Stalagmite,
+			SpriteData::STALAGMITE_SPRITE_WIDTH, SpriteData::STALAGMITE_SPRITE_HEIGHT,
+			WHITE, i);
 }
