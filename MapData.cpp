@@ -136,4 +136,4 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 	};
 
 // compute the number of items
-const unsigned int MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);
+const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);
