@@ -10,7 +10,7 @@ DestroyableItem::DestroyableItem(unsigned char flags) : Item(flags)
 {
 }
 
-bool DestroyableItem::CheckLethalDynamite(int width)
+bool DestroyableItem::CheckLethalDynamite(unsigned char width)
 {
 	// get my y coordinate on screen
 	int yOnScreen = MapManager::GetYOnScreen(Y);
