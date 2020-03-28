@@ -21,7 +21,7 @@ bool DestroyableItem::CheckLethalDynamite(unsigned char width)
 		int xOnScreen = MapManager::GetXOnScreen(X);
 		
 		// iterate on a certain distance
-		for (int i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
+		for (unsigned char i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)
 		{
 			// check on the left
 			int xLeft = xOnScreen - i;

@@ -81,7 +81,7 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 	int startXOnScreen = MapManager::GetXOnScreen(worldStartX);
 	int yOnScreen = MapManager::GetYOnScreen(Y);
 	// iterate on the frame buffer to check if any pixel is set
-	for (int i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
+	for (unsigned char i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
 		if (arduboy.getPixel(startXOnScreen + i, yOnScreen) == color)
 				return (worldStartX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
 	// no collision found

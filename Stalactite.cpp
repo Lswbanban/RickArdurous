@@ -34,7 +34,7 @@ bool Stalactite::Update(UpdateStep step)
 
 					// compute a shaking x variation
 					char shakingMove[] = {1, -1, 0, 2, 0, -2, 1, -1};
-					for (int i = 0; i < sizeof(shakingMove); ++i)
+					for (unsigned char i = 0; i < sizeof(shakingMove); ++i)
 						if (arduboy.everyXFrames(SHAKING_SPEED + i))
 						{
 							shakeX = shakingMove[i];
@@ -78,7 +78,7 @@ bool Stalactite::Update(UpdateStep step)
 					Draw(0);
 				
 				// draw the sparks
-				for (int i = 0; i < 2; ++i)
+				for (unsigned char i = 0; i < 2; ++i)
 					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (i*4)),
 						MapManager::GetYOnScreen(Y + 2 - SparksAnimFrameId),
 						SpriteData::Sparks[SparksAnimFrameId],
@@ -120,7 +120,7 @@ void Stalactite::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 
 void Stalactite::Draw(char shakeX)
 {
-	for (int i = 0; i < 2; ++i)
+	for (unsigned char i = 0; i < 2; ++i)
 		arduboy.drawBitmapExtended(
 					MapManager::GetXOnScreen(X + (i * (SpriteData::STALACTITE_SPRITE_WIDTH + 1)) + shakeX),
 					MapManager::GetYOnScreen(Y + i),
