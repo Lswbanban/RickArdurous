@@ -75,8 +75,8 @@ namespace MapManager
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
-	unsigned char GetLevelSpriteAt(int xMap, int yMap);
-	bool IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY);
+	unsigned char GetLevelSpriteAt(unsigned char xMap, unsigned char yMap);
+	bool IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap);
 }
 
 void MapManager::AddItem(Item * item)
@@ -256,23 +256,25 @@ bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
 
 unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld)
 {
-	// convert the world coordinate into index for the sprite map and call the right function
-	return GetLevelSpriteAt(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
-}
-
-unsigned char MapManager::GetLevelSpriteAt(int mapX, int mapY)
-{
+	// convert the world coordinate into index for the sprite map
+	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
+	int yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
-	if ((mapX < 0) || (mapX >= MapManager::LEVEL_SIZE_X) || (mapY < 0) || (mapY >= MapManager::LEVEL_SIZE_Y))
+	if ((xMap < 0) || (xMap >= MapManager::LEVEL_SIZE_X) || (yMap < 0) || (yMap >= MapManager::LEVEL_SIZE_Y))
 		return SpriteData::BLOCK_16_8_RIGHT;
+	// call the function to get the sprite inside the map
+	return GetLevelSpriteAt(xMap, yMap);
+}
 
+unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMap)
+{
 	// compute start and end index in the array of sprite ids
-	int startLineIndex = pgm_read_byte(&(LevelLineIndex[mapY]));
-	int endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
+	int startLineIndex = pgm_read_byte(&(LevelLineIndex[yMap]));
+	int endLineIndex = pgm_read_byte(&(LevelLineIndex[yMap + 1]));
 	
 	// get the index of the sprite in the one dimentionnal array
-	int targetSpriteIndex = mapX + 1;
+	int targetSpriteIndex = xMap + 1;
 	// iterate through the array to find the correct index
 	int spriteIndex = 0;
 	bool readNothingCount = false;
@@ -320,13 +322,13 @@ unsigned char MapManager::GetLevelSpriteAt(int mapX, int mapY)
 	return SpriteData::BLOCK_16_8_RIGHT;
 }
 
-bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY)
+bool MapManager::IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap)
 {
 	for (int i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DESTROYABLE_BLOCK))
 		{
 			DestroyableBlock * block = (DestroyableBlock*)ItemsToUpdate[i];
-			if (block->IsLocatedAt(spriteLevelX, spriteLevelY))
+			if (block->IsLocatedAt(xMap, yMap))
 				return block->IsAlive();
 		}
 	return false;
