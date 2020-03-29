@@ -21,12 +21,12 @@ namespace MapManager
 	static constexpr int SHUTTER_SPEED = 5;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
-	int CameraX = 0;
-	int CameraY = 0;
+	unsigned char CameraX = 0;
+	unsigned char CameraY = 0;
 	
-	// The target camera coordinates
-	int TargetCameraX = 0;
-	int TargetCameraY = 0;
+	// The target camera coordinates use the same coordinate reference (in the level array), but represent the target where the camera should go
+	unsigned char TargetCameraX = 0;
+	unsigned char TargetCameraY = 0;
 	
 	// This variable is used to store a temporary shift of the camera during a transition animation
 	char CameraTransitionX = 0;
@@ -50,10 +50,10 @@ namespace MapManager
 	// a variable to indicate in which direction the player goes when traversing the puzzle screens
 	char PuzzleScreenMoveDirection = 1;
 	// coordinates of the edge between the current puzzle screen and the previous screen
-	int LastPuzzleScreenEdgeCoordX = 0;
-	int LastPuzzleScreenEdgeCoordY = 0;
-	int LastCheckPointPuzzleScreenEdgeCoordX = 0;
-	int LastCheckPointPuzzleScreenEdgeCoordY = 0;
+	unsigned char LastPuzzleScreenEdgeCoordX = 0;
+	unsigned char LastPuzzleScreenEdgeCoordY = 0;
+	unsigned char LastCheckPointPuzzleScreenEdgeCoordX = 0;
+	unsigned char LastCheckPointPuzzleScreenEdgeCoordY = 0;
 	bool WasLastTransitionHorizontal = false;
 	bool WasLastCheckPointLastTransitionHorizontal = false;
 	
@@ -70,7 +70,7 @@ namespace MapManager
 	void TeleportAndRespawnToLastCheckpoint();
 	void AnimateCameraTransition();
 	void AnimateShutterTransition();
-	void BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY);
+	void BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY);
 	void EndSwitchPuzzleScreen();
 	char GetCameraSpeed(char step, char subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
@@ -221,12 +221,12 @@ void MapManager::Update()
 
 int MapManager::GetXOnScreen(int worldX)
 {
-	return worldX - (CameraX * SpriteData::LEVEL_SPRITE_WIDTH) - CameraTransitionX;
+	return worldX - ((int)CameraX * SpriteData::LEVEL_SPRITE_WIDTH) - CameraTransitionX;
 }
 
 int MapManager::GetYOnScreen(int worldY)
 {
-	return worldY - (CameraY * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraTransitionY + CAMERA_VERTICAL_SHIFT;
+	return worldY - ((int)CameraY * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraTransitionY + CAMERA_VERTICAL_SHIFT;
 }
 
 bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned char spriteHeight)
@@ -320,7 +320,7 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 
 bool MapManager::IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap)
 {
-	for (int i = 0; i < ItemsToUpdateCount; i++)
+	for (unsigned char i = 0; i < ItemsToUpdateCount; i++)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::DESTROYABLE_BLOCK))
 		{
 			DestroyableBlock * block = (DestroyableBlock*)ItemsToUpdate[i];
@@ -495,15 +495,15 @@ char MapManager::GetCameraSpeed(char step, char subStep)
 	}
 }
 
-void MapManager::BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY)
+void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY)
 {
 	bool isHorizontalTransition = (newTargetCameraX != TargetCameraX);
 	bool isVerticalTransition = (newTargetCameraY != TargetCameraY);
 	if (isHorizontalTransition || isVerticalTransition)
 	{
 		// get the edge of the transition (which is the max of the two target camera)
-		int newEdgeCoordX = (newTargetCameraX > TargetCameraX) ? newTargetCameraX : TargetCameraX;
-		int newEdgeCoordY = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
+		unsigned char newEdgeCoordX = (newTargetCameraX > TargetCameraX) ? newTargetCameraX : TargetCameraX;
+		unsigned char newEdgeCoordY = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
 		
 		// if Rick just crossed the same edge as before, he is returning back
 		bool isRickReturning = (WasLastTransitionHorizontal == isHorizontalTransition) && 
@@ -559,7 +559,7 @@ void MapManager::AnimateCameraTransition()
 	{
 		// Check if we should start a camera transition (if the main character exit the screen)
 		// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking if equivalent to the computation
-		int screenPuzzleY = CameraY & 0xFFF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
+		int screenPuzzleY = CameraY & 0xF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
 		if (Rick::GetBottomForScreenTransition() <= (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
 		{
 			BeginSwitchPuzzleScreen(TargetCameraX, screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN);
@@ -573,7 +573,7 @@ void MapManager::AnimateCameraTransition()
 			}
 			else
 			{
-				int screenPuzzleX = CameraX & 0xFFF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
+				int screenPuzzleX = CameraX & 0xF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
 				if (Rick::GetRightForScreenTransition() <= (screenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
 				{
 					BeginSwitchPuzzleScreen(screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN, TargetCameraY);
