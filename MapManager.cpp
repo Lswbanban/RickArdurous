@@ -338,22 +338,37 @@ bool MapManager::IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap)
  * a sprite at that place in the level, to still have accurate collision event if the ground or ceiling is outside the
  * the screen.
  */
-bool MapManager::IsThereAnyHorizontalCollisionAt(int leftWorld, int rightWorld, int yWorld)
+bool MapManager::IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigned char width)
 {
-	// get the coordinates to check on screen
-	int leftOnScreen = MapManager::GetXOnScreen(leftWorld);
-	int rightOnScreen = MapManager::GetXOnScreen(rightWorld);
+	// get the y coordinate first on screen (and check if it is on screen)
 	int yOnScreen = MapManager::GetYOnScreen(yWorld);
+	int rightWorld = xWorld + width;
 	// check if the Y coordinate is out of the screen, if yes ask the map manager if there is a sprite below the scrren
 	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))
-		return MapManager::IsThereStaticCollisionAt(leftWorld, yWorld) || 
+		return MapManager::IsThereStaticCollisionAt(xWorld, yWorld) || 
 				MapManager::IsThereStaticCollisionAt(rightWorld, yWorld);
-	// for the x coordinate, check individualy and if on screen check the pixel
-	bool isLeftOnScreen = (leftOnScreen >= 0) && (leftOnScreen < WIDTH);
-	bool isRightOnScreen = (rightOnScreen >= 0) && (rightOnScreen < WIDTH);
-	// if the coordinates are on screen, check the frame buffer
-	return (isLeftOnScreen && (arduboy.getPixel(leftOnScreen, yOnScreen) == WHITE)) ||
-			(isRightOnScreen && (arduboy.getPixel(rightOnScreen, yOnScreen) == WHITE));
+	// get the left coordinates to check if it is outside the screen in that case, check the sprite
+	// and if we find a collision stop here, otherwise continue to check
+	int leftOnScreen = MapManager::GetXOnScreen(xWorld);
+	if (((leftOnScreen < 0) || (leftOnScreen >= WIDTH)) && MapManager::IsThereStaticCollisionAt(xWorld, yWorld))
+		return true;
+	// get the right coordinates to check if it is outside the screen in that case, check the sprite
+	// and if we find a collision stop here, otherwise continue to check
+	int rightOnScreen = MapManager::GetXOnScreen(rightWorld);
+	if (((rightOnScreen < 0) || (rightOnScreen >= WIDTH)) && MapManager::IsThereStaticCollisionAt(rightWorld, yWorld))
+		return true;
+	// if no collision found so far, and at least it is partially (or totally) on screen
+	if ((leftOnScreen < WIDTH) && (rightOnScreen >= 0))
+	{
+		if (leftOnScreen < 0)
+		{
+			width += leftOnScreen;
+			leftOnScreen = 0;
+		}
+		return arduboy.CheckWhitePixelsInRow(leftOnScreen, yOnScreen, width);
+	}
+	// finally no collision found
+	return false;
 }
 
 /**
