@@ -33,6 +33,7 @@ void ArrowBullet::Fire(int x, int y, bool isMovingToLeft)
 	}
 	else
 	{
+		ClearProperty(Item::PropertyFlags::MIRROR_X);
 		X = x;
 	}
 	Y = y;
