@@ -10,22 +10,22 @@ namespace Physics
 	const char JUMP_AND_FALL_VERTICAL_MOVE[] 		= { 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1 };
 	const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[]	= { 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6 };
 	
-	const int INVALID_FALL_ANIM_SPEED_INDEX = 255;
+	static constexpr int INVALID_FALL_ANIM_SPEED_INDEX = 255;
 	class FallParameter
 	{
 	public:
 		unsigned char FrameCounter = 0;
 		unsigned char FallAnimSpeedIndex = INVALID_FALL_ANIM_SPEED_INDEX;
 	};
-	const int MAX_FALL_PARAMETER = INVALID_FALL_ID;
+	static constexpr int MAX_FALL_PARAMETER = INVALID_FALL_ID;
 	FallParameter FallParameterBuffer[MAX_FALL_PARAMETER];
 
 	// values for the parabolic trajectory
-	const int PARABOLIC_MOVING_SPEED = 16;
-	const int PARABOLIC_VELOCITY_Y = -30;
-	const int HALF_GRAVITY = 1;
+	static constexpr int PARABOLIC_MOVING_SPEED = 16;
+	static constexpr int PARABOLIC_VELOCITY_Y = -30;
+	static constexpr int HALF_GRAVITY = 1;
 
-	const int INVALID_PARABOLIC_TRAJECTORY_START_X = -5000;
+	static constexpr int INVALID_PARABOLIC_TRAJECTORY_START_X = -5000;
 	class ParabolicParameter
 	{
 	public:
@@ -35,7 +35,7 @@ namespace Physics
 		char VelocityX = 0;
 	};
 	
-	const int MAX_PARABOLIC_PARAMETER = INVALID_PARABOLIC_ID;
+	static constexpr int MAX_PARABOLIC_PARAMETER = INVALID_PARABOLIC_ID;
 	ParabolicParameter ParabolicParameterBuffer[MAX_PARABOLIC_PARAMETER];
 }
 
@@ -46,10 +46,10 @@ namespace Physics
 void Physics::ResetAll()
 {
 	// reset all the fall params
-	for (int i = 0; i < MAX_FALL_PARAMETER; ++i)
+	for (unsigned char i = 0; i < MAX_FALL_PARAMETER; ++i)
 		FallParameterBuffer[i].FallAnimSpeedIndex = INVALID_FALL_ANIM_SPEED_INDEX;
 	// reset all the parabolic params
-	for (int i = 0; i < MAX_PARABOLIC_PARAMETER; ++i)
+	for (unsigned char i = 0; i < MAX_PARABOLIC_PARAMETER; ++i)
 		ParabolicParameterBuffer[i].StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
 }
 
@@ -58,7 +58,7 @@ unsigned char Physics::StartFall()
 {
 	// search for a free parameter 
 	unsigned char returnId = MAX_FALL_PARAMETER;
-	for (int i = 0; i < MAX_FALL_PARAMETER; ++i)
+	for (unsigned char i = 0; i < MAX_FALL_PARAMETER; ++i)
 		if (FallParameterBuffer[i].FallAnimSpeedIndex == INVALID_FALL_ANIM_SPEED_INDEX)
 			returnId = i;
 	
@@ -132,7 +132,7 @@ unsigned char Physics::StartParabolicTrajectory(int startX, int startY, char vel
 {
 	// search for a free parameter 
 	unsigned char returnId = MAX_PARABOLIC_PARAMETER;
-	for (int i = 0; i < MAX_PARABOLIC_PARAMETER; ++i)
+	for (unsigned char i = 0; i < MAX_PARABOLIC_PARAMETER; ++i)
 		if (ParabolicParameterBuffer[i].StartX == INVALID_PARABOLIC_TRAJECTORY_START_X)
 			returnId = i;
 	
