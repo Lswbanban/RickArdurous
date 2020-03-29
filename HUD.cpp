@@ -8,11 +8,11 @@
 #include "Rick.h"
 namespace HUD
 {
-	const unsigned char LIFE_POS = 3;
-	const unsigned char BULLET_POS = 32;
-	const unsigned char DYNAMITE_POS = 64;
-	const unsigned char STATUETTE_POS = 95;
-	const unsigned char GAP_BETWEEN_LOGO_AND_NUMBER = 3;
+	static constexpr int LIFE_POS = 3;
+	static constexpr int BULLET_POS = 32;
+	static constexpr int DYNAMITE_POS = 64;
+	static constexpr int STATUETTE_POS = 95;
+	static constexpr int GAP_BETWEEN_LOGO_AND_NUMBER = 3;
 	
 	unsigned char drawNumber(unsigned char posX, unsigned char num);
 }
