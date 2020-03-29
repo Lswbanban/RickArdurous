@@ -679,26 +679,22 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
  */
 bool Rick::IsThereAnyGroundOrCeilingCollisionAt(int yWorld)
 {
-	// compute the world coord that we will check for left and right sensor
-	int leftWorld = X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET;
-	int rightWorld;
+	// compute the width that should be used for checking the collisions
+	unsigned char width;
 	if (State == AnimState::CRAWL)
-		rightWorld = X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL;
+		width = RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL;
 	else
-		rightWorld = X + RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND;
+		width = RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND;
 	// ask the MapManager to check for the collisions
-	return MapManager::IsThereAnyHorizontalCollisionAt(leftWorld, rightWorld, yWorld);
+	return MapManager::IsThereAnyHorizontalCollisionAt(X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET, yWorld, width);
 }
 
 bool Rick::IsThereAnyCeilingAboveCrawl()
 {
-	int xOnScreen = MapManager::GetXOnScreen(X);
+	int xWorld = X;
 	if (!IsLookingLeft)
-		xOnScreen += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
-	int yOnScreen = MapManager::GetYOnScreen(Y);
-	if ((xOnScreen < 0) || (xOnScreen >= WIDTH) || (yOnScreen < 0) || (yOnScreen >= HEIGHT))
-		return false;
-	return arduboy.CheckWhitePixelsInRow(xOnScreen, yOnScreen >> 3, SpriteData::RICK_SPRITE_WIDTH) != 0;
+		xWorld += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
+	return MapManager::IsThereAnyHorizontalCollisionAt(xWorld, Y, SpriteData::RICK_SPRITE_WIDTH);
 }
 
 /**

@@ -181,11 +181,8 @@ bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 
 bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
 {
-	// compute the world coord that we will check for left and right sensor
-	int leftWorldX = X + 1;
-	int rightWorldX = X + GetWidth() - 2;
-	// ask the MapManager to check for the collisions
-	return MapManager::IsThereAnyHorizontalCollisionAt(leftWorldX, rightWorldX, yWorld);
+	// ask the MapManager to check for the collisions (using one pixel less on the left and on the right)
+	return MapManager::IsThereAnyHorizontalCollisionAt(X + 1, yWorld, GetWidth() - 2);
 }
 
 void Enemy::UpdateSkeletonBehavior()

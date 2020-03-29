@@ -81,13 +81,14 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
 	return collisionDetected;
 }
 
-unsigned int CustomArduboy::CheckWhitePixelsInRow(uint8_t x, uint8_t row, uint8_t w)
+bool CustomArduboy::CheckWhitePixelsInRow(uint8_t x, uint8_t y, uint8_t w)
 {
-	unsigned int collisionDetected = 0;
+	unsigned char row = y >> 3;
+	unsigned char yLineToCheck = 1 << (y % 8);
 	int startX = (row*WIDTH) + x;
 	for (unsigned char i = 0; i < w; ++i)
-		if (sBuffer[startX + i])
-			collisionDetected |= 1 << i;
-	return collisionDetected;
+		if (sBuffer[startX + i] & yLineToCheck)
+			return true;
+	return false;
 }
 
