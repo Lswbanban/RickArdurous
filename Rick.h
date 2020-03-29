@@ -3,10 +3,10 @@
 
 namespace Rick
 {
-	const char MAX_LIFE_COUNT = 6;
-	const char MAX_STATUETTE_COUNT = 20;
-	const char MAX_BULLET_COUNT = 5;
-	const char MAX_DYNAMITE_COUNT = 5;
+	static constexpr int MAX_LIFE_COUNT = 6;
+	static constexpr int MAX_STATUETTE_COUNT = 20;
+	static constexpr int MAX_BULLET_COUNT = 5;
+	static constexpr int MAX_DYNAMITE_COUNT = 5;
 	
 	void UpdateInput();
 	void CheckLethalCollision();
