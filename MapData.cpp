@@ -17,25 +17,28 @@
 #include "Stalagmite.h"
 #include <avr/pgmspace.h>
 
+#define ID(id1,id2) ((id1<< 4) | id2)
 
-const unsigned char MapManager::Level[LEVEL_SIZE_Y][LEVEL_SIZE_X] PROGMEM = {
-	{ SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8, SpriteData::BLOCK_8_8_SPLIT, 2, 1, SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8_SPLIT, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 2, 1, SpriteData::BLOCK_8_8, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_8_8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8, 2, 1, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8_SPLIT, 2, 1, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8, 255, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 2, 1, SpriteData::BLOCK_8_8_SPLIT, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8_SPLIT, 255, 255, 255, SpriteData::LADDER, SpriteData::PLATFORM, SpriteData::PLATFORM, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM, SpriteData::PLATFORM, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
-	{ 2, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 255, SpriteData::SMALL_STATUE, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::BLOCK_8_8,},
-	{ SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER, 255, 255, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, SpriteData::DESTROYABLE_BLOCK, SpriteData::DESTROYABLE_BLOCK, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,},
-	{ SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER, SpriteData::PLATFORM, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, 255, 255, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT, 7, 0, 6, 0, 0, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 0,},
-	{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 7, 1, 2, 1, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0,},
+const unsigned char MapManager::Level[] PROGMEM = {
+	ID(SpriteData::BLOCK_8_8, SpriteData::NOTHING), ID(11, SpriteData::BLOCK_8_8), ID(SpriteData::BLOCK_8_8_SPLIT, 2), ID(1, SpriteData::BLOCK_8_8), ID(SpriteData::NOTHING, 14), ID(SpriteData::BLOCK_8_8, 0),
+	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::NOTHING), ID(11, 2), ID(1, SpriteData::BLOCK_8_8), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_8_8), ID(SpriteData::NOTHING, 14), ID(SpriteData::BLOCK_8_8, 0),
+	ID(SpriteData::BLOCK_8_8, 2), ID(1, SpriteData::PLATFORM), ID(SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM), ID(SpriteData::NOTHING, 7), ID(SpriteData::BLOCK_8_8_SPLIT, 2), ID(1, 0), ID(SpriteData::NOTHING, 14), ID(SpriteData::BLOCK_8_8,0),
+	ID(SpriteData::BLOCK_8_8, SpriteData::NOTHING), ID(3, SpriteData::LADDER), ID(SpriteData::NOTHING, 8), ID(2, 1), ID(SpriteData::BLOCK_8_8_SPLIT, 0), ID(SpriteData::NOTHING,14), ID(SpriteData::BLOCK_8_8, 0),
+	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::NOTHING), ID(3, SpriteData::LADDER), ID(SpriteData::PLATFORM, SpriteData::PLATFORM), ID(SpriteData::NOTHING, 3), ID(SpriteData::PLATFORM, SpriteData::PLATFORM), ID(SpriteData::PLATFORM, SpriteData::NOTHING), ID(3, 0), ID(SpriteData::NOTHING, 14), ID(0,0),
+	ID(2, SpriteData::NOTHING), ID(2, SpriteData::PLATFORM), ID(SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM), ID(SpriteData::NOTHING, 1), ID(SpriteData::SMALL_STATUE, SpriteData::NOTHING), ID(15, SpriteData::NOTHING), ID(8, SpriteData::BLOCK_8_8),
+	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER), ID(SpriteData::NOTHING, 2), ID(SpriteData::LADDER, SpriteData::NOTHING), ID(7, SpriteData::DESTROYABLE_BLOCK), ID(SpriteData::DESTROYABLE_BLOCK, SpriteData::NOTHING), ID(15, SpriteData::NOTHING), ID(3, 0),
+	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER), ID(SpriteData::PLATFORM, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::NOTHING, 2), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(7, 0), ID(6, 0), ID(0, SpriteData::NOTHING), ID(1, 0), ID(0, 0), ID(0, SpriteData::NOTHING), ID(5, 0),
+	/*{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 7, 1, 2, 1, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0,},
 	{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 6, 1, 1, 2, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 0,},
 	{ 0, SpriteData::LADDER, 255, 255, 255, 7, 255, 255, 6, 2, 2, 1, 2, 1, 1, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, SpriteData::LADDER, 255, 0,},
 	{ 0, SpriteData::LADDER, 255, SpriteData::LADDER, 255, 255, 255, 255, 0, 6, 7, 6, 0, 6, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
 	{ 0, 0, 0, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 3, SpriteData::STAIR, 255, 255, 255, 255, 255, 255, SpriteData::STAIR, 3, 255, 255, SpriteData::LADDER, 255, 0,},
 	{ 0, 255, 255, SpriteData::LADDER, 255, SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 1, 2, SpriteData::STAIR, 255, 255, 255, 255, SpriteData::STAIR, 1, 2, 255, 255, 255, 255, 0,},
 	{ 0, 255, 255, 255, 255, SpriteData::BIG_STATUE_BOTTOM, SpriteData::BIG_STATUE_BOTTOM, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},*/
 };
+
+const unsigned int MapManager::LevelSize = sizeof(MapManager::Level);
 
 // below is the instances of all the Items
 Enemy		mum(Item::PropertyFlags::NONE);

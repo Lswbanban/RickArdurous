@@ -20,7 +20,7 @@ namespace SpriteData
 		PLATFORM_WITH_LADDER,
 		ARROW_LAUNCHER,
 		DESTROYABLE_BLOCK,
-		NOTHING = 255, // todo replace when optimizing the map
+		NOTHING = 15,
 	};
 	
 	// sprite of the walls

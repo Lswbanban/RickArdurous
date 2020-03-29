@@ -74,7 +74,8 @@ namespace MapManager
 	void EndSwitchPuzzleScreen();
 	int GetCameraSpeed(int step, int subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
-	unsigned char GetLevelSpriteAt(int xWorld, int yWorld);
+	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
+	unsigned char GetLevelSpriteAt(int xMap, int yMap);
 	bool IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY);
 }
 
@@ -239,7 +240,7 @@ bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned ch
 
 bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 {
-	unsigned char spriteId = GetLevelSpriteAt(xWorld, yWorld);
+	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
 	if (spriteId == SpriteData::DESTROYABLE_BLOCK)
 		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
@@ -249,21 +250,62 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 
 bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
 {
-	unsigned char spriteId = GetLevelSpriteAt(xWorld, yWorld);
+	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	return (spriteId == SpriteData::WallId::LADDER) || (spriteId == SpriteData::WallId::PLATFORM_WITH_LADDER);
 }
 
-unsigned char MapManager::GetLevelSpriteAt(int xWorld, int yWorld)
+unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld)
 {
-	// convert the world coordinate into index for the sprite map
-	int mapX = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
-	int mapY = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
+	// convert the world coordinate into index for the sprite map and call the right function
+	return GetLevelSpriteAt(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
+}
+
+unsigned char MapManager::GetLevelSpriteAt(int mapX, int mapY)
+{
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
 	if ((mapX < 0) || (mapX >= MapManager::LEVEL_SIZE_X) || (mapY < 0) || (mapY >= MapManager::LEVEL_SIZE_Y))
 		return SpriteData::BLOCK_16_8_RIGHT;
-	// check if the specific sprite id on the map if empty or not
-	return pgm_read_byte(&(Level[mapY][mapX]));
+
+	// get the index of the sprite in the one dimentionnal array
+	int targetSpriteIndex = (LEVEL_SIZE_X * mapY) + mapX;
+	// iterate through the array to find the correct index
+	int spriteIndex = 0;
+	bool readNothingCount = false;
+	for (int i = 0; i < LevelSize; ++i)
+	{
+		unsigned char packedId = pgm_read_byte(&(Level[i]));
+		unsigned char id1 = packedId >> 4;
+		unsigned char id2 = packedId & 0x0F;
+		// check the first id
+		if (id1 == SpriteData::NOTHING)
+			spriteIndex += id2;
+		else if (readNothingCount)
+			spriteIndex += id1;
+		else
+			spriteIndex++;
+		
+		// check if we need to stop
+		if (spriteIndex == targetSpriteIndex)
+			return id1;
+		else if (spriteIndex > targetSpriteIndex)
+			return SpriteData::NOTHING;
+		
+		// check the second id
+		if (id2 == SpriteData::NOTHING)
+			readNothingCount = true;
+		else
+			spriteIndex++;
+
+		// check if we need to stop
+		if (spriteIndex == targetSpriteIndex)
+			return id2;
+		else if (spriteIndex > targetSpriteIndex)
+			return SpriteData::NOTHING;
+	}
+	
+	// by default return a collision
+	return SpriteData::BLOCK_16_8_RIGHT;
 }
 
 bool MapManager::IsDestroyableBlockAlive(unsigned char spriteLevelX, unsigned char spriteLevelY)
@@ -624,7 +666,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		{
 			unsigned char spriteLevelX = x + CameraX;
 			unsigned char spriteLevelY = y + CameraY;
-			unsigned char spriteId = pgm_read_byte(&(Level[spriteLevelY][spriteLevelX]));
+			unsigned char spriteId = GetLevelSpriteAt(spriteLevelX, spriteLevelY);
 			// special case for the mix of ladder and platform, draw either a platform or a ladder depending on the drawing state
 			if (spriteId == SpriteData::PLATFORM_WITH_LADDER)
 			{
@@ -644,9 +686,9 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				if (spriteId <= SpriteData::ROCK_GROUND)
 					isMirror = (spriteLevelX * spriteLevelY) % 2;
 				else if (spriteId == SpriteData::STAIR)
-					isMirror = (pgm_read_byte(&(Level[spriteLevelY][spriteLevelX - 1])) == SpriteData::NOTHING);
+					isMirror = (GetLevelSpriteAt(spriteLevelX - 1, spriteLevelY) == SpriteData::NOTHING);
 				else if ((spriteId == SpriteData::BIG_STATUE_TOP) || (spriteId == SpriteData::BIG_STATUE_BOTTOM))
-					isMirror = (pgm_read_byte(&(Level[spriteLevelY][spriteLevelX - 1])) == spriteId);
+					isMirror = (GetLevelSpriteAt(spriteLevelX - 1, spriteLevelY) == spriteId);
 
 				// call the draw function
 				arduboy.drawBitmapExtended(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
