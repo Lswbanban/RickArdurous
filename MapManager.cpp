@@ -268,7 +268,7 @@ unsigned char MapManager::GetLevelSpriteAt(int mapX, int mapY)
 		return SpriteData::BLOCK_16_8_RIGHT;
 
 	// get the index of the sprite in the one dimentionnal array
-	int targetSpriteIndex = (LEVEL_SIZE_X * mapY) + mapX;
+	int targetSpriteIndex = (LEVEL_SIZE_X * mapY) + mapX + 1;
 	// iterate through the array to find the correct index
 	int spriteIndex = 0;
 	bool readNothingCount = false;
@@ -278,30 +278,38 @@ unsigned char MapManager::GetLevelSpriteAt(int mapX, int mapY)
 		unsigned char id1 = packedId >> 4;
 		unsigned char id2 = packedId & 0x0F;
 		// check the first id
-		if (id1 == SpriteData::NOTHING)
-			spriteIndex += id2;
-		else if (readNothingCount)
+		if (readNothingCount)
+		{
 			spriteIndex += id1;
-		else
-			spriteIndex++;
-		
-		// check if we need to stop
-		if (spriteIndex == targetSpriteIndex)
-			return id1;
-		else if (spriteIndex > targetSpriteIndex)
-			return SpriteData::NOTHING;
-		
-		// check the second id
-		if (id2 == SpriteData::NOTHING)
+			readNothingCount = false;
+			if (spriteIndex >= targetSpriteIndex)
+				return SpriteData::NOTHING;
+		}
+		else if (id1 == SpriteData::NOTHING)
 			readNothingCount = true;
 		else
+		{
 			spriteIndex++;
-
-		// check if we need to stop
-		if (spriteIndex == targetSpriteIndex)
-			return id2;
-		else if (spriteIndex > targetSpriteIndex)
-			return SpriteData::NOTHING;
+			if (spriteIndex == targetSpriteIndex)
+				return id1;
+		}
+		
+		// check the second id
+		if (readNothingCount)
+		{
+			spriteIndex += id2;
+			readNothingCount = false;
+			if (spriteIndex >= targetSpriteIndex)
+				return SpriteData::NOTHING;
+		}
+		else if (id2 == SpriteData::NOTHING)
+			readNothingCount = true;
+		else
+		{
+			spriteIndex++;
+			if (spriteIndex == targetSpriteIndex)
+				return id2;
+		}
 	}
 	
 	// by default return a collision
