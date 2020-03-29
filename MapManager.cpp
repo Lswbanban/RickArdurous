@@ -15,10 +15,10 @@
 namespace MapManager
 {
 	// the vertical shift value in pixel that should be aplied to the camera when drawing the level
-	const int CAMERA_VERTICAL_SHIFT = 6;
-	const int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
-	const int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
-	const int SHUTTER_SPEED = 5;
+	static constexpr int CAMERA_VERTICAL_SHIFT = 6;
+	static constexpr int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
+	static constexpr int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
+	static constexpr int SHUTTER_SPEED = 5;
 	
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
 	int CameraX = 0;
@@ -64,7 +64,7 @@ namespace MapManager
 	// debug draw state
 	unsigned char DebugDrawStep = 255;
 	
-	void RemoveItem(int index);
+	void RemoveItem(unsigned char index);
 	void RemoveAllItemsOutsideOfTheScreen();
 	void UpdateItems(Item::UpdateStep updateStep);
 	void TeleportAndRespawnToLastCheckpoint();
@@ -72,7 +72,7 @@ namespace MapManager
 	void AnimateShutterTransition();
 	void BeginSwitchPuzzleScreen(int newTargetCameraX, int newTargetCameraY);
 	void EndSwitchPuzzleScreen();
-	int GetCameraSpeed(int step, int subStep);
+	char GetCameraSpeed(char step, char subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
 	unsigned char GetLevelSpriteAt(unsigned char xMap, unsigned char yMap);
@@ -84,7 +84,7 @@ void MapManager::AddItem(Item * item)
 	if (ItemsToUpdateCount < MAX_UPDATABLE_ITEM_COUNT)
 	{
 		// search if the item is not already inside the array
-		for (int i = 0; i < ItemsToUpdateCount; ++i)
+		for (unsigned char i = 0; i < ItemsToUpdateCount; ++i)
 			if (ItemsToUpdate[i] == item)
 				return;
 		// add the item to the last position of the array
@@ -95,7 +95,7 @@ void MapManager::AddItem(Item * item)
 	//Serial.println(ItemsToUpdateCount);
 }
 
-void MapManager::RemoveItem(int index)
+void MapManager::RemoveItem(unsigned char index)
 {
 	// decrease the item count
 	ItemsToUpdateCount--;
@@ -108,7 +108,7 @@ void MapManager::RemoveItem(int index)
 
 void MapManager::RemoveItem(Item * item)
 {
-	for (int i = 0; i < ItemsToUpdateCount; ++i)
+	for (unsigned char i = 0; i < ItemsToUpdateCount; ++i)
 		if (ItemsToUpdate[i] == item)
 		{
 			// remove the item found
@@ -121,7 +121,7 @@ void MapManager::RemoveItem(Item * item)
 void MapManager::RemoveAllItemsOutsideOfTheScreen()
 {
 	// remove items outside of the screen
-	for (int i = 0; i < ItemsToUpdateCount; i++)
+	for (unsigned char i = 0; i < ItemsToUpdateCount; i++)
 	{
 		Item * currentItem = ItemsToUpdate[i];
 		if (!IsOnScreen(currentItem->GetX(), currentItem->GetY(), 8, 8))
@@ -134,7 +134,7 @@ void MapManager::RemoveAllItemsOutsideOfTheScreen()
 
 void MapManager::CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callback)
 {
-	for (int i = 0; i < ItemsToUpdateCount; i++)
+	for (unsigned char i = 0; i < ItemsToUpdateCount; ++i)
 		if (ItemsToUpdate[i]->IsPropertySet(Item::PropertyFlags::TRAP_TRIGERER))
 			(*callback)(caller, ItemsToUpdate[i]);
 }
@@ -146,7 +146,7 @@ void MapManager::UpdateItems(Item::UpdateStep updateStep)
 		return;
 	
 	// iterate on all the items, and if one return true, we remove it from the update array
-	for (int i = 0; i < ItemsToUpdateCount; i++)
+	for (unsigned char i = 0; i < ItemsToUpdateCount; ++i)
 		if (ItemsToUpdate[i]->Update(updateStep))
 		{
 			RemoveItem(i);
@@ -466,10 +466,13 @@ void MapManager::AnimateShutterTransition()
 }
 
 /**
+ * Get the speed that the camera should use according to the specified step parameters
+ * If the step is greater than 1, then the returned speed correspond to the number of pixel to move,
+ * otherwise, the speed returned is the number of frame to wait.
  * @param step the current step in the scrolling between 0 and 8
  * @param subStep the current subStep bewteen 0 and 7
  */
-int MapManager::GetCameraSpeed(int step, int subStep)
+char MapManager::GetCameraSpeed(char step, char subStep)
 {
 	// check if we need to move every frame or not
 	if (step > 1)
@@ -588,7 +591,7 @@ void MapManager::AnimateCameraTransition()
 	}
 	
 	// Now check if the target is different from the current position of the camera
-	int xDiff = TargetCameraX - CameraX;
+	char xDiff = TargetCameraX - CameraX;
 	if (xDiff > 0)
 	{
 		CameraTransitionX += GetCameraSpeed(xDiff, CameraTransitionX);
@@ -623,7 +626,7 @@ void MapManager::AnimateCameraTransition()
 		EndDrawSpriteX = 0;
 	}
 	
-	int yDiff = TargetCameraY - CameraY;
+	char yDiff = TargetCameraY - CameraY;
 	if (yDiff > 0)
 	{
 		CameraTransitionY += GetCameraSpeed(yDiff, CameraTransitionY);
@@ -661,10 +664,10 @@ void MapManager::AnimateCameraTransition()
  */
 void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen)
 {
-	for (int y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
+	for (char y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
 	{
 		// compute the sprite y coordinate
-		int spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
+		char spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
 		// determines if we need to draw the platforms.
 		// If we are not specifically drawing the platforms (the min sprite index is not platforms),
 		// then we should only draw the platforms below the feet
@@ -672,7 +675,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// since the below ones as already been drawn
 		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_16_8_RIGHT) && (spriteY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (spriteY <= rickFeetOnScreen));
-		for (int x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
+		for (char x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
 		{
 			unsigned char spriteLevelX = x + CameraX;
 			unsigned char spriteLevelY = y + CameraY;

@@ -5,9 +5,8 @@ namespace Physics
 {
 	extern const char JUMP_AND_FALL_VERTICAL_MOVE[];
 	extern const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[];
-	const int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = 12;
-	const int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
-
+	static constexpr int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = 12;
+	static constexpr int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
 	static constexpr int INVALID_FALL_ID = 4;
 	static constexpr int INVALID_PARABOLIC_ID = 4;
 
