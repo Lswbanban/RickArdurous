@@ -19,6 +19,8 @@
 
 #define ID(id1,id2) ((id1<< 4) | id2)
 
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0, 6, 12, 20, 27, 36, 43, 50, 65, 76, 87, 102, 113, 124, 136, 141};
+
 const unsigned char MapManager::Level[] PROGMEM = {
 	ID(SpriteData::BLOCK_8_8, SpriteData::NOTHING), ID(11, SpriteData::BLOCK_8_8), ID(SpriteData::BLOCK_8_8_SPLIT, 2), ID(1, SpriteData::BLOCK_8_8), ID(SpriteData::NOTHING, 14), ID(SpriteData::BLOCK_8_8, 0),
 	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::NOTHING), ID(11, 2), ID(1, SpriteData::BLOCK_8_8), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_8_8), ID(SpriteData::NOTHING, 14), ID(SpriteData::BLOCK_8_8, 0),
@@ -28,17 +30,15 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(2, SpriteData::NOTHING), ID(2, SpriteData::PLATFORM), ID(SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM), ID(SpriteData::NOTHING, 1), ID(SpriteData::SMALL_STATUE, SpriteData::NOTHING), ID(15, SpriteData::NOTHING), ID(8, SpriteData::BLOCK_8_8),
 	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER), ID(SpriteData::NOTHING, 2), ID(SpriteData::LADDER, SpriteData::NOTHING), ID(7, SpriteData::DESTROYABLE_BLOCK), ID(SpriteData::DESTROYABLE_BLOCK, SpriteData::NOTHING), ID(15, SpriteData::NOTHING), ID(3, 0),
 	ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::LADDER), ID(SpriteData::PLATFORM, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::NOTHING, 2), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(SpriteData::BLOCK_8_8_SPLIT, SpriteData::BLOCK_16_8_RIGHT), ID(7, 0), ID(6, 0), ID(0, SpriteData::NOTHING), ID(1, 0), ID(0, 0), ID(0, SpriteData::NOTHING), ID(5, 0),
-	/*{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 7, 1, 2, 1, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 0,},
-	{ 0, SpriteData::LADDER, 255, 255, 255, 6, 255, 255, 6, 1, 1, 2, 2, 2, 1, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER, SpriteData::PLATFORM, 0,},
-	{ 0, SpriteData::LADDER, 255, 255, 255, 7, 255, 255, 6, 2, 2, 1, 2, 1, 1, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, SpriteData::LADDER, 255, SpriteData::LADDER, 255, 255, 255, 255, 0, 6, 7, 6, 0, 6, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, 0, 0, SpriteData::LADDER, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 3, SpriteData::STAIR, 255, 255, 255, 255, 255, 255, SpriteData::STAIR, 3, 255, 255, SpriteData::LADDER, 255, 0,},
-	{ 0, 255, 255, SpriteData::LADDER, 255, SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 1, 2, SpriteData::STAIR, 255, 255, 255, 255, SpriteData::STAIR, 1, 2, 255, 255, 255, 255, 0,},
-	{ 0, 255, 255, 255, 255, SpriteData::BIG_STATUE_BOTTOM, SpriteData::BIG_STATUE_BOTTOM, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,},
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},*/
+	ID(0, SpriteData::LADDER), ID(SpriteData::NOTHING, 3), ID(6, SpriteData::NOTHING), ID(2, 7), ID(1, 2), ID(1, 2), ID(2, 1), ID(0, 0), ID(SpriteData::NOTHING, 9), ID(0, SpriteData::NOTHING), ID(4, 0),
+	ID(0, SpriteData::LADDER), ID(SpriteData::NOTHING,3), ID(6, SpriteData::NOTHING), ID(2, 6), ID(1, 1), ID(2, 2), ID(2, 1), ID(0, 0), ID(SpriteData::NOTHING, 11), ID(SpriteData::PLATFORM, SpriteData::PLATFORM_WITH_LADDER), ID(SpriteData::PLATFORM, 0),
+	ID(0, SpriteData::LADDER), ID(SpriteData::NOTHING, 3), ID(7, SpriteData::NOTHING), ID(2, 6), ID(2, 2), ID(1, 2), ID(1, 1), ID(0, 0), ID(SpriteData::NOTHING, 6), ID(0, 0), ID(0, 0), ID(0, SpriteData::NOTHING), ID(1, SpriteData::LADDER), ID(SpriteData::NOTHING, 1), ID(0,0),
+	ID(0, SpriteData::LADDER), ID(SpriteData::NOTHING,1), ID(SpriteData::LADDER, SpriteData::NOTHING), ID(4, 0), ID(6, 7), ID(6, 0), ID(6, 0), ID(0, 0), ID(SpriteData::NOTHING, 12), ID(SpriteData::LADDER, SpriteData::NOTHING), ID(1, 0),
+	ID(0, 0), ID(0, SpriteData::LADDER), ID(SpriteData::NOTHING,10), ID(0, 0), ID(0, 3), ID(SpriteData::STAIR, SpriteData::NOTHING), ID(6, SpriteData::STAIR), ID(3, SpriteData::NOTHING), ID(2, SpriteData::LADDER), ID(SpriteData::NOTHING, 1), ID(0,0),
+	ID(0, SpriteData::NOTHING), ID(2, SpriteData::LADDER), ID(SpriteData::NOTHING,1), ID(SpriteData::BIG_STATUE_TOP, SpriteData::BIG_STATUE_TOP), ID(SpriteData::NOTHING, 8), ID(0, 0), ID(1, 2), ID(SpriteData::STAIR, SpriteData::NOTHING), ID(4, SpriteData::STAIR), ID(1, 2), ID(SpriteData::NOTHING, 4), ID(0,0),
+	ID(0, SpriteData::NOTHING), ID(4, SpriteData::BIG_STATUE_BOTTOM), ID(SpriteData::BIG_STATUE_BOTTOM, SpriteData::NOTHING), ID(15, SpriteData::NOTHING), ID(9, 0),
+	ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0), ID(0, 0),
 };
-
-const unsigned int MapManager::LevelSize = sizeof(MapManager::Level);
 
 // below is the instances of all the Items
 Enemy		mum(Item::PropertyFlags::NONE);
