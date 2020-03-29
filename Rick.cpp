@@ -15,25 +15,25 @@
 
 namespace Rick
 {
-	const int WALK_ANIM_SPEED = 3;
-	const int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
-	const int MIN_AIR_CONTROL_ANIM_SPEED = 3;
-	const int MAX_AIR_CONTROL_ANIM_SPEED = 8;
-	const int FIRE_ANIM_SPEED = 3;
-	const int CROUCH_STAND_ANIM_SPEED = 3;
-	const int CRAWL_ANIM_SPEED = 3;
-	const int CLIMB_LADDER_ANIM_SPEED = 3;
-	const int DEATH_ANIM_SPEED = 4;
-	const int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
-	const int DEATH_VELOCITY_X = 9;
+	static constexpr int WALK_ANIM_SPEED = 3;
+	static constexpr int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
+	static constexpr int MIN_AIR_CONTROL_ANIM_SPEED = 3;
+	static constexpr int MAX_AIR_CONTROL_ANIM_SPEED = 8;
+	static constexpr int FIRE_ANIM_SPEED = 3;
+	static constexpr int CROUCH_STAND_ANIM_SPEED = 3;
+	static constexpr int CRAWL_ANIM_SPEED = 3;
+	static constexpr int CLIMB_LADDER_ANIM_SPEED = 3;
+	static constexpr int DEATH_ANIM_SPEED = 4;
+	static constexpr int WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND = SpriteData::RICK_CRAWL_SPRITE_WIDTH - SpriteData::RICK_SPRITE_WIDTH;
+	static constexpr int DEATH_VELOCITY_X = 9;
 	// The standing sprite are stored on 2 bytes vertically, whereas the crawl sprite only use one.
 	// When switching from stand to crawl state, we don't change the Y, but just draw the sprite lower
 	// Thia constant value, store the difference between those two sprites visually speaking
-	const int VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL = 5;
+	static constexpr int VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL = 5;
 	// The distance from the left edge of the sprite, from which we check the collision under the feet
-	const int LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET = 2;
-	const int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND = 6;
-	const int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL = 9;
+	static constexpr int LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET = 2;
+	static constexpr int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND = 6;
+	static constexpr int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL = 9;
 	
 	// state of Rick
 	enum AnimState
@@ -52,14 +52,14 @@ namespace Rick
 	};
 	
 	// the current state of Rick
-	AnimState State = AnimState::IDLE;
+	AnimState State = AnimState::DEATH; // start with Death State, so that the init is properly done for the first respawn of the level
 	unsigned char CurrentAnimFrame = 0;
 	char CurrentAnimDirection = 1;
 	bool IsAlive() { return (State < AnimState::DEATH);}
 	
 	// position of Rick
-	int X = 15;
-	int Y = 2;
+	int X; // do not init X and Y it will be by the respawn of the first level
+	int Y; // do not init X and Y it will be by the respawn of the first level
 	int GetX() { return X; }
 	int GetY() { return Y; }
 	int GetCenterX() { return X + 4; }
@@ -109,7 +109,7 @@ namespace Rick
 	void InitCrawl();
 	void InitStandUp();
 	void InitClimbLadder();
-	void InitDeath(int collision);
+	void InitDeath(unsigned int collision);
 	bool IsDynamitePlacementRequested();
 	void PlaceDynamite();
 	void HandleInput();
@@ -183,10 +183,10 @@ void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
 		BulletCount = MAX_BULLET_COUNT;
 		DynamiteCount = MAX_DYNAMITE_COUNT;
 		// kill all the dynamites
-		for (int i = 0; i < MAX_DYNAMITE_COUNT; ++i)
+		for (unsigned char i = 0; i < MAX_DYNAMITE_COUNT; ++i)
 			AllDynamites[i].Kill();
 		// kill all the bullets
-		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+		for (unsigned char i = 0; i < MAX_BULLET_COUNT; ++i)
 			AllBullets[i].KillBulletWithoutSparks();
 		// start in idle state
 		InitIdle();
@@ -198,6 +198,9 @@ void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
 	}
 }
 
+/**
+ * Init function of the Idle State
+ */
 void Rick::InitIdle()
 {
 	State = AnimState::IDLE;
@@ -206,6 +209,9 @@ void Rick::InitIdle()
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
+/**
+ * Init function of the Fall State
+ */
 void Rick::InitFall()
 {
 	// special case for when I fall from the crawl state and there's ceiling above,
@@ -221,6 +227,9 @@ void Rick::InitFall()
 	AirControlFrameCount = 0;
 }
 
+/**
+ * Init function of the Crouch State
+ */
 void Rick::InitCrouch()
 {
 	State = AnimState::CROUCH_DOWN;
@@ -228,6 +237,9 @@ void Rick::InitCrouch()
 	CurrentAnimDirection = 1;
 }
 
+/**
+ * Init function of the Crawl State
+ */
 void Rick::InitCrawl()
 {
 	// if the down button is still pressed, go to crawl state
@@ -239,6 +251,9 @@ void Rick::InitCrawl()
 		X -= WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
 }
 
+/**
+ * Init function of the stand up State
+ */
 void Rick::InitStandUp()
 {
 	State = AnimState::STAND_UP;
@@ -249,6 +264,9 @@ void Rick::InitStandUp()
 		X += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
 }
 
+/**
+ * Init function of the Climb ladder State
+ */
 void Rick::InitClimbLadder()
 {
 	State = AnimState::CLIMB_LADDER;
@@ -257,7 +275,10 @@ void Rick::InitClimbLadder()
 	AirControlAnimSpeed = NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED;
 }
 
-void Rick::InitDeath(int collision)
+/**
+ * Init function of the Death State
+ */
+void Rick::InitDeath(unsigned int collision)
 {
 	State = AnimState::DEATH;
 	CurrentAnimFrame = SpriteData::RickAnimFrameId::DEATH_START;
@@ -273,19 +294,26 @@ void Rick::InitDeath(int collision)
 		LifeCount--;
 }
 
+/**
+ * This function check if the user pressed the correct button to place a dynamite
+ * and also check if the player has at least one dynamite available
+ */
 bool Rick::IsDynamitePlacementRequested()
 {
 	if ((Input::IsJustPressed(A_BUTTON)) && (DynamiteCount > 0))
-		for (int i = DynamiteCount-1; i >= 0; --i)
+		for (char i = DynamiteCount-1; i >= 0; --i)
 			if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 				return true;
 	return false;
 }
 
+/**
+ * This function search for an available dynamite and spawn it at the player's location
+ */
 void Rick::PlaceDynamite()
 {
 	// find an available dynamite and light it up
-	for (int i = DynamiteCount-1; i >= 0; --i)
+	for (char i = DynamiteCount-1; i >= 0; --i)
 		if (!AllDynamites[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 		{
 			// determines where to place the dynamite depending on our witdh and orientation
@@ -369,7 +397,7 @@ void Rick::UpdateInput()
 			CurrentAnimDirection = -1;
 			
 			// fire the bullet
-			for (int i = BulletCount-1; i >= 0; --i)
+			for (char i = BulletCount-1; i >= 0; --i)
 				if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 				{
 					AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
@@ -585,7 +613,7 @@ void Rick::UpdateInput()
 		// fire when pressing the correct button
 		if ((Input::IsJustPressed(A_BUTTON)) && (BulletCount > 0))
 		{
-			for (int i = BulletCount-1; i >= 0; --i)
+			for (char i = BulletCount-1; i >= 0; --i)
 				if (!AllBullets[i].IsPropertySet(Item::PropertyFlags::ALIVE))
 				{
 					CurrentAnimFrame = SpriteData::RickAnimFrameId::FIRE_START;
@@ -766,18 +794,25 @@ void Rick::CheckLethalCollision()
 {
 	if (IsAlive())
 	{
-		int collision = Draw(BLACK);
+		unsigned int collision = Draw(BLACK);
 		if (collision != 0)
 			InitDeath(collision);
 	}
 }
 
+/**
+ * Default draw function for the main character that choose the right color in which to draw
+ * depending on the state of the character.
+ */
 void Rick::Draw()
 {
 	// for the death animation, draw the main character in invert color
 	Draw((State == AnimState::DEATH) ? INVERT : WHITE);
 }
 
+/**
+ * Draw the main character with the specified color
+ */
 unsigned int Rick::Draw(unsigned char color)
 {
 	int xOnScreen = MapManager::GetXOnScreen(X);
