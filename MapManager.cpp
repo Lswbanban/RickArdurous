@@ -267,12 +267,16 @@ unsigned char MapManager::GetLevelSpriteAt(int mapX, int mapY)
 	if ((mapX < 0) || (mapX >= MapManager::LEVEL_SIZE_X) || (mapY < 0) || (mapY >= MapManager::LEVEL_SIZE_Y))
 		return SpriteData::BLOCK_16_8_RIGHT;
 
+	// compute start and end index in the array of sprite ids
+	int startLineIndex = pgm_read_byte(&(LevelLineIndex[mapY]));
+	int endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
+	
 	// get the index of the sprite in the one dimentionnal array
-	int targetSpriteIndex = (LEVEL_SIZE_X * mapY) + mapX + 1;
+	int targetSpriteIndex = mapX + 1;
 	// iterate through the array to find the correct index
 	int spriteIndex = 0;
 	bool readNothingCount = false;
-	for (int i = 0; i < LevelSize; ++i)
+	for (int i = startLineIndex; i < endLineIndex; ++i)
 	{
 		unsigned char packedId = pgm_read_byte(&(Level[i]));
 		unsigned char id1 = packedId >> 4;
