@@ -277,47 +277,43 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 	int targetSpriteIndex = xMap + 1;
 	// iterate through the array to find the correct index
 	int spriteIndex = 0;
-	bool readNothingCount = false;
+	bool readEmptySpaceCount = false;
 	for (int i = startLineIndex; i < endLineIndex; ++i)
 	{
+		// get the char that contains two ids (or one id and one count of empty space)
 		unsigned char packedId = pgm_read_byte(&(Level[i]));
-		unsigned char id1 = packedId >> 4;
-		unsigned char id2 = packedId & 0x0F;
-		// check the first id
-		if (readNothingCount)
+		// get the first id (or space count)
+		unsigned char id = packedId >> 4;
+		// loop two times to check the 2 ids
+		for (unsigned char j = 0; j < 2; ++j)
 		{
-			spriteIndex += id1;
-			readNothingCount = false;
-			if (spriteIndex >= targetSpriteIndex)
-				return SpriteData::NOTHING;
-		}
-		else if (id1 == SpriteData::NOTHING)
-			readNothingCount = true;
-		else
-		{
-			spriteIndex++;
-			if (spriteIndex == targetSpriteIndex)
-				return id1;
-		}
-		
-		// check the second id
-		if (readNothingCount)
-		{
-			spriteIndex += id2;
-			readNothingCount = false;
-			if (spriteIndex >= targetSpriteIndex)
-				return SpriteData::NOTHING;
-		}
-		else if (id2 == SpriteData::NOTHING)
-			readNothingCount = true;
-		else
-		{
-			spriteIndex++;
-			if (spriteIndex == targetSpriteIndex)
-				return id2;
+			// first check if we have to read the count of empty space
+			if (readEmptySpaceCount)
+			{
+				// the id should be interprated as a count, so sum it to the sprite index and reset the flag
+				spriteIndex += id;
+				readEmptySpaceCount = false;
+				// if we reach the target, return NOTHING since we were in the middle of a compressed line of NOTHING
+				if (spriteIndex >= targetSpriteIndex)
+					return SpriteData::NOTHING;
+			}
+			else if (id == SpriteData::NOTHING)
+			{
+				// if the id is NOTHING, set the flag to increase the sprite index with the next value
+				readEmptySpaceCount = true;
+			}
+			else
+			{
+				// otherwise this is a normal sprite, so just increase the index by one
+				spriteIndex++;
+				// check if we reach the target
+				if (spriteIndex == targetSpriteIndex)
+					return id;
+			}
+			// get the second id to check
+			id = packedId & 0x0F;
 		}
 	}
-	
 	// by default return a collision
 	return SpriteData::BLOCK_16_8_RIGHT;
 }
