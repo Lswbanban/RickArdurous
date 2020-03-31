@@ -681,6 +681,9 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 {
 	for (char y = StartDrawSpriteY; y < NB_VERTICAL_SPRITE_PER_SCREEN; ++y)
 	{
+		// compute start and end index in the array of sprite ids
+		int startLineIndex = pgm_read_byte(&(LevelLineIndex[y]));
+		int endLineIndex = pgm_read_byte(&(LevelLineIndex[y + 1]));
 		// compute the sprite y coordinate
 		char spriteY = (SpriteData::LEVEL_SPRITE_HEIGHT * y) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
 		// determines if we need to draw the platforms.
@@ -690,40 +693,92 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// since the below ones as already been drawn
 		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_16_8_RIGHT) && (spriteY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (spriteY <= rickFeetOnScreen));
-		for (char x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
+		//for (char x = StartDrawSpriteX; x < NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX; ++x)
+		char x = 0;
+		unsigned char previousSpriteId = SpriteData::NOTHING;
+		unsigned char currentSpriteId = SpriteData::NOTHING;
+		bool isReadingHighBit = true;
+		bool readEmptySpaceCount = false;
+		unsigned char packedId;
+		for (char i = startLineIndex; i < endLineIndex; i += isReadingHighBit)
 		{
+			if (isReadingHighBit)
+			{
+				// get the char that contains two ids (or one id and one count of empty space)
+				packedId = pgm_read_byte(&(Level[i]));
+				// get the first id (or space count)
+				currentSpriteId = packedId >> 4;
+			}
+			else
+			{
+				currentSpriteId = packedId & 0x0F;
+			}
+			// first check if we have to read the count of empty space
+			if (readEmptySpaceCount)
+			{
+				// the id should be interprated as a count, so sum it to the sprite index and reset the flag
+				x += currentSpriteId;
+				currentSpriteId = SpriteData::NOTHING;
+				readEmptySpaceCount = false;
+			}
+			else if (currentSpriteId == SpriteData::NOTHING)
+			{
+				// if the id is NOTHING, set the flag to increase the sprite index with the next value
+				readEmptySpaceCount = true;
+				isReadingHighBit = !isReadingHighBit;
+				continue;
+			}
+			else
+			{
+				// otherwise this is a normal sprite, so just increase the index by one
+				x++;
+			}
+			
+			// check if we reached the begining of the screen or the end
+			if (x < StartDrawSpriteX)
+			{
+				isReadingHighBit = !isReadingHighBit;
+				continue;
+			}
+			else if (x > StartDrawSpriteX + NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX)
+				break;
+			
 			unsigned char spriteLevelX = x + CameraX;
 			unsigned char spriteLevelY = y + CameraY;
-			unsigned char spriteId = GetLevelSpriteAt(spriteLevelX, spriteLevelY);
 			// special case for the mix of ladder and platform, draw either a platform or a ladder depending on the drawing state
-			if (spriteId == SpriteData::PLATFORM_WITH_LADDER)
+			if (currentSpriteId == SpriteData::PLATFORM_WITH_LADDER)
 			{
 				if (minSpriteIndex == SpriteData::LADDER)
-					spriteId = SpriteData::LADDER;
+					currentSpriteId = SpriteData::LADDER;
 				else
-					spriteId = SpriteData::PLATFORM;
+					currentSpriteId = SpriteData::PLATFORM;
 			}
 
 			// draw the sprite if we need to
-			if ((spriteId >= minSpriteIndex) && (spriteId <= maxSpriteIndex) &&
-				((spriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
+			if ((currentSpriteId >= minSpriteIndex) && (currentSpriteId <= maxSpriteIndex) &&
+				((currentSpriteId != SpriteData::PLATFORM) || shouldDrawPlatforms))
 			{
 				// choose a random mirror flag for some sprite that can be mirrored, for display variation
 				// and for the big statue, they are mirror if they are the right one (i.e. if there is the same sprite on their left)
 				bool isMirror = false;
-				if (spriteId <= SpriteData::ROCK_GROUND)
+				if (currentSpriteId <= SpriteData::ROCK_GROUND)
 					isMirror = (spriteLevelX * spriteLevelY) % 2;
-				else if (spriteId == SpriteData::STAIR)
-					isMirror = (GetLevelSpriteAt(spriteLevelX - 1, spriteLevelY) == SpriteData::NOTHING);
-				else if ((spriteId == SpriteData::BIG_STATUE_TOP) || (spriteId == SpriteData::BIG_STATUE_BOTTOM))
-					isMirror = (GetLevelSpriteAt(spriteLevelX - 1, spriteLevelY) == spriteId);
+				else if (currentSpriteId == SpriteData::STAIR)
+					isMirror = (previousSpriteId == SpriteData::NOTHING);
+				else if ((currentSpriteId == SpriteData::BIG_STATUE_TOP) || (currentSpriteId == SpriteData::BIG_STATUE_BOTTOM))
+					isMirror = (previousSpriteId == currentSpriteId);
 
 				// call the draw function
 				arduboy.drawBitmapExtended(SpriteData::LEVEL_SPRITE_WIDTH * x - CameraTransitionX,
 					spriteY,
-					SpriteData::Walls[spriteId],
+					SpriteData::Walls[currentSpriteId],
 					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, isMirror);
 			}
+			
+			// memorise the previous sprite id with the current one for the next loop
+			previousSpriteId = currentSpriteId;
+			// invert the boolean flag to read the low or high bit
+			isReadingHighBit = !isReadingHighBit;
 		}
 	}
 }
