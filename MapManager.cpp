@@ -681,11 +681,11 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 {
 	// compute the start and end coordinate of the sprites to draw on screen, in the level array
 	unsigned char startMapX = CameraX + StartDrawSpriteX;
-	unsigned char endMapX = startMapX + NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX;
+	unsigned char endMapX = CameraX + NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX;
 	unsigned char startMapY = CameraY + StartDrawSpriteY;
-	unsigned char endMapY = startMapY + NB_VERTICAL_SPRITE_PER_SCREEN;
+	unsigned char endMapY = CameraY + NB_VERTICAL_SPRITE_PER_SCREEN;
 	// iterate on the line first
-	for (char mapY = startMapY; mapY < endMapY; ++mapY)
+	for (unsigned char mapY = startMapY; mapY < endMapY; ++mapY)
 	{
 		// compute start and end index in the array of sprite ids
 		int startLineIndex = pgm_read_byte(&(LevelLineIndex[mapY]));
@@ -699,8 +699,8 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// since the below ones as already been drawn
 		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_16_8_RIGHT) && (screenY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (screenY <= rickFeetOnScreen));
-		// init the mapX coord with zero because we will uncompress the whole line
-		char mapX = 0;
+		// init the mapX coord with -1 because we will uncompress the whole line, and we want the first sprite to have the coordinate 0
+		unsigned char mapX = 255;
 		unsigned char previousSpriteId = SpriteData::NOTHING;
 		unsigned char currentSpriteId = SpriteData::NOTHING;
 		bool isReadingHighBit = true;
@@ -747,7 +747,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				isReadingHighBit = !isReadingHighBit;
 				continue;
 			}
-			else if (mapX > endMapX)
+			else if (mapX >= endMapX)
 				break;
 			
 			// special case for the mix of ladder and platform, draw either a platform or a ladder depending on the drawing state
