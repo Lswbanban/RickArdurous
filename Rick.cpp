@@ -682,9 +682,9 @@ bool Rick::IsThereAnyGroundOrCeilingCollisionAt(int yWorld)
 	// compute the width that should be used for checking the collisions
 	unsigned char width;
 	if (State == AnimState::CRAWL)
-		width = RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL;
+		width = RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL - LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET;
 	else
-		width = RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND;
+		width = RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND - LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET;
 	// ask the MapManager to check for the collisions
 	return MapManager::IsThereAnyHorizontalCollisionAt(X + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET, yWorld, width);
 }
