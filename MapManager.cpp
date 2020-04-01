@@ -277,7 +277,7 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 	int targetSpriteIndex = xMap + 1;
 	// iterate through the array to find the correct index
 	int spriteIndex = 0;
-	bool readEmptySpaceCount = false;
+	bool shouldReadEmptySpaceCount = false;
 	for (int i = startLineIndex; i < endLineIndex; ++i)
 	{
 		// get the char that contains two ids (or one id and one count of empty space)
@@ -288,11 +288,11 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 		for (unsigned char j = 0; j < 2; ++j)
 		{
 			// first check if we have to read the count of empty space
-			if (readEmptySpaceCount)
+			if (shouldReadEmptySpaceCount)
 			{
 				// the id should be interprated as a count, so sum it to the sprite index and reset the flag
 				spriteIndex += id;
-				readEmptySpaceCount = false;
+				shouldReadEmptySpaceCount = false;
 				// if we reach the target, return NOTHING since we were in the middle of a compressed line of NOTHING
 				if (spriteIndex >= targetSpriteIndex)
 					return SpriteData::NOTHING;
@@ -300,7 +300,7 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 			else if (id == SpriteData::NOTHING)
 			{
 				// if the id is NOTHING, set the flag to increase the sprite index with the next value
-				readEmptySpaceCount = true;
+				shouldReadEmptySpaceCount = true;
 			}
 			else
 			{
@@ -684,12 +684,13 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 	unsigned char endMapX = CameraX + NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX;
 	unsigned char startMapY = CameraY + StartDrawSpriteY;
 	unsigned char endMapY = CameraY + NB_VERTICAL_SPRITE_PER_SCREEN;
+	int endLineIndex = pgm_read_byte(&(LevelLineIndex[startMapY]));
 	// iterate on the line first
 	for (unsigned char mapY = startMapY; mapY < endMapY; ++mapY)
 	{
 		// compute start and end index in the array of sprite ids
-		int startLineIndex = pgm_read_byte(&(LevelLineIndex[mapY]));
-		int endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
+		int startLineIndex = endLineIndex;
+		endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
 		// compute the screen y coordinate for the sprite
 		char screenY = (SpriteData::LEVEL_SPRITE_HEIGHT * (mapY - CameraY)) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
 		// determines if we need to draw the platforms.
@@ -704,9 +705,9 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		unsigned char previousSpriteId = SpriteData::NOTHING;
 		unsigned char currentSpriteId = SpriteData::NOTHING;
 		bool isReadingHighBit = true;
-		bool readEmptySpaceCount = false;
+		bool shouldReadEmptySpaceCount = false;
 		unsigned char packedId;
-		for (int i = startLineIndex; i < endLineIndex; i += isReadingHighBit)
+		for (int i = startLineIndex; i < endLineIndex; isReadingHighBit = !isReadingHighBit, i += isReadingHighBit)
 		{
 			// read the current sprite id which is stored on 4 bits, either the high bits or the low bits
 			if (isReadingHighBit)
@@ -721,18 +722,18 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				currentSpriteId = packedId & 0x0F;
 			}
 			// first check if we have to read the count of empty space
-			if (readEmptySpaceCount)
+			if (shouldReadEmptySpaceCount)
 			{
 				// the id should be interprated as a count, so sum it to the sprite index and reset the flag
 				mapX += currentSpriteId;
-				currentSpriteId = SpriteData::NOTHING;
-				readEmptySpaceCount = false;
+				previousSpriteId = SpriteData::NOTHING;
+				shouldReadEmptySpaceCount = false;
+				continue;
 			}
 			else if (currentSpriteId == SpriteData::NOTHING)
 			{
 				// if the id is NOTHING, set the flag to increase the sprite index with the next value
-				readEmptySpaceCount = true;
-				isReadingHighBit = !isReadingHighBit;
+				shouldReadEmptySpaceCount = true;
 				continue;
 			}
 			else
@@ -743,10 +744,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 			
 			// check if we reached the begining of the screen or the end
 			if (mapX < startMapX)
-			{
-				isReadingHighBit = !isReadingHighBit;
 				continue;
-			}
 			else if (mapX >= endMapX)
 				break;
 			
@@ -782,8 +780,6 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 			
 			// memorise the previous sprite id with the current one for the next loop
 			previousSpriteId = currentSpriteId;
-			// invert the boolean flag to read the low or high bit
-			isReadingHighBit = !isReadingHighBit;
 		}
 	}
 }
