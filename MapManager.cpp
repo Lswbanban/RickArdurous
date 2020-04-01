@@ -632,7 +632,10 @@ void MapManager::AnimateCameraTransition()
 			CameraX--;
 			// check if we reach the end of the transition
 			if (TargetCameraX == CameraX)
+			{
+				StartDrawSpriteX = 0;
 				EndSwitchPuzzleScreen();
+			}
 		}
 	}
 	else
@@ -665,7 +668,10 @@ void MapManager::AnimateCameraTransition()
 			CameraY--;
 			// check if we reach the end of the transition
 			if (TargetCameraY == CameraY)
+			{
+				StartDrawSpriteY = 0;
 				EndSwitchPuzzleScreen();
+			}
 		}
 	}
 	else
@@ -679,16 +685,16 @@ void MapManager::AnimateCameraTransition()
  */
 void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen)
 {
-	// compute the start and end coordinate of the sprites to draw on screen, in the level array
+	// compute the start and end coordinate of the sprites to draw, in the level array coordinates
 	unsigned char startMapX = CameraX + StartDrawSpriteX;
 	unsigned char endMapX = CameraX + NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX;
 	unsigned char startMapY = CameraY + StartDrawSpriteY;
 	unsigned char endMapY = CameraY + NB_VERTICAL_SPRITE_PER_SCREEN;
 	int endLineIndex = pgm_read_byte(&(LevelLineIndex[startMapY]));
-	// iterate on the line first
+	// iterate on the line first before iterating on the columns
 	for (unsigned char mapY = startMapY; mapY < endMapY; ++mapY)
 	{
-		// compute start and end index in the array of sprite ids
+		// compute start and end index in the array of sprite ids, since we start a new line, the start is the end of the previous loop
 		int startLineIndex = endLineIndex;
 		endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
 		// compute the screen y coordinate for the sprite
@@ -701,7 +707,8 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_16_8_RIGHT) && (screenY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (screenY <= rickFeetOnScreen));
 		// init the mapX coord with -1 because we will uncompress the whole line, and we want the first sprite to have the coordinate 0
-		unsigned char mapX = 255;
+		unsigned char mapX = 255; // this is -1 but for unsigned char
+		// declare and init variable necessary for iterating on the columns
 		unsigned char previousSpriteId = SpriteData::NOTHING;
 		unsigned char currentSpriteId = SpriteData::NOTHING;
 		bool isReadingHighBit = true;
