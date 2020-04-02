@@ -57,6 +57,7 @@
 			// 
 			// SplitContainerToolAndLevel
 			// 
+			this.SplitContainerToolAndLevel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.SplitContainerToolAndLevel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SplitContainerToolAndLevel.Location = new System.Drawing.Point(0, 49);
 			this.SplitContainerToolAndLevel.Name = "SplitContainerToolAndLevel";
@@ -77,7 +78,7 @@
 			this.PictureBoxLevel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PictureBoxLevel.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxLevel.Name = "PictureBoxLevel";
-			this.PictureBoxLevel.Size = new System.Drawing.Size(645, 401);
+			this.PictureBoxLevel.Size = new System.Drawing.Size(641, 397);
 			this.PictureBoxLevel.TabIndex = 0;
 			this.PictureBoxLevel.TabStop = false;
 			// 
@@ -86,7 +87,8 @@
 			this.PictureBoxSprites.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PictureBoxSprites.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxSprites.Name = "PictureBoxSprites";
-			this.PictureBoxSprites.Size = new System.Drawing.Size(151, 401);
+			this.PictureBoxSprites.Size = new System.Drawing.Size(147, 397);
+			this.PictureBoxSprites.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.PictureBoxSprites.TabIndex = 0;
 			this.PictureBoxSprites.TabStop = false;
 			// 
