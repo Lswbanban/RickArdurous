@@ -91,6 +91,7 @@
 			this.PictureBoxSprites.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.PictureBoxSprites.TabIndex = 0;
 			this.PictureBoxSprites.TabStop = false;
+			this.PictureBoxSprites.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBoxSprites_MouseClick);
 			// 
 			// menuStrip1
 			// 
