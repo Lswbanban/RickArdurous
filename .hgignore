@@ -1,0 +1,7 @@
+syntax: glob
+
+RickArdurousEditor\.vs
+RickArdurousEditor\RickArdurousEditor\obj
+RickArdurousEditor\RickArdurousEditor\bin
+*.suo
+
