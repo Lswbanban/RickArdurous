@@ -14,12 +14,16 @@ namespace RickArdurousEditor
 	{
 		private int mCurrentSelectedSpriteId = 0;
 
+		private MapData mMap = new MapData();
+
 		#region init
 		public MainForm()
 		{
 			InitializeComponent();
 			// init the sprite tool box
 			redrawSpriteToolbox(0,0);
+			// init the level image
+			redrawLevel();
 		}
 
 		private void redrawSpriteToolbox(int selectedSpriteX, int selectedSpriteY)
@@ -45,6 +49,17 @@ namespace RickArdurousEditor
 			// set the strech image in the picture box
 			PictureBoxSprites.Image = spritesImage;
 		}
+
+		private void redrawLevel()
+		{
+			// create image
+			Bitmap levelImage = new Bitmap(PictureBoxLevel.Width, PictureBoxLevel.Height);
+			Graphics gc = Graphics.FromImage(levelImage);
+			// ask the map to redraw it
+			mMap.redraw(gc, levelImage.Width, levelImage.Height);
+			// set the image in the Picture box
+			PictureBoxLevel.Image = levelImage;
+		}
 		#endregion
 
 		#region menu event
@@ -62,6 +77,11 @@ namespace RickArdurousEditor
 			redrawSpriteToolbox(spriteX, spriteY);
 			// memorise the new selected sprite id
 			mCurrentSelectedSpriteId = spriteY + (8 * spriteX);
+		}
+
+		private void PictureBoxLevel_SizeChanged(object sender, EventArgs e)
+		{
+			redrawLevel();
 		}
 		#endregion
 	}

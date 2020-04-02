@@ -30,8 +30,8 @@
 		{
 			this.ToolBar = new System.Windows.Forms.ToolStrip();
 			this.SplitContainerToolAndLevel = new System.Windows.Forms.SplitContainer();
-			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
 			this.PictureBoxSprites = new System.Windows.Forms.PictureBox();
+			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,8 +42,8 @@
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
 			this.SplitContainerToolAndLevel.Panel2.SuspendLayout();
 			this.SplitContainerToolAndLevel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxSprites)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -73,15 +73,6 @@
 			this.SplitContainerToolAndLevel.SplitterDistance = 151;
 			this.SplitContainerToolAndLevel.TabIndex = 1;
 			// 
-			// PictureBoxLevel
-			// 
-			this.PictureBoxLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PictureBoxLevel.Location = new System.Drawing.Point(0, 0);
-			this.PictureBoxLevel.Name = "PictureBoxLevel";
-			this.PictureBoxLevel.Size = new System.Drawing.Size(641, 397);
-			this.PictureBoxLevel.TabIndex = 0;
-			this.PictureBoxLevel.TabStop = false;
-			// 
 			// PictureBoxSprites
 			// 
 			this.PictureBoxSprites.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -92,6 +83,16 @@
 			this.PictureBoxSprites.TabIndex = 0;
 			this.PictureBoxSprites.TabStop = false;
 			this.PictureBoxSprites.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBoxSprites_MouseClick);
+			// 
+			// PictureBoxLevel
+			// 
+			this.PictureBoxLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PictureBoxLevel.Location = new System.Drawing.Point(0, 0);
+			this.PictureBoxLevel.Name = "PictureBoxLevel";
+			this.PictureBoxLevel.Size = new System.Drawing.Size(641, 397);
+			this.PictureBoxLevel.TabIndex = 0;
+			this.PictureBoxLevel.TabStop = false;
+			this.PictureBoxLevel.SizeChanged += new System.EventHandler(this.PictureBoxLevel_SizeChanged);
 			// 
 			// menuStrip1
 			// 
@@ -117,24 +118,24 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(92, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -153,8 +154,8 @@
 			this.SplitContainerToolAndLevel.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).EndInit();
 			this.SplitContainerToolAndLevel.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxSprites)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
