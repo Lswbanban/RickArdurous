@@ -12,15 +12,17 @@ namespace RickArdurousEditor
 {
 	public partial class MainForm : Form
 	{
+		private int mCurrentSelectedSpriteId = 0;
+
 		#region init
 		public MainForm()
 		{
 			InitializeComponent();
 			// init the sprite tool box
-			InitSpriteToolbox();
+			redrawSpriteToolbox(0,0);
 		}
 
-		private void InitSpriteToolbox()
+		private void redrawSpriteToolbox(int selectedSpriteX, int selectedSpriteY)
 		{
 			Bitmap originalImage = new Bitmap(Application.StartupPath + @"\..\..\..\..\image\Walls.png");
 			Bitmap spritesImage = new Bitmap(PictureBoxSprites.Width, PictureBoxSprites.Height);
@@ -30,10 +32,15 @@ namespace RickArdurousEditor
 
 			// create a pen for drawing lines to split the sprites
 			Pen linePen = new Pen(Color.Blue, 2);
-			gc.DrawLine(linePen, new Point(spritesImage.Width / 2, 0), new Point(spritesImage.Width / 2, spritesImage.Height));
+			int width = spritesImage.Width / 2;
 			int height = spritesImage.Height / 8;
+			gc.DrawLine(linePen, new Point(width, 0), new Point(width, spritesImage.Height));
 			for (int i = 0; i < 8; ++i)
 				gc.DrawLine(linePen, new Point(0, height * i), new Point(spritesImage.Width, height * i));
+
+			// draw the selected sprite
+			Pen selectedSpritePen = new Pen(Color.Red, 3);
+			gc.DrawRectangle(selectedSpritePen, selectedSpriteX * width, selectedSpriteY * height, width, height);
 
 			// set the strech image in the picture box
 			PictureBoxSprites.Image = spritesImage;
@@ -44,6 +51,17 @@ namespace RickArdurousEditor
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+		#endregion
+
+		#region edition event
+		private void PictureBoxSprites_MouseClick(object sender, MouseEventArgs e)
+		{
+			int spriteX = e.Location.X / (PictureBoxSprites.Image.Width / 2);
+			int spriteY = e.Location.Y / (PictureBoxSprites.Image.Height / 8);
+			redrawSpriteToolbox(spriteX, spriteY);
+			// memorise the new selected sprite id
+			mCurrentSelectedSpriteId = spriteY + (8 * spriteX);
 		}
 		#endregion
 	}
