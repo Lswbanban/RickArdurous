@@ -72,8 +72,8 @@ namespace RickArdurousEditor
 		private void PanLevelCamera(Point newMousePosition)
 		{
 			Point mouseMove = new Point(mLastMouseDownPosition.X - newMousePosition.X, mLastMouseDownPosition.Y - newMousePosition.Y);
-			mMapCamera.X = mLastMouseDownMapCamera.X + (mouseMove.X / 32);
-			mMapCamera.Y = mLastMouseDownMapCamera.Y + (mouseMove.Y / 32);
+			mMapCamera.X = mLastMouseDownMapCamera.X + (mouseMove.X / mMap.DrawSpriteWidth);
+			mMapCamera.Y = mLastMouseDownMapCamera.Y + (mouseMove.Y / mMap.DrawSpriteHeight);
 			// clamp the coordinate inside the level
 			mMap.ClampCoordinatesInsideLevel(ref mMapCamera);
 
