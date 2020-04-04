@@ -12,8 +12,8 @@ namespace RickArdurousEditor
 	{
 		const int ARDUBOY_PUZZLE_SCREEN_WIDTH = 16;
 		const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
-		const int LEVEL_WIDTH = 64;
-		const int LEVEL_HEIGHT = 32;
+		const int LEVEL_WIDTH = 256;
+		const int LEVEL_HEIGHT = 256;
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
 		const int WALL_SPRITE_COUNT = 16;
@@ -47,6 +47,10 @@ namespace RickArdurousEditor
 			ClearLevel();
 			mLevel[1, 1] = 5;
 			mLevel[3, 1] = 7;
+
+			mLevel[23, 3] = 6;
+			mLevel[23, 4] = 8;
+
 		}
 
 		public void ClearLevel()
@@ -54,6 +58,12 @@ namespace RickArdurousEditor
 			for (int x = 0; x < LEVEL_WIDTH; ++x)
 				for (int y = 0; y < LEVEL_HEIGHT; ++y)
 					mLevel[x, y] = (byte)WallId.NOTHING;
+		}
+
+		public void ClampCoordinatesInsideLevel(ref Point coord)
+		{
+			coord.X = Math.Max(Math.Min(coord.X, LEVEL_WIDTH), 0);
+			coord.Y = Math.Max(Math.Min(coord.Y, LEVEL_HEIGHT), 0);
 		}
 
 		private void InitWallSpriteImages()
@@ -71,23 +81,25 @@ namespace RickArdurousEditor
 				}
 		}
 
-		public void redraw(Graphics gc, int width, int height)
+		public void redraw(Graphics gc, int width, int height, int cameraX, int cameraY)
 		{
 			// set the drawing mode
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
-			// compute the size of the sprite
-			int spriteWidth = (width - ((int)mPuzzleScreenSeparatorLinePen.Width * (LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH))) / LEVEL_WIDTH;
-			int spriteHeight = (height - ((int)mPuzzleScreenSeparatorLinePen.Width * (LEVEL_HEIGHT / ARDUBOY_PUZZLE_SCREEN_HEIGHT))) / LEVEL_HEIGHT;
+			// compute the last sprite to be drawn
+			const int spriteWidth = 32;
+			const int spriteHeight = 32;
+			int endCameraX = cameraX + ((width - ((int)mPuzzleScreenSeparatorLinePen.Width * (LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH))) / spriteWidth);
+			int endCameraY = cameraY + ((height - ((int)mPuzzleScreenSeparatorLinePen.Width * (LEVEL_HEIGHT / ARDUBOY_PUZZLE_SCREEN_HEIGHT))) / spriteHeight);
 
 			// count the lines
 			int horizontalLinesCount = 0;
 
 			// draw all the sprites
-			for (int y = 0; y < LEVEL_HEIGHT; ++y)
+			for (int y = cameraY; y < endCameraY; ++y)
 			{
-				int yPixel = (y * spriteHeight) + horizontalLinesCount;
+				int yPixel = ((y - cameraY) * spriteHeight) + horizontalLinesCount;
 				// draw the puzzle screen lines
 				if ((y % ARDUBOY_PUZZLE_SCREEN_HEIGHT) == 0)
 				{
@@ -97,9 +109,9 @@ namespace RickArdurousEditor
 					yPixel += (int)mPuzzleScreenSeparatorLinePen.Width;
 				}
 				int verticalLinesCount = 0;
-				for (int x = 0; x < LEVEL_WIDTH; ++x)
+				for (int x = cameraX; x < endCameraX; ++x)
 				{
-					int xPixel = (x * spriteWidth) + verticalLinesCount;
+					int xPixel = ((x - cameraX) * spriteWidth) + verticalLinesCount;
 					// draw the puzzle screen lines
 					if ((x % ARDUBOY_PUZZLE_SCREEN_WIDTH) == 0)
 					{
