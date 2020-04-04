@@ -27,8 +27,8 @@ namespace RickArdurousEditor
 			set
 			{
 				mDrawSpriteWidth = value;
-				if (mDrawSpriteWidth <= 0)
-					mDrawSpriteWidth = 1;
+				if (mDrawSpriteWidth < 2)
+					mDrawSpriteWidth = 2;
 			}
 		}
 
@@ -39,8 +39,8 @@ namespace RickArdurousEditor
 			set
 			{
 				mDrawSpriteHeight = value;
-				if (mDrawSpriteHeight <= 0)
-					mDrawSpriteHeight = 1;
+				if (mDrawSpriteHeight < 2)
+					mDrawSpriteHeight = 2;
 			}
 		}
 		#endregion
@@ -278,11 +278,18 @@ namespace RickArdurousEditor
 			Point startCamera = new Point(cameraX, cameraY);
 			ClampCoordinatesInsideLevel(ref startCamera);
 
+			// compute the width and height of the lines
+			availableSpriteCountX = endCamera.X - startCamera.X;
+			int lineWidth = Math.Min(width, (DrawSpriteWidth * availableSpriteCountX) + ((int)mPuzzleScreenSeparatorLinePen.Width * (availableSpriteCountX / ARDUBOY_PUZZLE_SCREEN_WIDTH)));
+			availableSpriteCountY = endCamera.Y - startCamera.Y;
+			int lineHeight = Math.Min(height, (DrawSpriteHeight * availableSpriteCountY) + ((int)mPuzzleScreenSeparatorLinePen.Width * (availableSpriteCountY / ARDUBOY_PUZZLE_SCREEN_HEIGHT)));
+
 			// clear the image
 			gc.Clear(Color.Black);
 
 			// count the lines
 			int horizontalLinesCount = 0;
+			int halfPenWidth = (int)(mPuzzleScreenSeparatorLinePen.Width / 2);
 
 			// draw all the sprites
 			for (int y = startCamera.Y; y < endCamera.Y; ++y)
@@ -291,8 +298,7 @@ namespace RickArdurousEditor
 				// draw the puzzle screen lines
 				if ((y % ARDUBOY_PUZZLE_SCREEN_HEIGHT) == 0)
 				{
-					int halfPenWidth = (int)(mPuzzleScreenSeparatorLinePen.Width / 2);
-					gc.DrawLine(mPuzzleScreenSeparatorLinePen, 0, yPixel + halfPenWidth, width, yPixel + halfPenWidth);
+					gc.DrawLine(mPuzzleScreenSeparatorLinePen, 0, yPixel + halfPenWidth, lineWidth, yPixel + halfPenWidth);
 					horizontalLinesCount += (int)mPuzzleScreenSeparatorLinePen.Width;
 					yPixel += (int)mPuzzleScreenSeparatorLinePen.Width;
 				}
@@ -304,11 +310,8 @@ namespace RickArdurousEditor
 					if ((x % ARDUBOY_PUZZLE_SCREEN_WIDTH) == 0)
 					{
 						// draw the vertical line only one time
-						if (y == cameraY)
-						{
-							int halfPenWidth = (int)(mPuzzleScreenSeparatorLinePen.Width / 2);
-							gc.DrawLine(mPuzzleScreenSeparatorLinePen, xPixel + halfPenWidth, 0, xPixel + halfPenWidth, height);
-						}
+						if (y == startCamera.Y)
+							gc.DrawLine(mPuzzleScreenSeparatorLinePen, xPixel + halfPenWidth, 0, xPixel + halfPenWidth, lineHeight);
 						verticalLinesCount += (int)mPuzzleScreenSeparatorLinePen.Width;
 						xPixel += (int)mPuzzleScreenSeparatorLinePen.Width;
 					}
@@ -329,6 +332,18 @@ namespace RickArdurousEditor
 					else
 						gc.DrawImage(mWallSprites[spriteId], xPixel, yPixel, DrawSpriteWidth, DrawSpriteHeight);
 				}
+				// draw the last line if needed
+				if (endCamera.X == LEVEL_WIDTH)
+				{
+					int xPixel = ((endCamera.X - startCamera.X) * DrawSpriteWidth) + verticalLinesCount;
+					gc.DrawLine(mPuzzleScreenSeparatorLinePen, xPixel + halfPenWidth, 0, xPixel + halfPenWidth, lineHeight);
+				}
+			}
+			// draw the last line if needed
+			if (endCamera.Y == LEVEL_HEIGHT)
+			{
+				int yPixel = ((endCamera.Y - startCamera.Y) * DrawSpriteHeight) + horizontalLinesCount;
+				gc.DrawLine(mPuzzleScreenSeparatorLinePen, 0, yPixel + halfPenWidth, lineWidth, yPixel + halfPenWidth);
 			}
 		}
 		#endregion
