@@ -245,7 +245,8 @@ namespace RickArdurousEditor
 
 		public void SetSpriteId(Point coord, byte id)
 		{
-			mLevel[coord.X, coord.Y] = id;
+			if ((coord.X >= 0) && (coord.X < LEVEL_WIDTH) && (coord.Y >= 0) && (coord.Y < LEVEL_HEIGHT))
+				mLevel[coord.X, coord.Y] = id;
 		}
 		#endregion
 
