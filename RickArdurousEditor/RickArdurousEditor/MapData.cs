@@ -15,7 +15,7 @@ namespace RickArdurousEditor
 		private const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
 
-		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.Green, 2);
+		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.CornflowerBlue, 2);
 
 		#region get/set
 		public int DrawSpriteWidth
@@ -127,7 +127,7 @@ namespace RickArdurousEditor
 					if ((x % ARDUBOY_PUZZLE_SCREEN_WIDTH) == 0)
 					{
 						// draw the vertical line only one time
-						if (y == 0)
+						if (y == cameraY)
 						{
 							int halfPenWidth = (int)(mPuzzleScreenSeparatorLinePen.Width / 2);
 							gc.DrawLine(mPuzzleScreenSeparatorLinePen, xPixel + halfPenWidth, 0, xPixel + halfPenWidth, height);
