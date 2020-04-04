@@ -112,21 +112,24 @@ namespace RickArdurousEditor
 			writer.WriteLine("/*");
 			writer.WriteLine(" * This is a generated file, use the Editor to modify it.");
 			writer.WriteLine(" */");
-			writer.WriteLine("# include \"MapData.h\"");
-			writer.WriteLine("# include \"SpriteData.h\"");
-			writer.WriteLine("# include \"MapManager.h\"");
-			writer.WriteLine("# include \"ArrowLauncher.h\"");
-			writer.WriteLine("# include \"Spike.h\"");
-			writer.WriteLine("# include \"Statuette.h\"");
-			writer.WriteLine("# include \"Dynamite.h\"");
-			writer.WriteLine("# include \"DynamiteCrate.h\"");
-			writer.WriteLine("# include \"BulletCrate.h\"");
-			writer.WriteLine("# include \"Enemy.h\"");
-			writer.WriteLine("# include \"DestroyableBlock.h\"");
-			writer.WriteLine("# include \"Stalactite.h\"");
-			writer.WriteLine("# include \"Stalagmite.h\"");
-			writer.WriteLine("# include <avr/pgmspace.h>");
+			writer.WriteLine();
+			writer.WriteLine("#include \"MapData.h\"");
+			writer.WriteLine("#include \"SpriteData.h\"");
+			writer.WriteLine("#include \"MapManager.h\"");
+			writer.WriteLine("#include \"ArrowLauncher.h\"");
+			writer.WriteLine("#include \"Spike.h\"");
+			writer.WriteLine("#include \"Statuette.h\"");
+			writer.WriteLine("#include \"Dynamite.h\"");
+			writer.WriteLine("#include \"DynamiteCrate.h\"");
+			writer.WriteLine("#include \"BulletCrate.h\"");
+			writer.WriteLine("#include \"Enemy.h\"");
+			writer.WriteLine("#include \"DestroyableBlock.h\"");
+			writer.WriteLine("#include \"Stalactite.h\"");
+			writer.WriteLine("#include \"Stalagmite.h\"");
+			writer.WriteLine("#include <avr/pgmspace.h>");
+			writer.WriteLine();
 			writer.WriteLine("#define ID(id1,id2) ((id1<< 4) | id2)");
+			writer.WriteLine();
 		}
 
 		private void WriteLevelId(StreamWriter writer, byte id, bool isWritingHighBit)
@@ -142,6 +145,7 @@ namespace RickArdurousEditor
 			writer.WriteLine("const unsigned char MapManager::Level[] PROGMEM = {");
 			for (int y = 0; y < 16; ++y)
 			{
+				writer.Write("\t");
 				bool shouldCountSpace = false;
 				bool isWritingHighBit = true;
 				byte spaceCounter = 1;
@@ -181,9 +185,10 @@ namespace RickArdurousEditor
 					WriteLevelId(writer, id, isWritingHighBit);
 					isWritingHighBit = !isWritingHighBit;
 				}
-				writer.WriteLine("");
+				writer.WriteLine();
 			}
 			writer.WriteLine("};");
+			writer.WriteLine();
 		}
 
 		public void Save(string fileName)
