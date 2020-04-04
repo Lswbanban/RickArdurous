@@ -63,6 +63,7 @@ namespace RickArdurousEditor
 			NOTHING = 15,
 		};
 
+		#region init
 		public MapData()
 		{
 			InitWallSpriteImages();
@@ -73,19 +74,6 @@ namespace RickArdurousEditor
 			mLevel[23, 3] = 6;
 			mLevel[23, 4] = 8;
 
-		}
-
-		public void ClearLevel()
-		{
-			for (int x = 0; x < LEVEL_WIDTH; ++x)
-				for (int y = 0; y < LEVEL_HEIGHT; ++y)
-					mLevel[x, y] = (byte)WallId.NOTHING;
-		}
-
-		public void ClampCoordinatesInsideLevel(ref Point coord)
-		{
-			coord.X = Math.Max(Math.Min(coord.X, LEVEL_WIDTH), 0);
-			coord.Y = Math.Max(Math.Min(coord.Y, LEVEL_HEIGHT), 0);
 		}
 
 		private void InitWallSpriteImages()
@@ -102,7 +90,31 @@ namespace RickArdurousEditor
 					mWallSprites[y + (x * 8)] = sprite;
 				}
 		}
+		#endregion
 
+		#region util function
+		public void ClampCoordinatesInsideLevel(ref Point coord)
+		{
+			coord.X = Math.Max(Math.Min(coord.X, LEVEL_WIDTH), 0);
+			coord.Y = Math.Max(Math.Min(coord.Y, LEVEL_HEIGHT), 0);
+		}
+		#endregion
+
+		#region map edition
+		public void ClearLevel()
+		{
+			for (int x = 0; x < LEVEL_WIDTH; ++x)
+				for (int y = 0; y < LEVEL_HEIGHT; ++y)
+					mLevel[x, y] = (byte)WallId.NOTHING;
+		}
+
+		public void SetSpriteId(int x, int y, byte id)
+		{
+			mLevel[x, y] = id;
+		}
+		#endregion
+
+		#region draw
 		public void redraw(Graphics gc, int width, int height, int cameraX, int cameraY)
 		{
 			// set the drawing mode
@@ -170,5 +182,6 @@ namespace RickArdurousEditor
 				}
 			}
 		}
+		#endregion
 	}
 }

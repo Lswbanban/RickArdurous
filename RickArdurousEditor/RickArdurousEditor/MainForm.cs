@@ -12,7 +12,7 @@ namespace RickArdurousEditor
 {
 	public partial class MainForm : Form
 	{
-		private int mCurrentSelectedSpriteId = 0;
+		private byte mCurrentSelectedSpriteId = 0;
 
 		private MapData mMap = new MapData();
 
@@ -97,7 +97,7 @@ namespace RickArdurousEditor
 			int spriteY = e.Location.Y / (PictureBoxSprites.Image.Height / 8);
 			redrawSpriteToolbox(spriteX, spriteY);
 			// memorise the new selected sprite id
-			mCurrentSelectedSpriteId = spriteY + (8 * spriteX);
+			mCurrentSelectedSpriteId = (byte)(spriteY + (8 * spriteX));
 		}
 
 		private void PictureBoxLevel_SizeChanged(object sender, EventArgs e)
@@ -134,6 +134,10 @@ namespace RickArdurousEditor
 		{
 			switch (e.Button)
 			{
+				case MouseButtons.Left:
+					mMap.SetSpriteId(mMapCamera.X + (e.Location.X / mMap.DrawSpriteWidth), mMapCamera.Y + (e.Location.Y / mMap.DrawSpriteWidth), mCurrentSelectedSpriteId);
+					redrawLevel();
+					break;
 				case MouseButtons.Right:
 					PanLevelCamera(e.Location);
 					break;
