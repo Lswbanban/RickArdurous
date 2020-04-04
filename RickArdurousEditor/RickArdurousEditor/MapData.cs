@@ -207,6 +207,32 @@ namespace RickArdurousEditor
 			coord.X = Math.Max(Math.Min(coord.X, LEVEL_WIDTH), 0);
 			coord.Y = Math.Max(Math.Min(coord.Y, LEVEL_HEIGHT), 0);
 		}
+
+		public Point GetSpriteCoordFromScreenCoord(Point cameraLocation, Point screenLocation)
+		{
+			// iterate from the camera position, until we reach the correct screen coordinate in x
+			int mapX = cameraLocation.X - 1;
+			int screenX = 0;
+			while (screenX <= screenLocation.X)
+			{
+				mapX++;
+				screenX += DrawSpriteWidth;
+				if ((mapX % ARDUBOY_PUZZLE_SCREEN_WIDTH) == 0)
+					screenX += (int)mPuzzleScreenSeparatorLinePen.Width;
+			}
+			// and in y
+			int mapY = cameraLocation.Y - 1;
+			int screenY = 0;
+			while (screenY <= screenLocation.Y)
+			{
+				mapY++;
+				screenY += DrawSpriteHeight;
+				if ((mapY % ARDUBOY_PUZZLE_SCREEN_HEIGHT) == 0)
+					screenY += (int)mPuzzleScreenSeparatorLinePen.Width;
+			}
+			// return the point computed
+			return new Point(mapX, mapY);
+		}
 		#endregion
 
 		#region map edition
@@ -217,9 +243,9 @@ namespace RickArdurousEditor
 					mLevel[x, y] = (byte)WallId.NOTHING;
 		}
 
-		public void SetSpriteId(int x, int y, byte id)
+		public void SetSpriteId(Point coord, byte id)
 		{
-			mLevel[x, y] = id;
+			mLevel[coord.X, coord.Y] = id;
 		}
 		#endregion
 
