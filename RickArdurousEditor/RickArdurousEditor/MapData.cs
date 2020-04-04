@@ -10,12 +10,16 @@ namespace RickArdurousEditor
 {
 	class MapData
 	{
-		const int LEVEL_WIDTH = 16;
+		const int ARDUBOY_PUZZLE_SCREEN_WIDTH = 16;
+		const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
+		const int LEVEL_WIDTH = 64;
 		const int LEVEL_HEIGHT = 32;
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
 		const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
+
+		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.Green, 2);
 
 		private enum WallId
 		{
@@ -71,16 +75,43 @@ namespace RickArdurousEditor
 		{
 			// set the drawing mode
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
 			// compute the size of the sprite
 			int spriteWidth = width / LEVEL_WIDTH;
 			int spriteHeight = height / LEVEL_HEIGHT;
 
+			// count the lines
+			int verticalLinesCount = 0;
+			int horizontalLinesCount = 0;
+
 			// draw all the sprites
-			for (int x = 0; x < LEVEL_WIDTH; ++x)
-				for (int y = 0; y < LEVEL_HEIGHT; ++y)
-					gc.DrawImage(mWallSprites[mLevel[x,y]], (x * spriteWidth), (y * spriteHeight), spriteWidth, spriteHeight);
+			for (int y = 0; y < LEVEL_HEIGHT; ++y)
+			{
+				int yPixel = (y * spriteHeight) + horizontalLinesCount;
+				// draw the puzzle screen lines
+				if ((y % ARDUBOY_PUZZLE_SCREEN_HEIGHT) == 0)
+				{
+					int halfPenWidth = (int)(mPuzzleScreenSeparatorLinePen.Width / 2);
+					gc.DrawLine(mPuzzleScreenSeparatorLinePen, 0, yPixel + halfPenWidth, width, yPixel + halfPenWidth);
+					horizontalLinesCount += (int)mPuzzleScreenSeparatorLinePen.Width;
+					yPixel += (int)mPuzzleScreenSeparatorLinePen.Width;
+				}
+				for (int x = 0; x < LEVEL_WIDTH; ++x)
+				{
+					int xPixel = (x * spriteWidth) + verticalLinesCount;
+					// draw the puzzle screen lines
+					if ((y == LEVEL_HEIGHT - 1) && (x % ARDUBOY_PUZZLE_SCREEN_WIDTH) == 0)
+					{
+						int halfPenWidth = (int)(mPuzzleScreenSeparatorLinePen.Width / 2);
+						gc.DrawLine(mPuzzleScreenSeparatorLinePen, xPixel + halfPenWidth, 0, xPixel + halfPenWidth, height);
+						verticalLinesCount += (int)mPuzzleScreenSeparatorLinePen.Width;
+						xPixel += (int)mPuzzleScreenSeparatorLinePen.Width;
+					}
+					// draw the sprites
+					gc.DrawImage(mWallSprites[mLevel[x, y]], xPixel, yPixel, spriteWidth, spriteHeight);
+				}
+			}
 		}
 	}
 }
