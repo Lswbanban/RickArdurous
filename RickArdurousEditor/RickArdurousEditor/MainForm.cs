@@ -140,7 +140,7 @@ namespace RickArdurousEditor
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
-					mMap.SetSpriteId(mMapCamera.X + (e.Location.X / mMap.DrawSpriteWidth), mMapCamera.Y + (e.Location.Y / mMap.DrawSpriteWidth), mCurrentSelectedSpriteId);
+					mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
 					redrawLevel();
 					break;
 				case MouseButtons.Right:
