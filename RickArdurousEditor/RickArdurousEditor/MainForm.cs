@@ -107,6 +107,11 @@ namespace RickArdurousEditor
 			redrawLevel();
 		}
 
+		private void PictureBoxLevel_MouseEnter(object sender, EventArgs e)
+		{
+			PictureBoxLevel.Focus();
+		}
+
 		private void PictureBoxLevel_MouseDown(object sender, MouseEventArgs e)
 		{
 			mLastMouseDownPosition = e.Location;
@@ -133,6 +138,14 @@ namespace RickArdurousEditor
 					PanLevelCamera(e.Location);
 					break;
 			}
+		}
+
+		private void PictureBoxLevel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			int spriteSizeChange = (e.Delta / 100);
+			mMap.DrawSpriteWidth = mMap.DrawSpriteWidth + spriteSizeChange;
+			mMap.DrawSpriteHeight = mMap.DrawSpriteHeight + spriteSizeChange;
+			redrawLevel();
 		}
 		#endregion
 	}
