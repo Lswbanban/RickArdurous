@@ -16,6 +16,14 @@ namespace RickArdurousEditor
 
 		private MapData mMap = new MapData();
 
+		// the coordinates of the current part of the level which is visible
+		private Point mMapCamera;
+		private Point mLastMouseDownMapCamera;
+
+		// variable for mouse events
+		private Point mLastMouseDownPosition;
+		private Point mLastMouseMovePosition;
+
 		#region init
 		public MainForm()
 		{
@@ -56,9 +64,21 @@ namespace RickArdurousEditor
 			Bitmap levelImage = new Bitmap(PictureBoxLevel.Width, PictureBoxLevel.Height);
 			Graphics gc = Graphics.FromImage(levelImage);
 			// ask the map to redraw it
-			mMap.redraw(gc, levelImage.Width, levelImage.Height);
+			mMap.redraw(gc, levelImage.Width, levelImage.Height, mMapCamera.X, mMapCamera.Y);
 			// set the image in the Picture box
 			PictureBoxLevel.Image = levelImage;
+		}
+
+		private void PanLevelCamera(Point newMousePosition)
+		{
+			Point mouseMove = new Point(mLastMouseDownPosition.X - newMousePosition.X, mLastMouseDownPosition.Y - newMousePosition.Y);
+			mMapCamera.X = mLastMouseDownMapCamera.X + (mouseMove.X / 32);
+			mMapCamera.Y = mLastMouseDownMapCamera.Y + (mouseMove.Y / 32);
+			// clamp the coordinate inside the level
+			mMap.ClampCoordinatesInsideLevel(ref mMapCamera);
+
+			// redraw the level
+			redrawLevel();
 		}
 		#endregion
 
@@ -82,6 +102,34 @@ namespace RickArdurousEditor
 		private void PictureBoxLevel_SizeChanged(object sender, EventArgs e)
 		{
 			redrawLevel();
+		}
+
+		private void PictureBoxLevel_MouseDown(object sender, MouseEventArgs e)
+		{
+			mLastMouseDownPosition = e.Location;
+			mLastMouseMovePosition = e.Location;
+			mLastMouseDownMapCamera = mMapCamera;
+		}
+
+		private void PictureBoxLevel_MouseMove(object sender, MouseEventArgs e)
+		{
+			switch (e.Button)
+			{
+				case MouseButtons.Right:
+					PanLevelCamera(e.Location);
+					break;
+			}
+			mLastMouseMovePosition = e.Location;
+		}
+
+		private void PictureBoxLevel_MouseUp(object sender, MouseEventArgs e)
+		{
+			switch (e.Button)
+			{
+				case MouseButtons.Right:
+					PanLevelCamera(e.Location);
+					break;
+			}
 		}
 		#endregion
 	}
