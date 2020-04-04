@@ -14,6 +14,7 @@ namespace RickArdurousEditor
 
 		private const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
+		private Bitmap[] mWallSpritesMirrored = new Bitmap[WALL_SPRITE_COUNT];
 
 		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.CornflowerBlue, 2);
 
@@ -76,18 +77,30 @@ namespace RickArdurousEditor
 
 		}
 
+		private Bitmap GetSprite(Bitmap originalImage, int x, int y, bool isMirrored)
+		{
+			Bitmap sprite = new Bitmap(8, 8);
+			Graphics gc = Graphics.FromImage(sprite);
+			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
+			if (isMirrored)
+			{
+				gc.TranslateTransform(8, 0);
+				gc.ScaleTransform(-1, 1);
+			}
+			gc.DrawImage(originalImage, new Rectangle(0, 0, 8, 8), new Rectangle(x * 8, y * 8, 8, 8), GraphicsUnit.Pixel);
+			return sprite;
+		}
+
 		private void InitWallSpriteImages()
 		{
 			Bitmap originalImage = new Bitmap(Application.StartupPath + @"\..\..\..\..\image\Walls.png");
 			for (int y = 0; y < 8; ++y)
 				for (int x = 0; x < 2; ++x)
 				{
-					Bitmap sprite = new Bitmap(8, 8);
-					Graphics gc = Graphics.FromImage(sprite);
-					gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-					gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
-					gc.DrawImage(originalImage, new Rectangle(0, 0, 8, 8), new Rectangle(x * 8, y * 8, 8, 8), GraphicsUnit.Pixel);
-					mWallSprites[y + (x * 8)] = sprite;
+					int spriteId = y + (x * 8);
+					mWallSprites[spriteId] = GetSprite(originalImage, x, y, false);
+					mWallSpritesMirrored[spriteId] = GetSprite(originalImage, x, y, true);
 				}
 		}
 		#endregion
@@ -177,8 +190,22 @@ namespace RickArdurousEditor
 						verticalLinesCount += (int)mPuzzleScreenSeparatorLinePen.Width;
 						xPixel += (int)mPuzzleScreenSeparatorLinePen.Width;
 					}
+
+					byte spriteId = mLevel[x, y];
+					byte previousSpriteId = mLevel[Math.Max(x - 1, 0), y];
+					bool isMirror = false;
+					if (spriteId <= (int)WallId.ROCK_GROUND)
+						isMirror = ((x * y) % 2) == 1;
+					else if (spriteId == (int)WallId.STAIR)
+						isMirror = (previousSpriteId == (int)WallId.NOTHING);
+					else if ((spriteId == (int)WallId.BIG_STATUE_TOP) || (spriteId == (int)WallId.BIG_STATUE_BOTTOM))
+						isMirror = (previousSpriteId == spriteId);
+
 					// draw the sprites
-					gc.DrawImage(mWallSprites[mLevel[x, y]], xPixel, yPixel, DrawSpriteWidth, DrawSpriteHeight);
+					if (isMirror)
+						gc.DrawImage(mWallSpritesMirrored[spriteId], xPixel, yPixel, DrawSpriteWidth, DrawSpriteHeight);
+					else
+						gc.DrawImage(mWallSprites[spriteId], xPixel, yPixel, DrawSpriteWidth, DrawSpriteHeight);
 				}
 			}
 		}
