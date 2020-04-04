@@ -61,12 +61,13 @@ namespace RickArdurousEditor
 		private void redrawLevel()
 		{
 			// create image
-			Bitmap levelImage = new Bitmap(PictureBoxLevel.Width, PictureBoxLevel.Height);
-			Graphics gc = Graphics.FromImage(levelImage);
+			if (PictureBoxLevel.Image == null)
+				PictureBoxLevel.Image = new Bitmap(PictureBoxLevel.Width, PictureBoxLevel.Height);
+			Graphics gc = Graphics.FromImage(PictureBoxLevel.Image);
 			// ask the map to redraw it
-			mMap.redraw(gc, levelImage.Width, levelImage.Height, mMapCamera.X, mMapCamera.Y);
-			// set the image in the Picture box
-			PictureBoxLevel.Image = levelImage;
+			mMap.redraw(gc, PictureBoxLevel.Image.Width, PictureBoxLevel.Image.Height, mMapCamera.X, mMapCamera.Y);
+			// and ask to refraw
+			PictureBoxLevel.Refresh();
 		}
 
 		private void PanLevelCamera(Point newMousePosition)
@@ -101,6 +102,8 @@ namespace RickArdurousEditor
 
 		private void PictureBoxLevel_SizeChanged(object sender, EventArgs e)
 		{
+			// delete the image so that a new one can be recreated with the new size
+			PictureBoxLevel.Image = null;
 			redrawLevel();
 		}
 
