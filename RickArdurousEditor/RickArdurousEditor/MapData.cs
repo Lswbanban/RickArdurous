@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RickArdurousEditor
@@ -102,6 +103,96 @@ namespace RickArdurousEditor
 					mWallSprites[spriteId] = GetSprite(originalImage, x, y, false);
 					mWallSpritesMirrored[spriteId] = GetSprite(originalImage, x, y, true);
 				}
+		}
+		#endregion
+
+		#region read/write
+		private void WriteHeader(StreamWriter writer)
+		{
+			writer.WriteLine("/*");
+			writer.WriteLine(" * This is a generated file, use the Editor to modify it.");
+			writer.WriteLine(" */");
+			writer.WriteLine("# include \"MapData.h\"");
+			writer.WriteLine("# include \"SpriteData.h\"");
+			writer.WriteLine("# include \"MapManager.h\"");
+			writer.WriteLine("# include \"ArrowLauncher.h\"");
+			writer.WriteLine("# include \"Spike.h\"");
+			writer.WriteLine("# include \"Statuette.h\"");
+			writer.WriteLine("# include \"Dynamite.h\"");
+			writer.WriteLine("# include \"DynamiteCrate.h\"");
+			writer.WriteLine("# include \"BulletCrate.h\"");
+			writer.WriteLine("# include \"Enemy.h\"");
+			writer.WriteLine("# include \"DestroyableBlock.h\"");
+			writer.WriteLine("# include \"Stalactite.h\"");
+			writer.WriteLine("# include \"Stalagmite.h\"");
+			writer.WriteLine("# include <avr/pgmspace.h>");
+			writer.WriteLine("#define ID(id1,id2) ((id1<< 4) | id2)");
+		}
+
+		private void WriteLevelId(StreamWriter writer, byte id, bool isWritingHighBit)
+		{
+			if (isWritingHighBit)
+				writer.Write("ID(" + id.ToString() + ",");
+			else
+				writer.Write(id.ToString() + "),");
+		}
+
+		private void WriteLevelData(StreamWriter writer)
+		{
+			writer.WriteLine("const unsigned char MapManager::Level[] PROGMEM = {");
+			for (int y = 0; y < 16; ++y)
+			{
+				bool shouldCountSpace = false;
+				bool isWritingHighBit = true;
+				byte spaceCounter = 1;
+				for (int x = 0; x < 32; ++x)
+				{
+					byte id = mLevel[x, y];
+					if (shouldCountSpace)
+					{
+						if (id == (byte)WallId.NOTHING)
+						{
+							spaceCounter++;
+							if (spaceCounter < 15)
+							{
+								continue;
+							}
+							else
+							{
+								WriteLevelId(writer, spaceCounter, isWritingHighBit);
+								isWritingHighBit = !isWritingHighBit;
+								WriteLevelId(writer, (byte)WallId.NOTHING, isWritingHighBit);
+								isWritingHighBit = !isWritingHighBit;
+								spaceCounter = 1;
+								continue;
+							}
+						}
+						else
+						{
+							WriteLevelId(writer, spaceCounter, isWritingHighBit);
+							isWritingHighBit = !isWritingHighBit;
+							shouldCountSpace = false;							
+						}
+					}
+					else if (id == (byte)WallId.NOTHING)
+					{
+						shouldCountSpace = true;
+					}
+					WriteLevelId(writer, id, isWritingHighBit);
+					isWritingHighBit = !isWritingHighBit;
+				}
+				writer.WriteLine("");
+			}
+			writer.WriteLine("};");
+		}
+
+		public void Save(string fileName)
+		{
+			StreamWriter writer = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
+			WriteHeader(writer);
+			WriteLevelData(writer);
+			writer.Flush();
+			writer.Close();
 		}
 		#endregion
 
