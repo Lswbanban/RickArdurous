@@ -84,6 +84,11 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region menu event
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			mMap.Load(Application.StartupPath + @"\MapTest.cpp");
+		}
+
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			mMap.Save(Application.StartupPath + @"\MapTest.cpp");

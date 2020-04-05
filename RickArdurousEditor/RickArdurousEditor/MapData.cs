@@ -108,7 +108,7 @@ namespace RickArdurousEditor
 		}
 		#endregion
 
-		#region read/write
+		#region write
 		private void WriteHeader(StreamWriter writer)
 		{
 			writer.WriteLine("/*");
@@ -229,6 +229,74 @@ namespace RickArdurousEditor
 			WriteLevelData(writer);
 			writer.Flush();
 			writer.Close();
+		}
+		#endregion
+
+		#region read
+		private void ReadLevelData(StreamReader reader)
+		{
+			int x = 0;
+			int y = 0;
+			string line = reader.ReadLine();
+			while (!reader.EndOfStream && !line.Contains("}"))
+			{
+				string[] tokens = line.Split(new string[] { "ID" }, StringSplitOptions.RemoveEmptyEntries);
+				bool nextId1IsCount = false;
+				foreach (string token in tokens)
+				{
+					if (token.StartsWith("("))
+					{
+						string[] ids = token.Split(new char[] { ',' });
+						int id1 = int.Parse(ids[0].Substring(1));
+						int id2 = int.Parse(ids[1].Remove(ids[1].IndexOf(')')));
+						// check id1 first
+						if (nextId1IsCount)
+						{
+							x += id1;
+							nextId1IsCount = false;
+						}
+						else if (id1 == (int)WallId.NOTHING)
+						{
+							x += id2;
+							continue;
+						}
+						else
+						{
+							mLevel[x, y] = (byte)id1;
+							x++;
+						}
+						// check id2
+						if (id2 == (int)WallId.NOTHING)
+						{
+							nextId1IsCount = true;
+						}
+						else
+						{
+							mLevel[x, y] = (byte)id2;
+							x++;
+						}
+					}
+				}
+				// read the next line
+				line = reader.ReadLine();
+				y++;
+				x = 0;
+			}
+		}
+
+		public void Load(string fileName)
+		{
+			// clear the level
+			ClearLevel();
+			// and read the cpp file
+			StreamReader reader = new StreamReader(fileName, System.Text.Encoding.UTF8);
+			while (!reader.EndOfStream)
+			{
+				string line = reader.ReadLine();
+				if (line.Contains("MapManager::Level[]"))
+					ReadLevelData(reader);
+			}
+			reader.Close();
 		}
 		#endregion
 
