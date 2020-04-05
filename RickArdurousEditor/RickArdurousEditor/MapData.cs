@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -70,6 +71,7 @@ namespace RickArdurousEditor
 		{
 			InitWallSpriteImages();
 			ClearLevel();
+			mLevel[15, 0] = 1;
 			mLevel[1, 1] = 5;
 			mLevel[3, 1] = 7;
 
@@ -132,25 +134,43 @@ namespace RickArdurousEditor
 			writer.WriteLine();
 		}
 
-		private void WriteLevelId(StreamWriter writer, byte id, bool isWritingHighBit)
+		private void WriteLevelId(StreamWriter writer, byte id, ref bool isWritingHighBit, ref int idCount)
 		{
 			if (isWritingHighBit)
+			{
 				writer.Write("ID(" + id.ToString() + ",");
+				idCount++;
+			}
 			else
+			{
 				writer.Write(id.ToString() + "),");
+			}
+			// inverse the flag
+			isWritingHighBit = !isWritingHighBit;
 		}
 
 		private void WriteLevelData(StreamWriter writer)
 		{
+			int startX = 0;
+			int endX = 16;
+			int startY = 0;
+			int endY = 32;
+			List<int> lineIndex = new List<int>(endY - startY + 1);
+			int idCount = 0;
+
 			writer.WriteLine("const unsigned char MapManager::Level[] PROGMEM = {");
-			for (int y = 0; y < 16; ++y)
+			for (int y = startY; y < endY; ++y)
 			{
+				// add the index of the first id of the line in the list
+				lineIndex.Add(idCount);
+				// start with a tab
 				writer.Write("\t");
 				bool shouldCountSpace = false;
 				bool isWritingHighBit = true;
 				byte spaceCounter = 1;
-				for (int x = 0; x < 32; ++x)
+				for (int x = startX; x < endX; ++x)
 				{
+					// get the current id
 					byte id = mLevel[x, y];
 					if (shouldCountSpace)
 					{
@@ -163,18 +183,15 @@ namespace RickArdurousEditor
 							}
 							else
 							{
-								WriteLevelId(writer, spaceCounter, isWritingHighBit);
-								isWritingHighBit = !isWritingHighBit;
-								WriteLevelId(writer, (byte)WallId.NOTHING, isWritingHighBit);
-								isWritingHighBit = !isWritingHighBit;
+								WriteLevelId(writer, spaceCounter, ref isWritingHighBit, ref idCount);
+								shouldCountSpace = false;
 								spaceCounter = 1;
 								continue;
 							}
 						}
 						else
 						{
-							WriteLevelId(writer, spaceCounter, isWritingHighBit);
-							isWritingHighBit = !isWritingHighBit;
+							WriteLevelId(writer, spaceCounter, ref isWritingHighBit, ref idCount);
 							shouldCountSpace = false;							
 						}
 					}
@@ -182,11 +199,25 @@ namespace RickArdurousEditor
 					{
 						shouldCountSpace = true;
 					}
-					WriteLevelId(writer, id, isWritingHighBit);
-					isWritingHighBit = !isWritingHighBit;
+					WriteLevelId(writer, id, ref isWritingHighBit, ref idCount);
+				}
+				// write the last low bit if we need to finish the line
+				if (!isWritingHighBit)
+				{
+					if (shouldCountSpace)
+						WriteLevelId(writer, spaceCounter, ref isWritingHighBit, ref idCount);
+					else
+						WriteLevelId(writer, 0, ref isWritingHighBit, ref idCount);
 				}
 				writer.WriteLine();
 			}
+			writer.WriteLine("};");
+			writer.WriteLine();
+
+			// write the line index array
+			writer.Write("const unsigned int MapManager::LevelLineIndex[] PROGMEM = {");
+			foreach (int index in lineIndex)
+				writer.Write(index.ToString() + ",");
 			writer.WriteLine("};");
 			writer.WriteLine();
 		}
