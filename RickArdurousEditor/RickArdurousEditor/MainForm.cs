@@ -87,6 +87,7 @@ namespace RickArdurousEditor
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			mMap.Load(Application.StartupPath + @"\MapTest.cpp");
+			redrawLevel();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)

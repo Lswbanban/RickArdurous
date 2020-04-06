@@ -192,7 +192,8 @@ namespace RickArdurousEditor
 						else
 						{
 							WriteLevelId(writer, spaceCounter, ref isWritingHighBit, ref idCount);
-							shouldCountSpace = false;							
+							shouldCountSpace = false;
+							spaceCounter = 1;
 						}
 					}
 					else if (id == (byte)WallId.NOTHING)
