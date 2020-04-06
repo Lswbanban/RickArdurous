@@ -149,17 +149,58 @@ namespace RickArdurousEditor
 			isWritingHighBit = !isWritingHighBit;
 		}
 
+		/// <summary>
+		/// This function compute the bouding area of the level which countains something.
+		/// It returns a bounding aligned on the puzzle screen.
+		/// </summary>
+		/// <param name="startX">the min x coord included</param>
+		/// <param name="endX">the max x coord included</param>
+		/// <param name="startY">the min y coord included</param>
+		/// <param name="endY">the max y coord included</param>
+		private void GetLevelBoundingBox(out int startX, out int endX, out int startY, out int endY)
+		{
+			// init the return values with the max and min values
+			startX = LEVEL_WIDTH - 1;
+			endX = 0;
+			startY = LEVEL_HEIGHT - 1;
+			endY = 0;
+			// iterate on the whole level to find non emty cells
+			for (int y = 0; y < LEVEL_HEIGHT; ++y)
+				for (int x = 0; x < LEVEL_WIDTH; ++x)
+					if (mLevel[x,y] != (byte)WallId.NOTHING)
+					{
+						// we found something, get the puzzle screen coord where is located the sprite
+						int minScreenX = (x / ARDUBOY_PUZZLE_SCREEN_WIDTH) * ARDUBOY_PUZZLE_SCREEN_WIDTH;
+						int maxScreenX = minScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1;
+						int minScreenY = (y / ARDUBOY_PUZZLE_SCREEN_HEIGHT) * ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+						int maxScreenY = minScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1;
+						// check if we found a coordinate better that what we already found
+						if (minScreenX < startX)
+							startX = minScreenX;
+						if (maxScreenX > endX)
+							endX = maxScreenX;
+						if (minScreenY < startY)
+							startY = minScreenY;
+						if (maxScreenY > endY)
+							endY = maxScreenY;
+					}
+		}
+
 		private void WriteLevelData(StreamWriter writer)
 		{
-			int startX = 0;
-			int endX = 16;
-			int startY = 0;
-			int endY = 32;
+			// get the bounding volume of the data to export
+			int startX;
+			int endX;
+			int startY;
+			int endY;
+			GetLevelBoundingBox(out startX, out endX, out startY, out endY);
+
+			// declare a list to store the index of each beggining of lines
 			List<int> lineIndex = new List<int>(endY - startY + 1);
 			int idCount = 0;
 
 			writer.WriteLine("const unsigned char MapManager::Level[] PROGMEM = {");
-			for (int y = startY; y < endY; ++y)
+			for (int y = startY; y <= endY; ++y)
 			{
 				// add the index of the first id of the line in the list
 				lineIndex.Add(idCount);
@@ -168,7 +209,7 @@ namespace RickArdurousEditor
 				bool shouldCountSpace = false;
 				bool isWritingHighBit = true;
 				byte spaceCounter = 1;
-				for (int x = startX; x < endX; ++x)
+				for (int x = startX; x <= endX; ++x)
 				{
 					// get the current id
 					byte id = mLevel[x, y];
