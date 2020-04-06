@@ -251,6 +251,12 @@ namespace RickArdurousEditor
 					else
 						WriteLevelId(writer, 0, ref isWritingHighBit, ref idCount);
 				}
+				else if (shouldCountSpace)
+				{
+					// also if the last low bit was a space, write the space count in the next high and pad with a zero
+					WriteLevelId(writer, spaceCounter, ref isWritingHighBit, ref idCount);
+					WriteLevelId(writer, 0, ref isWritingHighBit, ref idCount);
+				}
 				writer.WriteLine();
 			}
 			writer.WriteLine("};");
