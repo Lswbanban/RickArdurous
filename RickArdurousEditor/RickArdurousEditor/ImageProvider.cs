@@ -56,11 +56,19 @@ namespace RickArdurousEditor
 			return new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Walls.png");
 		}
 
-		public static Bitmap GetSpikeImage(bool isLeft)
+		public static Bitmap GetHorizontalSpikeImage(bool isLeft)
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"SpikeHorizontal.png");
 			Bitmap result = new Bitmap(3, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, isLeft, 1f, 0f, 0f);
+			return result;
+		}
+
+		public static Bitmap GetVerticalSpikeImage(bool isLeft)
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"SpikeVertical.png");
+			Bitmap result = new Bitmap(4, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 8), ref result, isLeft, 1f, 0f, 0f);
 			return result;
 		}
 	}
