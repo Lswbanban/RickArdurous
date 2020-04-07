@@ -14,6 +14,9 @@ namespace RickArdurousEditor
 		private const int LEVEL_HEIGHT = 256;
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
+		// all the items in the level
+		private List<Items.Item> mItems = new List<Items.Item>();
+
 		private const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
 		private Bitmap[] mWallSpritesMirrored = new Bitmap[WALL_SPRITE_COUNT];
@@ -73,9 +76,9 @@ namespace RickArdurousEditor
 			mLevel[1, 1] = 5;
 			mLevel[3, 1] = 7;
 
-			mLevel[23, 3] = 6;
-			mLevel[23, 4] = 8;
-
+			mItems.Add(new Items.Item(Items.Item.Type.HORIZONTAL_SPIKE, false, 10, 10));
+			mItems.Add(new Items.Item(Items.Item.Type.VERTICAL_SPIKE, true, 20, 10));
+			mItems.Add(new Items.Item(Items.Item.Type.VERTICAL_SPIKE, false, 30, 10));
 		}
 
 		private Bitmap GetSprite(Bitmap originalImage, int x, int y, bool isMirrored)
@@ -501,7 +504,8 @@ namespace RickArdurousEditor
 
 		private void DrawItems(Graphics gc, int width, int height, int cameraX, int cameraY)
 		{
-			gc.DrawImage(ImageProvider.GetSpikeImage(false), 10, 10, 3 * mPixelSize, 8 * mPixelSize);
+			foreach (Items.Item item in mItems)
+				item.Draw(gc, mPixelSize);
 		}
 		#endregion
 	}
