@@ -36,7 +36,7 @@ namespace RickArdurousEditor
 
 		private void redrawSpriteToolbox(int selectedSpriteX, int selectedSpriteY)
 		{
-			Bitmap originalImage = new Bitmap(Application.StartupPath + @"\..\..\..\..\image\Walls.png");
+			Bitmap originalImage = ImageProvider.GetWallSpriteImage();
 			Bitmap spritesImage = new Bitmap(PictureBoxSprites.Width, PictureBoxSprites.Height);
 			Graphics gc = Graphics.FromImage(spritesImage);
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -65,7 +65,7 @@ namespace RickArdurousEditor
 				PictureBoxLevel.Image = new Bitmap(PictureBoxLevel.Width, PictureBoxLevel.Height);
 			Graphics gc = Graphics.FromImage(PictureBoxLevel.Image);
 			// ask the map to redraw it
-			mMap.redraw(gc, PictureBoxLevel.Image.Width, PictureBoxLevel.Image.Height, mMapCamera.X, mMapCamera.Y);
+			mMap.Redraw(gc, PictureBoxLevel.Image.Width, PictureBoxLevel.Image.Height, mMapCamera.X, mMapCamera.Y);
 			// and ask to refraw
 			PictureBoxLevel.Refresh();
 		}
@@ -158,8 +158,7 @@ namespace RickArdurousEditor
 		private void PictureBoxLevel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			int spriteSizeChange = (e.Delta / 100);
-			mMap.DrawSpriteWidth = mMap.DrawSpriteWidth + spriteSizeChange;
-			mMap.DrawSpriteHeight = mMap.DrawSpriteHeight + spriteSizeChange;
+			mMap.PixelSize = mMap.PixelSize + spriteSizeChange;
 			redrawLevel();
 		}
 		#endregion
