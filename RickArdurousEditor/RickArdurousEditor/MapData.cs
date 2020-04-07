@@ -21,27 +21,25 @@ namespace RickArdurousEditor
 		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.CornflowerBlue, 2);
 
 		#region get/set
-		private int mDrawSpriteWidth = 32;
 		public int DrawSpriteWidth
 		{
-			get { return mDrawSpriteWidth; }
-			set
-			{
-				mDrawSpriteWidth = value;
-				if (mDrawSpriteWidth < 2)
-					mDrawSpriteWidth = 2;
-			}
+			get { return 8 * mPixelSize; }
 		}
 
-		private int mDrawSpriteHeight = 32;
 		public int DrawSpriteHeight
 		{
-			get { return mDrawSpriteHeight; }
+			get { return 8 * mPixelSize; }
+		}
+
+		private int mPixelSize = 2;
+		public int PixelSize
+		{
+			get { return mPixelSize; }
 			set
 			{
-				mDrawSpriteHeight = value;
-				if (mDrawSpriteHeight < 2)
-					mDrawSpriteHeight = 2;
+				mPixelSize = value;
+				if (mPixelSize < 2)
+					mPixelSize = 2;
 			}
 		}
 		#endregion
@@ -97,7 +95,7 @@ namespace RickArdurousEditor
 
 		private void InitWallSpriteImages()
 		{
-			Bitmap originalImage = new Bitmap(Application.StartupPath + @"\..\..\..\..\image\Walls.png");
+			Bitmap originalImage = ImageProvider.GetWallSpriteImage();
 			for (int y = 0; y < 8; ++y)
 				for (int x = 0; x < 2; ++x)
 				{
@@ -398,7 +396,13 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region draw
-		public void redraw(Graphics gc, int width, int height, int cameraX, int cameraY)
+		public void Redraw(Graphics gc, int width, int height, int cameraX, int cameraY)
+		{
+			DrawLevelWalls(gc, width, height, cameraX, cameraY);
+			DrawItems(gc, width, height, cameraX, cameraY);
+		}
+
+		private void DrawLevelWalls(Graphics gc, int width, int height, int cameraX, int cameraY)
 		{
 			// set the drawing mode
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -493,6 +497,11 @@ namespace RickArdurousEditor
 				int yPixel = ((endCamera.Y - startCamera.Y) * DrawSpriteHeight) + horizontalLinesCount;
 				gc.DrawLine(mPuzzleScreenSeparatorLinePen, 0, yPixel + halfPenWidth, lineWidth, yPixel + halfPenWidth);
 			}
+		}
+
+		private void DrawItems(Graphics gc, int width, int height, int cameraX, int cameraY)
+		{
+			gc.DrawImage(ImageProvider.GetSpikeImage(false), 10, 10, 3 * mPixelSize, 8 * mPixelSize);
 		}
 		#endregion
 	}
