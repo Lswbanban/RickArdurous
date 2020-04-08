@@ -56,11 +56,11 @@ namespace RickArdurousEditor
 			return new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Walls.png");
 		}
 
-		public static Bitmap GetHorizontalSpikeImage(bool isLeft)
+		public static Bitmap GetHorizontalSpikeImage()
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"SpikeHorizontal.png");
 			Bitmap result = new Bitmap(3, 8);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, isLeft, 1f, 0f, 0f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 1f, 0f, 0f);
 			return result;
 		}
 
@@ -86,8 +86,8 @@ namespace RickArdurousEditor
 			itemSize -= 2;
 
 			// draw all the items in a grid
-			gc.DrawImage(GetWallSpriteImage(), 0, 0, itemSize, itemSize);
-			gc.DrawImage(GetVerticalSpikeImage(false), 0, 0, itemSize, itemSize);
+			gc.DrawImage(GetHorizontalSpikeImage(), 0, 0, itemSize, itemSize);
+			gc.DrawImage(GetVerticalSpikeImage(false), 0, itemSize, itemSize, itemSize);
 
 			return itemSpriteImage;
 		}

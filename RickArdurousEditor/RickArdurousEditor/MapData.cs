@@ -170,7 +170,7 @@ namespace RickArdurousEditor
 			// iterate on the whole level to find non emty cells
 			for (int y = 0; y < LEVEL_HEIGHT; ++y)
 				for (int x = 0; x < LEVEL_WIDTH; ++x)
-					if (mLevel[x,y] != (byte)WallId.NOTHING)
+					if (mLevel[x, y] != (byte)WallId.NOTHING)
 					{
 						// we found something, get the puzzle screen coord where is located the sprite
 						int minScreenX = (x / ARDUBOY_PUZZLE_SCREEN_WIDTH) * ARDUBOY_PUZZLE_SCREEN_WIDTH;
@@ -397,6 +397,19 @@ namespace RickArdurousEditor
 		{
 			if ((coord.X >= 0) && (coord.X < LEVEL_WIDTH) && (coord.Y >= 0) && (coord.Y < LEVEL_HEIGHT))
 				mLevel[coord.X, coord.Y] = id;
+		}
+
+		public Items.Item GetItemAt(int x, int y)
+		{
+			foreach (Items.Item item in mItems)
+				if (item.IsUnder(x,y))
+					return item;
+			return null;
+		}
+
+		public void AddItem(Items.Item.Type itemType, bool isMirrored, int x, int y)
+		{
+			mItems.Add(new Items.Item(itemType, isMirrored, x, y));
 		}
 		#endregion
 

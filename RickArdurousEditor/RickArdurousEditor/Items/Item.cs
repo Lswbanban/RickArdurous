@@ -38,12 +38,18 @@ namespace RickArdurousEditor.Items
 			switch (mType)
 			{
 				case Type.HORIZONTAL_SPIKE:
-					mSprite = ImageProvider.GetHorizontalSpikeImage(isMirrored);
+					mSprite = ImageProvider.GetHorizontalSpikeImage();
 					break;
 				case Type.VERTICAL_SPIKE:
 					mSprite = ImageProvider.GetVerticalSpikeImage(isMirrored);
 					break;
 			}
+		}
+
+
+		public bool IsUnder(int x, int y)
+		{
+			return (x >= mX) && (x < mX + mSprite.Width) && (y >= mY) && (y < mY + mSprite.Height);
 		}
 
 		public void Draw(Graphics gc, int pixelSize, int cameraXWorld, int cameraYWorld)
