@@ -29,15 +29,16 @@ namespace RickArdurousEditor
 		{
 			InitializeComponent();
 			// init the sprite tool box
-			redrawSpriteToolbox(0,0);
+			RedrawWallSpriteToolbox(0, 0);
+			RedrawItemsSpriteToolbox(-1, -1);
 			// init the level image
-			redrawLevel();
+			RedrawLevel();
 		}
 
-		private void redrawSpriteToolbox(int selectedSpriteX, int selectedSpriteY)
+		private void RedrawWallSpriteToolbox(int selectedSpriteX, int selectedSpriteY)
 		{
 			Bitmap originalImage = ImageProvider.GetWallSpriteImage();
-			Bitmap spritesImage = new Bitmap(PictureBoxSprites.Width, PictureBoxSprites.Height);
+			Bitmap spritesImage = new Bitmap(PictureBoxWallSprites.Width, PictureBoxWallSprites.Height);
 			Graphics gc = Graphics.FromImage(spritesImage);
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			gc.DrawImage(originalImage, 0, 0, spritesImage.Width, spritesImage.Height);
@@ -51,14 +52,44 @@ namespace RickArdurousEditor
 				gc.DrawLine(linePen, new Point(0, height * i), new Point(spritesImage.Width, height * i));
 
 			// draw the selected sprite
-			Pen selectedSpritePen = new Pen(Color.Red, 3);
-			gc.DrawRectangle(selectedSpritePen, selectedSpriteX * width, selectedSpriteY * height, width, height);
+			if (selectedSpriteX >= 0)
+			{
+				Pen selectedSpritePen = new Pen(Color.Red, 3);
+				gc.DrawRectangle(selectedSpritePen, selectedSpriteX * width, selectedSpriteY * height, width, height);
+			}
 
 			// set the strech image in the picture box
-			PictureBoxSprites.Image = spritesImage;
+			PictureBoxWallSprites.Image = spritesImage;
 		}
 
-		private void redrawLevel()
+		private void RedrawItemsSpriteToolbox(int selectedItemX, int selectedItemY)
+		{
+			Bitmap originalImage = ImageProvider.GetItemsSpriteImage();
+			Bitmap spritesImage = new Bitmap(PictureBoxItems.Width, PictureBoxItems.Height);
+			Graphics gc = Graphics.FromImage(spritesImage);
+			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			gc.DrawImage(originalImage, 0, 0, spritesImage.Width, spritesImage.Height);
+
+			// create a pen for drawing lines to split the sprites
+			Pen linePen = new Pen(Color.Blue, 2);
+			int width = spritesImage.Width / 2;
+			int height = spritesImage.Height / 8;
+			gc.DrawLine(linePen, new Point(width, 0), new Point(width, spritesImage.Height));
+			for (int i = 0; i < 8; ++i)
+				gc.DrawLine(linePen, new Point(0, height * i), new Point(spritesImage.Width, height * i));
+
+			// draw the selected sprite
+			if (selectedItemX >= 0)
+			{
+				Pen selectedSpritePen = new Pen(Color.Red, 3);
+				gc.DrawRectangle(selectedSpritePen, selectedItemX * width, selectedItemY * height, width, height);
+			}
+
+			// set the strech image in the picture box
+			PictureBoxItems.Image = spritesImage;
+		}
+
+		private void RedrawLevel()
 		{
 			// create image
 			if (PictureBoxLevel.Image == null)
@@ -79,7 +110,7 @@ namespace RickArdurousEditor
 			mMap.ClampCoordinatesInsideLevel(ref mMapCamera);
 
 			// redraw the level
-			redrawLevel();
+			RedrawLevel();
 		}
 		#endregion
 
@@ -87,7 +118,7 @@ namespace RickArdurousEditor
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			mMap.Load(Application.StartupPath + @"\MapTest.cpp");
-			redrawLevel();
+			RedrawLevel();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -104,18 +135,29 @@ namespace RickArdurousEditor
 		#region edition event
 		private void PictureBoxSprites_MouseClick(object sender, MouseEventArgs e)
 		{
-			int spriteX = e.Location.X / (PictureBoxSprites.Image.Width / 2);
-			int spriteY = e.Location.Y / (PictureBoxSprites.Image.Height / 8);
-			redrawSpriteToolbox(spriteX, spriteY);
+			int spriteX = e.Location.X / (PictureBoxWallSprites.Image.Width / 2);
+			int spriteY = e.Location.Y / (PictureBoxWallSprites.Image.Height / 8);
+			RedrawWallSpriteToolbox(spriteX, spriteY);
+			RedrawItemsSpriteToolbox(-1, -1);
 			// memorise the new selected sprite id
 			mCurrentSelectedSpriteId = (byte)(spriteY + (8 * spriteX));
+		}
+
+		private void PictureBoxItems_MouseClick(object sender, MouseEventArgs e)
+		{
+			int spriteX = e.Location.X / (PictureBoxWallSprites.Image.Width / 2);
+			int spriteY = e.Location.Y / (PictureBoxWallSprites.Image.Height / 8);
+			RedrawWallSpriteToolbox(-1, -1);
+			RedrawItemsSpriteToolbox(spriteX, spriteY);
+			// memorise the new selected sprite id
+			mCurrentSelectedSpriteId = (byte)(16 + spriteY + (8 * spriteX));
 		}
 
 		private void PictureBoxLevel_SizeChanged(object sender, EventArgs e)
 		{
 			// delete the image so that a new one can be recreated with the new size
 			PictureBoxLevel.Image = null;
-			redrawLevel();
+			RedrawLevel();
 		}
 
 		private void PictureBoxLevel_MouseEnter(object sender, EventArgs e)
@@ -146,8 +188,11 @@ namespace RickArdurousEditor
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
-					mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
-					redrawLevel();
+					if (mCurrentSelectedSpriteId < 16)
+						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
+					//else
+						// TODO
+					RedrawLevel();
 					break;
 				case MouseButtons.Right:
 					PanLevelCamera(e.Location);
@@ -159,7 +204,7 @@ namespace RickArdurousEditor
 		{
 			int spriteSizeChange = (e.Delta / 100);
 			mMap.PixelSize = mMap.PixelSize + spriteSizeChange;
-			redrawLevel();
+			RedrawLevel();
 		}
 		#endregion
 	}
