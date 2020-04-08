@@ -190,8 +190,14 @@ namespace RickArdurousEditor
 				case MouseButtons.Left:
 					if (mCurrentSelectedSpriteId < 16)
 						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
-					//else
-						// TODO
+					else
+					{
+						int itemX = e.Location.X / mMap.PixelSize;
+						int itemY = e.Location.Y / mMap.PixelSize;
+						Items.Item itemUnderMouse = mMap.GetItemAt(itemX, itemY);
+						if (itemUnderMouse == null)
+							mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, itemX, itemY);
+					}
 					RedrawLevel();
 					break;
 				case MouseButtons.Right:
