@@ -71,5 +71,25 @@ namespace RickArdurousEditor
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 8), ref result, isLeft, 1f, 0f, 0f);
 			return result;
 		}
+
+		public static Bitmap GetItemsSpriteImage()
+		{
+			int itemSize = 16;
+			Bitmap itemSpriteImage = new Bitmap(itemSize * 2, itemSize * 8);
+			Graphics gc = Graphics.FromImage(itemSpriteImage);
+			SetGCInPixelMode(ref gc);
+
+			// clear the background
+			gc.Clear(Color.Black);
+
+			// decrease the item size to leave a margin
+			itemSize -= 2;
+
+			// draw all the items in a grid
+			gc.DrawImage(GetWallSpriteImage(), 0, 0, itemSize, itemSize);
+			gc.DrawImage(GetVerticalSpikeImage(false), 0, 0, itemSize, itemSize);
+
+			return itemSpriteImage;
+		}
 	}
 }
