@@ -12,6 +12,8 @@ namespace RickArdurousEditor
 		private const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
 		private const int LEVEL_WIDTH = 256;
 		private const int LEVEL_HEIGHT = 256;
+		private const int WALL_SPRITE_WIDTH = 8;
+		private const int WALL_SPRITE_HEIGHT = 8;
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
 		// all the items in the level
@@ -26,12 +28,12 @@ namespace RickArdurousEditor
 		#region get/set
 		public int DrawSpriteWidth
 		{
-			get { return 8 * mPixelSize; }
+			get { return WALL_SPRITE_WIDTH * mPixelSize; }
 		}
 
 		public int DrawSpriteHeight
 		{
-			get { return 8 * mPixelSize; }
+			get { return WALL_SPRITE_HEIGHT * mPixelSize; }
 		}
 
 		private int mPixelSize = 2;
@@ -504,8 +506,10 @@ namespace RickArdurousEditor
 
 		private void DrawItems(Graphics gc, int width, int height, int cameraX, int cameraY)
 		{
+			int cameraXWorld = cameraX * WALL_SPRITE_WIDTH;
+			int cameraYWorld = cameraY * WALL_SPRITE_HEIGHT;
 			foreach (Items.Item item in mItems)
-				item.Draw(gc, mPixelSize);
+				item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld);
 		}
 		#endregion
 	}

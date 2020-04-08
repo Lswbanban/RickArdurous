@@ -46,9 +46,9 @@ namespace RickArdurousEditor.Items
 			}
 		}
 
-		public void Draw(Graphics gc, int pixelSize)
+		public void Draw(Graphics gc, int pixelSize, int cameraXWorld, int cameraYWorld)
 		{
-			gc.DrawImage(mSprite, mX * pixelSize, mY * pixelSize, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
+			gc.DrawImage(mSprite, (mX - cameraXWorld) * pixelSize, (mY - cameraYWorld) * pixelSize, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
 		}
 	}
 }
