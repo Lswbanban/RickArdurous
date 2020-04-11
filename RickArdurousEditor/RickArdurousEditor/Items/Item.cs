@@ -14,6 +14,8 @@ namespace RickArdurousEditor.Items
 		{
 			HORIZONTAL_SPIKE,
 			VERTICAL_SPIKE,
+
+			RICK = 255,
 		}
 
 		private static Pen mSelectedPen = new Pen(Color.Yellow, 2);
@@ -56,6 +58,9 @@ namespace RickArdurousEditor.Items
 					break;
 				case Type.VERTICAL_SPIKE:
 					mSprite = ImageProvider.GetVerticalSpikeImage(mIsMirror);
+					break;
+				case Type.RICK:
+					mSprite = ImageProvider.GetRickImage();
 					break;
 			}
 		}
@@ -105,12 +110,16 @@ namespace RickArdurousEditor.Items
 
 		public void WriteAddToManager(StreamWriter writer)
 		{
-			writer.WriteLine("\tMapManager::AddItem(&" + GetInstanceName() + ");");
+			if (mType == Type.RICK)
+				writer.WriteLine("\tMapManager::MemorizeCheckPoint(" + mX.ToString() + ", " + mY.ToString() + ");");
+			else
+				writer.WriteLine("\tMapManager::AddItem(&" + GetInstanceName() + ");");
 		}
 
 		public void WriteInitPosition(StreamWriter writer)
 		{
-			writer.WriteLine("\t" + GetInstanceName() + ".Init(" + mX.ToString() + ", " + mY.ToString() + ");");
+			if (mType != Type.RICK)
+				writer.WriteLine("\t" + GetInstanceName() + ".Init(" + mX.ToString() + ", " + mY.ToString() + ");");
 		}
 		#endregion
 

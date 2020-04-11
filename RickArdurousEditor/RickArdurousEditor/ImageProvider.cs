@@ -60,6 +60,14 @@ namespace RickArdurousEditor
 			return new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Walls.png");
 		}
 
+		public static Bitmap GetRickImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Rick.png");
+			Bitmap result = new Bitmap(9, 16);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, false, 0f, 0f, 1f);
+			return result;
+		}
+
 		public static Bitmap GetHorizontalSpikeImage()
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"SpikeHorizontal.png");
