@@ -178,17 +178,36 @@ namespace RickArdurousEditor
 			PictureBoxLevel.Focus();
 		}
 
+		private Point ConvertMouseCoordToLevelCoord(Point mouseCoord)
+		{
+			return new Point((mMapCamera.X * MapData.WALL_SPRITE_WIDTH) + (mouseCoord.X / mMap.PixelSize), (mMapCamera.Y * MapData.WALL_SPRITE_HEIGHT) + (mouseCoord.Y / mMap.PixelSize));
+		}
+
 		private void PictureBoxLevel_MouseDown(object sender, MouseEventArgs e)
 		{
 			mLastMouseDownPosition = e.Location;
 			mLastMouseMovePosition = e.Location;
 			mLastMouseDownMapCamera = mMapCamera;
+
+			switch (e.Button)
+			{
+				case MouseButtons.Left:
+					mCurrentSelectedItem = mMap.GetItemAt(ConvertMouseCoordToLevelCoord(e.Location));
+					break;
+			}
 		}
 
 		private void PictureBoxLevel_MouseMove(object sender, MouseEventArgs e)
 		{
 			switch (e.Button)
 			{
+				case MouseButtons.Left:
+					if (mCurrentSelectedItem != null)
+					{
+						mCurrentSelectedItem.Move(ConvertMouseCoordToLevelCoord(e.Location));
+						RedrawLevel();
+					}
+					break;
 				case MouseButtons.Right:
 					PanLevelCamera(e.Location);
 					break;
@@ -205,13 +224,8 @@ namespace RickArdurousEditor
 						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
 					else
 					{
-						int itemX = e.Location.X / mMap.PixelSize;
-						int itemY = e.Location.Y / mMap.PixelSize;
-						Items.Item itemUnderMouse = mMap.GetItemAt(itemX, itemY);
-						if (itemUnderMouse == null)
-							mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, itemX, itemY);
-						else
-							mCurrentSelectedItem = itemUnderMouse;
+						if (mCurrentSelectedItem == null)
+							mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));
 					}
 					RedrawLevel();
 					break;

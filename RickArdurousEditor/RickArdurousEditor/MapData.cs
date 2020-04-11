@@ -12,8 +12,8 @@ namespace RickArdurousEditor
 		private const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
 		private const int LEVEL_WIDTH = 256;
 		private const int LEVEL_HEIGHT = 256;
-		private const int WALL_SPRITE_WIDTH = 8;
-		private const int WALL_SPRITE_HEIGHT = 8;
+		public const int WALL_SPRITE_WIDTH = 8;
+		public const int WALL_SPRITE_HEIGHT = 8;
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
 		// all the items in the level
@@ -399,17 +399,17 @@ namespace RickArdurousEditor
 				mLevel[coord.X, coord.Y] = id;
 		}
 
-		public Items.Item GetItemAt(int x, int y)
+		public Items.Item GetItemAt(Point location)
 		{
 			foreach (Items.Item item in mItems)
-				if (item.IsUnder(x,y))
+				if (item.IsUnder(location.X, location.Y))
 					return item;
 			return null;
 		}
 
-		public void AddItem(Items.Item.Type itemType, bool isMirrored, int x, int y)
+		public void AddItem(Items.Item.Type itemType, bool isMirrored, Point location)
 		{
-			mItems.Add(new Items.Item(itemType, isMirrored, x, y));
+			mItems.Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
 		}
 		#endregion
 

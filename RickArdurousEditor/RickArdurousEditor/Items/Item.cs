@@ -55,6 +55,12 @@ namespace RickArdurousEditor.Items
 			mIsMirror = !mIsMirror;
 			UpdateSprite();
 		}
+
+		public void Move(Point location)
+		{
+			mX = location.X;
+			mY = location.Y;
+		}
 		#endregion
 
 		public bool IsUnder(int x, int y)
