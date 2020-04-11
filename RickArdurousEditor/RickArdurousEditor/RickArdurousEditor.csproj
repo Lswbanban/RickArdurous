@@ -89,5 +89,8 @@
   <ItemGroup>
     <None Include="Resources\DeleteIcon.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MainApplicationIcon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
