@@ -13,7 +13,7 @@ namespace RickArdurousEditor
 			gc.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			gc.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
 		}
 
 		private static void CreateTaintedAndMirroredImage(Bitmap sourceImage, Rectangle sourceRectangle, ref Bitmap resultImage, bool shouldMirror, float red, float green, float blue)
