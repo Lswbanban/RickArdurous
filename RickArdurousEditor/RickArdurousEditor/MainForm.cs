@@ -17,6 +17,7 @@ namespace RickArdurousEditor
 		// current selection
 		private byte mCurrentSelectedSpriteId = 0;
 		private Items.Item mCurrentSelectedItem = null;
+		private Point mCurrentSelectedItemGrabDelta;
 
 		// the coordinates of the current part of the level which is visible
 		private Point mMapCamera;
@@ -125,7 +126,8 @@ namespace RickArdurousEditor
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			mMap.Save(Application.StartupPath + @"\MapTest.cpp");
+			//mMap.Save(Application.StartupPath + @"\MapTest.cpp");
+			mMap.Save(Application.StartupPath + Properties.Settings.Default.GameRelativePath + @"MapData.cpp");
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -207,7 +209,10 @@ namespace RickArdurousEditor
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
-					mCurrentSelectedItem = mMap.GetItemAt(ConvertMouseCoordToLevelCoord(e.Location));
+					Point mouseInLevelCoord = ConvertMouseCoordToLevelCoord(e.Location);
+					mCurrentSelectedItem = mMap.GetItemAt(mouseInLevelCoord);
+					if (mCurrentSelectedItem != null)
+						mCurrentSelectedItemGrabDelta = new Point(mCurrentSelectedItem.X - mouseInLevelCoord.X, mCurrentSelectedItem.Y - mouseInLevelCoord.Y);
 					break;
 			}
 		}
@@ -219,7 +224,10 @@ namespace RickArdurousEditor
 				case MouseButtons.Left:
 					if (mCurrentSelectedItem != null)
 					{
-						mCurrentSelectedItem.Move(ConvertMouseCoordToLevelCoord(e.Location));
+						Point newLocation = ConvertMouseCoordToLevelCoord(e.Location);
+						newLocation.X += mCurrentSelectedItemGrabDelta.X;
+						newLocation.Y += mCurrentSelectedItemGrabDelta.Y;
+						mCurrentSelectedItem.Move(newLocation);
 						RedrawLevel();
 					}
 					break;
