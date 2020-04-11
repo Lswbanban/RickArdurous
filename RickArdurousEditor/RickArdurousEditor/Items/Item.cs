@@ -34,10 +34,22 @@ namespace RickArdurousEditor.Items
 		// sprite of the item
 		Bitmap mSprite = null;
 
+		#region get/set
+		public int X
+		{
+			get { return mX; }
+		}
+
+		public int Y
+		{
+			get { return mY; }
+		}
+
 		public Type ItemType
 		{
 			get { return mType; }
 		}
+		#endregion
 
 		public Item(Type type, int uniqueId, bool isMirrored, int x, int y)
 		{
