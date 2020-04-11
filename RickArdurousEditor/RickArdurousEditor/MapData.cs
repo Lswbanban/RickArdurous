@@ -337,11 +337,72 @@ namespace RickArdurousEditor
 			writer.WriteLine("}");
 		}
 
-		private void WriteInitFunctions(StreamWriter writer)
+		private bool IsAPuzzleScreenExit(byte wallId)
 		{
-			WriteInitFunctionForOneScreen(writer, 0, 0, 0);
+			return (wallId >= (byte)WallId.DESTROYABLE_BLOCK) || (wallId == (byte)WallId.LADDER) || (wallId == (byte)WallId.PLATFORM_WITH_LADDER);
 		}
-		
+
+		private int WriteInitFunctions(StreamWriter writer)
+		{
+			// TODO: hard coded start and end
+			int startScreenX = 0;
+			int endScreenX = 0;
+			int startScreenY = 0;
+			int endScreenY = ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+
+			// init the current screen coord with the start one
+			int currentScreenX = startScreenX;
+			int currentScreenY = startScreenY;
+			int screenId = 0;
+			while ((currentScreenX != endScreenX) || (currentScreenY != endScreenY))
+			{
+				// write the init function of the current screen
+				WriteInitFunctionForOneScreen(writer, screenId, currentScreenX, currentScreenY);
+				screenId++;
+
+				// get the next screen coordinates above or below
+				bool isExitFound = false;
+				for (int x = currentScreenX + 1; x < currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 2; ++x)
+				{
+					if ((currentScreenY > 0) && IsAPuzzleScreenExit(mLevel[x, currentScreenY]))
+					{
+						currentScreenY -= ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+						isExitFound = true;
+						break;
+					}
+					if ((currentScreenY < LEVEL_HEIGHT - ARDUBOY_PUZZLE_SCREEN_HEIGHT) && IsAPuzzleScreenExit(mLevel[x, currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
+					{
+						currentScreenY += ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+						isExitFound = true;
+						break;
+					}
+				}
+
+				// get the next screen coordinates
+				if (!isExitFound)
+				{
+					for (int y = currentScreenY + 1; y < currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 2; ++y)
+					{
+						if ((currentScreenX > 0) && IsAPuzzleScreenExit(mLevel[currentScreenX, y]))
+						{
+							currentScreenX -= ARDUBOY_PUZZLE_SCREEN_WIDTH;
+							break;
+						}
+						if ((currentScreenX < LEVEL_WIDTH - ARDUBOY_PUZZLE_SCREEN_WIDTH) && IsAPuzzleScreenExit(mLevel[currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
+						{
+							currentScreenY += ARDUBOY_PUZZLE_SCREEN_WIDTH;
+							break;
+						}
+					}
+				}
+			}
+			// write the init function of the last screen
+			WriteInitFunctionForOneScreen(writer, screenId, endScreenX, endScreenY);
+
+			// return the number of screens
+			return screenId + 1;
+		}
+
 		private void WriteInitFunctionArray(StreamWriter writer, int screenCount)
 		{
 			// write the array of init function
@@ -366,8 +427,8 @@ namespace RickArdurousEditor
 			WriteHeader(writer);
 			WriteLevelData(writer);
 			WriteItemInstances(writer);
-			WriteInitFunctions(writer);
-			WriteInitFunctionArray(writer, 1);
+			int screenCount = WriteInitFunctions(writer);
+			WriteInitFunctionArray(writer, screenCount);
 			writer.Flush();
 			writer.Close();
 		}
