@@ -173,8 +173,8 @@ namespace RickArdurousEditor
 
 		private void PictureBoxItems_MouseClick(object sender, MouseEventArgs e)
 		{
-			int spriteX = e.Location.X / (PictureBoxWallSprites.Image.Width / 2);
-			int spriteY = e.Location.Y / (PictureBoxWallSprites.Image.Height / 8);
+			int spriteX = e.Location.X / (PictureBoxItems.Image.Width / 2);
+			int spriteY = e.Location.Y / (PictureBoxItems.Image.Height / 8);
 			RedrawWallSpriteToolbox(-1, -1);
 			RedrawItemsSpriteToolbox(spriteX, spriteY);
 			// memorise the new selected sprite id
