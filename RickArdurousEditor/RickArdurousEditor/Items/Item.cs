@@ -26,6 +26,9 @@ namespace RickArdurousEditor.Items
 		private int mX = 0;
 		private int mY = 0;
 
+		// unique id used during the export of the map
+		private readonly int mId = 0;
+
 		// sprite of the item
 		Bitmap mSprite = null;
 
@@ -34,9 +37,10 @@ namespace RickArdurousEditor.Items
 			get { return mType; }
 		}
 
-		public Item(Type type, bool isMirrored, int x, int y)
+		public Item(Type type, int uniqueId, bool isMirrored, int x, int y)
 		{
 			mType = type;
+			mId = uniqueId;
 			mX = x;
 			mY = y;
 			UpdateSprite();
@@ -70,9 +74,9 @@ namespace RickArdurousEditor.Items
 		#endregion
 
 		#region read/write
-		private string GetInstanceName(int instanceNumber)
+		private string GetInstanceName()
 		{
-			string instanceNumberString = instanceNumber.ToString();
+			string instanceNumberString = mId.ToString();
 			switch (mType)
 			{
 				case Type.HORIZONTAL_SPIKE:
@@ -82,9 +86,9 @@ namespace RickArdurousEditor.Items
 			return string.Empty;
 		}
 
-		public void WriteInstance(StreamWriter writer, int instanceNumber)
+		public void WriteInstance(StreamWriter writer)
 		{
-			string instanceName = GetInstanceName(instanceNumber);
+			string instanceName = GetInstanceName();
 			switch (mType)
 			{
 				case Type.HORIZONTAL_SPIKE:
@@ -97,6 +101,16 @@ namespace RickArdurousEditor.Items
 						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL);");
 					break;
 			}
+		}
+
+		public void WriteAddToManager(StreamWriter writer)
+		{
+			writer.WriteLine("\tMapManager::AddItem(&" + GetInstanceName() + ");");
+		}
+
+		public void WriteInitPosition(StreamWriter writer)
+		{
+			writer.WriteLine("\t" + GetInstanceName() + ".Init(" + mX.ToString() + ", " + mY.ToString() + ");");
 		}
 		#endregion
 

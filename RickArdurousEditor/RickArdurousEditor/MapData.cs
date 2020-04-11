@@ -19,6 +19,9 @@ namespace RickArdurousEditor
 		// all the items in the level
 		private Dictionary<Items.Item.Type, List<Items.Item>> mItems = new Dictionary<Items.Item.Type, List<Items.Item>>();
 
+		// a variable to give unique id to item instances
+		private int mItemIdsCount = 0;
+
 		private const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
 		private Bitmap[] mWallSpritesMirrored = new Bitmap[WALL_SPRITE_COUNT];
@@ -273,13 +276,12 @@ namespace RickArdurousEditor
 		{
 			if (itemList.Count > 0)
 			{
-				int instanceCounter = 1;
 				foreach (Items.Item item in itemList)
-					item.WriteInstance(writer, instanceCounter++);
+					item.WriteInstance(writer);
 			}
 		}
 
-		private void WriteItems(StreamWriter writer)
+		private void WriteItemInstances(StreamWriter writer)
 		{
 			// merge the two list of spikes
 			List<Items.Item> spikeItemList = new List<Items.Item>();
@@ -291,12 +293,73 @@ namespace RickArdurousEditor
 			WriteItemList(writer, spikeItemList);
 		}
 
+		private List<Items.Item> GetItemsOnScreen(int screenId)
+		{
+			// merge the two list of spikes
+			List<Items.Item> spikeItemList = new List<Items.Item>();
+			if (mItems.ContainsKey(Items.Item.Type.HORIZONTAL_SPIKE))
+				spikeItemList.AddRange(mItems[Items.Item.Type.HORIZONTAL_SPIKE]);
+			if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
+				spikeItemList.AddRange(mItems[Items.Item.Type.VERTICAL_SPIKE]);
+			return spikeItemList;
+		}
+
+		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId)
+		{
+			// get all the items on the specified screen
+			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenId);
+
+			// begin of the init function
+			writer.WriteLine();
+			writer.WriteLine("void InitScreen" + screenId.ToString() + "(bool init)");
+			writer.WriteLine("{");
+
+			// add the items in the map manager
+			writer.WriteLine("\t// Add all the items to the manager");
+			foreach (Items.Item item in itemsOnScreen)
+				item.WriteAddToManager(writer);
+			writer.WriteLine();
+
+			// init the position of the item
+			writer.WriteLine("\t// init the item positions");
+			foreach (Items.Item item in itemsOnScreen)
+				item.WriteInitPosition(writer);
+
+			// finish the init function
+			writer.WriteLine("}");
+		}
+
+		private void WriteInitFunctions(StreamWriter writer)
+		{
+			WriteInitFunctionForOneScreen(writer, 1);
+		}
+		
+		private void WriteInitFunctionArray(StreamWriter writer, int screenCount)
+		{
+			// write the array of init function
+			writer.WriteLine();
+			writer.WriteLine("// The array that contains all the items");
+			writer.WriteLine("ItemInitFunction MapManager::ItemInitFunctions[] = {");
+			writer.Write("\t");
+			for (int i = 0; i < screenCount; ++i)
+				writer.Write("&InitScreen" + i.ToString() + ", ");
+			writer.WriteLine();
+			writer.WriteLine("};");
+			writer.WriteLine();
+
+			// write the number of screen
+			writer.WriteLine("// compute the number of items");
+			writer.WriteLine("const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);");
+		}
+
 		public void Save(string fileName)
 		{
 			StreamWriter writer = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
 			WriteHeader(writer);
 			WriteLevelData(writer);
-			WriteItems(writer);
+			WriteItemInstances(writer);
+			WriteInitFunctions(writer);
+			WriteInitFunctionArray(writer, 1);
 			writer.Flush();
 			writer.Close();
 		}
@@ -434,7 +497,7 @@ namespace RickArdurousEditor
 				mItems.Add(itemType, new List<Items.Item>());
 
 			// add the item in the correct list
-			mItems[itemType].Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
+			mItems[itemType].Add(new Items.Item(itemType, ++mItemIdsCount, isMirrored, location.X, location.Y));
 		}
 
 		public void RemoveItem(Items.Item itemToRemove)
