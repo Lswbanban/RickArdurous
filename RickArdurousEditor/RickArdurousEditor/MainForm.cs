@@ -27,6 +27,8 @@ namespace RickArdurousEditor
 		private Point mLastMouseDownPosition;
 		private Point mLastMouseMovePosition;
 
+		private Pen mSelectedSpritePen = new Pen(Color.Yellow, 3);
+
 		#region init
 		public MainForm()
 		{
@@ -56,10 +58,7 @@ namespace RickArdurousEditor
 
 			// draw the selected sprite
 			if (selectedSpriteX >= 0)
-			{
-				Pen selectedSpritePen = new Pen(Color.Red, 3);
-				gc.DrawRectangle(selectedSpritePen, selectedSpriteX * width, selectedSpriteY * height, width, height);
-			}
+				gc.DrawRectangle(mSelectedSpritePen, selectedSpriteX * width, selectedSpriteY * height, width, height);
 
 			// set the strech image in the picture box
 			PictureBoxWallSprites.Image = spritesImage;
@@ -83,10 +82,7 @@ namespace RickArdurousEditor
 
 			// draw the selected sprite
 			if (selectedItemX >= 0)
-			{
-				Pen selectedSpritePen = new Pen(Color.Red, 3);
-				gc.DrawRectangle(selectedSpritePen, selectedItemX * width, selectedItemY * height, width, height);
-			}
+				gc.DrawRectangle(mSelectedSpritePen, selectedItemX * width, selectedItemY * height, width, height);
 
 			// set the strech image in the picture box
 			PictureBoxItems.Image = spritesImage;
