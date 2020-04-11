@@ -12,9 +12,11 @@ namespace RickArdurousEditor
 {
 	public partial class MainForm : Form
 	{
-		private byte mCurrentSelectedSpriteId = 0;
-
 		private MapData mMap = new MapData();
+
+		// current selection
+		private byte mCurrentSelectedSpriteId = 0;
+		private Items.Item mCurrentSelectedItem = null;
 
 		// the coordinates of the current part of the level which is visible
 		private Point mMapCamera;
@@ -96,7 +98,7 @@ namespace RickArdurousEditor
 				PictureBoxLevel.Image = new Bitmap(PictureBoxLevel.Width, PictureBoxLevel.Height);
 			Graphics gc = Graphics.FromImage(PictureBoxLevel.Image);
 			// ask the map to redraw it
-			mMap.Redraw(gc, PictureBoxLevel.Image.Width, PictureBoxLevel.Image.Height, mMapCamera.X, mMapCamera.Y);
+			mMap.Redraw(gc, PictureBoxLevel.Image.Width, PictureBoxLevel.Image.Height, mMapCamera.X, mMapCamera.Y, mCurrentSelectedItem);
 			// and ask to refraw
 			PictureBoxLevel.Refresh();
 		}
@@ -129,6 +131,17 @@ namespace RickArdurousEditor
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+		#endregion
+
+		#region toolbar events
+		private void toolStripButtonMirrorItem_Click(object sender, EventArgs e)
+		{
+			if (mCurrentSelectedItem != null)
+			{
+				mCurrentSelectedItem.Mirror();
+				RedrawLevel();
+			}
 		}
 		#endregion
 
@@ -197,6 +210,8 @@ namespace RickArdurousEditor
 						Items.Item itemUnderMouse = mMap.GetItemAt(itemX, itemY);
 						if (itemUnderMouse == null)
 							mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, itemX, itemY);
+						else
+							mCurrentSelectedItem = itemUnderMouse;
 					}
 					RedrawLevel();
 					break;

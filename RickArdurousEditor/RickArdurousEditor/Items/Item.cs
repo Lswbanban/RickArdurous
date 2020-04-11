@@ -15,8 +15,11 @@ namespace RickArdurousEditor.Items
 			VERTICAL_SPIKE,
 		}
 
+		private static Pen mSelectedPen = new Pen(Color.Yellow, 2);
+
 		// type of the item
 		private Type mType = Type.HORIZONTAL_SPIKE;
+		private bool mIsMirror = false;
 
 		// coordinate of the Item
 		private int mX = 0;
@@ -30,10 +33,10 @@ namespace RickArdurousEditor.Items
 			mType = type;
 			mX = x;
 			mY = y;
-			UpdateSprite(isMirrored);
+			UpdateSprite();
 		}
 
-		private void UpdateSprite(bool isMirrored)
+		private void UpdateSprite()
 		{
 			switch (mType)
 			{
@@ -41,20 +44,30 @@ namespace RickArdurousEditor.Items
 					mSprite = ImageProvider.GetHorizontalSpikeImage();
 					break;
 				case Type.VERTICAL_SPIKE:
-					mSprite = ImageProvider.GetVerticalSpikeImage(isMirrored);
+					mSprite = ImageProvider.GetVerticalSpikeImage(mIsMirror);
 					break;
 			}
 		}
 
+		#region edition
+		public void Mirror()
+		{
+			mIsMirror = !mIsMirror;
+			UpdateSprite();
+		}
+		#endregion
 
 		public bool IsUnder(int x, int y)
 		{
 			return (x >= mX) && (x < mX + mSprite.Width) && (y >= mY) && (y < mY + mSprite.Height);
 		}
 
-		public void Draw(Graphics gc, int pixelSize, int cameraXWorld, int cameraYWorld)
+		public void Draw(Graphics gc, int pixelSize, int cameraXWorld, int cameraYWorld, bool isSelected)
 		{
-			gc.DrawImage(mSprite, (mX - cameraXWorld) * pixelSize, (mY - cameraYWorld) * pixelSize, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
+			Rectangle drawArea = new Rectangle((mX - cameraXWorld) * pixelSize, (mY - cameraYWorld) * pixelSize, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
+			gc.DrawImage(mSprite, drawArea);
+			if (isSelected)
+				gc.DrawRectangle(mSelectedPen, drawArea);
 		}
 	}
 }
