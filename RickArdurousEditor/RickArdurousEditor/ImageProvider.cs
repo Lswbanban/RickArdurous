@@ -9,7 +9,7 @@ namespace RickArdurousEditor
 	{
 		private static void SetGCInPixelMode(ref Graphics gc)
 		{
-			gc.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+			gc.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 			gc.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			gc.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
@@ -29,6 +29,9 @@ namespace RickArdurousEditor
 			ColorMatrix colorMatrix = new ColorMatrix(colorMatrixElements);
 			imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
+			// set the color key so that the black becomes transparent
+			imageAttributes.SetColorKey(Color.Black, Color.Gray, ColorAdjustType.Bitmap);
+
 			// check if the source rectangle is empty, use the full source image
 			if (sourceRectangle.IsEmpty)
 				sourceRectangle = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
@@ -36,6 +39,7 @@ namespace RickArdurousEditor
 			// paint the image in the mirrored one with the image attribute
 			Graphics gc = Graphics.FromImage(resultImage);
 			SetGCInPixelMode(ref gc);
+			gc.Clear(Color.Transparent);
 			gc.DrawImage(sourceImage,       // source image
 				new Rectangle(0, 0, resultImage.Width, resultImage.Height),  // destination rectangle 
 				sourceRectangle.X,
