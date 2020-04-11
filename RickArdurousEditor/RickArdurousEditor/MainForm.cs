@@ -143,9 +143,21 @@ namespace RickArdurousEditor
 				RedrawLevel();
 			}
 		}
+		private void toolStripButtonDeleteItem_Click(object sender, EventArgs e)
+		{
+			DeleteCurrentSelectedItem();
+		}
 		#endregion
 
 		#region edition event
+
+		private void DeleteCurrentSelectedItem()
+		{
+			mMap.RemoveItem(mCurrentSelectedItem);
+			mCurrentSelectedItem = null;
+			RedrawLevel();
+		}
+
 		private void PictureBoxSprites_MouseClick(object sender, MouseEventArgs e)
 		{
 			int spriteX = e.Location.X / (PictureBoxWallSprites.Image.Width / 2);
@@ -240,6 +252,12 @@ namespace RickArdurousEditor
 			int spriteSizeChange = (e.Delta / 100);
 			mMap.PixelSize = mMap.PixelSize + spriteSizeChange;
 			RedrawLevel();
+		}
+
+		private void MainForm_KeyUp(object sender, KeyEventArgs e)
+		{
+			if ((mCurrentSelectedItem != null) && ((e.KeyCode == Keys.Delete) || (e.KeyCode == Keys.Back)))
+				DeleteCurrentSelectedItem();
 		}
 		#endregion
 	}

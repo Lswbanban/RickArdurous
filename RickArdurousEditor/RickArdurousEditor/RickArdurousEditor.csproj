@@ -86,5 +86,8 @@
   <ItemGroup>
     <None Include="Resources\MirrorIcon.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeleteIcon.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
