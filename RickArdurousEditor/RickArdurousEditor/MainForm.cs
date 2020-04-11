@@ -153,9 +153,12 @@ namespace RickArdurousEditor
 
 		private void DeleteCurrentSelectedItem()
 		{
-			mMap.RemoveItem(mCurrentSelectedItem);
-			mCurrentSelectedItem = null;
-			RedrawLevel();
+			if (mCurrentSelectedItem != null)
+			{
+				mMap.RemoveItem(mCurrentSelectedItem);
+				mCurrentSelectedItem = null;
+				RedrawLevel();
+			}
 		}
 
 		private void PictureBoxSprites_MouseClick(object sender, MouseEventArgs e)

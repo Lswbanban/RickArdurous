@@ -28,8 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.ToolBar = new System.Windows.Forms.ToolStrip();
+			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
 			this.SplitContainerToolAndLevel = new System.Windows.Forms.SplitContainer();
 			this.SplitContainerWallAndItems = new System.Windows.Forms.SplitContainer();
 			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
@@ -41,7 +41,6 @@
 			this.PictureBoxWallSprites = new System.Windows.Forms.PictureBox();
 			this.PictureBoxItems = new System.Windows.Forms.PictureBox();
 			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
-			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonDeleteItem = new System.Windows.Forms.ToolStripButton();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
@@ -68,6 +67,16 @@
 			this.ToolBar.Size = new System.Drawing.Size(800, 25);
 			this.ToolBar.TabIndex = 0;
 			this.ToolBar.Text = "toolStrip1";
+			// 
+			// toolStripButtonMirrorItem
+			// 
+			this.toolStripButtonMirrorItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonMirrorItem.Image = global::RickArdurousEditor.Properties.Resources.MirrorIcon;
+			this.toolStripButtonMirrorItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonMirrorItem.Name = "toolStripButtonMirrorItem";
+			this.toolStripButtonMirrorItem.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonMirrorItem.Text = "Mirror";
+			this.toolStripButtonMirrorItem.Click += new System.EventHandler(this.toolStripButtonMirrorItem_Click);
 			// 
 			// SplitContainerToolAndLevel
 			// 
@@ -189,20 +198,10 @@
 			this.PictureBoxLevel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseUp);
 			this.PictureBoxLevel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseWheel);
 			// 
-			// toolStripButtonMirrorItem
-			// 
-			this.toolStripButtonMirrorItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonMirrorItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonMirrorItem.Image")));
-			this.toolStripButtonMirrorItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonMirrorItem.Name = "toolStripButtonMirrorItem";
-			this.toolStripButtonMirrorItem.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonMirrorItem.Text = "Mirror";
-			this.toolStripButtonMirrorItem.Click += new System.EventHandler(this.toolStripButtonMirrorItem_Click);
-			// 
 			// toolStripButtonDeleteItem
 			// 
 			this.toolStripButtonDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeleteItem.Image")));
+			this.toolStripButtonDeleteItem.Image = global::RickArdurousEditor.Properties.Resources.DeleteIcon;
 			this.toolStripButtonDeleteItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonDeleteItem.Name = "toolStripButtonDeleteItem";
 			this.toolStripButtonDeleteItem.Size = new System.Drawing.Size(23, 22);
