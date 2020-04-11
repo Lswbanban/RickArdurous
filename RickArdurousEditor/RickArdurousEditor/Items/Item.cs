@@ -97,13 +97,13 @@ namespace RickArdurousEditor.Items
 			switch (mType)
 			{
 				case Type.HORIZONTAL_SPIKE:
-					writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::NONE);");
+					writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL);");
 					break;
 				case Type.VERTICAL_SPIKE:
 					if (mIsMirror)
-						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);");
+						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::MIRROR_X);");
 					else
-						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL);");
+						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::NONE);");
 					break;
 			}
 		}
