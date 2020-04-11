@@ -414,10 +414,10 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region draw
-		public void Redraw(Graphics gc, int width, int height, int cameraX, int cameraY)
+		public void Redraw(Graphics gc, int width, int height, int cameraX, int cameraY, Items.Item selectedItem)
 		{
 			DrawLevelWalls(gc, width, height, cameraX, cameraY);
-			DrawItems(gc, width, height, cameraX, cameraY);
+			DrawItems(gc, width, height, cameraX, cameraY, selectedItem);
 		}
 
 		private void DrawLevelWalls(Graphics gc, int width, int height, int cameraX, int cameraY)
@@ -517,12 +517,12 @@ namespace RickArdurousEditor
 			}
 		}
 
-		private void DrawItems(Graphics gc, int width, int height, int cameraX, int cameraY)
+		private void DrawItems(Graphics gc, int width, int height, int cameraX, int cameraY, Items.Item selectedItem)
 		{
 			int cameraXWorld = cameraX * WALL_SPRITE_WIDTH;
 			int cameraYWorld = cameraY * WALL_SPRITE_HEIGHT;
 			foreach (Items.Item item in mItems)
-				item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld);
+				item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld, (selectedItem == item));
 		}
 		#endregion
 	}
