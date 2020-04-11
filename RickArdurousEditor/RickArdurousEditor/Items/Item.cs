@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,11 @@ namespace RickArdurousEditor.Items
 		// sprite of the item
 		Bitmap mSprite = null;
 
+		public Type ItemType
+		{
+			get { return mType; }
+		}
+
 		public Item(Type type, bool isMirrored, int x, int y)
 		{
 			mType = type;
@@ -36,6 +42,7 @@ namespace RickArdurousEditor.Items
 			UpdateSprite();
 		}
 
+		#region edition
 		private void UpdateSprite()
 		{
 			switch (mType)
@@ -49,7 +56,6 @@ namespace RickArdurousEditor.Items
 			}
 		}
 
-		#region edition
 		public void Mirror()
 		{
 			mIsMirror = !mIsMirror;
@@ -60,6 +66,37 @@ namespace RickArdurousEditor.Items
 		{
 			mX = location.X;
 			mY = location.Y;
+		}
+		#endregion
+
+		#region read/write
+		private string GetInstanceName(int instanceNumber)
+		{
+			string instanceNumberString = instanceNumber.ToString();
+			switch (mType)
+			{
+				case Type.HORIZONTAL_SPIKE:
+				case Type.VERTICAL_SPIKE:
+					return "spike" + instanceNumberString;
+			}
+			return string.Empty;
+		}
+
+		public void WriteInstance(StreamWriter writer, int instanceNumber)
+		{
+			string instanceName = GetInstanceName(instanceNumber);
+			switch (mType)
+			{
+				case Type.HORIZONTAL_SPIKE:
+					writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::NONE);");
+					break;
+				case Type.VERTICAL_SPIKE:
+					if (mIsMirror)
+						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);");
+					else
+						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL);");
+					break;
+			}
 		}
 		#endregion
 
