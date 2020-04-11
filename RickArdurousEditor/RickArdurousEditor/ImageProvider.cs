@@ -98,8 +98,9 @@ namespace RickArdurousEditor
 			itemSize -= 2;
 
 			// draw all the items in a grid
-			gc.DrawImage(GetHorizontalSpikeImage(), 0, 0, itemSize, itemSize);
-			gc.DrawImage(GetVerticalSpikeImage(false), 0, itemSize, itemSize, itemSize);
+			gc.DrawImage(GetRickImage(), 0, 0, itemSize, itemSize);
+			gc.DrawImage(GetHorizontalSpikeImage(), 0, itemSize, itemSize, itemSize);
+			gc.DrawImage(GetVerticalSpikeImage(false), 0, itemSize * 2, itemSize, itemSize);
 
 			return itemSpriteImage;
 		}

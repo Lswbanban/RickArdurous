@@ -12,10 +12,9 @@ namespace RickArdurousEditor.Items
 	{
 		public enum Type
 		{
+			RICK,
 			HORIZONTAL_SPIKE,
 			VERTICAL_SPIKE,
-
-			RICK = 255,
 		}
 
 		private static Pen mSelectedPen = new Pen(Color.Yellow, 2);
