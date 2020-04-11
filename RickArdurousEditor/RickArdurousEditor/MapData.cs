@@ -17,7 +17,7 @@ namespace RickArdurousEditor
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
 		// all the items in the level
-		private List<Items.Item> mItems = new List<Items.Item>();
+		private Dictionary<Items.Item.Type, List<Items.Item>> mItems = new Dictionary<Items.Item.Type, List<Items.Item>>();
 
 		private const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
@@ -77,10 +77,6 @@ namespace RickArdurousEditor
 			mLevel[15, 0] = 1;
 			mLevel[1, 1] = 5;
 			mLevel[3, 1] = 7;
-
-			mItems.Add(new Items.Item(Items.Item.Type.HORIZONTAL_SPIKE, false, 10, 10));
-			mItems.Add(new Items.Item(Items.Item.Type.VERTICAL_SPIKE, true, 20, 10));
-			mItems.Add(new Items.Item(Items.Item.Type.VERTICAL_SPIKE, false, 30, 10));
 		}
 
 		private Bitmap GetSprite(Bitmap originalImage, int x, int y, bool isMirrored)
@@ -273,11 +269,34 @@ namespace RickArdurousEditor
 			writer.WriteLine();
 		}
 
+		private void WriteItemList(StreamWriter writer, List<Items.Item> itemList)
+		{
+			if (itemList.Count > 0)
+			{
+				int instanceCounter = 1;
+				foreach (Items.Item item in itemList)
+					item.WriteInstance(writer, instanceCounter++);
+			}
+		}
+
+		private void WriteItems(StreamWriter writer)
+		{
+			// merge the two list of spikes
+			List<Items.Item> spikeItemList = new List<Items.Item>();
+			if (mItems.ContainsKey(Items.Item.Type.HORIZONTAL_SPIKE))
+				spikeItemList.AddRange(mItems[Items.Item.Type.HORIZONTAL_SPIKE]);
+			if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
+				spikeItemList.AddRange(mItems[Items.Item.Type.VERTICAL_SPIKE]);
+			// if there is any spikes, write them
+			WriteItemList(writer, spikeItemList);
+		}
+
 		public void Save(string fileName)
 		{
 			StreamWriter writer = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
 			WriteHeader(writer);
 			WriteLevelData(writer);
+			WriteItems(writer);
 			writer.Flush();
 			writer.Close();
 		}
@@ -401,20 +420,27 @@ namespace RickArdurousEditor
 
 		public Items.Item GetItemAt(Point location)
 		{
-			foreach (Items.Item item in mItems)
-				if (item.IsUnder(location.X, location.Y))
-					return item;
+			foreach (List<Items.Item> itemList in mItems.Values)
+				foreach (Items.Item item in itemList)
+					if (item.IsUnder(location.X, location.Y))
+						return item;
 			return null;
 		}
 
 		public void AddItem(Items.Item.Type itemType, bool isMirrored, Point location)
 		{
-			mItems.Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
+			// add the list of items of the specified type if not already in the dictionary
+			if (!mItems.ContainsKey(itemType))
+				mItems.Add(itemType, new List<Items.Item>());
+
+			// add the item in the correct list
+			mItems[itemType].Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
 		}
 
 		public void RemoveItem(Items.Item itemToRemove)
 		{
-			mItems.Remove(itemToRemove);
+			if (mItems.ContainsKey(itemToRemove.ItemType))
+				mItems[itemToRemove.ItemType].Remove(itemToRemove);
 		}
 		#endregion
 
@@ -526,8 +552,9 @@ namespace RickArdurousEditor
 		{
 			int cameraXWorld = cameraX * WALL_SPRITE_WIDTH;
 			int cameraYWorld = cameraY * WALL_SPRITE_HEIGHT;
-			foreach (Items.Item item in mItems)
-				item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld, (selectedItem == item));
+			foreach (List<Items.Item> itemList in mItems.Values)
+				foreach (Items.Item item in itemList)
+					item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld, (selectedItem == item));
 		}
 		#endregion
 	}
