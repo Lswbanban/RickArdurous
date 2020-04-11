@@ -295,22 +295,27 @@ namespace RickArdurousEditor
 			WriteItemList(writer, spikeItemList);
 		}
 
-		private List<Items.Item> GetItemsOnScreen(int screenId)
+		private List<Items.Item> GetItemsOnScreen(int left, int top)
 		{
-			// merge the two list of spikes
-			List<Items.Item> spikeItemList = new List<Items.Item>();
-			if (mItems.ContainsKey(Items.Item.Type.HORIZONTAL_SPIKE))
-				spikeItemList.AddRange(mItems[Items.Item.Type.HORIZONTAL_SPIKE]);
-			if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
-				spikeItemList.AddRange(mItems[Items.Item.Type.VERTICAL_SPIKE]);
-			spikeItemList.Add(mItems[Items.Item.Type.RICK][0]);
-			return spikeItemList;
+			List<Items.Item> result = new List<Items.Item>();
+			// convert the scren coord to game world coord
+			int leftX = left * WALL_SPRITE_WIDTH;
+			int rightX = (left + ARDUBOY_PUZZLE_SCREEN_WIDTH ) * WALL_SPRITE_WIDTH;
+			int topX = top * WALL_SPRITE_HEIGHT;
+			int bottomX  = (top + ARDUBOY_PUZZLE_SCREEN_HEIGHT) * WALL_SPRITE_HEIGHT;
+			// iterate on all items to find those inside the screen
+			foreach (List<Items.Item> itemList in mItems.Values)
+				foreach (Items.Item item in itemList)
+					if (item.IsInPuzzleScreen(leftX, topX, rightX, bottomX))
+						result.Add(item);
+			// return the list
+			return result;
 		}
 
-		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId)
+		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop)
 		{
 			// get all the items on the specified screen
-			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenId);
+			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenLeft, screenTop);
 
 			// begin of the init function
 			writer.WriteLine();
@@ -334,7 +339,7 @@ namespace RickArdurousEditor
 
 		private void WriteInitFunctions(StreamWriter writer)
 		{
-			WriteInitFunctionForOneScreen(writer, 0);
+			WriteInitFunctionForOneScreen(writer, 0, 0, 0);
 		}
 		
 		private void WriteInitFunctionArray(StreamWriter writer, int screenCount)

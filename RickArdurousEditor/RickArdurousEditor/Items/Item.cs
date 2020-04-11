@@ -128,6 +128,11 @@ namespace RickArdurousEditor.Items
 			return (x >= mX) && (x < mX + mSprite.Width) && (y >= mY) && (y < mY + mSprite.Height);
 		}
 
+		public bool IsInPuzzleScreen(int left, int top, int right, int bottom)
+		{
+			return (mX >= left) && (mX < right) && (mY >= top) && (mY < bottom);
+		}
+
 		public void Draw(Graphics gc, int pixelSize, int cameraXWorld, int cameraYWorld, bool isSelected)
 		{
 			Rectangle drawArea = new Rectangle((mX - cameraXWorld) * pixelSize, (mY - cameraYWorld) * pixelSize, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
