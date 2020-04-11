@@ -80,6 +80,8 @@ namespace RickArdurousEditor
 			mLevel[15, 0] = 1;
 			mLevel[1, 1] = 5;
 			mLevel[3, 1] = 7;
+
+			this.AddItem(Items.Item.Type.RICK, false, new Point(20, 30));
 		}
 
 		private Bitmap GetSprite(Bitmap originalImage, int x, int y, bool isMirrored)
@@ -301,6 +303,7 @@ namespace RickArdurousEditor
 				spikeItemList.AddRange(mItems[Items.Item.Type.HORIZONTAL_SPIKE]);
 			if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
 				spikeItemList.AddRange(mItems[Items.Item.Type.VERTICAL_SPIKE]);
+			spikeItemList.Add(mItems[Items.Item.Type.RICK][0]);
 			return spikeItemList;
 		}
 
@@ -331,7 +334,7 @@ namespace RickArdurousEditor
 
 		private void WriteInitFunctions(StreamWriter writer)
 		{
-			WriteInitFunctionForOneScreen(writer, 1);
+			WriteInitFunctionForOneScreen(writer, 0);
 		}
 		
 		private void WriteInitFunctionArray(StreamWriter writer, int screenCount)
