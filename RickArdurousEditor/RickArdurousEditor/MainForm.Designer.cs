@@ -28,19 +28,21 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.ToolBar = new System.Windows.Forms.ToolStrip();
 			this.SplitContainerToolAndLevel = new System.Windows.Forms.SplitContainer();
 			this.SplitContainerWallAndItems = new System.Windows.Forms.SplitContainer();
-			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
 			this.PictureBoxWallSprites = new System.Windows.Forms.PictureBox();
 			this.PictureBoxItems = new System.Windows.Forms.PictureBox();
 			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
+			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonDeleteItem = new System.Windows.Forms.ToolStripButton();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -50,7 +52,7 @@
 			this.SplitContainerWallAndItems.Panel1.SuspendLayout();
 			this.SplitContainerWallAndItems.Panel2.SuspendLayout();
 			this.SplitContainerWallAndItems.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
+			this.MenuStripMain.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxWallSprites)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxItems)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
@@ -59,7 +61,8 @@
 			// ToolBar
 			// 
 			this.ToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonMirrorItem});
+            this.toolStripButtonMirrorItem,
+            this.toolStripButtonDeleteItem});
 			this.ToolBar.Location = new System.Drawing.Point(0, 24);
 			this.ToolBar.Name = "ToolBar";
 			this.ToolBar.Size = new System.Drawing.Size(800, 25);
@@ -103,15 +106,14 @@
 			this.SplitContainerWallAndItems.SplitterDistance = 255;
 			this.SplitContainerWallAndItems.TabIndex = 1;
 			// 
-			// menuStrip1
+			// MenuStripMain
 			// 
-			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.MenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
-			this.menuStrip1.TabIndex = 2;
-			this.menuStrip1.Text = "MenuStripMain";
+			this.MenuStripMain.Location = new System.Drawing.Point(0, 0);
+			this.MenuStripMain.Name = "MenuStripMain";
+			this.MenuStripMain.Size = new System.Drawing.Size(800, 24);
+			this.MenuStripMain.TabIndex = 2;
 			// 
 			// fileToolStripMenuItem
 			// 
@@ -150,15 +152,6 @@
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// toolStripButtonMirrorItem
-			// 
-			this.toolStripButtonMirrorItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonMirrorItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonMirrorItem.Name = "toolStripButtonMirrorItem";
-			this.toolStripButtonMirrorItem.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonMirrorItem.Text = "toolStripButton1";
-			this.toolStripButtonMirrorItem.Click += new System.EventHandler(this.toolStripButtonMirrorItem_Click);
-			// 
 			// PictureBoxWallSprites
 			// 
 			this.PictureBoxWallSprites.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -196,6 +189,25 @@
 			this.PictureBoxLevel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseUp);
 			this.PictureBoxLevel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseWheel);
 			// 
+			// toolStripButtonMirrorItem
+			// 
+			this.toolStripButtonMirrorItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonMirrorItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonMirrorItem.Image")));
+			this.toolStripButtonMirrorItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonMirrorItem.Name = "toolStripButtonMirrorItem";
+			this.toolStripButtonMirrorItem.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonMirrorItem.Text = "Mirror";
+			this.toolStripButtonMirrorItem.Click += new System.EventHandler(this.toolStripButtonMirrorItem_Click);
+			// 
+			// toolStripButtonDeleteItem
+			// 
+			this.toolStripButtonDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeleteItem.Image")));
+			this.toolStripButtonDeleteItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonDeleteItem.Name = "toolStripButtonDeleteItem";
+			this.toolStripButtonDeleteItem.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonDeleteItem.Click += new System.EventHandler(this.toolStripButtonDeleteItem_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,10 +215,12 @@
 			this.ClientSize = new System.Drawing.Size(800, 450);
 			this.Controls.Add(this.SplitContainerToolAndLevel);
 			this.Controls.Add(this.ToolBar);
-			this.Controls.Add(this.menuStrip1);
-			this.MainMenuStrip = this.menuStrip1;
+			this.Controls.Add(this.MenuStripMain);
+			this.KeyPreview = true;
+			this.MainMenuStrip = this.MenuStripMain;
 			this.Name = "MainForm";
 			this.Text = "Rick Ardurous Editor";
+			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
 			this.ToolBar.ResumeLayout(false);
 			this.ToolBar.PerformLayout();
 			this.SplitContainerToolAndLevel.Panel1.ResumeLayout(false);
@@ -217,8 +231,8 @@
 			this.SplitContainerWallAndItems.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerWallAndItems)).EndInit();
 			this.SplitContainerWallAndItems.ResumeLayout(false);
-			this.menuStrip1.ResumeLayout(false);
-			this.menuStrip1.PerformLayout();
+			this.MenuStripMain.ResumeLayout(false);
+			this.MenuStripMain.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxWallSprites)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxItems)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
@@ -233,7 +247,7 @@
 		private System.Windows.Forms.SplitContainer SplitContainerToolAndLevel;
 		private System.Windows.Forms.PictureBox PictureBoxWallSprites;
 		private System.Windows.Forms.PictureBox PictureBoxLevel;
-		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.MenuStrip MenuStripMain;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
@@ -242,6 +256,7 @@
 		private System.Windows.Forms.SplitContainer SplitContainerWallAndItems;
 		private System.Windows.Forms.PictureBox PictureBoxItems;
 		private System.Windows.Forms.ToolStripButton toolStripButtonMirrorItem;
+		private System.Windows.Forms.ToolStripButton toolStripButtonDeleteItem;
 	}
 }
 

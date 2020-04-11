@@ -411,6 +411,11 @@ namespace RickArdurousEditor
 		{
 			mItems.Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
 		}
+
+		public void RemoveItem(Items.Item itemToRemove)
+		{
+			mItems.Remove(itemToRemove);
+		}
 		#endregion
 
 		#region draw
