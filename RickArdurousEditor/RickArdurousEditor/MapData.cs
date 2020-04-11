@@ -550,6 +550,9 @@ namespace RickArdurousEditor
 
 		private void DrawItems(Graphics gc, int width, int height, int cameraX, int cameraY, Items.Item selectedItem)
 		{
+			// after drawing the map, move the compositing mode to sourc over, for the item to be drawn with transparency
+			gc.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+			// compute the camera position in game world coordinates
 			int cameraXWorld = cameraX * WALL_SPRITE_WIDTH;
 			int cameraYWorld = cameraY * WALL_SPRITE_HEIGHT;
 			foreach (List<Items.Item> itemList in mItems.Values)
