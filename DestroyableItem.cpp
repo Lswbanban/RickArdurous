@@ -6,10 +6,6 @@
 #include "DestroyableItem.h"
 #include "MapManager.h"
 
-DestroyableItem::DestroyableItem(unsigned char flags) : Item(flags)
-{
-}
-
 bool DestroyableItem::CheckLethalDynamite(unsigned char width)
 {
 	// get my y coordinate on screen

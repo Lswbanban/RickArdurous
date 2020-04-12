@@ -8,7 +8,7 @@
 #include "Physics.h"
 #include "MapManager.h"
 
-BlockFragment::BlockFragment() : Item(Item::PropertyFlags::NONE),
+BlockFragment::BlockFragment() :
 StoneFallIndex(Physics::INVALID_FALL_ID)
 {
 }

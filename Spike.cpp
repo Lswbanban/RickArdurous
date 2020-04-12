@@ -7,10 +7,6 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-Spike::Spike(unsigned char flags) : Item(flags)
-{
-}
-
 bool Spike::Update(UpdateStep step)
 {
 	if (step == UpdateStep::DRAW_LETHAL)

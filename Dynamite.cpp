@@ -7,10 +7,6 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-Dynamite::Dynamite() : Item(Item::PropertyFlags::NONE)
-{
-};
-
 void Dynamite::LightUp(int x, int y)
 {
 	X = x;

@@ -7,8 +7,9 @@
 #include "MapManager.h"
 #include "SpriteData.h"
 
-Stalagmite::Stalagmite(unsigned char flags) : DestroyableItem(flags | Item::PropertyFlags::ALIVE)
+Stalagmite::Stalagmite()
 {
+	SetProperty(Item::PropertyFlags::ALIVE);
 }
 
 bool Stalagmite::Update(UpdateStep step)
