@@ -271,26 +271,46 @@ namespace RickArdurousEditor
 			writer.WriteLine();
 		}
 
-		private void WriteItemList(StreamWriter writer, List<Items.Item> itemList)
+		private int GetPuzzleScreenIdFromGameWorldCoord(int x, int y)
 		{
-			if (itemList.Count > 0)
-			{
-				int instanceCounter = 1;
-				foreach (Items.Item item in itemList)
-					item.WriteInstance(writer, instanceCounter++);
-			}
+			return ((y / (ARDUBOY_PUZZLE_SCREEN_HEIGHT * WALL_SPRITE_HEIGHT)) * (LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH)) + (x / (ARDUBOY_PUZZLE_SCREEN_WIDTH * WALL_SPRITE_WIDTH));
+		}
+
+		private int GetMaxItemCount(Items.Item.Type itemType)
+		{
+			int[] maxCountPerSreen = new int[(LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH) * (LEVEL_HEIGHT /ARDUBOY_PUZZLE_SCREEN_HEIGHT)];
+
+			// iterate on the list of all the item of the specified type
+			foreach (Items.Item item in mItems[itemType])
+				maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
+
+			// special case for vertical spike, count them with the horizontal ones
+			if (itemType == Items.Item.Type.HORIZONTAL_SPIKE)
+				foreach (Items.Item item in mItems[Items.Item.Type.VERTICAL_SPIKE])
+					maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
+
+			// then iterate on the max count to find the highest
+			int maxCount = 0;
+			foreach (int count in maxCountPerSreen)
+				if (maxCount < count)
+					maxCount = count;
+
+			// return the max found
+			return maxCount;
 		}
 
 		private void WriteItemInstances(StreamWriter writer)
 		{
-			// merge the two list of spikes
-			List<Items.Item> spikeItemList = new List<Items.Item>();
-			if (mItems.ContainsKey(Items.Item.Type.HORIZONTAL_SPIKE))
-				spikeItemList.AddRange(mItems[Items.Item.Type.HORIZONTAL_SPIKE]);
-			if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
-				spikeItemList.AddRange(mItems[Items.Item.Type.VERTICAL_SPIKE]);
-			// if there is any spikes, write them
-			WriteItemList(writer, spikeItemList);
+			for (int i = 0; i < (int)Items.Item.Type.COUNT; ++i)
+			{
+				// skip the vertical spike, because they are merge with the horizontal ones
+				if (i == (int)Items.Item.Type.VERTICAL_SPIKE)
+					continue;
+				// get the max number of instances that we need 
+				int maxItemCount = GetMaxItemCount((Items.Item.Type)i);
+				for (int j = 1; j <= maxItemCount; ++j)
+					Items.Item.WriteInstance(writer, (Items.Item.Type)i, j);
+			}
 		}
 
 		private List<Items.Item> GetItemsOnScreen(int left, int top)
