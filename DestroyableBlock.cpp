@@ -10,8 +10,9 @@
 
 BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
-DestroyableBlock::DestroyableBlock(unsigned char flags) : DestroyableItem(flags | Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE)
+DestroyableBlock::DestroyableBlock()
 {
+	SetProperty(Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE);
 }
 
 void DestroyableBlock::StaticInit()

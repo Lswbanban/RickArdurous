@@ -8,7 +8,7 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-ArrowLauncher::ArrowLauncher(unsigned char detectionWidth, unsigned char flags) : Item(flags)
+ArrowLauncher::ArrowLauncher(unsigned char detectionWidth)
 {
 	DetectionWidth = detectionWidth;
 	// instantiate my arrow

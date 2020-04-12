@@ -6,7 +6,7 @@
 class Stalactite : public Item
 {
 public:
-	Stalactite(unsigned char flags);
+	Stalactite();
 	virtual bool Update(UpdateStep step);
 
 protected:

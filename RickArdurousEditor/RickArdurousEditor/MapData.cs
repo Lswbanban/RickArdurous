@@ -19,9 +19,6 @@ namespace RickArdurousEditor
 		// all the items in the level
 		private Dictionary<Items.Item.Type, List<Items.Item>> mItems = new Dictionary<Items.Item.Type, List<Items.Item>>();
 
-		// a variable to give unique id to item instances
-		private int mItemIdsCount = 0;
-
 		private const int WALL_SPRITE_COUNT = 16;
 		private Bitmap[] mWallSprites = new Bitmap[WALL_SPRITE_COUNT];
 		private Bitmap[] mWallSpritesMirrored = new Bitmap[WALL_SPRITE_COUNT];
@@ -278,8 +275,9 @@ namespace RickArdurousEditor
 		{
 			if (itemList.Count > 0)
 			{
+				int instanceCounter = 1;
 				foreach (Items.Item item in itemList)
-					item.WriteInstance(writer);
+					item.WriteInstance(writer, instanceCounter++);
 			}
 		}
 
@@ -312,10 +310,24 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		private int IncreaseItemCounterAndGetId(ref int[] itemCount, Items.Item item)
+		{
+			int itemType = (int)item.ItemType;
+			// special case for the spikes, both horizontal and vertical use the same instances
+			if (itemType == (int)Items.Item.Type.VERTICAL_SPIKE)
+				itemType = (int)Items.Item.Type.HORIZONTAL_SPIKE;
+			// increase the counter
+			itemCount[itemType]++;
+			return itemCount[itemType];
+		}
+
 		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop)
 		{
 			// get all the items on the specified screen
 			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenLeft, screenTop);
+
+			// declare an array to count the items per type for the current screen
+			int[] itemCount = new int[(int)Items.Item.Type.COUNT];
 
 			// begin of the init function
 			writer.WriteLine();
@@ -325,13 +337,16 @@ namespace RickArdurousEditor
 			// add the items in the map manager
 			writer.WriteLine("\t// Add all the items to the manager");
 			foreach (Items.Item item in itemsOnScreen)
-				item.WriteAddToManager(writer);
+				item.WriteAddToManager(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 			writer.WriteLine();
+
+			// reset the item count array
+			Array.Clear(itemCount, 0, itemCount.Length);
 
 			// init the position of the item
 			writer.WriteLine("\t// init the item positions");
 			foreach (Items.Item item in itemsOnScreen)
-				item.WriteInitPosition(writer);
+				item.WriteInitPosition(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 
 			// finish the init function
 			writer.WriteLine("}");
@@ -566,7 +581,7 @@ namespace RickArdurousEditor
 				mItems.Add(itemType, new List<Items.Item>());
 
 			// add the item in the correct list
-			mItems[itemType].Add(new Items.Item(itemType, ++mItemIdsCount, isMirrored, location.X, location.Y));
+			mItems[itemType].Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
 		}
 
 		public void RemoveItem(Items.Item itemToRemove)

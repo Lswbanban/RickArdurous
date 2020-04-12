@@ -9,9 +9,10 @@
 #include "Rick.h"
 #include "Physics.h"
 
-Stalactite::Stalactite(unsigned char flags) : Item(flags | Item::PropertyFlags::ALIVE),
+Stalactite::Stalactite() :
 FallAnimSpeedIndex(Physics::INVALID_FALL_ID)
 {
+	SetProperty(Item::PropertyFlags::ALIVE);
 }
 
 bool Stalactite::Update(UpdateStep step)

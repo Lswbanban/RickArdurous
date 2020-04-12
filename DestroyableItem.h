@@ -6,7 +6,6 @@
 class DestroyableItem : public Item
 {
 public:
-	DestroyableItem(unsigned char flags);
 	bool CheckLethalDynamite(unsigned char width);
 	
 private:

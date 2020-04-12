@@ -31,8 +31,7 @@ public:
 		RESPAWN,
 	};
 	
-	Item(unsigned char flags);
-	void Init(int startX, int startY);
+	void Init(int startX, int startY, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;
 	
 	void SetProperty(unsigned char flag) { Property |= flag; }

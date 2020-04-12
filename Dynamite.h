@@ -6,7 +6,6 @@
 class Dynamite : public Item
 {
 public:
-	Dynamite();
 	virtual bool Update(UpdateStep step);
 	void LightUp(int x, int y);
 	void Kill();

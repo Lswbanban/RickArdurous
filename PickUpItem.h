@@ -6,7 +6,7 @@
 class PickUpItem : public Item
 {
 public:
-	PickUpItem() : Item(PropertyFlags::ALIVE) {}
+	PickUpItem() { SetProperty(Item::PropertyFlags::ALIVE); }
 
 protected:
 	void UpdateShineStar(char minX, char maxX, char minY, char maxY);

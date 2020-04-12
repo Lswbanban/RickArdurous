@@ -15,6 +15,9 @@ namespace RickArdurousEditor.Items
 			RICK,
 			HORIZONTAL_SPIKE,
 			VERTICAL_SPIKE,
+
+			// the type count
+			COUNT,
 		}
 
 		private static Pen mSelectedPen = new Pen(Color.Yellow, 2);
@@ -26,9 +29,6 @@ namespace RickArdurousEditor.Items
 		// coordinate of the Item
 		private int mX = 0;
 		private int mY = 0;
-
-		// unique id used during the export of the map
-		private readonly int mId = 0;
 
 		// sprite of the item
 		Bitmap mSprite = null;
@@ -50,10 +50,9 @@ namespace RickArdurousEditor.Items
 		}
 		#endregion
 
-		public Item(Type type, int uniqueId, bool isMirrored, int x, int y)
+		public Item(Type type, bool isMirrored, int x, int y)
 		{
 			mType = type;
-			mId = uniqueId;
 			mX = x;
 			mY = y;
 			UpdateSprite();
@@ -90,9 +89,9 @@ namespace RickArdurousEditor.Items
 		#endregion
 
 		#region read/write
-		private string GetInstanceName()
+		private string GetInstanceName(int instanceNumber)
 		{
-			string instanceNumberString = mId.ToString();
+			string instanceNumberString = instanceNumber.ToString();
 			switch (mType)
 			{
 				case Type.HORIZONTAL_SPIKE:
@@ -102,35 +101,45 @@ namespace RickArdurousEditor.Items
 			return string.Empty;
 		}
 
-		public void WriteInstance(StreamWriter writer)
+		public void WriteInstance(StreamWriter writer, int instanceNumber)
 		{
-			string instanceName = GetInstanceName();
+			string instanceName = GetInstanceName(instanceNumber);
 			switch (mType)
 			{
 				case Type.HORIZONTAL_SPIKE:
-					writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::SPECIAL);");
+					writer.WriteLine("Spike " + instanceName + ";");
 					break;
 				case Type.VERTICAL_SPIKE:
 					if (mIsMirror)
-						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::MIRROR_X);");
+						writer.WriteLine("Spike " + instanceName + ";");
 					else
-						writer.WriteLine("Spike " + instanceName + "(Item::PropertyFlags::NONE);");
+						writer.WriteLine("Spike " + instanceName + ";");
 					break;
 			}
 		}
 
-		public void WriteAddToManager(StreamWriter writer)
+		public void WriteAddToManager(StreamWriter writer, int instanceNumber)
 		{
 			if (mType == Type.RICK)
 				writer.WriteLine("\tMapManager::MemorizeCheckPoint(" + mX.ToString() + ", " + mY.ToString() + ");");
 			else
-				writer.WriteLine("\tMapManager::AddItem(&" + GetInstanceName() + ");");
+				writer.WriteLine("\tMapManager::AddItem(&" + GetInstanceName(instanceNumber) + ");");
 		}
 
-		public void WriteInitPosition(StreamWriter writer)
+		public void WriteInitPosition(StreamWriter writer, int instanceNumber)
 		{
-			if (mType != Type.RICK)
-				writer.WriteLine("\t" + GetInstanceName() + ".Init(" + mX.ToString() + ", " + mY.ToString() + ");");
+			switch (mType)
+			{
+				case Type.HORIZONTAL_SPIKE:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL);");
+					break;
+				case Type.VERTICAL_SPIKE:
+					if (mIsMirror)
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::MIRROR_X);");
+					else
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE);");
+					break;
+			}
 		}
 		#endregion
 
