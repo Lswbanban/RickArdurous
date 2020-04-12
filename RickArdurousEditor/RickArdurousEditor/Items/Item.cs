@@ -91,8 +91,13 @@ namespace RickArdurousEditor.Items
 		#region read/write
 		private string GetInstanceName(int instanceNumber)
 		{
+			return GetInstanceName(mType, instanceNumber);
+		}
+
+		private static string GetInstanceName(Type type, int instanceNumber)
+		{
 			string instanceNumberString = instanceNumber.ToString();
-			switch (mType)
+			switch (type)
 			{
 				case Type.HORIZONTAL_SPIKE:
 				case Type.VERTICAL_SPIKE:
@@ -101,19 +106,14 @@ namespace RickArdurousEditor.Items
 			return string.Empty;
 		}
 
-		public void WriteInstance(StreamWriter writer, int instanceNumber)
+		public static void WriteInstance(StreamWriter writer, Type type, int instanceNumber)
 		{
-			string instanceName = GetInstanceName(instanceNumber);
-			switch (mType)
+			string instanceName = GetInstanceName(type, instanceNumber);
+			switch (type)
 			{
 				case Type.HORIZONTAL_SPIKE:
-					writer.WriteLine("Spike " + instanceName + ";");
-					break;
 				case Type.VERTICAL_SPIKE:
-					if (mIsMirror)
-						writer.WriteLine("Spike " + instanceName + ";");
-					else
-						writer.WriteLine("Spike " + instanceName + ";");
+					writer.WriteLine("Spike " + instanceName + ";");
 					break;
 			}
 		}
