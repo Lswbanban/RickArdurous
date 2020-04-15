@@ -281,13 +281,15 @@ namespace RickArdurousEditor
 			int[] maxCountPerSreen = new int[(LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH) * (LEVEL_HEIGHT /ARDUBOY_PUZZLE_SCREEN_HEIGHT)];
 
 			// iterate on the list of all the item of the specified type
-			foreach (Items.Item item in mItems[itemType])
-				maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
+			if (mItems.ContainsKey(itemType))
+				foreach (Items.Item item in mItems[itemType])
+					maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
 
 			// special case for vertical spike, count them with the horizontal ones
 			if (itemType == Items.Item.Type.HORIZONTAL_SPIKE)
-				foreach (Items.Item item in mItems[Items.Item.Type.VERTICAL_SPIKE])
-					maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
+				if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
+					foreach (Items.Item item in mItems[Items.Item.Type.VERTICAL_SPIKE])
+						maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
 
 			// then iterate on the max count to find the highest
 			int maxCount = 0;

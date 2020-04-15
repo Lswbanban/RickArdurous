@@ -1,6 +1,8 @@
 #ifndef _ITEM_H_
 #define _ITEM_H_
 
+#include "Progress.h"
+
 class Item
 {
 public:
@@ -34,8 +36,8 @@ public:
 	void Init(int startX, int startY, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;
 	
-	void SetProperty(unsigned char flag) { Property |= flag; }
-	void ClearProperty(unsigned char flag) { Property &= ~flag; }
+	void SetProperty(unsigned char flag) { Property |= flag; if (flag & PropertyFlags::ALIVE) Progress::SetItemAlive(this, true); }
+	void ClearProperty(unsigned char flag) { Property &= ~flag; if (flag & PropertyFlags::ALIVE) Progress::SetItemAlive(this, false); }
 	void InverseProperty(unsigned char flag) { Property = (Property & ~flag) | (~Property & flag); }
 	bool IsPropertySet(unsigned char flag) { return (Property & flag) == flag; }
 

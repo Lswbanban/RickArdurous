@@ -7,6 +7,7 @@
 #include "MapManager.h"
 #include "HUD.h"
 #include "DestroyableBlock.h"
+#include "Progress.h"
 
 // instance of the arduboy class
 CustomArduboy arduboy;
@@ -27,6 +28,7 @@ void setup()
 	// call init function of some managers
 	MapManager::Init(true);
 	DestroyableBlock::StaticInit();
+	Progress::ResetProgress();
 }
 
 void loop()

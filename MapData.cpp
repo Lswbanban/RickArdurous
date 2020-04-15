@@ -30,42 +30,35 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(2,5),ID(5,0),ID(5,0),ID(5,6),ID(0,1),ID(2,6),ID(15,2),ID(11,15),ID(1,0),ID(15,15),
 	ID(15,14),ID(11,15),ID(1,0),ID(15,15),
 	ID(15,14),ID(11,15),ID(1,0),ID(15,15),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
+	ID(15,14),ID(11,15),ID(15,15),ID(2,0),
+	ID(15,14),ID(11,15),ID(15,15),ID(2,0),
+	ID(15,14),ID(11,15),ID(15,15),ID(2,0),
+	ID(0,15),ID(13,11),ID(0,15),ID(15,15),ID(1,0),
+	ID(0,15),ID(9,0),ID(15,3),ID(11,0),ID(15,15),ID(15,1),
+	ID(0,0),ID(0,0),ID(0,0),ID(0,0),ID(0,0),ID(0,0),ID(0,0),ID(0,0),ID(15,15),ID(15,1),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,69,72,75,78,81,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,70,74,78,83,89,};
 
-Spike spike1;
-Spike spike2;
-Spike spike3;
-Spike spike4;
+Enemy en;
 
 void InitScreen0(bool init)
 {
 	// Add all the items to the manager
-	MapManager::MemorizeCheckPoint(20, 30);
-	MapManager::AddItem(&spike1);
-	MapManager::AddItem(&spike2);
-
+	MapManager::MemorizeCheckPoint(73, 34);
+	MapManager::AddItem(&en);
+	
 	// init the item positions
-	spike1.Init(56, 48, Item::PropertyFlags::SPECIAL);
-	spike2.Init(76, 8, Item::PropertyFlags::NONE);
+	en.Init(20,30, Item::PropertyFlags::NONE, init);
 }
 
 void InitScreen1(bool init)
 {
 	// Add all the items to the manager
-	MapManager::AddItem(&spike1);
-	MapManager::AddItem(&spike2);
-
+	MapManager::AddItem(&en);
+	
 	// init the item positions
-	spike1.Init(27, 85, Item::PropertyFlags::MIRROR_X);
-	spike2.Init(78, 103, Item::PropertyFlags::NONE);
+	en.Init(20, 100, Item::PropertyFlags::NONE, init);
 }
 
 // The array that contains all the items
