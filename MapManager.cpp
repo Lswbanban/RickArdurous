@@ -72,6 +72,7 @@ namespace MapManager
 	void AnimateShutterTransition();
 	void BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY);
 	void EndSwitchPuzzleScreen();
+	unsigned char GetCurrentPuzzleScreenId() { return CurrentPuzzleScreenId; }
 	char GetCameraSpeed(char step, char subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
