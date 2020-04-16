@@ -12,7 +12,6 @@
 Stalactite::Stalactite() :
 FallAnimSpeedIndex(Physics::INVALID_FALL_ID)
 {
-	SetProperty(Item::PropertyFlags::ALIVE);
 }
 
 bool Stalactite::Update(UpdateStep step)
@@ -93,7 +92,6 @@ bool Stalactite::Update(UpdateStep step)
 		case Item::UpdateStep::RESPAWN:
 		{
 			ClearProperty(Item::PropertyFlags::SPECIAL);
-			SetProperty(Item::PropertyFlags::ALIVE);
 			SparksAnimFrameId = 0;
 			break;
 		}
