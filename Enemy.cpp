@@ -14,25 +14,19 @@ const char WALK_AND_WAIT_ANIM_SPEED[] = { 8, 13, 6, 8 };
 Enemy::Enemy() :
 PhysicsId(Physics::INVALID_FALL_ID)
 {
-	
 }
 
 void Enemy::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
 {
-	// if we are not forced to respaw, ask our alive status to the progress
-	if (!shouldRespawn)
-		shouldRespawn = Progress::IsItemAlive(this);
-
-	// set the alive flag
-	if (shouldRespawn)
-		flags |= Item::PropertyFlags::ALIVE;
-	
 	// mummy and Skeleton are trap trigerer but not the scorpion
-	if (!IsScorpion())
+	// so set the trap trigerer flag if not scorpion (i.e. special flag not set)
+	// alos, we need to test on the flag specified as parameter,
+	// because the IsScorpion() function is testing our property flag which is not set yet.
+	if ((flags & Item::PropertyFlags::SPECIAL) == 0)
 		flags |= Item::PropertyFlags::TRAP_TRIGERER;
 
-	// set the property flags
-	Item::Init(startX, startY, flags);
+	// call the init function of the base class
+	Item::Init(startX, startY, flags, shouldRespawn);
 };
 
 bool Enemy::Update(UpdateStep step)

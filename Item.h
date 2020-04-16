@@ -34,6 +34,7 @@ public:
 	};
 	
 	void Init(int startX, int startY, unsigned char flags);
+	void Init(int startX, int startY, unsigned char flags, bool shouldRespawn);
 	virtual bool Update(UpdateStep step) = 0;
 	
 	void SetProperty(unsigned char flag) { Property |= flag; if (flag & PropertyFlags::ALIVE) Progress::SetItemAlive(this, true); }
