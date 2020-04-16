@@ -40,7 +40,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,70,74,78,83,89,};
 
-DestroyableBlock en;
+ArrowLauncher en;
 
 void InitScreen0(bool init)
 {
@@ -48,7 +48,7 @@ void InitScreen0(bool init)
 	MapManager::MemorizeCheckPoint(73, 34);
 	
 	// init the item positions
-	en.Init(20,50, Item::PropertyFlags::DESTROYABLE_BLOCK, init);
+	en.Init(20,50, Item::PropertyFlags::NONE, 80);
 }
 
 void InitScreen1(bool init)
@@ -56,7 +56,7 @@ void InitScreen1(bool init)
 	// Add all the items to the manager
 	
 	// init the item positions
-	en.Init(20, 114, Item::PropertyFlags::DESTROYABLE_BLOCK, init);
+	en.Init(80, 114, Item::PropertyFlags::MIRROR_X, 80);
 }
 
 // The array that contains all the items
