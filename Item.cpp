@@ -5,8 +5,9 @@
 #include "RickArdurous.h"
 #include "Item.h"
 #include "Progress.h"
+#include "MapManager.h"
 
-void Item::Init(int startX, int startY, unsigned char flags)
+void Item::CommonInit(int startX, int startY, unsigned char flags)
 {
 	X = startX;
 	Y = startY;
@@ -14,6 +15,14 @@ void Item::Init(int startX, int startY, unsigned char flags)
 	Property = flags;
 	// call the update virtual function with the Respawn step, for specific data init
 	Update(Item::UpdateStep::RESPAWN);
+}
+
+void Item::Init(int startX, int startY, unsigned char flags)
+{
+	// for items that can never die, add it to the manager anyway
+	MapManager::AddItem(this);
+	// and call the common init function
+	CommonInit(startX, startY, flags);
 }
 
 void Item::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
@@ -24,11 +33,20 @@ void Item::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
 	// set the alive flag
 	if (shouldRespawn)
 	{
-		// set the alive flag if the flags variable
+		// set the alive flag in the flags variable
 		flags |= Item::PropertyFlags::ALIVE;
 		// warn also the progress, because the general init function will override the property flag and not call the SetProperty() function
 		Progress::SetItemAlive(this, true);
+		// add the item to the manager
+		MapManager::AddItem(this);
+		// and call the common init function
+		CommonInit(startX, startY, flags);
 	}
-	// and call the other init function
-	Init(startX, startY, flags);
+	else
+	{
+		// warn the progress, because the general init function will override the property flag and not call the ClearProperty() function
+		Progress::SetItemAlive(this, false);
+		// remove the item from the manager
+		MapManager::RemoveItem(this);
+	}
 };

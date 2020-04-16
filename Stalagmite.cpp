@@ -7,11 +7,6 @@
 #include "MapManager.h"
 #include "SpriteData.h"
 
-Stalagmite::Stalagmite()
-{
-	SetProperty(Item::PropertyFlags::ALIVE);
-}
-
 bool Stalagmite::Update(UpdateStep step)
 {
 	switch (step)
@@ -65,7 +60,6 @@ bool Stalagmite::Update(UpdateStep step)
 		case Item::UpdateStep::RESPAWN:
 		{
 			SparksAnimFrameId = 0;
-			SetProperty(Item::PropertyFlags::ALIVE);
 			break;
 		}
 	}

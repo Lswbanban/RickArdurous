@@ -7,7 +7,6 @@ class Enemy : public Item
 {
 public:
 	Enemy();
-	void Init(int startX, int startY, unsigned char flags, bool shouldRespawn);
 	virtual bool Update(UpdateStep step);
 	
 private:

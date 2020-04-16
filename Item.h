@@ -49,6 +49,9 @@ protected:
 	int X;
 	int Y;
 	unsigned char Property = 0;
+	
+private:
+	void CommonInit(int startX, int startY, unsigned char flags);
 };
 
 #endif

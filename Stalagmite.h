@@ -6,8 +6,8 @@
 class Stalagmite : public DestroyableItem
 {
 public:
-	Stalagmite();
 	virtual bool Update(UpdateStep step);
+
 private:
 	static constexpr int SPARKS_ANIM_SPEED = 3;
 

@@ -40,25 +40,23 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,70,74,78,83,89,};
 
-Statuette en;
+DestroyableBlock en;
 
 void InitScreen0(bool init)
 {
 	// Add all the items to the manager
 	MapManager::MemorizeCheckPoint(73, 34);
-	MapManager::AddItem(&en);
 	
 	// init the item positions
-	en.Init(20,40, Item::PropertyFlags::NONE, init);
+	en.Init(20,50, Item::PropertyFlags::DESTROYABLE_BLOCK, init);
 }
 
 void InitScreen1(bool init)
 {
 	// Add all the items to the manager
-	MapManager::AddItem(&en);
 	
 	// init the item positions
-	en.Init(20, 110, Item::PropertyFlags::NONE, init);
+	en.Init(20, 114, Item::PropertyFlags::DESTROYABLE_BLOCK, init);
 }
 
 // The array that contains all the items
