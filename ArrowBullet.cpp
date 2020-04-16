@@ -94,7 +94,7 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 void ArrowBullet::KillBulletWithoutSparks()
 {
 	ClearProperty(Item::PropertyFlags::ALIVE);
-	MapManager::RemoveItem(this);
+	SparksAnimFrameId = SpriteData::SPARKS_SPRITE_FRAME_COUNT;
 }
 
 bool ArrowBullet::Update(UpdateStep step)
@@ -112,10 +112,13 @@ bool ArrowBullet::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// before erasing first check if some pixels of the ray cast has been erased (which means the bullet has hit something)
-				if ((SearchForPixelColorAlongBulletRay(BLACK) != NO_PIXEL_FOUND))
+				bool shouldKillBullet = (SearchForPixelColorAlongBulletRay(BLACK) != NO_PIXEL_FOUND);
+				if (shouldKillBullet)
 					KillBulletWithoutSparks();
 				// now erase the bullet ray
 				DrawBulletRay(BLACK);
+				// return the value depending if the bullet was killed
+				return shouldKillBullet;
 			}
 			break;
 			
@@ -154,6 +157,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				{
 					// if the bullet is outside the screen, kill it immediately without playing sparks
 					KillBulletWithoutSparks();
+					return true;
 				}
 			}
 			else

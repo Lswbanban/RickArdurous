@@ -32,6 +32,7 @@ bool Dynamite::Update(UpdateStep step)
 				if (DynamiteAnimFrameId == SpriteData::DYNAMITE_SPRITE_FRAME_COUNT)
 				{
 					Kill();
+					return true;
 				}
 				else
 				{
@@ -43,7 +44,11 @@ bool Dynamite::Update(UpdateStep step)
 			
 		case UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 			// check if the dynamite is alive
-			if ((DynamiteAnimFrameId > -1) && (DynamiteAnimFrameId < 6))
+			if (DynamiteAnimFrameId == -1)
+			{
+				return true;
+			}
+			else if (DynamiteAnimFrameId < 6)
 			{
 				// We are in fuse consume part, increase the dynamite frame id for consuming the fuse
 				if (arduboy.everyXFrames(DYNAMITE_ANIM_SPEED))
@@ -70,7 +75,6 @@ void Dynamite::Kill()
 {
 	DynamiteAnimFrameId = -1;
 	ClearProperty(Item::PropertyFlags::ALIVE);
-	MapManager::RemoveItem(this);
 }
 
 void Dynamite::Draw()
