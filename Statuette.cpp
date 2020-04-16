@@ -8,10 +8,6 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-Statuette::Statuette() : PickUpItem()
-{
-};
-
 bool Statuette::Update(UpdateStep step)
 {
 	switch (step)
@@ -33,10 +29,6 @@ bool Statuette::Update(UpdateStep step)
 				// draw the shiny star
 				UpdateShineStar(-2, 3, -2, 4);
 			}
-			break;
-			
-		case UpdateStep::RESPAWN:
-			SetProperty(Item::PropertyFlags::ALIVE);
 			break;
 	}
 	return false;

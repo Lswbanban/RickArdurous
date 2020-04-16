@@ -40,7 +40,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,70,74,78,83,89,};
 
-Enemy en;
+Statuette en;
 
 void InitScreen0(bool init)
 {
@@ -49,7 +49,7 @@ void InitScreen0(bool init)
 	MapManager::AddItem(&en);
 	
 	// init the item positions
-	en.Init(20,30, Item::PropertyFlags::NONE, init);
+	en.Init(20,40, Item::PropertyFlags::NONE, init);
 }
 
 void InitScreen1(bool init)
@@ -58,7 +58,7 @@ void InitScreen1(bool init)
 	MapManager::AddItem(&en);
 	
 	// init the item positions
-	en.Init(20, 100, Item::PropertyFlags::NONE, init);
+	en.Init(20, 110, Item::PropertyFlags::NONE, init);
 }
 
 // The array that contains all the items

@@ -8,10 +8,6 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-DynamiteCrate::DynamiteCrate() : PickUpItem()
-{
-};
-
 bool DynamiteCrate::Update(UpdateStep step)
 {
 	switch (step)
@@ -35,9 +31,6 @@ bool DynamiteCrate::Update(UpdateStep step)
 			}
 			break;
 			
-		case UpdateStep::RESPAWN:
-			SetProperty(Item::PropertyFlags::ALIVE);
-			break;
 	}
 	return false;
 }

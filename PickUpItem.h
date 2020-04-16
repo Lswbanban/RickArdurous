@@ -5,9 +5,6 @@
 
 class PickUpItem : public Item
 {
-public:
-	PickUpItem() { SetProperty(Item::PropertyFlags::ALIVE); }
-
 protected:
 	void UpdateShineStar(char minX, char maxX, char minY, char maxY);
 	bool DoesRickPickMeUp(unsigned char width, unsigned char height);
