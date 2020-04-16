@@ -10,11 +10,6 @@
 
 BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
-DestroyableBlock::DestroyableBlock()
-{
-	SetProperty(Item::PropertyFlags::DESTROYABLE_BLOCK | Item::PropertyFlags::ALIVE);
-}
-
 void DestroyableBlock::StaticInit()
 {
 	for (unsigned char i = 0; i < FRAGMENT_COUNT; ++i)
@@ -43,12 +38,13 @@ bool DestroyableBlock::Update(UpdateStep step)
 		{
 			// if we are updated, that means we are alive, so no need to check the property flag
 			arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::DestroyableBlock, SpriteData::DESTROYABLE_BLOCK_SPRITE_WIDTH, SpriteData::DESTROYABLE_BLOCK_SPRITE_HEIGHT, WHITE, false);
+			break;
 		}
-		break;
-
+		
 		case Item::UpdateStep::RESPAWN:
 		{
-			SetProperty(Item::PropertyFlags::ALIVE);
+			// set again the destroyable property flag because it may have been cleared in the Init function
+			SetProperty(Item::PropertyFlags::DESTROYABLE_BLOCK);
 			break;
 		}
 	}

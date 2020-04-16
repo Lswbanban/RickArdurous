@@ -16,19 +16,6 @@ PhysicsId(Physics::INVALID_FALL_ID)
 {
 }
 
-void Enemy::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
-{
-	// mummy and Skeleton are trap trigerer but not the scorpion
-	// so set the trap trigerer flag if not scorpion (i.e. special flag not set)
-	// alos, we need to test on the flag specified as parameter,
-	// because the IsScorpion() function is testing our property flag which is not set yet.
-	if ((flags & Item::PropertyFlags::SPECIAL) == 0)
-		flags |= Item::PropertyFlags::TRAP_TRIGERER;
-
-	// call the init function of the base class
-	Item::Init(startX, startY, flags, shouldRespawn);
-};
-
 bool Enemy::Update(UpdateStep step)
 {
 	switch (step)
@@ -147,8 +134,12 @@ bool Enemy::Update(UpdateStep step)
 		}
 		case Item::UpdateStep::RESPAWN:
 		{
-			if (IsPropertySet(Item::PropertyFlags::ALIVE))
-				InitWalk();
+			// mummy and Skeleton are trap trigerer but not the scorpion
+			// so set this flag in the respawn because the Property flag has been overriden in the Init function
+			if (!IsScorpion())
+				SetProperty(Item::PropertyFlags::TRAP_TRIGERER);
+			// and start to walk (if we are not alive, this update is not even called)
+			InitWalk();
 			break;
 		}
 	}
