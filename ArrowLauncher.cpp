@@ -8,11 +8,18 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-ArrowLauncher::ArrowLauncher(unsigned char detectionWidth)
+ArrowLauncher::ArrowLauncher()
 {
-	DetectionWidth = detectionWidth;
 	// instantiate my arrow
 	Arrow = new ArrowBullet(true);
+}
+
+void ArrowLauncher::Init(int startX, int startY, unsigned char flags, unsigned char detectionWidth)
+{
+	// set my detection
+	DetectionWidth = detectionWidth;
+	// and call the item init
+	Item::Init(startX, startY, flags);
 }
 
 bool ArrowLauncher::Update(UpdateStep step)
