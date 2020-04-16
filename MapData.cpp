@@ -40,7 +40,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,70,74,78,83,89,};
 
-ArrowLauncher en;
+Stalactite en;
 
 void InitScreen0(bool init)
 {
@@ -48,7 +48,7 @@ void InitScreen0(bool init)
 	MapManager::MemorizeCheckPoint(73, 34);
 	
 	// init the item positions
-	en.Init(20,50, Item::PropertyFlags::NONE, 80);
+	en.Init(50, 5, Item::PropertyFlags::NONE, init);
 }
 
 void InitScreen1(bool init)
@@ -56,7 +56,7 @@ void InitScreen1(bool init)
 	// Add all the items to the manager
 	
 	// init the item positions
-	en.Init(80, 114, Item::PropertyFlags::MIRROR_X, 80);
+	en.Init(80, 70, Item::PropertyFlags::MIRROR_X, init);
 }
 
 // The array that contains all the items
