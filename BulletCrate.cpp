@@ -8,10 +8,6 @@
 #include "Rick.h"
 #include "MapManager.h"
 
-BulletCrate::BulletCrate() : PickUpItem()
-{
-};
-
 bool BulletCrate::Update(UpdateStep step)
 {
 	switch (step)
@@ -33,10 +29,6 @@ bool BulletCrate::Update(UpdateStep step)
 				// draw the shiny star
 				UpdateShineStar(-2, 9, 1, 6);
 			}
-			break;
-			
-		case UpdateStep::RESPAWN:
-			SetProperty(Item::PropertyFlags::ALIVE);
 			break;
 	}
 	return false;
