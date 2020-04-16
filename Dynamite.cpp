@@ -32,7 +32,6 @@ bool Dynamite::Update(UpdateStep step)
 				if (DynamiteAnimFrameId == SpriteData::DYNAMITE_SPRITE_FRAME_COUNT)
 				{
 					Kill();
-					return true;
 				}
 				else
 				{
@@ -71,6 +70,7 @@ void Dynamite::Kill()
 {
 	DynamiteAnimFrameId = -1;
 	ClearProperty(Item::PropertyFlags::ALIVE);
+	MapManager::RemoveItem(this);
 }
 
 void Dynamite::Draw()
