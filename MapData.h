@@ -18,8 +18,8 @@ namespace MapManager
 	extern ItemInitFunction ItemInitFunctions[];
 	extern const unsigned char PUZZLE_SCREEN_COUNT;
 	
-	// the max number of items
-	static constexpr int MAX_LIVING_ITEM_COUNT_PER_PUZZLE_SCREEN = 4;
+	// init the progress with all the living items
+	void InitProgress();
 };
 
 #endif

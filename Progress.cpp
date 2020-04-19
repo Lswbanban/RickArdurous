@@ -7,145 +7,80 @@
 #include "Progress.h"
 #include "MapManager.h"
 #include "MapData.h"
+#include "Item.h"
 
 namespace Progress
 {
 	static constexpr int PROGRESSION_SAVE_ADDRESS = 16;
-	
-	Item * DeadItems[MapManager::MAX_LIVING_ITEM_COUNT_PER_PUZZLE_SCREEN];
-	unsigned char DeadItemsCount = 0;
+	// the size of char used to save the progress is 2 bytes for the item adress + one byte for every 8 puzzle screen
+	const unsigned char ITEM_PROGRESS_SAVE_SIZE = (MapManager::PUZZLE_SCREEN_COUNT >> 3) + 3;
+
+	// a variable to memorize how many living items have been initialized and saved in the eeprom
+	unsigned char LivingItemsCount = 0;
 	
 	// private functions
-	void AddItemToDeadPool(Item * item);
-	void RemoveItemFromDeadPool(unsigned char index);
-	void RemoveItemFromDeadPool(Item * item);
+	void UpdateBit(int eepromAddress, char bit, bool shouldSet);
+	bool GetBit(int eepromAddress, char bit);
 }
 
 void Progress::ResetProgress()
 {
-	DeadItemsCount = 0;
 }
 
-bool Progress::IsItemAlive(Item * item)
+void Progress::InitItem(Item * item, unsigned char index)
 {
-	for (unsigned char i = 0; i < DeadItemsCount; ++i)
-		if (DeadItems[i] == item)
-			return false;
-	return true;
+	int eepromAddress = PROGRESSION_SAVE_ADDRESS + (ITEM_PROGRESS_SAVE_SIZE * index);
+	EEPROM.put(eepromAddress, (unsigned int)item);
+	eepromAddress += 2;
+	for (unsigned char i = 0; i < ITEM_PROGRESS_SAVE_SIZE - 2; ++i)
+		EEPROM.update(eepromAddress++, (unsigned char)0);
+	// save the index in the count, assuming the function will be called in order (last index called last)
+	LivingItemsCount = index + 1;
 }
 
-void Progress::SetItemAlive(Item * item, bool isAlive)
+void Progress::UpdateBit(int eepromAddress, char bit, bool shouldSet)
 {
-	if (isAlive)
-		RemoveItemFromDeadPool(item);
+	// read and update the bit for the screen to save
+	unsigned char currentByteValue = EEPROM.read(eepromAddress);
+	// change the bit for the current screen to save, according to the specified parameter
+	if (shouldSet)
+		currentByteValue |= (1 << bit);
 	else
-		AddItemToDeadPool(item);
+		currentByteValue &= ~(1 << bit);
+	// and update the byte in the eeprom
+	EEPROM.update(eepromAddress, currentByteValue);
+}
+
+bool Progress::GetBit(int eepromAddress, char bit)
+{
+	// read and update the bit for the screen to save
+	unsigned char currentByteValue = EEPROM.read(eepromAddress);
+	return (currentByteValue & (1 << bit));
 }
 
 void Progress::SaveAndLoadProgress(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)
 {
-	unsigned char screenByteNumber = currentScreenIdToSave >> 3;
-	unsigned char screenBitNumber = currentScreenIdToSave % 8;
+	// compute the screen byte and bit for the save and load
+	unsigned char screenToSaveByteNumber = 2 + (currentScreenIdToSave >> 3);
+	unsigned char screenToSaveBitNumber = currentScreenIdToSave % 8;
+	unsigned char screenToLoadByteNumber = 2 + (newScreenIdToLoad >> 3);
+	unsigned char screenToLoadBitNumber = newScreenIdToLoad % 8;
 	
-	// compute how many bytes we need to store one bit for all the puzzle screen
-	unsigned char byteCount = MapManager::PUZZLE_SCREEN_COUNT >> 3;
-	if ((MapManager::PUZZLE_SCREEN_COUNT % 8) != 0)
-		byteCount++;
-	
+	// reset the eeprom address at the begining of the progress save
 	int eepromAddress = PROGRESSION_SAVE_ADDRESS;
-	for (unsigned char i = 0; i < MapManager::MAX_LIVING_ITEM_COUNT_PER_PUZZLE_SCREEN; ++i)
+	for (unsigned char i = 0; i < LivingItemsCount; ++i)
 	{
-		// save the item eepromAddress
-		int itemAddress;
+		// get the item address
+		unsigned int itemAddress;
 		EEPROM.get(eepromAddress, itemAddress);
-		// if the itemAddress is null, that means we reach the end of all saved item in eeprom
-		if (itemAddress == 0)
-			break;
-		// iterate on all the items to check if we found the current item
-		for (unsigned char j = 0; j < DeadItemsCount; ++j)
-			if ((int)DeadItems[j] == itemAddress)
-			{
-				// move to the address of the byte saving the alive status of the screen to save
-				eepromAddress += 2 + screenByteNumber;
-				// read and update the bit for the screen to save
-				unsigned char currentByteValue;
-				EEPROM.get(eepromAddress, currentByteValue);
-				EEPROM.update(eepromAddress, currentByteValue | (1 << screenBitNumber));
-				// remove the item from the pool, after updating
-				RemoveItemFromDeadPool(j);
-				break;
-			}
-		// compute the begining address for the next item to save
-		eepromAddress += 2 + byteCount;
-	}
-	
-	// check if there's remaining item to save
-	for (unsigned char j = 0; j < DeadItemsCount; ++j)
-	{
-		EEPROM.update(eepromAddress, (int)DeadItems[j]);
-		EEPROM.update(eepromAddress, 1 << screenBitNumber);
-		// compute the begining address for the next item to save
-		eepromAddress += 2 + byteCount;
-	}
-	
-	// reset the dead pool after saving all the items
-	DeadItemsCount = 0;
-	
-	// compute the screen byte and bit for the load
-	screenByteNumber = newScreenIdToLoad >> 3;
-	screenBitNumber = newScreenIdToLoad % 8;
-
-	eepromAddress = PROGRESSION_SAVE_ADDRESS;
-	for (unsigned char i = 0; i < MapManager::MAX_LIVING_ITEM_COUNT_PER_PUZZLE_SCREEN; ++i)
-	{
-		// save the item eepromAddress
-		int itemAddress;
-		EEPROM.get(eepromAddress, itemAddress);
-		// if the itemAddress is null, that means we reach the end of all saved item in eeprom
-		if (itemAddress == 0)
-			break;
-		
-		// move to the address of the byte saving the alive status of the screen to save
-		eepromAddress += 2 + screenByteNumber;
-		// read and update the bit for the screen to save
-		unsigned char currentByteValue;
-		EEPROM.get(eepromAddress, currentByteValue);
-
-		// if the item is dead for the next screen to load, then add it in the dead pool
-		if (currentByteValue & (1 << screenBitNumber))
-			AddItemToDeadPool((Item*)itemAddress);
+		// first update the bit in the eeprom, according to the current alive status of the item
+		UpdateBit(eepromAddress + screenToSaveByteNumber, screenToSaveBitNumber, ((Item*)itemAddress)->IsPropertySet(Item::PropertyFlags::ALIVE));
+		// now update the alive status of the current item according to the current bit set in the eeprom
+		if (GetBit(eepromAddress + screenToLoadByteNumber, screenToLoadBitNumber))
+			((Item*)itemAddress)->SetProperty(Item::PropertyFlags::ALIVE);
+		else
+			((Item*)itemAddress)->ClearProperty(Item::PropertyFlags::ALIVE);
+		// compute the begining address for the next item to read from eeprom
+		eepromAddress += ITEM_PROGRESS_SAVE_SIZE;
 	}
 }
-
-void Progress::AddItemToDeadPool(Item * item)
-{
-	if (DeadItemsCount < MapManager::MAX_LIVING_ITEM_COUNT_PER_PUZZLE_SCREEN)
-	{
-		// search if the item is not already inside the array
-		for (unsigned char i = 0; i < DeadItemsCount; ++i)
-			if (DeadItems[i] == item)
-				return;
-		// add the item to the last position of the array
-		DeadItems[DeadItemsCount++] = item;
-	}
-}
-
-void Progress::RemoveItemFromDeadPool(unsigned char index)
-{
-	// decrease the item count
-	DeadItemsCount--;
-	// if the array is not empty, move the last item to the empty place
-	DeadItems[index] = DeadItems[DeadItemsCount];
-}
-
-void Progress::RemoveItemFromDeadPool(Item * item)
-{
-	for (unsigned char i = 0; i < DeadItemsCount; ++i)
-		if (DeadItems[i] == item)
-		{
-			RemoveItemFromDeadPool(i);
-			// exit the loop when we have found and removed the item
-			break;
-		}
-}
-
