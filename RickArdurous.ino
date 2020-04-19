@@ -5,9 +5,9 @@
 #include "RickArdurous.h"
 #include "Input.h"
 #include "MapManager.h"
+#include "MapData.h"
 #include "HUD.h"
 #include "DestroyableBlock.h"
-#include "Progress.h"
 
 // instance of the arduboy class
 CustomArduboy arduboy;
@@ -26,9 +26,9 @@ void setup()
 	arduboy.initRandomSeed();
 	
 	// call init function of some managers
+	MapManager::InitProgress(); // call this before the Init of the MapManager
 	MapManager::Init(true);
 	DestroyableBlock::StaticInit();
-	Progress::ResetProgress();
 }
 
 void loop()

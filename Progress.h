@@ -5,9 +5,8 @@ class Item;
 
 namespace Progress
 {
+	void InitItem(Item * item, unsigned char index);
 	void ResetProgress();
-	bool IsItemAlive(Item * item);
-	void SetItemAlive(Item * item, bool isAlive);
 	void SaveAndLoadProgress(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad);
 }
 

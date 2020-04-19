@@ -11,6 +11,7 @@
 #include <avr/pgmspace.h>
 #include "Input.h"
 #include "Physics.h"
+#include "Progress.h"
 
 namespace MapManager
 {

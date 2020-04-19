@@ -27,16 +27,14 @@ void Item::Init(int startX, int startY, unsigned char flags)
 
 void Item::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
 {
-	// if we are not forced to respaw, ask our alive status to the progress
+	// if we are not forced to respaw, check our alive status that as been correctly set by the progress
 	if (!shouldRespawn)
-		shouldRespawn = Progress::IsItemAlive(this);
-	// set the alive flag
+		shouldRespawn = IsPropertySet(Item::PropertyFlags::ALIVE);
+	// set the alive flag if we should respawn
 	if (shouldRespawn)
 	{
 		// set the alive flag in the flags variable
 		flags |= Item::PropertyFlags::ALIVE;
-		// warn also the progress, because the general init function will override the property flag and not call the SetProperty() function
-		Progress::SetItemAlive(this, true);
 		// add the item to the manager
 		MapManager::AddItem(this);
 		// and call the common init function
@@ -44,8 +42,6 @@ void Item::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
 	}
 	else
 	{
-		// warn the progress, because the general init function will override the property flag and not call the ClearProperty() function
-		Progress::SetItemAlive(this, false);
 		// remove the item from the manager
 		MapManager::RemoveItem(this);
 	}

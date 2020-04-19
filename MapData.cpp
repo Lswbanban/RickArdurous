@@ -15,6 +15,7 @@
 #include "DestroyableBlock.h"
 #include "Stalactite.h"
 #include "Stalagmite.h"
+#include "Progress.h"
 #include <avr/pgmspace.h>
 
 #define ID(id1,id2) ((id1<< 4) | id2)
@@ -64,5 +65,10 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 	&InitScreen0, &InitScreen1, 
 };
 
-// compute the number of items
+// compute the of puzzle screen and byte to save progress
 const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);
+
+void MapManager::InitProgress()
+{
+	Progress::InitItem(&en, 0);
+}
