@@ -31,7 +31,6 @@ namespace MapManager
 	// checkpoint functions
 	void MemorizeCheckPoint(int rickX, int rickY);
 	void RestartToLastCheckpoint();
-	unsigned char GetCurrentPuzzleScreenId();
 }
 
 #endif

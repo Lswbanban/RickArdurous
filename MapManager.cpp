@@ -72,7 +72,6 @@ namespace MapManager
 	void AnimateShutterTransition();
 	void BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY);
 	void EndSwitchPuzzleScreen();
-	unsigned char GetCurrentPuzzleScreenId() { return CurrentPuzzleScreenId; }
 	char GetCameraSpeed(char step, char subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
@@ -539,6 +538,9 @@ void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigne
 		if (isRickReturning)
 			PuzzleScreenMoveDirection = -PuzzleScreenMoveDirection;
 		
+		// dump the progress in eeprom
+		Progress::SaveAndLoadProgress(CurrentPuzzleScreenId, CurrentPuzzleScreenId + PuzzleScreenMoveDirection);
+
 		// increase the puzzle screen according to the direction
 		CurrentPuzzleScreenId += PuzzleScreenMoveDirection;
 		
