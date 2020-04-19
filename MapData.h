@@ -17,6 +17,9 @@ namespace MapManager
 	// all the function to init the items in the level split per puzzle screen
 	extern ItemInitFunction ItemInitFunctions[];
 	extern const unsigned char PUZZLE_SCREEN_COUNT;
+	
+	// the max number of items
+	static constexpr int MAX_LIVING_ITEM_COUNT_PER_PUZZLE_SCREEN = 4;
 };
 
 #endif
