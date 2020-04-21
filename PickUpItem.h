@@ -8,7 +8,8 @@ class PickUpItem : public Item
 protected:
 	void UpdateShineStar(char minX, char maxX, char minY, char maxY);
 	bool DoesRickPickMeUp(unsigned char width, unsigned char height);
-	
+	bool PickupUpdate(UpdateStep step, const unsigned char sprite[], unsigned char spriteWidth, unsigned char spriteHeight, bool isCrate);
+
 private:
 	static constexpr int ANIM_SPEED = 2;
 	static constexpr int MIN_PAUSE_TIMES = 10;

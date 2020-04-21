@@ -80,3 +80,26 @@ void PickUpItem::UpdateShineStar(char minX, char maxX, char minY, char maxY)
 							SpriteData::SHINE_STAR_SPRITE_HEIGHT,
 							INVERT, false);
 }
+
+bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], unsigned char spriteWidth, unsigned char spriteHeight, bool isCrate)
+{
+	if ((step == UpdateStep::DRAW_IGNORED_BY_ENEMIES) && IsPropertySet(Item::PropertyFlags::ALIVE))
+	{
+		// check if the player pick me up
+		if (DoesRickPickMeUp(spriteWidth, spriteHeight))
+		{
+			ClearProperty(Item::PropertyFlags::ALIVE);
+			return true;
+		}
+		
+		// draw the statuette
+		arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), sprite, spriteWidth, spriteHeight, WHITE, false);
+		
+		// draw the shiny star
+		if (isCrate)
+			UpdateShineStar(-2, 9, 1, 6);
+		else
+			UpdateShineStar(-2, 3, -2, 4);
+	}
+	return false;
+}

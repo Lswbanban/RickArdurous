@@ -6,31 +6,13 @@
 #include "DynamiteCrate.h"
 #include "SpriteData.h"
 #include "Rick.h"
-#include "MapManager.h"
 
 bool DynamiteCrate::Update(UpdateStep step)
 {
-	switch (step)
+	if (PickupUpdate(step, SpriteData::DynamiteCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, true))
 	{
-		case UpdateStep::DRAW_IGNORED_BY_ENEMIES:
-			if (IsPropertySet(Item::PropertyFlags::ALIVE))
-			{
-				// check if the player pick me up
-				if (DoesRickPickMeUp(SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT))
-				{
-					ClearProperty(Item::PropertyFlags::ALIVE);
-					Rick::DynamiteCount = Rick::MAX_DYNAMITE_COUNT;
-					return true;
-				}
-
-				// draw the crate
-				arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::DynamiteCrate, SpriteData::CRATE_SPRITE_WIDTH, SpriteData::CRATE_SPRITE_HEIGHT, WHITE, false);
-				
-				// draw the shiny star
-				UpdateShineStar(-2, 9, 1, 6);
-			}
-			break;
-			
+		Rick::DynamiteCount = Rick::MAX_DYNAMITE_COUNT;
+		return true;
 	}
 	return false;
 }
