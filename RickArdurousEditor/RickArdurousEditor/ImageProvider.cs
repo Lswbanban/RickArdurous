@@ -84,6 +84,30 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetMummyImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Mummy.png");
+			Bitmap result = new Bitmap(9, 16);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, false, 1f, 1f, 0f);
+			return result;
+		}
+
+		public static Bitmap GetSkeletonImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Skeleton.png");
+			Bitmap result = new Bitmap(6, 16);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 16), ref result, false, 1f, 1f, 0f);
+			return result;
+		}
+
+		public static Bitmap GetScorpionImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Scorpion.png");
+			Bitmap result = new Bitmap(8, 4);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 8, 4), ref result, false, 1f, 1f, 0f);
+			return result;
+		}
+
 		public static Bitmap GetItemsSpriteImage()
 		{
 			int itemSize = 16;
@@ -101,6 +125,9 @@ namespace RickArdurousEditor
 			gc.DrawImage(GetRickImage(), 0, 0, itemSize, itemSize);
 			gc.DrawImage(GetHorizontalSpikeImage(), 0, itemSize, itemSize, itemSize);
 			gc.DrawImage(GetVerticalSpikeImage(false), 0, itemSize * 2, itemSize, itemSize);
+			gc.DrawImage(GetMummyImage(), 0, itemSize * 3, itemSize, itemSize);
+			gc.DrawImage(GetSkeletonImage(), 0, itemSize * 4, itemSize, itemSize);
+			gc.DrawImage(GetScorpionImage(), 0, itemSize * 5, itemSize, itemSize);
 
 			return itemSpriteImage;
 		}

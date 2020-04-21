@@ -15,6 +15,9 @@ namespace RickArdurousEditor.Items
 			RICK,
 			HORIZONTAL_SPIKE,
 			VERTICAL_SPIKE,
+			MUMMY,
+			SKELETON,
+			SCORPION,
 
 			// the type count
 			COUNT,
@@ -63,14 +66,23 @@ namespace RickArdurousEditor.Items
 		{
 			switch (mType)
 			{
+				case Type.RICK:
+					mSprite = ImageProvider.GetRickImage();
+					break;
 				case Type.HORIZONTAL_SPIKE:
 					mSprite = ImageProvider.GetHorizontalSpikeImage();
 					break;
 				case Type.VERTICAL_SPIKE:
 					mSprite = ImageProvider.GetVerticalSpikeImage(mIsMirror);
 					break;
-				case Type.RICK:
-					mSprite = ImageProvider.GetRickImage();
+				case Type.MUMMY:
+					mSprite = ImageProvider.GetMummyImage();
+					break;
+				case Type.SKELETON:
+					mSprite = ImageProvider.GetSkeletonImage();
+					break;
+				case Type.SCORPION:
+					mSprite = ImageProvider.GetScorpionImage();
 					break;
 			}
 		}
@@ -102,6 +114,10 @@ namespace RickArdurousEditor.Items
 				case Type.HORIZONTAL_SPIKE:
 				case Type.VERTICAL_SPIKE:
 					return "spike" + instanceNumberString;
+				case Type.MUMMY:
+				case Type.SKELETON:
+				case Type.SCORPION:
+					return "enemy" + instanceNumberString;
 			}
 			return string.Empty;
 		}
@@ -115,18 +131,36 @@ namespace RickArdurousEditor.Items
 				case Type.VERTICAL_SPIKE:
 					writer.WriteLine("Spike " + instanceName + ";");
 					break;
+				case Type.MUMMY:
+				case Type.SKELETON:
+				case Type.SCORPION:
+					writer.WriteLine("Enemy " + instanceName + ";");
+					break;
 			}
 		}
 
-		public void WriteAddToManager(StreamWriter writer, int instanceNumber)
+		public static bool WriteProgressInit(StreamWriter writer, Type type, int instanceNumber, int instanceCount)
+		{
+			string instanceName = GetInstanceName(type, instanceNumber);
+			switch (type)
+			{
+				case Type.MUMMY:
+				case Type.SKELETON:
+				case Type.SCORPION:
+					writer.WriteLine("\tProgress::InitItem(&" + instanceName + ", " + instanceCount.ToString() + ");");
+					return true;
+			}
+			return false;
+		}
+
+
+		public void WriteCheckpoint(StreamWriter writer, int instanceNumber)
 		{
 			if (mType == Type.RICK)
 				writer.WriteLine("\tMapManager::MemorizeCheckPoint(" + mX.ToString() + ", " + mY.ToString() + ");");
-			else
-				writer.WriteLine("\tMapManager::AddItem(&" + GetInstanceName(instanceNumber) + ");");
 		}
 
-		public void WriteInitPosition(StreamWriter writer, int instanceNumber)
+		public void WriteInit(StreamWriter writer, int instanceNumber)
 		{
 			switch (mType)
 			{
@@ -138,6 +172,15 @@ namespace RickArdurousEditor.Items
 						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::MIRROR_X);");
 					else
 						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE);");
+					break;
+				case Type.MUMMY:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
+					break;
+				case Type.SKELETON:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL_2, shouldRespawn);");
+					break;
+				case Type.SCORPION:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL, shouldRespawn);");
 					break;
 			}
 		}
