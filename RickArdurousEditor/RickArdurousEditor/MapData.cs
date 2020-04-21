@@ -110,6 +110,12 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region write
+
+		List<Items.Item.Type>[] mSimilarTypes = new List<Items.Item.Type>[]
+				{   new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.HORIZONTAL_SPIKE, Items.Item.Type.VERTICAL_SPIKE } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.MUMMY, Items.Item.Type.SKELETON, Items.Item.Type.SCORPION }),
+				};
+
 		private void WriteHeader(StreamWriter writer)
 		{
 			writer.WriteLine("/*");
@@ -129,6 +135,7 @@ namespace RickArdurousEditor
 			writer.WriteLine("#include \"DestroyableBlock.h\"");
 			writer.WriteLine("#include \"Stalactite.h\"");
 			writer.WriteLine("#include \"Stalagmite.h\"");
+			writer.WriteLine("#include \"Progress.h\"");
 			writer.WriteLine("#include <avr/pgmspace.h>");
 			writer.WriteLine();
 			writer.WriteLine("#define ID(id1,id2) ((id1<< 4) | id2)");
@@ -276,19 +283,14 @@ namespace RickArdurousEditor
 			return ((y / (ARDUBOY_PUZZLE_SCREEN_HEIGHT * WALL_SPRITE_HEIGHT)) * (LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH)) + (x / (ARDUBOY_PUZZLE_SCREEN_WIDTH * WALL_SPRITE_WIDTH));
 		}
 
-		private int GetMaxItemCount(Items.Item.Type itemType)
+		private int GetMaxItemCount(List<Items.Item.Type> itemTypes)
 		{
 			int[] maxCountPerSreen = new int[(LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH) * (LEVEL_HEIGHT /ARDUBOY_PUZZLE_SCREEN_HEIGHT)];
 
 			// iterate on the list of all the item of the specified type
-			if (mItems.ContainsKey(itemType))
-				foreach (Items.Item item in mItems[itemType])
-					maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
-
-			// special case for vertical spike, count them with the horizontal ones
-			if (itemType == Items.Item.Type.HORIZONTAL_SPIKE)
-				if (mItems.ContainsKey(Items.Item.Type.VERTICAL_SPIKE))
-					foreach (Items.Item item in mItems[Items.Item.Type.VERTICAL_SPIKE])
+			foreach (Items.Item.Type itemType in itemTypes)
+				if (mItems.ContainsKey(itemType))
+					foreach (Items.Item item in mItems[itemType])
 						maxCountPerSreen[GetPuzzleScreenIdFromGameWorldCoord(item.X, item.Y)]++;
 
 			// then iterate on the max count to find the highest
@@ -303,15 +305,12 @@ namespace RickArdurousEditor
 
 		private void WriteItemInstances(StreamWriter writer)
 		{
-			for (int i = 0; i < (int)Items.Item.Type.COUNT; ++i)
+			for (int i = 0; i < mSimilarTypes.Length; ++i)
 			{
-				// skip the vertical spike, because they are merge with the horizontal ones
-				if (i == (int)Items.Item.Type.VERTICAL_SPIKE)
-					continue;
 				// get the max number of instances that we need 
-				int maxItemCount = GetMaxItemCount((Items.Item.Type)i);
+				int maxItemCount = GetMaxItemCount(mSimilarTypes[i]);
 				for (int j = 1; j <= maxItemCount; ++j)
-					Items.Item.WriteInstance(writer, (Items.Item.Type)i, j);
+					Items.Item.WriteInstance(writer, mSimilarTypes[i][0], j);
 			}
 		}
 
@@ -334,13 +333,15 @@ namespace RickArdurousEditor
 
 		private int IncreaseItemCounterAndGetId(ref int[] itemCount, Items.Item item)
 		{
-			int itemType = (int)item.ItemType;
-			// special case for the spikes, both horizontal and vertical use the same instances
-			if (itemType == (int)Items.Item.Type.VERTICAL_SPIKE)
-				itemType = (int)Items.Item.Type.HORIZONTAL_SPIKE;
-			// increase the counter
-			itemCount[itemType]++;
-			return itemCount[itemType];
+			// search in which Similar Item group the specified item belongs to
+			for (int i = 0; i < mSimilarTypes.Length; ++i)
+				if (mSimilarTypes[i].Contains(item.ItemType))
+				{
+					// increase the counter
+					itemCount[i]++;
+					return itemCount[i];
+				}
+			return 0;
 		}
 
 		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop)
@@ -349,26 +350,26 @@ namespace RickArdurousEditor
 			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenLeft, screenTop);
 
 			// declare an array to count the items per type for the current screen
-			int[] itemCount = new int[(int)Items.Item.Type.COUNT];
+			int[] itemCount = new int[mSimilarTypes.Length];
 
 			// begin of the init function
 			writer.WriteLine();
-			writer.WriteLine("void InitScreen" + screenId.ToString() + "(bool init)");
+			writer.WriteLine("void InitScreen" + screenId.ToString() + "(bool shouldRespawn)");
 			writer.WriteLine("{");
 
 			// add the items in the map manager
-			writer.WriteLine("\t// Add all the items to the manager");
+			writer.WriteLine("\t// Add a checkpoint if we need to");
 			foreach (Items.Item item in itemsOnScreen)
-				item.WriteAddToManager(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
+				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 			writer.WriteLine();
 
 			// reset the item count array
 			Array.Clear(itemCount, 0, itemCount.Length);
 
 			// init the position of the item
-			writer.WriteLine("\t// init the item positions");
+			writer.WriteLine("\t// init all the item of the current puzzle screen");
 			foreach (Items.Item item in itemsOnScreen)
-				item.WriteInitPosition(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
+				item.WriteInit(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 
 			// finish the init function
 			writer.WriteLine("}");
@@ -458,6 +459,26 @@ namespace RickArdurousEditor
 			writer.WriteLine("const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);");
 		}
 
+		private void WriteProgressInitFunction(StreamWriter writer)
+		{
+			writer.WriteLine();
+			writer.WriteLine("// this function is to init the progress of the living items in eeprom");
+			writer.WriteLine("void MapManager::InitProgress()");
+			writer.WriteLine("{");
+
+			int instanceCount = 0;
+			for (int i = 0; i < mSimilarTypes.Length; ++i)
+			{
+				// get the max number of instances that we need 
+				int maxItemCount = GetMaxItemCount(mSimilarTypes[i]);
+				for (int j = 1; j <= maxItemCount; ++j)
+					if (Items.Item.WriteProgressInit(writer, mSimilarTypes[i][0], j, instanceCount))
+						instanceCount++;
+			}
+
+			writer.WriteLine("}");
+		}
+
 		public void Save(string fileName)
 		{
 			StreamWriter writer = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
@@ -466,6 +487,7 @@ namespace RickArdurousEditor
 			WriteItemInstances(writer);
 			int screenCount = WriteInitFunctions(writer);
 			WriteInitFunctionArray(writer, screenCount);
+			WriteProgressInitFunction(writer);
 			writer.Flush();
 			writer.Close();
 		}
