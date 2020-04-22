@@ -20,21 +20,25 @@ namespace MapManager
 	static constexpr int NB_HORIZONTAL_SPRITE_PER_SCREEN = 16;
 	static constexpr int NB_VERTICAL_SPRITE_PER_SCREEN = 8;
 	static constexpr int SHUTTER_SPEED = 5;
-	
+
+	class CameraCoord
+	{
+	public:
+		unsigned char Current = 0;
+		unsigned char Target = 0;
+		char Transition = 0;
+		char StartDrawSprite = 0;
+		char EndDrawSprite = 0;
+		
+		void Animate(char spriteSize);
+		
+	private:
+		char GetCameraSpeed(char step, char subStep);
+	};
+
 	// The current camera coordinate reference the top left corner of the screen portion of the level, in the big level array.
-	unsigned char CameraX = 0;
-	unsigned char CameraY = 0;
-	
-	// The target camera coordinates use the same coordinate reference (in the level array), but represent the target where the camera should go
-	unsigned char TargetCameraX = 0;
-	unsigned char TargetCameraY = 0;
-	
-	// This variable is used to store a temporary shift of the camera during a transition animation
-	char CameraTransitionX = 0;
-	char StartDrawSpriteX = 0;
-	char EndDrawSpriteX = 0;
-	char CameraTransitionY = 0;
-	char StartDrawSpriteY = 0;
+	CameraCoord CameraX;
+	CameraCoord CameraY;
 	
 	// the items to currently update
 	static const unsigned int MAX_UPDATABLE_ITEM_COUNT = 20;
@@ -62,9 +66,6 @@ namespace MapManager
 	char ShutterHeight = 0;
 	char ShutterDirection = 1;
 	
-	// debug draw state
-	unsigned char DebugDrawStep = 255;
-	
 	void RemoveItem(unsigned char index);
 	void RemoveAllItemsOutsideOfTheScreen();
 	void UpdateItems(Item::UpdateStep updateStep);
@@ -73,7 +74,6 @@ namespace MapManager
 	void AnimateShutterTransition();
 	void BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY);
 	void EndSwitchPuzzleScreen();
-	char GetCameraSpeed(char step, char subStep);
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
 	unsigned char GetLevelSpriteAt(unsigned char xMap, unsigned char yMap);
@@ -142,10 +142,6 @@ void MapManager::CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callb
 
 void MapManager::UpdateItems(Item::UpdateStep updateStep)
 {
-	// debug early exit
-	if (updateStep > DebugDrawStep)
-		return;
-	
 	// iterate on all the items, and if one return true, we remove it from the update array
 	for (unsigned char i = 0; i < ItemsToUpdateCount; ++i)
 		if (ItemsToUpdate[i]->Update(updateStep))
@@ -157,12 +153,6 @@ void MapManager::UpdateItems(Item::UpdateStep updateStep)
 
 void MapManager::Update()
 {
-	// debug code
-	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(UP_BUTTON))
-		DebugDrawStep++;
-	if (Input::IsDown(B_BUTTON) && Input::IsJustPressed(DOWN_BUTTON))
-		DebugDrawStep--;
-	
 	// update the input of the main character
 	Rick::UpdateInput();
 	
@@ -222,12 +212,12 @@ void MapManager::Update()
 
 int MapManager::GetXOnScreen(int worldX)
 {
-	return worldX - ((int)CameraX * SpriteData::LEVEL_SPRITE_WIDTH) - CameraTransitionX;
+	return worldX - ((int)CameraX.Current * SpriteData::LEVEL_SPRITE_WIDTH) - CameraX.Transition;
 }
 
 int MapManager::GetYOnScreen(int worldY)
 {
-	return worldY - ((int)CameraY * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraTransitionY + CAMERA_VERTICAL_SHIFT;
+	return worldY - ((int)CameraY.Current * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraY.Transition + CAMERA_VERTICAL_SHIFT;
 }
 
 bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned char spriteHeight)
@@ -444,10 +434,10 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 	WasLastTransitionHorizontal = WasLastCheckPointLastTransitionHorizontal;
 
 	// teleport the camera to avoid a transition when restarting to last checkpoint
-	TargetCameraX = LastCheckPointPuzzleScreenEdgeCoordX;
-	TargetCameraY = LastCheckPointPuzzleScreenEdgeCoordY;
-	CameraX = LastCheckPointPuzzleScreenEdgeCoordX;
-	CameraY = LastCheckPointPuzzleScreenEdgeCoordY;
+	CameraX.Current = LastCheckPointPuzzleScreenEdgeCoordX;
+	CameraX.Target = LastCheckPointPuzzleScreenEdgeCoordX;
+	CameraY.Current = LastCheckPointPuzzleScreenEdgeCoordY;
+	CameraY.Target = LastCheckPointPuzzleScreenEdgeCoordY;
 
 	// remove all the items, by clearing the whole array
 	ItemsToUpdateCount = 0;
@@ -488,7 +478,7 @@ void MapManager::AnimateShutterTransition()
  * @param step the current step in the scrolling between 0 and 8
  * @param subStep the current subStep bewteen 0 and 7
  */
-char MapManager::GetCameraSpeed(char step, char subStep)
+char MapManager::CameraCoord::GetCameraSpeed(char step, char subStep)
 {
 	// check if we need to move every frame or not
 	if (step > 1)
@@ -511,15 +501,57 @@ char MapManager::GetCameraSpeed(char step, char subStep)
 	}
 }
 
+void MapManager::CameraCoord::Animate(char spriteSize)
+{
+	// Now check if the target is different from the current position of the camera
+	char diff = Target - Current;
+	if (diff > 0)
+	{
+		Transition += GetCameraSpeed(diff, Transition);
+		StartDrawSprite = 0;
+		EndDrawSprite = 1;
+		if (Transition >= spriteSize)
+		{
+			Transition -= spriteSize;
+			Current++;
+			// check if we reach the end of the transition
+			if (Target == Current)
+				MapManager::EndSwitchPuzzleScreen();
+		}
+	}
+	else if (diff < 0)
+	{
+		Transition -= GetCameraSpeed(-diff, -Transition);
+		StartDrawSprite = -1;
+		EndDrawSprite = 0;
+		if (Transition <= -spriteSize)
+		{
+			Transition += spriteSize;
+			Current--;
+			// check if we reach the end of the transition
+			if (Target == Current)
+			{
+				StartDrawSprite = 0;
+				MapManager::EndSwitchPuzzleScreen();
+			}
+		}
+	}
+	else
+	{
+		StartDrawSprite = 0;
+		EndDrawSprite = 0;
+	}
+}
+
 void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY)
 {
-	bool isHorizontalTransition = (newTargetCameraX != TargetCameraX);
-	bool isVerticalTransition = (newTargetCameraY != TargetCameraY);
+	bool isHorizontalTransition = (newTargetCameraX != CameraX.Target);
+	bool isVerticalTransition = (newTargetCameraY != CameraY.Target);
 	if (isHorizontalTransition || isVerticalTransition)
 	{
 		// get the edge of the transition (which is the max of the two target camera)
-		unsigned char newEdgeCoordX = (newTargetCameraX > TargetCameraX) ? newTargetCameraX : TargetCameraX;
-		unsigned char newEdgeCoordY = (newTargetCameraY > TargetCameraY) ? newTargetCameraY : TargetCameraY;
+		unsigned char newEdgeCoordX = (newTargetCameraX > CameraX.Target) ? newTargetCameraX : CameraX.Target;
+		unsigned char newEdgeCoordY = (newTargetCameraY > CameraY.Target) ? newTargetCameraY : CameraY.Target;
 		
 		// if Rick just crossed the same edge as before, he is returning back
 		bool isRickReturning = (WasLastTransitionHorizontal == isHorizontalTransition) && 
@@ -532,8 +564,8 @@ void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigne
 		WasLastTransitionHorizontal = isHorizontalTransition;
 		
 		// set the new target camera
-		TargetCameraX = newTargetCameraX;
-		TargetCameraY = newTargetCameraY;
+		CameraX.Target = newTargetCameraX;
+		CameraY.Target = newTargetCameraY;
 
 		// if the player return to the previous screen, inverse the direction
 		if (isRickReturning)
@@ -578,110 +610,40 @@ void MapManager::AnimateCameraTransition()
 	{
 		// Check if we should start a camera transition (if the main character exit the screen)
 		// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking if equivalent to the computation
-		int screenPuzzleY = CameraY & 0xF8; // i.e. (CameraY / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
+		int screenPuzzleY = CameraY.Current & 0xF8; // i.e. (CameraY.Current / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
 		if (Rick::GetBottomForScreenTransition() <= (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
 		{
-			BeginSwitchPuzzleScreen(TargetCameraX, screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN);
+			BeginSwitchPuzzleScreen(CameraX.Target, screenPuzzleY - NB_VERTICAL_SPRITE_PER_SCREEN);
 		}
 		else
 		{
 			int nextScreenPuzzleY = screenPuzzleY + NB_VERTICAL_SPRITE_PER_SCREEN;
 			if (Rick::GetTopForScreenTransition() >= (nextScreenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT) - CAMERA_VERTICAL_SHIFT)
 			{
-				BeginSwitchPuzzleScreen(TargetCameraX, nextScreenPuzzleY);
+				BeginSwitchPuzzleScreen(CameraX.Target, nextScreenPuzzleY);
 			}
 			else
 			{
-				int screenPuzzleX = CameraX & 0xF0; // i.e. (CameraX / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
+				int screenPuzzleX = CameraX.Current & 0xF0; // i.e. (CameraX.Current / NB_HORIZONTAL_SPRITE_PER_SCREEN) * NB_HORIZONTAL_SPRITE_PER_SCREEN
 				if (Rick::GetRightForScreenTransition() <= (screenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
 				{
-					BeginSwitchPuzzleScreen(screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN, TargetCameraY);
+					BeginSwitchPuzzleScreen(screenPuzzleX - NB_HORIZONTAL_SPRITE_PER_SCREEN, CameraY.Target);
 				}
 				else
 				{
 					int nextScreenPuzzleX = screenPuzzleX + NB_HORIZONTAL_SPRITE_PER_SCREEN;
 					if (Rick::GetLeftForScreenTransition() >= (nextScreenPuzzleX * SpriteData::LEVEL_SPRITE_WIDTH))
 					{
-						BeginSwitchPuzzleScreen(nextScreenPuzzleX, TargetCameraY);
+						BeginSwitchPuzzleScreen(nextScreenPuzzleX, CameraY.Target);
 					}
 				}
 			}
 		}
 	}
 	
-	// Now check if the target is different from the current position of the camera
-	char xDiff = TargetCameraX - CameraX;
-	if (xDiff > 0)
-	{
-		CameraTransitionX += GetCameraSpeed(xDiff, CameraTransitionX);
-		StartDrawSpriteX = 0;
-		EndDrawSpriteX = 1;
-		if (CameraTransitionX >= SpriteData::LEVEL_SPRITE_WIDTH)
-		{
-			CameraTransitionX -= SpriteData::LEVEL_SPRITE_WIDTH;
-			CameraX++;
-			// check if we reach the end of the transition
-			if (TargetCameraX == CameraX)
-				EndSwitchPuzzleScreen();
-		}
-	}
-	else if (xDiff < 0)
-	{
-		CameraTransitionX -= GetCameraSpeed(-xDiff, -CameraTransitionX);
-		StartDrawSpriteX = -1;
-		EndDrawSpriteX = 0;
-		if (CameraTransitionX <= -SpriteData::LEVEL_SPRITE_WIDTH)
-		{
-			CameraTransitionX += SpriteData::LEVEL_SPRITE_WIDTH;
-			CameraX--;
-			// check if we reach the end of the transition
-			if (TargetCameraX == CameraX)
-			{
-				StartDrawSpriteX = 0;
-				EndSwitchPuzzleScreen();
-			}
-		}
-	}
-	else
-	{
-		StartDrawSpriteX = 0;
-		EndDrawSpriteX = 0;
-	}
-	
-	char yDiff = TargetCameraY - CameraY;
-	if (yDiff > 0)
-	{
-		CameraTransitionY += GetCameraSpeed(yDiff, CameraTransitionY);
-		StartDrawSpriteY = 0;
-		if (CameraTransitionY >= SpriteData::LEVEL_SPRITE_HEIGHT)
-		{
-			CameraTransitionY -= SpriteData::LEVEL_SPRITE_HEIGHT;
-			CameraY++;
-			// check if we reach the end of the transition
-			if (TargetCameraY == CameraY)
-				EndSwitchPuzzleScreen();
-		}
-	}
-	else if (yDiff < 0)
-	{
-		CameraTransitionY -= GetCameraSpeed(-yDiff, -CameraTransitionY);
-		StartDrawSpriteY = -1;
-		if (CameraTransitionY <= -SpriteData::LEVEL_SPRITE_HEIGHT)
-		{
-			CameraTransitionY += SpriteData::LEVEL_SPRITE_HEIGHT;
-			CameraY--;
-			// check if we reach the end of the transition
-			if (TargetCameraY == CameraY)
-			{
-				StartDrawSpriteY = 0;
-				EndSwitchPuzzleScreen();
-			}
-		}
-	}
-	else
-	{
-		StartDrawSpriteY = 0;
-	}
+	// animate the two coordinates of the camera
+	CameraX.Animate(SpriteData::LEVEL_SPRITE_WIDTH);
+	CameraY.Animate(SpriteData::LEVEL_SPRITE_HEIGHT);
 }
 
 /**
@@ -690,10 +652,10 @@ void MapManager::AnimateCameraTransition()
 void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen)
 {
 	// compute the start and end coordinate of the sprites to draw, in the level array coordinates
-	unsigned char startMapX = CameraX + StartDrawSpriteX;
-	unsigned char endMapX = CameraX + NB_HORIZONTAL_SPRITE_PER_SCREEN + EndDrawSpriteX;
-	unsigned char startMapY = CameraY + StartDrawSpriteY;
-	unsigned char endMapY = CameraY + NB_VERTICAL_SPRITE_PER_SCREEN;
+	unsigned char startMapX = CameraX.Current + CameraX.StartDrawSprite;
+	unsigned char endMapX = CameraX.Current + NB_HORIZONTAL_SPRITE_PER_SCREEN + CameraX.EndDrawSprite;
+	unsigned char startMapY = CameraY.Current + CameraY.StartDrawSprite;
+	unsigned char endMapY = CameraY.Current + NB_VERTICAL_SPRITE_PER_SCREEN;
 	int endLineIndex = pgm_read_byte(&(LevelLineIndex[startMapY]));
 	// iterate on the line first before iterating on the columns
 	for (unsigned char mapY = startMapY; mapY < endMapY; ++mapY)
@@ -702,7 +664,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		int startLineIndex = endLineIndex;
 		endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
 		// compute the screen y coordinate for the sprite
-		char screenY = (SpriteData::LEVEL_SPRITE_HEIGHT * (mapY - CameraY)) + CAMERA_VERTICAL_SHIFT - CameraTransitionY;
+		char screenY = (SpriteData::LEVEL_SPRITE_HEIGHT * (mapY - CameraY.Current)) + CAMERA_VERTICAL_SHIFT - CameraY.Transition;
 		// determines if we need to draw the platforms.
 		// If we are not specifically drawing the platforms (the min sprite index is not platforms),
 		// then we should only draw the platforms below the feet
@@ -783,7 +745,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 					isMirror = (previousSpriteId == currentSpriteId);
 
 				// call the draw function
-				arduboy.drawBitmapExtended((SpriteData::LEVEL_SPRITE_WIDTH * (mapX - CameraX)) - CameraTransitionX,
+				arduboy.drawBitmapExtended((SpriteData::LEVEL_SPRITE_WIDTH * (mapX - CameraX.Current)) - CameraX.Transition,
 					screenY,
 					SpriteData::Walls[currentSpriteId],
 					SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, isMirror);
