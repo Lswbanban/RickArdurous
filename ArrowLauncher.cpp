@@ -9,9 +9,8 @@
 #include "MapManager.h"
 
 ArrowLauncher::ArrowLauncher()
+: Arrow(true)
 {
-	// instantiate my arrow
-	Arrow = new ArrowBullet(true);
 }
 
 void ArrowLauncher::Init(int startX, int startY, unsigned char flags, unsigned char detectionWidth)
@@ -53,7 +52,7 @@ bool ArrowLauncher::Update(UpdateStep step)
 			
 		case UpdateStep::RESPAWN:
 			LastLaunchTime = CAN_LAUNCH_ARROW;
-			Arrow->KillBulletWithoutSparks();
+			Arrow.KillBulletWithoutSparks();
 			break;
 	}
 	return false;
@@ -85,7 +84,7 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 		// check if the main character is inside the detection range
 		if (isAlive && (Y > trigererY) && (Y < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
 		{
-			Arrow->Fire(X, Y, isShootingTowardLeft);
+			Arrow.Fire(X, Y, isShootingTowardLeft);
 			LastLaunchTime = 0;
 		}
 	}

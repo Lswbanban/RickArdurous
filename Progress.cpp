@@ -33,7 +33,7 @@ void Progress::InitItem(Item * item, unsigned char index)
 	EEPROM.put(eepromAddress, (unsigned int)item);
 	eepromAddress += 2;
 	for (unsigned char i = 0; i < ITEM_PROGRESS_SAVE_SIZE - 2; ++i)
-		EEPROM.update(eepromAddress++, (unsigned char)0);
+		EEPROM.update(eepromAddress++, (unsigned char)0xFF);
 	// save the index in the count, assuming the function will be called in order (last index called last)
 	LivingItemsCount = index + 1;
 }

@@ -14,7 +14,7 @@ private:
 	static constexpr int LAUNCH_PERIOD = 180;
 	static constexpr int CAN_LAUNCH_ARROW = 255;
 	
-	ArrowBullet * Arrow;
+	ArrowBullet Arrow;
 	unsigned char LastLaunchTime = CAN_LAUNCH_ARROW;
 	unsigned char DetectionWidth;
 	
