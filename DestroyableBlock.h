@@ -7,8 +7,6 @@ class BlockFragment;
 class DestroyableBlock : public DestroyableItem
 {
 public:
-	static void StaticInit();
-
 	virtual bool Update(UpdateStep step);
 	bool IsLocatedAt(unsigned char mapX, unsigned char mapY);
 	bool IsAlive() { return IsPropertySet(Item::PropertyFlags::ALIVE); }
@@ -16,7 +14,7 @@ public:
 private:
 	static constexpr int FRAGMENT_COUNT = 3;
 	
-	static BlockFragment * Fragments[FRAGMENT_COUNT];
+	static BlockFragment Fragments[FRAGMENT_COUNT];
 	
 	void InitDeath();
 };
