@@ -24,40 +24,33 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(2,1),ID(2,0),ID(5,15),ID(4,5),ID(1,2),ID(2,1),ID(2,5),ID(15,15),ID(15,1),
 	ID(1,1),ID(1,5),ID(15,6),ID(5,6),ID(1,1),ID(1,5),ID(15,15),ID(15,1),
 	ID(2,2),ID(6,15),ID(13,0),ID(15,15),
-	ID(1,5),ID(5,15),ID(5,5),ID(15,7),ID(0,15),ID(15,0),
+	ID(1,5),ID(5,15),ID(13,0),ID(15,15),
 	ID(2,5),ID(15,6),ID(10,10),ID(10,10),ID(10,10),ID(12,15),ID(1,0),ID(15,15),
 	ID(1,6),ID(15,4),ID(10,15),ID(7,11),ID(15,15),ID(15,2),
 	ID(1,5),ID(15,3),ID(10,15),ID(2,4),ID(3,3),ID(7,15),ID(2,11),ID(15,15),ID(15,2),
 	ID(2,5),ID(5,0),ID(5,0),ID(5,6),ID(0,1),ID(2,6),ID(15,2),ID(11,15),ID(1,0),ID(15,15),
 	ID(15,14),ID(11,15),ID(1,0),ID(15,15),
 	ID(15,14),ID(11,15),ID(1,0),ID(15,15),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
-	ID(15,15),ID(15,15),ID(15,2),
+	ID(15,14),ID(11,15),ID(15,15),ID(2,0),
+	ID(5,15),ID(4,5),ID(5,12),ID(15,6),ID(11,15),ID(15,15),ID(2,0),
+	ID(5,15),ID(6,11),ID(15,6),ID(11,15),ID(3,4),ID(3,4),ID(15,11),
+	ID(6,13),ID(15,5),ID(11,15),ID(6,11),ID(15,2),ID(4,2),ID(1,2),ID(15,11),
+	ID(5,15),ID(6,11),ID(15,6),ID(11,15),ID(1,4),ID(1,1),ID(2,2),ID(15,11),
+	ID(5,5),ID(6,5),ID(5,6),ID(5,5),ID(6,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,15),ID(11,0),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,27,35,41,50,60,64,68,71,74,77,80,83,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,9,17,21,25,33,39,48,58,62,66,70,77,84,92,100,112,};
 
-Spike spike1;
-Spike spike2;
+const unsigned char MapManager::LEVEL_WIDTH = 32;
+const unsigned char MapManager::LEVEL_HEIGHT = 16;
 Enemy enemy1;
-Enemy enemy2;
-Enemy enemy3;
 
 void InitScreen0(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(40, 30);
+	MapManager::MemorizeCheckPoint(74, 35);
 
 	// init all the item of the current puzzle screen
-	spike1.Init(34, 16, Item::PropertyFlags::SPECIAL);
-	spike2.Init(66, 6, Item::PropertyFlags::NONE);
-	enemy1.Init(83, 17, Item::PropertyFlags::SPECIAL_2, shouldRespawn);
-	enemy2.Init(70, 34, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy3.Init(30, 50, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
 
 void InitScreen1(bool shouldRespawn)
@@ -65,6 +58,7 @@ void InitScreen1(bool shouldRespawn)
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
+	enemy1.Init(41, 84, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
 
 // The array that contains all the items
@@ -79,6 +73,4 @@ const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemIni
 void MapManager::InitProgress()
 {
 	Progress::InitItem(&enemy1, 0);
-	Progress::InitItem(&enemy2, 1);
-	Progress::InitItem(&enemy3, 2);
 }

@@ -204,7 +204,7 @@ namespace RickArdurousEditor
 			GetLevelBoundingBox(out startX, out endX, out startY, out endY);
 
 			// declare a list to store the index of each beggining of lines
-			List<int> lineIndex = new List<int>(endY - startY + 1);
+			List<int> lineIndex = new List<int>(endY - startY + 2);
 			int idCount = 0;
 
 			writer.WriteLine("const unsigned char MapManager::Level[] PROGMEM = {");
@@ -270,11 +270,19 @@ namespace RickArdurousEditor
 			writer.WriteLine("};");
 			writer.WriteLine();
 
+			// add the index of the first id of the last line
+			lineIndex.Add(idCount);
+
 			// write the line index array
 			writer.Write("const unsigned int MapManager::LevelLineIndex[] PROGMEM = {");
 			foreach (int index in lineIndex)
 				writer.Write(index.ToString() + ",");
 			writer.WriteLine("};");
+			writer.WriteLine();
+
+			// write the level size
+			writer.WriteLine("const unsigned char MapManager::LEVEL_WIDTH = " + (endX - startX + 1).ToString() + ";");
+			writer.WriteLine("const unsigned char MapManager::LEVEL_HEIGHT = " + (endY - startY + 1).ToString() + ";");
 			writer.WriteLine();
 		}
 

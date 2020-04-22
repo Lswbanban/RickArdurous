@@ -7,11 +7,11 @@ typedef void (*ItemInitFunction)(bool init);
 namespace MapManager
 {
 	// size of the level
-	static constexpr int LEVEL_SIZE_X = 32;
-	static constexpr int LEVEL_SIZE_Y = 16;
+	extern const unsigned char LEVEL_WIDTH;
+	extern const unsigned char LEVEL_HEIGHT;
 	
 	// all the map sprite ids of the full level
-	extern const unsigned int LevelLineIndex[LEVEL_SIZE_Y];
+	extern const unsigned int LevelLineIndex[];
 	extern const unsigned char Level[];
 	
 	// all the function to init the items in the level split per puzzle screen
