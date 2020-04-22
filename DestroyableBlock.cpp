@@ -8,13 +8,7 @@
 #include "BlockFragment.h"
 #include "MapManager.h"
 
-BlockFragment * DestroyableBlock::Fragments[FRAGMENT_COUNT];
-
-void DestroyableBlock::StaticInit()
-{
-	for (unsigned char i = 0; i < FRAGMENT_COUNT; ++i)
-		Fragments[i] = new BlockFragment();
-}
+BlockFragment DestroyableBlock::Fragments[FRAGMENT_COUNT];
 
 bool DestroyableBlock::Update(UpdateStep step)
 {
@@ -55,7 +49,7 @@ void DestroyableBlock::InitDeath()
 {
 	ClearProperty(Item::PropertyFlags::ALIVE);
 	for (unsigned char i = 0; i < FRAGMENT_COUNT; ++i)
-		Fragments[i]->Spawn(X + (i*6), Y, i);
+		Fragments[i].Spawn(X + (i*6), Y, i);
 }
 
 bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY)

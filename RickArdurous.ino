@@ -28,7 +28,6 @@ void setup()
 	// call init function of some managers
 	MapManager::InitProgress(); // call this before the Init of the MapManager
 	MapManager::Init(true);
-	DestroyableBlock::StaticInit();
 }
 
 void loop()
