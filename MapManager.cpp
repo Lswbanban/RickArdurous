@@ -252,7 +252,7 @@ unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld
 	int yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
-	if ((xMap < 0) || (xMap >= MapManager::LEVEL_SIZE_X) || (yMap < 0) || (yMap >= MapManager::LEVEL_SIZE_Y))
+	if ((xMap < 0) || (xMap >= MapManager::LEVEL_WIDTH) || (yMap < 0) || (yMap >= MapManager::LEVEL_HEIGHT))
 		return SpriteData::BLOCK_16_8_RIGHT;
 	// call the function to get the sprite inside the map
 	return GetLevelSpriteAt(xMap, yMap);
