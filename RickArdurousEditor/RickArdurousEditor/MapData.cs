@@ -73,12 +73,7 @@ namespace RickArdurousEditor
 		public MapData()
 		{
 			InitWallSpriteImages();
-			ClearLevel();
-			mLevel[15, 0] = 1;
-			mLevel[1, 1] = 5;
-			mLevel[3, 1] = 7;
-
-			this.AddItem(Items.Item.Type.RICK, false, new Point(20, 30));
+			Reset();
 		}
 
 		private Bitmap GetSprite(Bitmap originalImage, int x, int y, bool isMirrored)
@@ -553,10 +548,34 @@ namespace RickArdurousEditor
 			}
 		}
 
+		private void ReadItemInit(StreamReader reader, string line)
+		{
+		}
+
+		private void ReadCheckpointRespawn(StreamReader reader, string line)
+		{
+			const string checkpointFunctionName = "MemorizeCheckPoint(";
+			string[] tokens = line.Substring(line.IndexOf(checkpointFunctionName) + checkpointFunctionName.Length).Split(new char[] { ',', ')' });
+
+			// parse the two coordinate of the checkpoint respawn
+			int coordIndex = 0;
+			int[] coord = new int[]{ 0, 0 };
+			foreach (string token in tokens)
+				if (int.TryParse(token, out coord[coordIndex]))
+				{
+					coordIndex++;
+					if (coordIndex >= 2)
+						break;
+				}
+
+			// instantiate a RICK item
+			AddItem(Items.Item.Type.RICK, false, new Point(coord[0], coord[1]));
+		}
+
 		public void Load(string fileName)
 		{
 			// clear the level
-			ClearLevel();
+			Reset();
 			// and read the cpp file
 			StreamReader reader = new StreamReader(fileName, System.Text.Encoding.UTF8);
 			while (!reader.EndOfStream)
@@ -564,6 +583,10 @@ namespace RickArdurousEditor
 				string line = reader.ReadLine();
 				if (line.Contains("MapManager::Level[]"))
 					ReadLevelData(reader);
+				else if (line.Contains(".Init("))
+					ReadItemInit(reader, line);
+				else if (line.Contains("MemorizeCheckPoint"))
+					ReadCheckpointRespawn(reader, line);
 			}
 			reader.Close();
 		}
@@ -604,11 +627,15 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region map edition
-		public void ClearLevel()
+		public void Reset()
 		{
+			// clear the level
 			for (int x = 0; x < LEVEL_WIDTH; ++x)
 				for (int y = 0; y < LEVEL_HEIGHT; ++y)
 					mLevel[x, y] = (byte)WallId.NOTHING;
+
+			// clear all the items
+			mItems.Clear();
 		}
 
 		public void SetSpriteId(Point coord, byte id)

@@ -116,7 +116,7 @@ namespace RickArdurousEditor
 		#region menu event
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			mMap.Load(Application.StartupPath + @"\MapTest.cpp");
+			mMap.Load(Application.StartupPath + Properties.Settings.Default.GameRelativePath + @"MapData.cpp");
 			RedrawLevel();
 		}
 
