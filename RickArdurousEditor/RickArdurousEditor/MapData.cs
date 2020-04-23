@@ -550,6 +550,35 @@ namespace RickArdurousEditor
 
 		private void ReadItemInit(StreamReader reader, string line)
 		{
+			const string propertyFlagType = "Item::PropertyFlags::";
+			const string initFunctionName = ".Init(";
+			string instanceName = line.Remove(line.IndexOf(initFunctionName)).Trim();
+			string[] tokens = line.Substring(line.IndexOf(initFunctionName) + initFunctionName.Length).Split(new char[] { ',', ')', '|' });
+
+			// declare some boolean variable to store the property flags
+			bool isSpecial = false;
+			bool isSpecial2 = false;
+			bool isMirror = false;
+
+			// parse the two coordinate of the checkpoint respawn
+			int intValueIndex = 0;
+			int[] intValues = new int[] { 0, 0, 0 };
+			foreach (string token in tokens)
+			{
+				if ((intValueIndex < intValues.Length) && int.TryParse(token, out intValues[intValueIndex]))
+				{
+					intValueIndex++;
+				}
+				else if (token.Contains(propertyFlagType))
+				{
+					isSpecial = token.Contains("SPECIAL");
+					isSpecial2 = token.Contains("SPECIAL_2");
+					isMirror = token.Contains("MIRROR_X");
+				}
+			}
+
+			// instantiate teh correct item
+			AddItem(Items.Item.GetInstanceTypeFromName(instanceName, isSpecial, isSpecial2), isMirror, new Point(intValues[0], intValues[1]));
 		}
 
 		private void ReadCheckpointRespawn(StreamReader reader, string line)
@@ -564,7 +593,7 @@ namespace RickArdurousEditor
 				if (int.TryParse(token, out coord[coordIndex]))
 				{
 					coordIndex++;
-					if (coordIndex >= 2)
+					if (coordIndex >= coord.Length)
 						break;
 				}
 
