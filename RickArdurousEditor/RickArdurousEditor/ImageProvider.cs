@@ -60,11 +60,24 @@ namespace RickArdurousEditor
 			return new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Walls.png");
 		}
 
-		public static Bitmap GetRickImage()
+		public static Bitmap GetRickImage(Items.Item.RespawnType respawnType)
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Rick.png");
 			Bitmap result = new Bitmap(9, 16);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, false, 0f, 0f, 1f);
+			float red = 0f;
+			float green = 0f;
+			float blue = 1f;
+			switch (respawnType)
+			{
+				case Items.Item.RespawnType.START:
+					green = 1f;
+					break;
+				case Items.Item.RespawnType.END:
+					red = 0.5f;
+					green = 0.5f;
+					break;
+			}
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, false, red, green, blue);
 			return result;
 		}
 
@@ -122,7 +135,7 @@ namespace RickArdurousEditor
 			itemSize -= 2;
 
 			// draw all the items in a grid
-			gc.DrawImage(GetRickImage(), 0, 0, itemSize, itemSize);
+			gc.DrawImage(GetRickImage(Items.Item.RespawnType.NORMAL), 0, 0, itemSize, itemSize);
 			gc.DrawImage(GetHorizontalSpikeImage(), 0, itemSize, itemSize, itemSize);
 			gc.DrawImage(GetVerticalSpikeImage(false), 0, itemSize * 2, itemSize, itemSize);
 			gc.DrawImage(GetMummyImage(), 0, itemSize * 3, itemSize, itemSize);
