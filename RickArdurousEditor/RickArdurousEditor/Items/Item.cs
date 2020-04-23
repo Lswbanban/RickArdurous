@@ -58,6 +58,7 @@ namespace RickArdurousEditor.Items
 			mType = type;
 			mX = x;
 			mY = y;
+			mIsMirror = isMirrored;
 			UpdateSprite();
 		}
 
@@ -120,6 +121,16 @@ namespace RickArdurousEditor.Items
 					return "enemy" + instanceNumberString;
 			}
 			return string.Empty;
+		}
+
+		public static Type GetInstanceTypeFromName(string instanceName, bool isSpecial, bool isSpecial2)
+		{
+			if (instanceName.StartsWith("spike"))
+				return isSpecial ? Type.HORIZONTAL_SPIKE : Type.VERTICAL_SPIKE;
+			else if (instanceName.StartsWith("enemy"))
+				return isSpecial ? Type.SCORPION : (isSpecial2 ? Type.SKELETON : Type.MUMMY);
+
+			return Type.HORIZONTAL_SPIKE;
 		}
 
 		public static void WriteInstance(StreamWriter writer, Type type, int instanceNumber)
