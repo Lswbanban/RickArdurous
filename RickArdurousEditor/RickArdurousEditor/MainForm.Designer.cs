@@ -43,6 +43,8 @@
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripButtonFirstRespawnPoint = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonLastRespawnPoint = new System.Windows.Forms.ToolStripButton();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -62,7 +64,9 @@
 			// 
 			this.ToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonMirrorItem,
-            this.toolStripButtonDeleteItem});
+            this.toolStripButtonDeleteItem,
+            this.toolStripButtonFirstRespawnPoint,
+            this.toolStripButtonLastRespawnPoint});
 			this.ToolBar.Location = new System.Drawing.Point(0, 24);
 			this.ToolBar.Name = "ToolBar";
 			this.ToolBar.Size = new System.Drawing.Size(800, 25);
@@ -208,6 +212,26 @@
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
+			// toolStripButtonFirstRespawnPoint
+			// 
+			this.toolStripButtonFirstRespawnPoint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonFirstRespawnPoint.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFirstRespawnPoint.Image")));
+			this.toolStripButtonFirstRespawnPoint.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonFirstRespawnPoint.Name = "toolStripButtonFirstRespawnPoint";
+			this.toolStripButtonFirstRespawnPoint.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonFirstRespawnPoint.Text = "toolStripButton1";
+			this.toolStripButtonFirstRespawnPoint.Click += new System.EventHandler(this.toolStripButtonFirstRespawnPoint_Click);
+			// 
+			// toolStripButtonLastRespawnPoint
+			// 
+			this.toolStripButtonLastRespawnPoint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonLastRespawnPoint.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLastRespawnPoint.Image")));
+			this.toolStripButtonLastRespawnPoint.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonLastRespawnPoint.Name = "toolStripButtonLastRespawnPoint";
+			this.toolStripButtonLastRespawnPoint.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonLastRespawnPoint.Text = "toolStripButton1";
+			this.toolStripButtonLastRespawnPoint.Click += new System.EventHandler(this.toolStripButtonLastRespawnPoint_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,6 +282,8 @@
 		private System.Windows.Forms.PictureBox PictureBoxItems;
 		private System.Windows.Forms.ToolStripButton toolStripButtonMirrorItem;
 		private System.Windows.Forms.ToolStripButton toolStripButtonDeleteItem;
+		private System.Windows.Forms.ToolStripButton toolStripButtonFirstRespawnPoint;
+		private System.Windows.Forms.ToolStripButton toolStripButtonLastRespawnPoint;
 	}
 }
 

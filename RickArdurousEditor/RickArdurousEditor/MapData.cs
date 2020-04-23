@@ -286,6 +286,12 @@ namespace RickArdurousEditor
 			return ((y / (ARDUBOY_PUZZLE_SCREEN_HEIGHT * WALL_SPRITE_HEIGHT)) * (LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH)) + (x / (ARDUBOY_PUZZLE_SCREEN_WIDTH * WALL_SPRITE_WIDTH));
 		}
 
+		private void GetPuzzleScreenCoordFromGameWorldCoord(int x, int y, out int screenX, out int screenY)
+		{
+			screenX = (x / (ARDUBOY_PUZZLE_SCREEN_WIDTH * WALL_SPRITE_WIDTH)) * ARDUBOY_PUZZLE_SCREEN_WIDTH;
+			screenY = (y / (ARDUBOY_PUZZLE_SCREEN_HEIGHT * WALL_SPRITE_HEIGHT)) * ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+		}
+
 		private int GetMaxItemCount(List<Items.Item.Type> itemTypes)
 		{
 			int[] maxCountPerSreen = new int[(LEVEL_WIDTH / ARDUBOY_PUZZLE_SCREEN_WIDTH) * (LEVEL_HEIGHT /ARDUBOY_PUZZLE_SCREEN_HEIGHT)];
@@ -383,13 +389,27 @@ namespace RickArdurousEditor
 			return (wallId >= (byte)WallId.DESTROYABLE_BLOCK) || (wallId == (byte)WallId.LADDER) || (wallId == (byte)WallId.PLATFORM_WITH_LADDER);
 		}
 
+		private void GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType typeOfScreen, out int screenX, out int screenY)
+		{
+			// default value if we didn't find the special respawn point
+			screenX = 0;
+			screenY = 0;
+			// search in the rick item the one that match the specified parameter
+			if (mItems.ContainsKey(Items.Item.Type.RICK))
+				foreach (Items.Item respawnItem in mItems[Items.Item.Type.RICK])
+					if (respawnItem.RickRespawnType == typeOfScreen)
+						GetPuzzleScreenCoordFromGameWorldCoord(respawnItem.X, respawnItem.Y, out screenX, out screenY);
+		}
+
 		private int WriteInitFunctions(StreamWriter writer)
 		{
-			// TODO: hard coded start and end
-			int startScreenX = 0;
-			int endScreenX = 0;
-			int startScreenY = 0;
-			int endScreenY = ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+			// get the coordinate of the start and End screen
+			int startScreenX;
+			int endScreenX;
+			int startScreenY;
+			int endScreenY;
+			GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.START, out startScreenX, out startScreenY);
+			GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.END, out endScreenX, out endScreenY);
 
 			// init the current screen coord with the start one
 			int currentScreenX = startScreenX;

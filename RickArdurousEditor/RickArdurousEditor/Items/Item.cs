@@ -23,11 +23,21 @@ namespace RickArdurousEditor.Items
 			COUNT,
 		}
 
+		public enum RespawnType
+		{
+			NORMAL,
+			START,
+			END,
+		}
+
 		private static Pen mSelectedPen = new Pen(Color.Yellow, 2);
 
 		// type of the item
 		private Type mType = Type.HORIZONTAL_SPIKE;
 		private bool mIsMirror = false;
+
+		// two special flags for the Rick type of Item that can identify the first and last puzzle screen
+		private RespawnType mRickRespawnType = RespawnType.NORMAL;
 
 		// coordinate of the Item
 		private int mX = 0;
@@ -35,6 +45,7 @@ namespace RickArdurousEditor.Items
 
 		// sprite of the item
 		Bitmap mSprite = null;
+
 
 		#region get/set
 		public int X
@@ -50,6 +61,16 @@ namespace RickArdurousEditor.Items
 		public Type ItemType
 		{
 			get { return mType; }
+		}
+
+		public RespawnType RickRespawnType
+		{
+			get { return mRickRespawnType; }
+			set
+			{
+				mRickRespawnType = value;
+				UpdateSprite();
+			}
 		}
 		#endregion
 
@@ -68,7 +89,7 @@ namespace RickArdurousEditor.Items
 			switch (mType)
 			{
 				case Type.RICK:
-					mSprite = ImageProvider.GetRickImage();
+					mSprite = ImageProvider.GetRickImage(mRickRespawnType);
 					break;
 				case Type.HORIZONTAL_SPIKE:
 					mSprite = ImageProvider.GetHorizontalSpikeImage();
@@ -163,7 +184,6 @@ namespace RickArdurousEditor.Items
 			}
 			return false;
 		}
-
 
 		public void WriteCheckpoint(StreamWriter writer, int instanceNumber)
 		{
