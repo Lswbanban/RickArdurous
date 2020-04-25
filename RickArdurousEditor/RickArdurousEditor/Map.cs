@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 
 namespace RickArdurousEditor
 {
-	class MapData
+	class Map
 	{
 		private const int ARDUBOY_PUZZLE_SCREEN_WIDTH = 16;
 		private const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
@@ -70,7 +69,7 @@ namespace RickArdurousEditor
 		};
 
 		#region init
-		public MapData()
+		public Map()
 		{
 			InitWallSpriteImages();
 			Reset();
