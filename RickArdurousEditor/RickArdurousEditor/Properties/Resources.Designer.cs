@@ -71,6 +71,24 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There&apos;s no End Rick respawn point in the Map (dark blue color). The Map cannot be exported..
+        /// </summary>
+        internal static string ErrorNoEndPuzzleScreen {
+            get {
+                return ResourceManager.GetString("ErrorNoEndPuzzleScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There&apos;s no Start Rick respawn point in the Map (cyan color). The Map cannot be exported..
+        /// </summary>
+        internal static string ErrorNoStartPuzzleScreen {
+            get {
+                return ResourceManager.GetString("ErrorNoStartPuzzleScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon MainApplicationIcon {

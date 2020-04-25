@@ -281,5 +281,26 @@ namespace RickArdurousEditor
 				DeleteCurrentSelectedItem();
 		}
 		#endregion
+
+		#region Log
+
+		public enum LogLevel
+		{
+			NORMAL,
+			GOOD,
+			WARNING,
+			ERROR,
+		}
+
+		public static void LogMessage(string message, LogLevel level)
+		{
+			// get the main form
+			MainForm mainForm = Application.OpenForms[0] as MainForm;
+			// add the message in the list of string
+			List<string> existingMessages = new List<string>(mainForm.textBoxLog.Lines);
+			existingMessages.Add(message);
+			mainForm.textBoxLog.Lines = existingMessages.ToArray();
+		}
+		#endregion
 	}
 }

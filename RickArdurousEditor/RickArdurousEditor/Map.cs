@@ -388,7 +388,7 @@ namespace RickArdurousEditor
 			return (wallId >= (byte)WallId.DESTROYABLE_BLOCK) || (wallId == (byte)WallId.LADDER) || (wallId == (byte)WallId.PLATFORM_WITH_LADDER);
 		}
 
-		private void GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType typeOfScreen, out int screenX, out int screenY)
+		private bool GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType typeOfScreen, out int screenX, out int screenY)
 		{
 			// default value if we didn't find the special respawn point
 			screenX = 0;
@@ -397,7 +397,11 @@ namespace RickArdurousEditor
 			if (mItems.ContainsKey(Items.Item.Type.RICK))
 				foreach (Items.Item respawnItem in mItems[Items.Item.Type.RICK])
 					if (respawnItem.RickRespawnType == typeOfScreen)
+					{
 						GetPuzzleScreenCoordFromGameWorldCoord(respawnItem.X, respawnItem.Y, out screenX, out screenY);
+						return true;
+					}
+			return false;
 		}
 
 		private int WriteInitFunctions(StreamWriter writer)
@@ -407,8 +411,16 @@ namespace RickArdurousEditor
 			int endScreenX;
 			int startScreenY;
 			int endScreenY;
-			GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.START, out startScreenX, out startScreenY);
-			GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.END, out endScreenX, out endScreenY);
+			if (!GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.START, out startScreenX, out startScreenY))
+			{
+				MainForm.LogMessage(Properties.Resources.ErrorNoStartPuzzleScreen, MainForm.LogLevel.ERROR);
+				return 0;
+			}
+			if (!GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.END, out endScreenX, out endScreenY))
+			{
+				MainForm.LogMessage(Properties.Resources.ErrorNoEndPuzzleScreen, MainForm.LogLevel.ERROR);
+				return 0;
+			}
 
 			// init the current screen coord with the start one
 			int currentScreenX = startScreenX;
