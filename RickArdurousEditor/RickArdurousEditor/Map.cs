@@ -430,6 +430,7 @@ namespace RickArdurousEditor
 						(currentScreenY - ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreenY) &&
 						IsAPuzzleScreenExit(mLevel[x, currentScreenY]))
 					{
+						previousScreenY = currentScreenY;
 						currentScreenY -= ARDUBOY_PUZZLE_SCREEN_HEIGHT;
 						isExitFound = true;
 						break;
@@ -438,6 +439,7 @@ namespace RickArdurousEditor
 						(currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreenY) &&
 						IsAPuzzleScreenExit(mLevel[x, currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
 					{
+						previousScreenY = currentScreenY;
 						currentScreenY += ARDUBOY_PUZZLE_SCREEN_HEIGHT;
 						isExitFound = true;
 						break;
@@ -453,6 +455,7 @@ namespace RickArdurousEditor
 							(currentScreenX - ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreenX) &&
 							IsAPuzzleScreenExit(mLevel[currentScreenX, y]))
 						{
+							previousScreenX = currentScreenX;
 							currentScreenX -= ARDUBOY_PUZZLE_SCREEN_WIDTH;
 							break;
 						}
@@ -460,6 +463,7 @@ namespace RickArdurousEditor
 							(currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreenX) &&
 							IsAPuzzleScreenExit(mLevel[currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
 						{
+							previousScreenX = currentScreenX;
 							currentScreenX += ARDUBOY_PUZZLE_SCREEN_WIDTH;
 							break;
 						}
@@ -647,6 +651,16 @@ namespace RickArdurousEditor
 					ReadCheckpointRespawn(reader, line);
 			}
 			reader.Close();
+
+			// set the first and last rick respawn type
+			if (mItems.ContainsKey(Items.Item.Type.RICK))
+			{
+				List<Items.Item> respawnList = mItems[Items.Item.Type.RICK];
+				if (respawnList.Count > 0)
+					respawnList[0].RickRespawnType = Items.Item.RespawnType.START;
+				if (respawnList.Count > 1)
+					respawnList[respawnList.Count - 1].RickRespawnType = Items.Item.RespawnType.END;
+			}
 		}
 		#endregion
 
