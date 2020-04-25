@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
@@ -126,24 +127,60 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetItemsSpriteImage()
 		{
-			int itemSize = 16;
-			Bitmap itemSpriteImage = new Bitmap(itemSize * 2, itemSize * 8);
+			// get all the image of all the items
+			List<Bitmap> itemImages = new List<Bitmap>();
+			itemImages.Add(GetRickImage(Items.Item.RespawnType.NORMAL));
+			itemImages.Add(GetHorizontalSpikeImage());
+			itemImages.Add(GetVerticalSpikeImage(false));
+			itemImages.Add(GetMummyImage());
+			itemImages.Add(GetSkeletonImage());
+			itemImages.Add(GetScorpionImage());
+
+			// declare the size, and numbers of items in the toolbars
+			const int itemRows = 8;
+			const int itemColumns = 2;
+			const int cellSize = 64;
+			Bitmap itemSpriteImage = new Bitmap(cellSize * itemColumns, cellSize * itemRows);
 			Graphics gc = Graphics.FromImage(itemSpriteImage);
 			SetGCInPixelMode(ref gc);
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
 			// clear the background
 			gc.Clear(Color.Black);
 
 			// decrease the item size to leave a margin
-			itemSize -= 2;
+			int margin = 1;
+			int itemSize = cellSize - (margin * 2);
 
-			// draw all the items in a grid
-			gc.DrawImage(GetRickImage(Items.Item.RespawnType.NORMAL), 0, 0, itemSize, itemSize);
-			gc.DrawImage(GetHorizontalSpikeImage(), 0, itemSize, itemSize, itemSize);
-			gc.DrawImage(GetVerticalSpikeImage(false), 0, itemSize * 2, itemSize, itemSize);
-			gc.DrawImage(GetMummyImage(), 0, itemSize * 3, itemSize, itemSize);
-			gc.DrawImage(GetSkeletonImage(), 0, itemSize * 4, itemSize, itemSize);
-			gc.DrawImage(GetScorpionImage(), 0, itemSize * 5, itemSize, itemSize);
+			// coordinate of the item to draw
+			int itemX = 0;
+			int itemY = 0;
+
+			// iterate on all the item images to draw them in the correct cell space
+			foreach (Bitmap itemImage in itemImages)
+			{
+				// get the size of the image and get the biggest one to keep the aspect ratio
+				int width = itemSize;
+				int height = itemSize;
+				if (itemImage.Width < itemImage.Height)
+					width = (itemSize * itemImage.Width) / itemImage.Height;
+				else if (itemImage.Width > itemImage.Height)
+					height = (itemSize * itemImage.Height) / itemImage.Width;
+
+				// draw the image in the correct cell
+				gc.DrawImage(itemImage,
+					new Rectangle((cellSize * itemX) + ((cellSize - width) / 2), (cellSize * itemY) + ((cellSize - height) / 2), width, height),
+					new Rectangle(0, 0, itemImage.Width, itemImage.Height),
+					GraphicsUnit.Pixel);
+
+				// increase the item coordinates
+				itemY++;
+				if (itemY == itemRows)
+				{
+					itemY = 0;
+					itemX++;
+				}
+			}
 
 			return itemSpriteImage;
 		}
