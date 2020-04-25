@@ -244,10 +244,10 @@ unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
 	// convert the world coordinate into index for the sprite map
 	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
 	int yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
-	while (!(yMap % NB_VERTICAL_SPRITE_PER_SCREEN))
+	while (yMap % NB_VERTICAL_SPRITE_PER_SCREEN)
 	{
 		if (GetLevelSpriteAt(xMap, yMap) != SpriteData::NOTHING)
-			return (yMap % NB_VERTICAL_SPRITE_PER_SCREEN) * SpriteData::LEVEL_SPRITE_HEIGHT;
+			return (((yMap % NB_VERTICAL_SPRITE_PER_SCREEN) + 1) * SpriteData::LEVEL_SPRITE_HEIGHT) + CAMERA_VERTICAL_SHIFT;
 		// look at the level sprite above
 		yMap--;
 	}
