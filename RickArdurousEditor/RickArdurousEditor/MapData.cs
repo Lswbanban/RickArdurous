@@ -414,6 +414,8 @@ namespace RickArdurousEditor
 			// init the current screen coord with the start one
 			int currentScreenX = startScreenX;
 			int currentScreenY = startScreenY;
+			int previousScreenX = startScreenX;
+			int previousScreenY = startScreenY;
 			int screenId = 0;
 			while ((currentScreenX != endScreenX) || (currentScreenY != endScreenY))
 			{
@@ -425,13 +427,17 @@ namespace RickArdurousEditor
 				bool isExitFound = false;
 				for (int x = currentScreenX + 1; x < currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 2; ++x)
 				{
-					if ((currentScreenY > 0) && IsAPuzzleScreenExit(mLevel[x, currentScreenY]))
+					if ((currentScreenY > 0) && 
+						(currentScreenY - ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreenY) &&
+						IsAPuzzleScreenExit(mLevel[x, currentScreenY]))
 					{
 						currentScreenY -= ARDUBOY_PUZZLE_SCREEN_HEIGHT;
 						isExitFound = true;
 						break;
 					}
-					if ((currentScreenY < LEVEL_HEIGHT - ARDUBOY_PUZZLE_SCREEN_HEIGHT) && IsAPuzzleScreenExit(mLevel[x, currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
+					if ((currentScreenY < LEVEL_HEIGHT - ARDUBOY_PUZZLE_SCREEN_HEIGHT) &&
+						(currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreenY) &&
+						IsAPuzzleScreenExit(mLevel[x, currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
 					{
 						currentScreenY += ARDUBOY_PUZZLE_SCREEN_HEIGHT;
 						isExitFound = true;
@@ -444,14 +450,18 @@ namespace RickArdurousEditor
 				{
 					for (int y = currentScreenY + 1; y < currentScreenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 2; ++y)
 					{
-						if ((currentScreenX > 0) && IsAPuzzleScreenExit(mLevel[currentScreenX, y]))
+						if ((currentScreenX > 0) &&
+							(currentScreenX - ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreenX) &&
+							IsAPuzzleScreenExit(mLevel[currentScreenX, y]))
 						{
 							currentScreenX -= ARDUBOY_PUZZLE_SCREEN_WIDTH;
 							break;
 						}
-						if ((currentScreenX < LEVEL_WIDTH - ARDUBOY_PUZZLE_SCREEN_WIDTH) && IsAPuzzleScreenExit(mLevel[currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
+						if ((currentScreenX < LEVEL_WIDTH - ARDUBOY_PUZZLE_SCREEN_WIDTH) &&
+							(currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreenX) &&
+							IsAPuzzleScreenExit(mLevel[currentScreenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
 						{
-							currentScreenY += ARDUBOY_PUZZLE_SCREEN_WIDTH;
+							currentScreenX += ARDUBOY_PUZZLE_SCREEN_WIDTH;
 							break;
 						}
 					}
