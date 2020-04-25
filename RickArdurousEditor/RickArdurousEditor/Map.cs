@@ -352,7 +352,7 @@ namespace RickArdurousEditor
 			return 0;
 		}
 
-		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop)
+		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop, bool isLastScreen)
 		{
 			// get all the items on the specified screen
 			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenLeft, screenTop);
@@ -368,7 +368,7 @@ namespace RickArdurousEditor
 			// add the items in the map manager
 			writer.WriteLine("\t// Add a checkpoint if we need to");
 			foreach (Items.Item item in itemsOnScreen)
-				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
+				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item), isLastScreen);
 			writer.WriteLine();
 
 			// reset the item count array
@@ -419,7 +419,7 @@ namespace RickArdurousEditor
 			while ((currentScreenX != endScreenX) || (currentScreenY != endScreenY))
 			{
 				// write the init function of the current screen
-				WriteInitFunctionForOneScreen(writer, screenId, currentScreenX, currentScreenY);
+				WriteInitFunctionForOneScreen(writer, screenId, currentScreenX, currentScreenY, false);
 				screenId++;
 
 				// get the next screen coordinates above or below
@@ -471,7 +471,7 @@ namespace RickArdurousEditor
 				}
 			}
 			// write the init function of the last screen
-			WriteInitFunctionForOneScreen(writer, screenId, endScreenX, endScreenY);
+			WriteInitFunctionForOneScreen(writer, screenId, endScreenX, endScreenY, true);
 
 			// return the number of screens
 			return screenId + 1;
