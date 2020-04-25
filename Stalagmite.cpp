@@ -31,7 +31,40 @@ bool Stalagmite::Update(UpdateStep step)
 		
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
-			if (!IsPropertySet(Item::PropertyFlags::ALIVE))
+			// get my screen coords
+			unsigned char screenX = MapManager::GetXOnScreen(X);
+			unsigned char screenY = MapManager::GetYOnScreen(Y);
+			
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				// check if we are waiting for the drop to fall
+				if (DropY == 255)
+				{
+					if (arduboy.everyXFrames(DROP_PERIOD))
+						InitDrop();
+				}
+				else
+				{
+					// the drop is currently falling, so increase the drop position
+					DropY++;
+					
+					// get the top coord of the stalagmite
+					screenY += 6;
+					
+					// if we reach the stalagmite, and finished to play the sparks, then go to wait mode
+					if (DropY >= screenY + SpriteData::SPARKS_SPRITE_FRAME_COUNT)
+						DropY = 255;
+					else if (DropY >= screenY) // otherwise play the sparks
+						arduboy.drawBitmapExtended(screenX + DropX - 1, screenY - 10,
+							SpriteData::Sparks[DropY % SpriteData::SPARKS_SPRITE_FRAME_COUNT],
+							SpriteData::SPARKS_SPRITE_WIDTH,
+							SpriteData::SPARKS_SPRITE_HEIGHT,
+							INVERT, false);
+					else // otherwise draw the drop
+						arduboy.drawPixel(screenX + DropX, DropY, WHITE);
+				}
+			}
+			else
 			{
 				// increase the sparks frame counter
 				if (arduboy.everyXFrames(SPARKS_ANIM_SPEED))
@@ -47,8 +80,7 @@ bool Stalagmite::Update(UpdateStep step)
 				
 				// draw the sparks
 				for (unsigned char i = 0; i < 3; ++i)
-					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (i*3) -1),
-						MapManager::GetYOnScreen(Y + 1),
+					arduboy.drawBitmapExtended(screenX + (i*3) -1, screenY + 1,
 						SpriteData::Sparks[(SparksAnimFrameId + i) % SpriteData::SPARKS_SPRITE_FRAME_COUNT],
 						SpriteData::SPARKS_SPRITE_WIDTH,
 						SpriteData::SPARKS_SPRITE_HEIGHT,
@@ -64,6 +96,14 @@ bool Stalagmite::Update(UpdateStep step)
 		}
 	}
 	return false;
+}
+
+void Stalagmite::InitDrop()
+{
+	DropX = random(2);
+	if (DropX == 0)
+		DropX = 5;
+	DropY = MapManager::GetCeillingScreenPositionAbove(X + DropX,Y);
 }
 
 void Stalagmite::Draw()

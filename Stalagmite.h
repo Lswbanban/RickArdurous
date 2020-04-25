@@ -9,11 +9,19 @@ public:
 	virtual bool Update(UpdateStep step);
 
 private:
+	static constexpr int DROP_PERIOD = 150;
 	static constexpr int SPARKS_ANIM_SPEED = 3;
 
-	unsigned char SparksAnimFrameId = 0;
+	union
+	{
+		unsigned char DropY;
+		unsigned char SparksAnimFrameId = 0;
+	};
+	
+	unsigned char DropX;
 	
 	void Draw();
+	void InitDrop();
 };
 
 #endif

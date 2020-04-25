@@ -24,7 +24,8 @@ namespace MapManager
 	bool IsThereStaticCollisionAt(int xWorld, int yWorld);
 	bool IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigned char width);
 	bool IsThereLadderAt(int xWorld, int yWorld);
-	
+	unsigned char GetCeillingScreenPositionAbove(int xWorld, int yWorld);
+
 	// function to iterate on items
 	void CallMeBackForEachTrapTriggerer(Item* caller, ItemCallback callback);
 	
