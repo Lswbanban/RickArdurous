@@ -15,7 +15,7 @@ private:
 	union
 	{
 		unsigned char DropY;
-		unsigned char SparksAnimFrameId = 0;
+		unsigned char SparksAnimFrameId;
 	};
 	
 	unsigned char DropX;
