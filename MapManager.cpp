@@ -239,6 +239,21 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 	return (spriteId < SpriteData::WallId::LADDER) || ((spriteId > SpriteData::WallId::PLATFORM_WITH_LADDER) && (spriteId != SpriteData::NOTHING));
 }
 
+unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
+{
+	// convert the world coordinate into index for the sprite map
+	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
+	int yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
+	while (!(yMap % NB_VERTICAL_SPRITE_PER_SCREEN))
+	{
+		if (GetLevelSpriteAt(xMap, yMap) != SpriteData::NOTHING)
+			return (yMap % NB_VERTICAL_SPRITE_PER_SCREEN) * SpriteData::LEVEL_SPRITE_HEIGHT;
+		// look at the level sprite above
+		yMap--;
+	}
+	return 0;
+}
+
 bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
 {
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
