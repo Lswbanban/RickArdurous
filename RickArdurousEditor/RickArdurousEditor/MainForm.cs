@@ -146,26 +146,16 @@ namespace RickArdurousEditor
 			DeleteCurrentSelectedItem();
 		}
 
-		private void toolStripButtonFirstRespawnPoint_Click(object sender, EventArgs e)
+		private void toolStripButtonRespawnPointType_Click(object sender, EventArgs e)
 		{
 			if ((mCurrentSelectedItem != null) && (mCurrentSelectedItem.ItemType == Items.Item.Type.RICK))
 			{
-				if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.START)
-					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
-				else
+				if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.NORMAL)
 					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.START;
-				RedrawLevel();
-			}
-		}
-
-		private void toolStripButtonLastRespawnPoint_Click(object sender, EventArgs e)
-		{
-			if ((mCurrentSelectedItem != null) && (mCurrentSelectedItem.ItemType == Items.Item.Type.RICK))
-			{
-				if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.END)
-					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
-				else
+				else if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.START)
 					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.END;
+				else
+					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
 				RedrawLevel();
 			}
 		}

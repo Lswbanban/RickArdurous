@@ -64,17 +64,20 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Rick.png");
 			Bitmap result = new Bitmap(9, 16);
-			float red = 0f;
-			float green = 0f;
+			float red = 0.5f;
+			float green = 0.6f;
 			float blue = 1f;
 			switch (respawnType)
 			{
 				case Items.Item.RespawnType.START:
+					red = 0f;
 					green = 1f;
+					blue = 1f;
 					break;
 				case Items.Item.RespawnType.END:
-					red = 0.5f;
-					green = 0.5f;
+					red = 0f;
+					green = 0f;
+					blue = 1f;
 					break;
 			}
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, false, red, green, blue);
