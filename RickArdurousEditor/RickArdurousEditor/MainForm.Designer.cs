@@ -74,7 +74,7 @@
 			// toolStripButtonMirrorItem
 			// 
 			this.toolStripButtonMirrorItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonMirrorItem.Image = global::RickArdurousEditor.Properties.Resources.MirrorIcon;
+			this.toolStripButtonMirrorItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonMirrorItem.Image")));
 			this.toolStripButtonMirrorItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonMirrorItem.Name = "toolStripButtonMirrorItem";
 			this.toolStripButtonMirrorItem.Size = new System.Drawing.Size(23, 22);
@@ -84,7 +84,7 @@
 			// toolStripButtonDeleteItem
 			// 
 			this.toolStripButtonDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonDeleteItem.Image = global::RickArdurousEditor.Properties.Resources.DeleteIcon;
+			this.toolStripButtonDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeleteItem.Image")));
 			this.toolStripButtonDeleteItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonDeleteItem.Name = "toolStripButtonDeleteItem";
 			this.toolStripButtonDeleteItem.Size = new System.Drawing.Size(23, 22);
@@ -93,7 +93,7 @@
 			// toolStripButtonRespawnPointType
 			// 
 			this.toolStripButtonRespawnPointType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonRespawnPointType.Image = global::RickArdurousEditor.Properties.Resources.RespawnPointType;
+			this.toolStripButtonRespawnPointType.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRespawnPointType.Image")));
 			this.toolStripButtonRespawnPointType.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonRespawnPointType.Name = "toolStripButtonRespawnPointType";
 			this.toolStripButtonRespawnPointType.Size = new System.Drawing.Size(23, 22);
@@ -115,7 +115,7 @@
 			// 
 			this.SplitContainerToolAndLevel.Panel2.Controls.Add(this.PictureBoxLevel);
 			this.SplitContainerToolAndLevel.Size = new System.Drawing.Size(800, 401);
-			this.SplitContainerToolAndLevel.SplitterDistance = 151;
+			this.SplitContainerToolAndLevel.SplitterDistance = 95;
 			this.SplitContainerToolAndLevel.TabIndex = 1;
 			// 
 			// SplitContainerWallAndItems
@@ -133,7 +133,7 @@
 			// SplitContainerWallAndItems.Panel2
 			// 
 			this.SplitContainerWallAndItems.Panel2.Controls.Add(this.PictureBoxItems);
-			this.SplitContainerWallAndItems.Size = new System.Drawing.Size(151, 401);
+			this.SplitContainerWallAndItems.Size = new System.Drawing.Size(95, 401);
 			this.SplitContainerWallAndItems.SplitterDistance = 255;
 			this.SplitContainerWallAndItems.TabIndex = 1;
 			// 
@@ -142,7 +142,7 @@
 			this.PictureBoxWallSprites.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PictureBoxWallSprites.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxWallSprites.Name = "PictureBoxWallSprites";
-			this.PictureBoxWallSprites.Size = new System.Drawing.Size(147, 251);
+			this.PictureBoxWallSprites.Size = new System.Drawing.Size(91, 251);
 			this.PictureBoxWallSprites.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.PictureBoxWallSprites.TabIndex = 0;
 			this.PictureBoxWallSprites.TabStop = false;
@@ -153,7 +153,7 @@
 			this.PictureBoxItems.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PictureBoxItems.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxItems.Name = "PictureBoxItems";
-			this.PictureBoxItems.Size = new System.Drawing.Size(147, 138);
+			this.PictureBoxItems.Size = new System.Drawing.Size(91, 138);
 			this.PictureBoxItems.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.PictureBoxItems.TabIndex = 0;
 			this.PictureBoxItems.TabStop = false;
@@ -164,7 +164,7 @@
 			this.PictureBoxLevel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PictureBoxLevel.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxLevel.Name = "PictureBoxLevel";
-			this.PictureBoxLevel.Size = new System.Drawing.Size(641, 397);
+			this.PictureBoxLevel.Size = new System.Drawing.Size(697, 397);
 			this.PictureBoxLevel.TabIndex = 0;
 			this.PictureBoxLevel.TabStop = false;
 			this.PictureBoxLevel.SizeChanged += new System.EventHandler(this.PictureBoxLevel_SizeChanged);
