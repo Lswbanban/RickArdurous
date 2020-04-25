@@ -12,7 +12,7 @@ namespace RickArdurousEditor
 {
 	public partial class MainForm : Form
 	{
-		private MapData mMap = new MapData();
+		private Map mMap = new Map();
 
 		// current selection
 		private byte mCurrentSelectedSpriteId = 0;
@@ -207,7 +207,7 @@ namespace RickArdurousEditor
 
 		private Point ConvertMouseCoordToLevelCoord(Point mouseCoord)
 		{
-			return new Point((mMapCamera.X * MapData.WALL_SPRITE_WIDTH) + (mouseCoord.X / mMap.PixelSize), (mMapCamera.Y * MapData.WALL_SPRITE_HEIGHT) + (mouseCoord.Y / mMap.PixelSize));
+			return new Point((mMapCamera.X * Map.WALL_SPRITE_WIDTH) + (mouseCoord.X / mMap.PixelSize), (mMapCamera.Y * Map.WALL_SPRITE_HEIGHT) + (mouseCoord.Y / mMap.PixelSize));
 		}
 
 		private void PictureBoxLevel_MouseDown(object sender, MouseEventArgs e)
