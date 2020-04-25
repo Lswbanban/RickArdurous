@@ -71,6 +71,24 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The editor has detected a cyclic path in the chain of puzzle screen. Rick Ardurous does not support loops in the puzzle screens. The Map cannot be exported..
+        /// </summary>
+        internal static string ErrorCyclicPuzzlePathDetected {
+            get {
+                return ResourceManager.GetString("ErrorCyclicPuzzlePathDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dead End detected, the editor didn&apos;t find any exit in the screen located at (¤,¤¤). The Map cannot be exported..
+        /// </summary>
+        internal static string ErrorDeadEndNotExitFound {
+            get {
+                return ResourceManager.GetString("ErrorDeadEndNotExitFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There&apos;s no End Rick respawn point in the Map (dark blue color). The Map cannot be exported..
         /// </summary>
         internal static string ErrorNoEndPuzzleScreen {
