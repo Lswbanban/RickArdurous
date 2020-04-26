@@ -59,5 +59,11 @@
             <File name="SpriteData.h" />
             <File name="SpriteData.cpp" />
         </Folder>
+        <Folder name="GameManager">
+            <File name="GameManager.h" />
+            <File name="GameManager.cpp" />
+            <File name="MainMenu.h" />
+            <File name="MainMenu.cpp" />
+        </Folder>
     </Project>
 </NotepadPlus>
