@@ -152,8 +152,6 @@ namespace RickArdurousEditor
 			{
 				if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.NORMAL)
 					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.START;
-				else if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.START)
-					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.END;
 				else
 					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
 				RedrawLevel();

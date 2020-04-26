@@ -28,7 +28,6 @@ namespace RickArdurousEditor.Items
 		{
 			NORMAL,
 			START,
-			END,
 		}
 
 		private static Pen mSelectedPen = new Pen(Color.Yellow, 2);
@@ -197,20 +196,10 @@ namespace RickArdurousEditor.Items
 			return false;
 		}
 
-		public void WriteCheckpoint(StreamWriter writer, int instanceNumber, bool isLastScreen)
+		public void WriteCheckpoint(StreamWriter writer, int instanceNumber)
 		{
 			if (mType == Type.RICK)
-			{
-				// comment this line if it is the last screen
-				if (isLastScreen)
-				{
-					writer.WriteLine("\t// The last checkpoint is uselfull for the Map Editor only, when reading and loading the map in the editor");
-					writer.Write("\t//");
-				}
-				else
-					writer.Write("\t");
-				writer.WriteLine("MapManager::MemorizeCheckPoint(" + mX.ToString() + ", " + mY.ToString() + ");");
-			}
+				writer.WriteLine("\tMapManager::MemorizeCheckPoint(" + mX.ToString() + ", " + mY.ToString() + ");");
 		}
 
 		public void WriteInit(StreamWriter writer, int instanceNumber)

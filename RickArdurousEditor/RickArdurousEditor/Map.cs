@@ -354,7 +354,7 @@ namespace RickArdurousEditor
 			return 0;
 		}
 
-		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop, bool isLastScreen)
+		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop)
 		{
 			// get all the items on the specified screen
 			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenLeft, screenTop);
@@ -370,7 +370,7 @@ namespace RickArdurousEditor
 			// add the items in the map manager
 			writer.WriteLine("\t// Add a checkpoint if we need to");
 			foreach (Items.Item item in itemsOnScreen)
-				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item), isLastScreen);
+				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 			writer.WriteLine();
 
 			// reset the item count array
@@ -390,15 +390,19 @@ namespace RickArdurousEditor
 			return (wallId >= (byte)WallId.DESTROYABLE_BLOCK) || (wallId == (byte)WallId.LADDER) || (wallId == (byte)WallId.PLATFORM_WITH_LADDER);
 		}
 
-		private bool GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType typeOfScreen, out int screenX, out int screenY)
+		private bool GetStartOrEndPuzzleScreenCoordinates(bool isStart, out int screenX, out int screenY)
 		{
 			// default value if we didn't find the special respawn point
 			screenX = 0;
 			screenY = 0;
+
+			// configure the type of item to search (either RICK for start or GRAAL for end)
+			Items.Item.Type itemTypeToSearch = isStart ? Items.Item.Type.RICK : Items.Item.Type.GRAAL;
+
 			// search in the rick item the one that match the specified parameter
-			if (mItems.ContainsKey(Items.Item.Type.RICK))
-				foreach (Items.Item respawnItem in mItems[Items.Item.Type.RICK])
-					if (respawnItem.RickRespawnType == typeOfScreen)
+			if (mItems.ContainsKey(itemTypeToSearch))
+				foreach (Items.Item respawnItem in mItems[itemTypeToSearch])
+					if (!isStart || (respawnItem.RickRespawnType == Items.Item.RespawnType.START))
 					{
 						GetPuzzleScreenCoordFromGameWorldCoord(respawnItem.X, respawnItem.Y, out screenX, out screenY);
 						return true;
@@ -413,9 +417,9 @@ namespace RickArdurousEditor
 			int endScreenX;
 			int startScreenY;
 			int endScreenY;
-			if (!GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.START, out startScreenX, out startScreenY))
+			if (!GetStartOrEndPuzzleScreenCoordinates(true, out startScreenX, out startScreenY))
 				throw new MapSaveException(Properties.Resources.ErrorNoStartPuzzleScreen, MainForm.LogLevel.ERROR);
-			if (!GetStartOrEndPuzzleScreenCoordinates(Items.Item.RespawnType.END, out endScreenX, out endScreenY))
+			if (!GetStartOrEndPuzzleScreenCoordinates(false, out endScreenX, out endScreenY))
 				throw new MapSaveException(Properties.Resources.ErrorNoEndPuzzleScreen, MainForm.LogLevel.ERROR);
 
 			// declare a list for storing all the puzzle screen already exported
@@ -433,7 +437,7 @@ namespace RickArdurousEditor
 				exportedPuzzleScreenCoord.Add(currentScreen);
 
 				// write the init function of the current screen
-				WriteInitFunctionForOneScreen(writer, screenId, currentScreen.X, currentScreen.Y, false);
+				WriteInitFunctionForOneScreen(writer, screenId, currentScreen.X, currentScreen.Y);
 				screenId++;
 
 				// get the next screen coordinates above or below
@@ -491,7 +495,7 @@ namespace RickArdurousEditor
 					throw new MapSaveException(Properties.Resources.ErrorDeadEndNotExitFound, MainForm.LogLevel.ERROR, currentScreen.X.ToString(), currentScreen.Y.ToString());
 			}
 			// write the init function of the last screen
-			WriteInitFunctionForOneScreen(writer, screenId, endScreenX, endScreenY, true);
+			WriteInitFunctionForOneScreen(writer, screenId, endScreenX, endScreenY);
 
 			// return the number of screens
 			return screenId + 1;
@@ -683,14 +687,12 @@ namespace RickArdurousEditor
 			}
 			reader.Close();
 
-			// set the first and last rick respawn type
+			// set the first rick respawn type
 			if (mItems.ContainsKey(Items.Item.Type.RICK))
 			{
 				List<Items.Item> respawnList = mItems[Items.Item.Type.RICK];
 				if (respawnList.Count > 0)
 					respawnList[0].RickRespawnType = Items.Item.RespawnType.START;
-				if (respawnList.Count > 1)
-					respawnList[respawnList.Count - 1].RickRespawnType = Items.Item.RespawnType.END;
 			}
 		}
 		#endregion

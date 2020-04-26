@@ -65,19 +65,14 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Rick.png");
 			Bitmap result = new Bitmap(9, 16);
-			float red = 0.5f;
-			float green = 0.6f;
+			float red = 0.1f;
+			float green = 0.4f;
 			float blue = 1f;
 			switch (respawnType)
 			{
 				case Items.Item.RespawnType.START:
 					red = 0f;
 					green = 1f;
-					blue = 1f;
-					break;
-				case Items.Item.RespawnType.END:
-					red = 0f;
-					green = 0f;
 					blue = 1f;
 					break;
 			}
