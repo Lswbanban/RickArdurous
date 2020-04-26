@@ -52,9 +52,9 @@ namespace Rick
 	};
 	
 	// the current state of Rick
-	AnimState State = AnimState::DEATH; // start with Death State, so that the init is properly done for the first respawn of the level
-	unsigned char CurrentAnimFrame = 0;
-	char CurrentAnimDirection = 1;
+	AnimState State;
+	unsigned char CurrentAnimFrame;
+	char CurrentAnimDirection;
 	bool IsAlive() { return (State < AnimState::DEATH);}
 	
 	// position of Rick
@@ -125,10 +125,12 @@ namespace Rick
  */
 void Rick::Reset()
 {
+	// reset variable not reset in the respawn function
 	LifeCount = MAX_LIFE_COUNT;
-	StatuetteCount = 0;
-	BulletCount = MAX_BULLET_COUNT;
-	DynamiteCount = MAX_DYNAMITE_COUNT;
+	// reset the statuette count, because that will initialize the current statuette count in the respawn function
+	StatuetteCountAtLastCheckpoint = 0;
+	// start with Death State, so that the init is properly done for the first respawn of the level
+	State = AnimState::DEATH;
 }
 
 int Rick::GetLeftForScreenTransition()
