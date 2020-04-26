@@ -101,6 +101,11 @@ namespace SpriteData
 	static constexpr int STATUETTE_SPRITE_WIDTH = 5;
 	static constexpr int STATUETTE_SPRITE_HEIGHT = 8;
 	extern const unsigned char Statuette[];
+
+	// statue sprite
+	static constexpr int GRAAL_SPRITE_WIDTH = 5;
+	static constexpr int GRAAL_SPRITE_HEIGHT = 8;
+	extern const unsigned char Graal[];
 	
 	// dynamite and bullet bonus sprite
 	static constexpr int CRATE_SPRITE_WIDTH = 11;
