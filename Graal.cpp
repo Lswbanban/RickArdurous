@@ -9,7 +9,7 @@
 
 bool Graal::Update(UpdateStep step)
 {
-	if (PickupUpdate(step, SpriteData::Statuette, SpriteData::STATUETTE_SPRITE_WIDTH, SpriteData::STATUETTE_SPRITE_HEIGHT, false))
+	if (PickupUpdate(step, SpriteData::Graal, SpriteData::GRAAL_SPRITE_WIDTH, SpriteData::GRAAL_SPRITE_HEIGHT, false))
 	{
 		GameManager::CurrentGameState = GameManager::GameState::VICTORY;
 		return true;
