@@ -37,15 +37,15 @@
 			this.SplitContainerWallAndItems = new System.Windows.Forms.SplitContainer();
 			this.PictureBoxWallSprites = new System.Windows.Forms.PictureBox();
 			this.PictureBoxItems = new System.Windows.Forms.PictureBox();
+			this.splitContainerMapAndLogWindow = new System.Windows.Forms.SplitContainer();
 			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
+			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.splitContainerMapAndLogWindow = new System.Windows.Forms.SplitContainer();
-			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -57,12 +57,12 @@
 			this.SplitContainerWallAndItems.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxWallSprites)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxItems)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
-			this.MenuStripMain.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMapAndLogWindow)).BeginInit();
 			this.splitContainerMapAndLogWindow.Panel1.SuspendLayout();
 			this.splitContainerMapAndLogWindow.Panel2.SuspendLayout();
 			this.splitContainerMapAndLogWindow.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
+			this.MenuStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ToolBar
@@ -99,7 +99,7 @@
 			// toolStripButtonRespawnPointType
 			// 
 			this.toolStripButtonRespawnPointType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonRespawnPointType.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRespawnPointType.Image")));
+			this.toolStripButtonRespawnPointType.Image = global::RickArdurousEditor.Properties.Resources.RespawnPointType;
 			this.toolStripButtonRespawnPointType.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonRespawnPointType.Name = "toolStripButtonRespawnPointType";
 			this.toolStripButtonRespawnPointType.Size = new System.Drawing.Size(23, 22);
@@ -165,6 +165,25 @@
 			this.PictureBoxItems.TabStop = false;
 			this.PictureBoxItems.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBoxItems_MouseClick);
 			// 
+			// splitContainerMapAndLogWindow
+			// 
+			this.splitContainerMapAndLogWindow.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.splitContainerMapAndLogWindow.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerMapAndLogWindow.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerMapAndLogWindow.Name = "splitContainerMapAndLogWindow";
+			this.splitContainerMapAndLogWindow.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainerMapAndLogWindow.Panel1
+			// 
+			this.splitContainerMapAndLogWindow.Panel1.Controls.Add(this.PictureBoxLevel);
+			// 
+			// splitContainerMapAndLogWindow.Panel2
+			// 
+			this.splitContainerMapAndLogWindow.Panel2.Controls.Add(this.textBoxLog);
+			this.splitContainerMapAndLogWindow.Size = new System.Drawing.Size(701, 401);
+			this.splitContainerMapAndLogWindow.SplitterDistance = 308;
+			this.splitContainerMapAndLogWindow.TabIndex = 1;
+			// 
 			// PictureBoxLevel
 			// 
 			this.PictureBoxLevel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -179,6 +198,15 @@
 			this.PictureBoxLevel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseMove);
 			this.PictureBoxLevel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseUp);
 			this.PictureBoxLevel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.PictureBoxLevel_MouseWheel);
+			// 
+			// textBoxLog
+			// 
+			this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxLog.Location = new System.Drawing.Point(0, 0);
+			this.textBoxLog.Multiline = true;
+			this.textBoxLog.Name = "textBoxLog";
+			this.textBoxLog.Size = new System.Drawing.Size(697, 85);
+			this.textBoxLog.TabIndex = 0;
 			// 
 			// MenuStripMain
 			// 
@@ -226,34 +254,6 @@
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// splitContainerMapAndLogWindow
-			// 
-			this.splitContainerMapAndLogWindow.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.splitContainerMapAndLogWindow.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainerMapAndLogWindow.Location = new System.Drawing.Point(0, 0);
-			this.splitContainerMapAndLogWindow.Name = "splitContainerMapAndLogWindow";
-			this.splitContainerMapAndLogWindow.Orientation = System.Windows.Forms.Orientation.Horizontal;
-			// 
-			// splitContainerMapAndLogWindow.Panel1
-			// 
-			this.splitContainerMapAndLogWindow.Panel1.Controls.Add(this.PictureBoxLevel);
-			// 
-			// splitContainerMapAndLogWindow.Panel2
-			// 
-			this.splitContainerMapAndLogWindow.Panel2.Controls.Add(this.textBoxLog);
-			this.splitContainerMapAndLogWindow.Size = new System.Drawing.Size(701, 401);
-			this.splitContainerMapAndLogWindow.SplitterDistance = 308;
-			this.splitContainerMapAndLogWindow.TabIndex = 1;
-			// 
-			// textBoxLog
-			// 
-			this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textBoxLog.Location = new System.Drawing.Point(0, 0);
-			this.textBoxLog.Multiline = true;
-			this.textBoxLog.Name = "textBoxLog";
-			this.textBoxLog.Size = new System.Drawing.Size(697, 85);
-			this.textBoxLog.TabIndex = 0;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -280,14 +280,14 @@
 			this.SplitContainerWallAndItems.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxWallSprites)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxItems)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
-			this.MenuStripMain.ResumeLayout(false);
-			this.MenuStripMain.PerformLayout();
 			this.splitContainerMapAndLogWindow.Panel1.ResumeLayout(false);
 			this.splitContainerMapAndLogWindow.Panel2.ResumeLayout(false);
 			this.splitContainerMapAndLogWindow.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMapAndLogWindow)).EndInit();
 			this.splitContainerMapAndLogWindow.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
+			this.MenuStripMain.ResumeLayout(false);
+			this.MenuStripMain.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

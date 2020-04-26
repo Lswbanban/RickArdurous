@@ -128,7 +128,7 @@
     <value>Dead End detected, the editor didn't find any exit in the screen located at (¤,¤¤). The Map cannot be exported.</value>
   </data>
   <data name="ErrorNoEndPuzzleScreen" xml:space="preserve">
-    <value>There's no End Rick respawn point in the Map (dark blue color). The Map cannot be exported.</value>
+    <value>There's no Graal in the Map. Please place a Graal item in the last Puzzle screen. The Map cannot be exported.</value>
   </data>
   <data name="ErrorNoStartPuzzleScreen" xml:space="preserve">
     <value>There's no Start Rick respawn point in the Map (cyan color). The Map cannot be exported.</value>
