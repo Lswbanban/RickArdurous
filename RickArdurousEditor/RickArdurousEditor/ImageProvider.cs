@@ -17,8 +17,12 @@ namespace RickArdurousEditor
 			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
 		}
 
-		private static void CreateTaintedAndMirroredImage(Bitmap sourceImage, Rectangle sourceRectangle, ref Bitmap resultImage, bool shouldMirror, float red, float green, float blue)
+		private static void CreateTaintedAndMirroredImage(Bitmap sourceImage, Rectangle sourceRectangle, ref Bitmap resultImage, bool shouldMirror, float red, float green, float blue, Rectangle destinationRectangle = default)
 		{
+			// is the destination rectangle is empty use the full result image size
+			if (destinationRectangle.IsEmpty)
+				destinationRectangle = new Rectangle(0, 0, resultImage.Width, resultImage.Height);
+
 			// Create some image attribut to change the color of the mirrored image
 			ImageAttributes imageAttributes = new ImageAttributes();
 			float[][] colorMatrixElements = {
@@ -40,9 +44,8 @@ namespace RickArdurousEditor
 			// paint the image in the mirrored one with the image attribute
 			Graphics gc = Graphics.FromImage(resultImage);
 			SetGCInPixelMode(ref gc);
-			gc.Clear(Color.Transparent);
 			gc.DrawImage(sourceImage,       // source image
-				new Rectangle(0, 0, resultImage.Width, resultImage.Height),  // destination rectangle 
+				destinationRectangle,  // destination rectangle 
 				sourceRectangle.X,
 				sourceRectangle.Y,          // upper-left corner of source rectangle 
 				sourceRectangle.Width,      // width of source rectangle
@@ -128,6 +131,15 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetStalagmiteImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Stalagmite.png");
+			Bitmap result = new Bitmap(7, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 0f, 1f, 1f, new Rectangle(0, 0, 3, 8));
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 0f, 1f, 1f, new Rectangle(5, 0, 3, 8));
+			return result;
+		}
+
 		public static Bitmap GetItemsSpriteImage()
 		{
 			// get all the image of all the items
@@ -139,6 +151,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetMummyImage());
 			itemImages.Add(GetSkeletonImage());
 			itemImages.Add(GetScorpionImage());
+			itemImages.Add(GetStalagmiteImage());
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;

@@ -14,7 +14,7 @@
 namespace MainMenu
 {
 	static constexpr int LAST_MENU_OPTION = 1;
-	static constexpr int MENU_X = 20;
+	static constexpr int MENU_X = 56;
 	static constexpr int GAME_OVER_ANIM_SPEED = 4;
 	
 	unsigned char SelectedOption = 0;
@@ -70,7 +70,7 @@ void MainMenu::UpdateGameOver(bool isVictory)
 
 void MainMenu::DrawMainMenu()
 {
-	unsigned char menuY[] = { 10, 20 };
+	unsigned char menuY[] = { 30, 42 };
 	arduboy.setCursor(MENU_X, menuY[0]);
 	arduboy.print("Play");
 	arduboy.setCursor(MENU_X, menuY[1]);

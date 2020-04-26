@@ -109,6 +109,7 @@ namespace RickArdurousEditor
 				{   new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.GRAAL } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.HORIZONTAL_SPIKE, Items.Item.Type.VERTICAL_SPIKE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.MUMMY, Items.Item.Type.SKELETON, Items.Item.Type.SCORPION }),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALAGMITE } ),
 				};
 
 		private void WriteHeader(StreamWriter writer)
@@ -412,6 +413,9 @@ namespace RickArdurousEditor
 
 		private int WriteInitFunctions(StreamWriter writer)
 		{
+			// write the init function of the Main Menu
+			WriteInitFunctionForOneScreen(writer, 0, 0, 0);
+
 			// get the coordinate of the start and End screen
 			int startScreenX;
 			int endScreenX;
@@ -428,7 +432,7 @@ namespace RickArdurousEditor
 			// init the current screen coord with the start one
 			Point currentScreen = new Point(startScreenX, startScreenY);
 			Point previousScreen = new Point(startScreenX, startScreenY);
-			int screenId = 0;
+			int screenId = 1;
 			while ((currentScreen.X != endScreenX) || (currentScreen.Y != endScreenY))
 			{
 				// check if we didn't already exported the current puzzle screen, otherwise that means we have a cyclic path
