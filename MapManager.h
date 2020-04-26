@@ -8,7 +8,7 @@ typedef void (*ItemCallback)(Item* caller, Item* trigerer);
 
 namespace MapManager
 {
-	void Reset();
+	void Reset(unsigned char startScreenId, unsigned char startScreenCameraX, unsigned char startScreenCameraY);
 	void Update();
 	
 	// function to add or remove the items currently updated

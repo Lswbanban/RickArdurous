@@ -15,6 +15,7 @@ namespace GameManager
 	
 	void Update();
 	void StartNewGame();
+	void GoToMainMenu();
 }
 
 #endif

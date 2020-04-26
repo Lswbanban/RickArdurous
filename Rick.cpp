@@ -52,7 +52,7 @@ namespace Rick
 	};
 	
 	// the current state of Rick
-	AnimState State;
+	AnimState State = AnimState::WAIT_FOR_RESPAWN; // keep the initialization here for when the Arduboy is switch on
 	unsigned char CurrentAnimFrame;
 	char CurrentAnimDirection;
 	bool IsAlive() { return (State < AnimState::DEATH);}

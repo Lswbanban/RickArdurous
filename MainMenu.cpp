@@ -59,7 +59,7 @@ void MainMenu::UpdateGameOver(bool isVictory)
 {
 	// wait for user to press a button
 	if (Input::IsJustPressed(A_BUTTON) || Input::IsJustPressed(B_BUTTON))
-		GameManager::CurrentGameState = GameManager::GameState::MAIN_MENU;
+		GameManager::GoToMainMenu();
 	
 	if (isVictory)
 		DrawVictory();
