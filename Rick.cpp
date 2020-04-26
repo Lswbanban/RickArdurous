@@ -89,11 +89,11 @@ namespace Rick
 	// variable for death state
 	unsigned char DeathParabolicId = 0;
 	
-	// Inventory
-	char LifeCount = MAX_LIFE_COUNT;
-	char StatuetteCount = 0;
-	char BulletCount = MAX_BULLET_COUNT;
-	char DynamiteCount = MAX_DYNAMITE_COUNT;
+	// Inventory (is initialized in the Reset function)
+	char LifeCount;
+	char StatuetteCount;
+	char BulletCount;
+	char DynamiteCount;
 	
 	// all the dynamite instances
 	Dynamite AllDynamites[MAX_DYNAMITE_COUNT];
@@ -118,6 +118,17 @@ namespace Rick
 	bool IsThereAnyGroundOrCeilingCollisionAt(int y);
 	bool IsThereAnyCeilingAboveCrawl();
 	unsigned int Draw(unsigned char color);
+}
+
+/**
+ * This function should be called when user starts a new game
+ */
+void Rick::Reset()
+{
+	LifeCount = MAX_LIFE_COUNT;
+	StatuetteCount = 0;
+	BulletCount = MAX_BULLET_COUNT;
+	DynamiteCount = MAX_DYNAMITE_COUNT;
 }
 
 int Rick::GetLeftForScreenTransition()

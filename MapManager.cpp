@@ -12,6 +12,7 @@
 #include "Input.h"
 #include "Physics.h"
 #include "Progress.h"
+#include "GameManager.h"
 
 namespace MapManager
 {
@@ -438,30 +439,38 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 	//Serial.print("Restart to screen id:");
 	//Serial.println(LastCheckPointPuzzleScreenId);
 	
-	// set the current puzzle id to the last checkpoint puzzle id
-	CurrentPuzzleScreenId = LastCheckPointPuzzleScreenId;
-	FarestPuzzleScreenIdReached = LastCheckPointPuzzleScreenId;
-	PuzzleScreenMoveDirection = 1;
-	
-	// reset the edge transition to the previous screen before last checkpoint
-	LastPuzzleScreenEdgeCoordX = LastCheckPointPuzzleScreenEdgeCoordX;
-	LastPuzzleScreenEdgeCoordY = LastCheckPointPuzzleScreenEdgeCoordY;
-	WasLastTransitionHorizontal = WasLastCheckPointLastTransitionHorizontal;
+	// check if Rick still has some life
+	if (Rick::LifeCount == 0)
+	{
+		GameManager::CurrentGameState = GameManager::GameState::GAME_OVER;
+	}
+	else
+	{
+		// set the current puzzle id to the last checkpoint puzzle id
+		CurrentPuzzleScreenId = LastCheckPointPuzzleScreenId;
+		FarestPuzzleScreenIdReached = LastCheckPointPuzzleScreenId;
+		PuzzleScreenMoveDirection = 1;
+		
+		// reset the edge transition to the previous screen before last checkpoint
+		LastPuzzleScreenEdgeCoordX = LastCheckPointPuzzleScreenEdgeCoordX;
+		LastPuzzleScreenEdgeCoordY = LastCheckPointPuzzleScreenEdgeCoordY;
+		WasLastTransitionHorizontal = WasLastCheckPointLastTransitionHorizontal;
 
-	// teleport the camera to avoid a transition when restarting to last checkpoint
-	CameraX.Current = LastCheckPointPuzzleScreenEdgeCoordX;
-	CameraX.Target = LastCheckPointPuzzleScreenEdgeCoordX;
-	CameraY.Current = LastCheckPointPuzzleScreenEdgeCoordY;
-	CameraY.Target = LastCheckPointPuzzleScreenEdgeCoordY;
+		// teleport the camera to avoid a transition when restarting to last checkpoint
+		CameraX.Current = LastCheckPointPuzzleScreenEdgeCoordX;
+		CameraX.Target = LastCheckPointPuzzleScreenEdgeCoordX;
+		CameraY.Current = LastCheckPointPuzzleScreenEdgeCoordY;
+		CameraY.Target = LastCheckPointPuzzleScreenEdgeCoordY;
 
-	// remove all the items, by clearing the whole array
-	ItemsToUpdateCount = 0;
-	
-	// reset all the physics
-	Physics::ResetAll();
-	
-	// call the init
-	Init(true);
+		// remove all the items, by clearing the whole array
+		ItemsToUpdateCount = 0;
+		
+		// reset all the physics
+		Physics::ResetAll();
+		
+		// call the init
+		Init(true);
+	}
 }
 
 void MapManager::AnimateShutterTransition()
