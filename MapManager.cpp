@@ -44,29 +44,30 @@ namespace MapManager
 	// the items to currently update
 	static const unsigned int MAX_UPDATABLE_ITEM_COUNT = 20;
 	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
-	unsigned char ItemsToUpdateCount = 0;
+	unsigned char ItemsToUpdateCount;
 	
 	// variable for managing puzzle screen
 	// the id of the puzzle screen where the last checkpoint is
-	unsigned char LastCheckPointPuzzleScreenId = 0;
+	unsigned char LastCheckPointPuzzleScreenId;
 	// the id of the puzzle screen currently player by the player
-	unsigned char CurrentPuzzleScreenId = 0;
+	unsigned char CurrentPuzzleScreenId;
 	// the id of the farest puzzle screen reached by the player
-	unsigned char FarestPuzzleScreenIdReached = 0;
+	unsigned char FarestPuzzleScreenIdReached;
 	// a variable to indicate in which direction the player goes when traversing the puzzle screens
-	char PuzzleScreenMoveDirection = 1;
+	char PuzzleScreenMoveDirection;
 	// coordinates of the edge between the current puzzle screen and the previous screen
-	unsigned char LastPuzzleScreenEdgeCoordX = 0;
-	unsigned char LastPuzzleScreenEdgeCoordY = 0;
-	unsigned char LastCheckPointPuzzleScreenEdgeCoordX = 0;
-	unsigned char LastCheckPointPuzzleScreenEdgeCoordY = 0;
-	bool WasLastTransitionHorizontal = false;
-	bool WasLastCheckPointLastTransitionHorizontal = false;
+	unsigned char LastPuzzleScreenEdgeCoordX;
+	unsigned char LastPuzzleScreenEdgeCoordY;
+	unsigned char LastCheckPointPuzzleScreenEdgeCoordX;
+	unsigned char LastCheckPointPuzzleScreenEdgeCoordY;
+	bool WasLastTransitionHorizontal;
+	bool WasLastCheckPointLastTransitionHorizontal;
 	
 	// variable use the draw the Shutter animation after a Respawn
 	char ShutterHeight = 0;
 	char ShutterDirection = 1;
 	
+	void Init(bool shouldRespawn);
 	void RemoveItem(unsigned char index);
 	void RemoveAllItemsOutsideOfTheScreen();
 	void UpdateItems(Item::UpdateStep updateStep);
@@ -79,6 +80,25 @@ namespace MapManager
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
 	unsigned char GetLevelSpriteAt(unsigned char xMap, unsigned char yMap);
 	bool IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap);
+}
+
+void MapManager::Reset()
+{
+	// reset all internal variables
+	ItemsToUpdateCount = 0;
+	LastCheckPointPuzzleScreenId = 0;
+	CurrentPuzzleScreenId = 0;
+	FarestPuzzleScreenIdReached = 0;
+	PuzzleScreenMoveDirection = 1;
+	LastPuzzleScreenEdgeCoordY = 0;
+	LastCheckPointPuzzleScreenEdgeCoordX = 0;
+	LastPuzzleScreenEdgeCoordX = 0;
+	LastCheckPointPuzzleScreenEdgeCoordY = 0;
+	WasLastTransitionHorizontal = false;
+	WasLastCheckPointLastTransitionHorizontal = false;
+	
+	// init the first puzzle screen
+	Init(true);
 }
 
 void MapManager::AddItem(Item * item)
