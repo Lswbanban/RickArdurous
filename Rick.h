@@ -17,6 +17,7 @@ namespace Rick
 	void Draw();
 	bool IsAlive();
 	void CheckPointRespawn(int respawnWorldX, int respawnWorldY);
+	void InitWaitForRespawn();
 
 	// function to get the coordinate of the sprite of the main character
 	int GetX();
