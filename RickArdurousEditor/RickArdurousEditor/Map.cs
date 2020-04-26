@@ -563,8 +563,11 @@ namespace RickArdurousEditor
 			{
 				string[] tokens = line.Split(new string[] { "ID" }, StringSplitOptions.RemoveEmptyEntries);
 				bool nextId1IsCount = false;
-				foreach (string token in tokens)
+				for (int t = 0; t < tokens.Length; ++t)
 				{
+					// get the current token
+					string token = tokens[t];
+					// check what it is
 					if (token.StartsWith("("))
 					{
 						string[] ids = token.Split(new char[] { ',' });
@@ -593,7 +596,9 @@ namespace RickArdurousEditor
 						}
 						else
 						{
-							mLevel[x, y] = (byte)id2;
+							// special case for the last id of the line, it may be just a padding value
+							if ((t < tokens.Length - 1) || ((x % ARDUBOY_PUZZLE_SCREEN_WIDTH) != 0))
+								mLevel[x, y] = (byte)id2;
 							x++;
 						}
 					}
