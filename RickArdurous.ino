@@ -4,10 +4,7 @@
 
 #include "RickArdurous.h"
 #include "Input.h"
-#include "MapManager.h"
-#include "MapData.h"
-#include "HUD.h"
-#include "DestroyableBlock.h"
+#include "GameManager.h"
 
 // instance of the arduboy class
 CustomArduboy arduboy;
@@ -24,10 +21,6 @@ void setup()
 	
 	// init the random generator
 	arduboy.initRandomSeed();
-	
-	// call init function of some managers
-	MapManager::InitProgress(); // call this before the Init of the MapManager
-	MapManager::Init(true);
 }
 
 void loop()
@@ -42,11 +35,8 @@ void loop()
 	// update the input
 	Input::Update();
 	
-	// update the managers
-	MapManager::Update();
-	
-	// update the HUD
-	HUD::Update();
+	// update the game state
+	GameManager::Update();
 	
 	// draw the frame buffer
 	arduboy.display();
