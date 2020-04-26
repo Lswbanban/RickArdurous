@@ -13,6 +13,7 @@ namespace RickArdurousEditor.Items
 		public enum Type
 		{
 			RICK,
+			GRAAL,
 			HORIZONTAL_SPIKE,
 			VERTICAL_SPIKE,
 			MUMMY,
@@ -91,6 +92,9 @@ namespace RickArdurousEditor.Items
 				case Type.RICK:
 					mSprite = ImageProvider.GetRickImage(mRickRespawnType);
 					break;
+				case Type.GRAAL:
+					mSprite = ImageProvider.GetGraalImage();
+					break;
 				case Type.HORIZONTAL_SPIKE:
 					mSprite = ImageProvider.GetHorizontalSpikeImage();
 					break;
@@ -133,6 +137,8 @@ namespace RickArdurousEditor.Items
 			string instanceNumberString = instanceNumber.ToString();
 			switch (type)
 			{
+				case Type.GRAAL:
+					return "graal" + instanceNumberString;
 				case Type.HORIZONTAL_SPIKE:
 				case Type.VERTICAL_SPIKE:
 					return "spike" + instanceNumberString;
@@ -146,7 +152,9 @@ namespace RickArdurousEditor.Items
 
 		public static Type GetInstanceTypeFromName(string instanceName, bool isSpecial, bool isSpecial2)
 		{
-			if (instanceName.StartsWith("spike"))
+			if (instanceName.StartsWith("graal"))
+				return Type.GRAAL;
+			else if (instanceName.StartsWith("spike"))
 				return isSpecial ? Type.HORIZONTAL_SPIKE : Type.VERTICAL_SPIKE;
 			else if (instanceName.StartsWith("enemy"))
 				return isSpecial ? Type.SCORPION : (isSpecial2 ? Type.SKELETON : Type.MUMMY);
@@ -159,6 +167,9 @@ namespace RickArdurousEditor.Items
 			string instanceName = GetInstanceName(type, instanceNumber);
 			switch (type)
 			{
+				case Type.GRAAL:
+					writer.WriteLine("Graal " + instanceName + ";");
+					break;
 				case Type.HORIZONTAL_SPIKE:
 				case Type.VERTICAL_SPIKE:
 					writer.WriteLine("Spike " + instanceName + ";");
@@ -176,6 +187,7 @@ namespace RickArdurousEditor.Items
 			string instanceName = GetInstanceName(type, instanceNumber);
 			switch (type)
 			{
+				case Type.GRAAL:
 				case Type.MUMMY:
 				case Type.SKELETON:
 				case Type.SCORPION:
@@ -205,6 +217,9 @@ namespace RickArdurousEditor.Items
 		{
 			switch (mType)
 			{
+				case Type.GRAAL:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
+					break;
 				case Type.HORIZONTAL_SPIKE:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL);");
 					break;

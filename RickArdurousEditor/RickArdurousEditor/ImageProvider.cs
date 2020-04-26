@@ -125,11 +125,20 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetGraalImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Graal.png");
+			Bitmap result = new Bitmap(5, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, false, 0f, 1f, 1f);
+			return result;
+		}
+
 		public static Bitmap GetItemsSpriteImage()
 		{
 			// get all the image of all the items
 			List<Bitmap> itemImages = new List<Bitmap>();
 			itemImages.Add(GetRickImage(Items.Item.RespawnType.NORMAL));
+			itemImages.Add(GetGraalImage());
 			itemImages.Add(GetHorizontalSpikeImage());
 			itemImages.Add(GetVerticalSpikeImage(false));
 			itemImages.Add(GetMummyImage());

@@ -106,7 +106,8 @@ namespace RickArdurousEditor
 		#region write
 
 		List<Items.Item.Type>[] mSimilarTypes = new List<Items.Item.Type>[]
-				{   new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.HORIZONTAL_SPIKE, Items.Item.Type.VERTICAL_SPIKE } ),
+				{   new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.GRAAL } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.HORIZONTAL_SPIKE, Items.Item.Type.VERTICAL_SPIKE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.MUMMY, Items.Item.Type.SKELETON, Items.Item.Type.SCORPION }),
 				};
 
@@ -124,6 +125,7 @@ namespace RickArdurousEditor
 			writer.WriteLine("#include \"Statuette.h\"");
 			writer.WriteLine("#include \"Dynamite.h\"");
 			writer.WriteLine("#include \"DynamiteCrate.h\"");
+			writer.WriteLine("#include \"Graal.h\"");
 			writer.WriteLine("#include \"BulletCrate.h\"");
 			writer.WriteLine("#include \"Enemy.h\"");
 			writer.WriteLine("#include \"DestroyableBlock.h\"");
