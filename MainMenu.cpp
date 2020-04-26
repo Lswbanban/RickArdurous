@@ -10,13 +10,19 @@ namespace MainMenu
 {
 	static constexpr int LAST_MENU_OPTION = 1;
 	static constexpr int MENU_X = 20;
+	static constexpr int VICTORY_X = 20;
+	static constexpr int VICTORY_Y = 40;
+	static constexpr int GAME_OVER_X = 20;
+	static constexpr int GAME_OVER_Y = 40;
 	
 	unsigned char SelectedOption = 0;
 	
-	void Draw();
+	void DrawMainMenu();
+	void DrawVictory();
+	void DrawGameOver();
 }
 
-void MainMenu::Update()
+void MainMenu::UpdateMainMenu()
 {
 	// check the input
 	if (Input::IsJustPressed(DOWN_BUTTON) && (SelectedOption < LAST_MENU_OPTION))
@@ -36,10 +42,23 @@ void MainMenu::Update()
 	}
 	
 	// draw the menu
-	Draw();
+	DrawMainMenu();
 }
 
-void MainMenu::Draw()
+void MainMenu::UpdateGameOver(bool isVictory)
+{
+	// wait for user to press a button
+	if (Input::IsJustPressed(A_BUTTON) || Input::IsJustPressed(B_BUTTON))
+		GameManager::CurrentGameState = GameManager::GameState::MAIN_MENU;
+	
+	if (isVictory)
+		DrawVictory();
+	else
+		DrawGameOver();
+	
+}
+
+void MainMenu::DrawMainMenu()
 {
 	unsigned char menuY[] = { 10, 20 };
 	arduboy.setCursor(MENU_X, menuY[0]);
@@ -50,4 +69,16 @@ void MainMenu::Draw()
 	// draw the selected indicator
 	arduboy.setCursor(MENU_X - 8, menuY[SelectedOption]);
 	arduboy.print('>');
+}
+
+void MainMenu::DrawVictory()
+{
+	arduboy.setCursor(VICTORY_X, VICTORY_Y);
+	arduboy.print("Victory!");
+}
+
+void MainMenu::DrawGameOver()
+{
+	arduboy.setCursor(GAME_OVER_X, GAME_OVER_Y);
+	arduboy.print("Game Over...");
 }

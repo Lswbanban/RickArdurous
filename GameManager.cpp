@@ -8,6 +8,7 @@
 #include "MapData.h"
 #include "HUD.h"
 #include "MainMenu.h"
+#include "Rick.h"
 
 GameManager::GameState GameManager::CurrentGameState = GameManager::GameState::MAIN_MENU;
 
@@ -16,7 +17,7 @@ void GameManager::Update()
 	switch (CurrentGameState)
 	{
 		case GameState::MAIN_MENU:
-			MainMenu::Update();
+			MainMenu::UpdateMainMenu();
 			break;
 			
 		case GameState::PLAYING:
@@ -25,11 +26,22 @@ void GameManager::Update()
 			// update the HUD
 			HUD::Update();
 			break;
+			
+		case GameState::GAME_OVER:
+			MainMenu::UpdateGameOver(false);
+			break;
+
+		case GameState::VICTORY:
+			MainMenu::UpdateGameOver(true);
+			break;
 	}
 }
 
 void GameManager::StartNewGame()
 {
+	// reset the life count and inventory of Rick
+	Rick::Reset();
+	
 	// call init function of some managers
 	MapManager::InitProgress(); // call this before the Init of the MapManager
 	MapManager::Init(true);

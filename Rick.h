@@ -8,6 +8,7 @@ namespace Rick
 	static constexpr int MAX_BULLET_COUNT = 5;
 	static constexpr int MAX_DYNAMITE_COUNT = 5;
 	
+	void Reset();
 	void UpdateInput();
 	void CheckLethalCollision();
 	void CheckStaticCollision();

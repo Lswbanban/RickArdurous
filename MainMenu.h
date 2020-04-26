@@ -3,7 +3,8 @@
 
 namespace MainMenu
 {
-	void Update();
+	void UpdateMainMenu();
+	void UpdateGameOver(bool isVictory);
 }
 
 #endif
