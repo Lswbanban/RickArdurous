@@ -29,7 +29,7 @@ bool PickUpItem::DoesRickPickMeUp(unsigned char width, unsigned char height)
  * @param minY the included top border where the star can shine
  * @param maxY the excluded bottom border where the star can shine 
  */
-void PickUpItem::UpdateShineStar(char minX, char maxX, char minY, char maxY)
+void PickUpItem::UpdateShineStar(unsigned char screenX, unsigned char screenY, char minX, char maxX, char minY, char maxY)
 {
 	if (AnimFrameId == -1)
 	{
@@ -73,8 +73,8 @@ void PickUpItem::UpdateShineStar(char minX, char maxX, char minY, char maxY)
 	
 	//draw the star if needed
 	if (AnimFrameId > -1)
-		arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + ShineStarShiftX),
-							MapManager::GetYOnScreen(Y + ShineStarShiftY),
+		arduboy.drawBitmapExtended(screenX + ShineStarShiftX,
+							screenY + ShineStarShiftY,
 							SpriteData::ShineStar[AnimFrameId],
 							SpriteData::SHINE_STAR_SPRITE_WIDTH,
 							SpriteData::SHINE_STAR_SPRITE_HEIGHT,
@@ -92,14 +92,16 @@ bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], uns
 			return true;
 		}
 		
-		// draw the statuette
-		arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), sprite, spriteWidth, spriteHeight, WHITE, false);
+		// draw the sprite
+		unsigned char screenX = MapManager::GetXOnScreen(X);
+		unsigned char screenY = MapManager::GetYOnScreen(Y);
+		arduboy.drawBitmapExtended(screenX, screenY, sprite, spriteWidth, spriteHeight, WHITE, false);
 		
 		// draw the shiny star
 		if (isCrate)
-			UpdateShineStar(-2, 9, 1, 6);
+			UpdateShineStar(screenX, screenY, -2, 9, 1, 6);
 		else
-			UpdateShineStar(-2, 3, -2, 4);
+			UpdateShineStar(screenX, screenY, -2, 3, -2, 4);
 	}
 	return false;
 }

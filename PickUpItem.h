@@ -5,8 +5,10 @@
 
 class PickUpItem : public Item
 {
+public:
+	void UpdateShineStar(unsigned char screenX, unsigned char screenY, char minX, char maxX, char minY, char maxY);
+
 protected:
-	void UpdateShineStar(char minX, char maxX, char minY, char maxY);
 	bool DoesRickPickMeUp(unsigned char width, unsigned char height);
 	bool PickupUpdate(UpdateStep step, const unsigned char sprite[], unsigned char spriteWidth, unsigned char spriteHeight, bool isCrate);
 
