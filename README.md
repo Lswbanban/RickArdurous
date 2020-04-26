@@ -7,8 +7,10 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 # Bug list
 
 # To do
-- Need an animation for the stalagmite
 - The main menu
+	- Play
+	- Sound on/off
+	- Help/display controls?
 - The Game Over (+ return to main menu when the life reach zero or when we reach the end of the map)
 - Sound FX
 	- Fire a bullet
