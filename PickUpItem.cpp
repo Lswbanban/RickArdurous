@@ -18,7 +18,7 @@ bool PickUpItem::DoesRickPickMeUp(unsigned char width, unsigned char height)
 {
 	int centerRickX = Rick::GetCenterX();
 	int centerRickY = Rick::GetCenterY();
-	return ((centerRickX >= X) && (centerRickX <= X + width) && (centerRickY >= Y) && (centerRickY <= Y + height));
+	return (Rick::IsAlive() && (centerRickX >= X) && (centerRickX <= X + width) && (centerRickY >= Y) && (centerRickY <= Y + height));
 }
 
 /**

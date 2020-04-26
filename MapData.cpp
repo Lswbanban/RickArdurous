@@ -28,8 +28,8 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,5),ID(5,15),ID(13,0),ID(15,14),ID(5,0),
 	ID(2,5),ID(15,6),ID(10,10),ID(10,10),ID(10,10),ID(12,15),ID(1,0),ID(15,14),ID(5,0),
 	ID(1,6),ID(15,4),ID(10,15),ID(7,11),ID(15,1),ID(5,15),ID(14,5),
-	ID(1,5),ID(15,3),ID(10,15),ID(2,4),ID(3,3),ID(7,15),ID(2,11),ID(15,1),ID(5,15),ID(14,5),
-	ID(2,5),ID(5,0),ID(5,0),ID(5,6),ID(0,1),ID(2,6),ID(15,2),ID(11,15),ID(1,0),ID(15,14),ID(5,0),
+	ID(1,5),ID(15,3),ID(10,15),ID(2,4),ID(3,3),ID(7,15),ID(2,11),ID(15,1),ID(5,15),ID(15,0),
+	ID(2,5),ID(5,0),ID(5,0),ID(5,6),ID(0,1),ID(2,6),ID(15,2),ID(11,15),ID(15,15),ID(2,0),
 	ID(15,14),ID(11,15),ID(1,0),ID(15,14),ID(5,0),
 	ID(15,14),ID(11,15),ID(1,0),ID(15,14),ID(5,0),
 	ID(15,14),ID(11,15),ID(15,15),ID(1,5),
@@ -40,32 +40,32 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(5,5),ID(6,5),ID(5,6),ID(5,5),ID(6,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,15,23,28,33,42,49,59,70,75,80,84,91,99,108,117,133,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,15,23,28,33,42,49,59,69,74,79,83,90,98,107,116,132,};
 
 const unsigned char MapManager::LEVEL_WIDTH = 32;
 const unsigned char MapManager::LEVEL_HEIGHT = 16;
 
 Graal graal1;
-Spike spike1;
-Spike spike2;
-Spike spike3;
-Enemy enemy1;
 
 void InitScreen0(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(74, 35);
 
 	// init all the item of the current puzzle screen
-	spike1.Init(76, 6, Item::PropertyFlags::NONE);
-	spike2.Init(31, 8, Item::PropertyFlags::MIRROR_X);
-	spike3.Init(20, 48, Item::PropertyFlags::SPECIAL);
-	graal1.Init(31, 47, Item::PropertyFlags::NONE, shouldRespawn);
+}
+
+void InitScreen1(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+	MapManager::MemorizeCheckPoint(65, 74);
+
+	// init all the item of the current puzzle screen
+	graal1.Init(92, 111, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, 
+	&InitScreen0, &InitScreen1, 
 };
 
 // compute the number of items
@@ -75,5 +75,4 @@ const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemIni
 void MapManager::InitProgress()
 {
 	Progress::InitItem(&graal1, 0);
-	Progress::InitItem(&enemy1, 1);
 }

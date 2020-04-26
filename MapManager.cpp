@@ -83,23 +83,29 @@ namespace MapManager
 	bool IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap);
 }
 
-void MapManager::Reset()
+void MapManager::Reset(unsigned char startScreenId, unsigned char startScreenCameraX, unsigned char startScreenCameraY)
 {
 	// reset all internal variables
 	ItemsToUpdateCount = 0;
-	LastCheckPointPuzzleScreenId = 0;
-	CurrentPuzzleScreenId = 0;
-	FarestPuzzleScreenIdReached = 0;
+	LastCheckPointPuzzleScreenId = startScreenId;
+	CurrentPuzzleScreenId = startScreenId;
+	FarestPuzzleScreenIdReached = startScreenId;
 	PuzzleScreenMoveDirection = 1;
-	LastPuzzleScreenEdgeCoordY = 0;
-	LastCheckPointPuzzleScreenEdgeCoordX = 0;
-	LastPuzzleScreenEdgeCoordX = 0;
-	LastCheckPointPuzzleScreenEdgeCoordY = 0;
+	LastPuzzleScreenEdgeCoordY = startScreenCameraY;
+	LastCheckPointPuzzleScreenEdgeCoordX = startScreenCameraX;
+	LastPuzzleScreenEdgeCoordX = startScreenCameraX;
+	LastCheckPointPuzzleScreenEdgeCoordY = startScreenCameraY;
 	WasLastTransitionHorizontal = false;
 	WasLastCheckPointLastTransitionHorizontal = false;
 	
+	// init the current camera
+	CameraX.Current = startScreenCameraX;
+	CameraX.Target =  startScreenCameraX;
+	CameraY.Current = startScreenCameraY;
+	CameraY.Target =  startScreenCameraY;
+	
 	// init the shutter variables in open mode
-	ShutterHeight = HEIGHT / 2;
+	ShutterHeight = (startScreenId == 0) ? 0 : HEIGHT / 2;
 	ShutterDirection = -SHUTTER_SPEED;
 	
 	// init the first puzzle screen

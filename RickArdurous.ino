@@ -25,6 +25,9 @@ void setup()
 	
 	// init the progress
 	MapManager::InitProgress(); // call this before the Init of the MapManager
+	
+	// go to main menu
+	GameManager::GoToMainMenu();
 }
 
 void loop()
