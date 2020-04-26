@@ -223,6 +223,17 @@ void Rick::InitIdle()
 }
 
 /**
+ * Init function of the Wait for Respawn (after death of after finishining the game)
+ */
+void Rick::InitWaitForRespawn()
+{
+	// change my state to wait for respawn
+	State = WAIT_FOR_RESPAWN;
+	// ask the MapManager to start the shutter animation, and that will respawn me to the last checkpoint after that
+	MapManager::StartShutterAnimation();
+}
+
+/**
  * Init function of the Fall State
  */
 void Rick::InitFall()
@@ -554,10 +565,8 @@ void Rick::UpdateInput()
 		{
 			// stop the parabolic trajectory
 			Physics::StopParabolicTrajectory(DeathParabolicId);
-			// change my state to wait for respawn
-			State = WAIT_FOR_RESPAWN;
-			// ask the MapManager to respawn me to the last checkpoint
-			MapManager::RestartToLastCheckpoint();
+			// init Rick in wait for respawn state
+			InitWaitForRespawn();
 		}
 	}
 	else if (IsAlive())

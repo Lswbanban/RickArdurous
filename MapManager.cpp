@@ -13,6 +13,7 @@
 #include "Physics.h"
 #include "Progress.h"
 #include "GameManager.h"
+#include "Graal.h"
 
 namespace MapManager
 {
@@ -64,8 +65,8 @@ namespace MapManager
 	bool WasLastCheckPointLastTransitionHorizontal;
 	
 	// variable use the draw the Shutter animation after a Respawn
-	char ShutterHeight = 0;
-	char ShutterDirection = 1;
+	char ShutterHeight;
+	char ShutterDirection;
 	
 	void Init(bool shouldRespawn);
 	void RemoveItem(unsigned char index);
@@ -96,6 +97,10 @@ void MapManager::Reset()
 	LastCheckPointPuzzleScreenEdgeCoordY = 0;
 	WasLastTransitionHorizontal = false;
 	WasLastCheckPointLastTransitionHorizontal = false;
+	
+	// init the shutter variables in open mode
+	ShutterHeight = HEIGHT / 2;
+	ShutterDirection = -SHUTTER_SPEED;
 	
 	// init the first puzzle screen
 	Init(true);
@@ -442,18 +447,6 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 	Rick::CheckPointRespawn(rickX, rickY);
 }
 
-/**
- * This function is called when the player as finished his death animation, and that the game should restart
- * from the last checkpoint. This function will teleport the camera to skip the transition, and will call
- * a Init with full initialization to respawn the dead enemies
- */
-void MapManager::RestartToLastCheckpoint()
-{
-	// start the shutter animation by giving a non zero value
-	ShutterHeight = SHUTTER_SPEED;
-	ShutterDirection = SHUTTER_SPEED;
-}
-
 void MapManager::TeleportAndRespawnToLastCheckpoint()
 {
 	//Serial.print("Restart to screen id:");
@@ -493,6 +486,24 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 	}
 }
 
+/**
+ * This function is called when the player as finished his death animation, and that the game should restart
+ * from the last checkpoint. This function start the shutter animation, and when the shutter will be closed
+ * in the AnimateShutterTransition() function, it will respawn the player to last checkpoint.
+ */
+void MapManager::StartShutterAnimation()
+{
+	// start the shutter animation by giving a non zero value
+	ShutterHeight = SHUTTER_SPEED;
+	ShutterDirection = SHUTTER_SPEED;
+}
+
+/**
+ * This function will animate the shutter by closing it or opening it depending on the shutter speed sign.
+ * If the shutter is closing, then when the shutter as finished to close it will either call the victory
+ * screen if the graal has been collected, or it will teleport the camera to skip the transition, and will call
+ * a Init with full initialization to respawn the dead enemies.
+*/
 void MapManager::AnimateShutterTransition()
 {
 	if (ShutterHeight > 0)
@@ -507,10 +518,18 @@ void MapManager::AnimateShutterTransition()
 		// check if the shutter is closed
 		if (ShutterHeight >= (HEIGHT / 2))
 		{
-			// if the shutter is closed, call the teleport
-			TeleportAndRespawnToLastCheckpoint();
-			// reverse the shutter direction to reopen it
-			ShutterDirection = -SHUTTER_SPEED;
+			// when the shutter is closed, check if we collected the graal or not
+			if (graal1.IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				// if the shutter is closed, call the teleport
+				TeleportAndRespawnToLastCheckpoint();
+				// reverse the shutter direction to reopen it
+				ShutterDirection = -SHUTTER_SPEED;
+			}
+			else
+			{
+				GameManager::CurrentGameState = GameManager::GameState::VICTORY;
+			}
 		}
 	}
 }

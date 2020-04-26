@@ -5,13 +5,13 @@
 #include "RickArdurous.h"
 #include "Graal.h"
 #include "SpriteData.h"
-#include "GameManager.h"
+#include "Rick.h"
 
 bool Graal::Update(UpdateStep step)
 {
 	if (PickupUpdate(step, SpriteData::Graal, SpriteData::GRAAL_SPRITE_WIDTH, SpriteData::GRAAL_SPRITE_HEIGHT, false))
 	{
-		GameManager::CurrentGameState = GameManager::GameState::VICTORY;
+		Rick::InitWaitForRespawn();
 		return true;
 	}
 	return false;
