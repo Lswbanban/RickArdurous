@@ -19,6 +19,7 @@ namespace RickArdurousEditor.Items
 			MUMMY,
 			SKELETON,
 			SCORPION,
+			STALAGMITE,
 
 			// the type count
 			COUNT,
@@ -109,6 +110,9 @@ namespace RickArdurousEditor.Items
 				case Type.SCORPION:
 					mSprite = ImageProvider.GetScorpionImage();
 					break;
+				case Type.STALAGMITE:
+					mSprite = ImageProvider.GetStalagmiteImage();
+					break;
 			}
 		}
 
@@ -145,6 +149,8 @@ namespace RickArdurousEditor.Items
 				case Type.SKELETON:
 				case Type.SCORPION:
 					return "enemy" + instanceNumberString;
+				case Type.STALAGMITE:
+					return "stalagmite" + instanceNumberString;
 			}
 			return string.Empty;
 		}
@@ -157,6 +163,8 @@ namespace RickArdurousEditor.Items
 				return isSpecial ? Type.HORIZONTAL_SPIKE : Type.VERTICAL_SPIKE;
 			else if (instanceName.StartsWith("enemy"))
 				return isSpecial ? Type.SCORPION : (isSpecial2 ? Type.SKELETON : Type.MUMMY);
+			else if (instanceName.StartsWith("stalagmite"))
+				return Type.STALAGMITE;
 
 			return Type.HORIZONTAL_SPIKE;
 		}
@@ -178,6 +186,9 @@ namespace RickArdurousEditor.Items
 				case Type.SCORPION:
 					writer.WriteLine("Enemy " + instanceName + ";");
 					break;
+				case Type.STALAGMITE:
+					writer.WriteLine("Stalagmite " + instanceName + ";");
+					break;
 			}
 		}
 
@@ -190,6 +201,7 @@ namespace RickArdurousEditor.Items
 				case Type.MUMMY:
 				case Type.SKELETON:
 				case Type.SCORPION:
+				case Type.STALAGMITE:
 					writer.WriteLine("\tProgress::InitItem(&" + instanceName + ", " + instanceCount.ToString() + ");");
 					return true;
 			}
@@ -226,6 +238,9 @@ namespace RickArdurousEditor.Items
 					break;
 				case Type.SCORPION:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL, shouldRespawn);");
+					break;
+				case Type.STALAGMITE:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
 					break;
 			}
 		}
