@@ -1,6 +1,11 @@
 #ifndef _MAP_DATA_H_
 #define _MAP_DATA_H_
 
+class Graal;
+
+// some mandatory instance of Items
+extern Graal graal1;
+
 // define the type of pointer on member function of Item, for callback purpose
 typedef void (*ItemInitFunction)(bool init);
 

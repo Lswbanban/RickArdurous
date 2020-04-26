@@ -6,14 +6,14 @@
 #include "MainMenu.h"
 #include "GameManager.h"
 #include "Input.h"
+#include "MapData.h"
+#include "SpriteData.h"
+#include "Graal.h"
+
 namespace MainMenu
 {
 	static constexpr int LAST_MENU_OPTION = 1;
 	static constexpr int MENU_X = 20;
-	static constexpr int VICTORY_X = 20;
-	static constexpr int VICTORY_Y = 40;
-	static constexpr int GAME_OVER_X = 20;
-	static constexpr int GAME_OVER_Y = 40;
 	
 	unsigned char SelectedOption = 0;
 	
@@ -73,12 +73,19 @@ void MainMenu::DrawMainMenu()
 
 void MainMenu::DrawVictory()
 {
-	arduboy.setCursor(VICTORY_X, VICTORY_Y);
-	arduboy.print("Victory!");
+	// draw the graal!
+	arduboy.drawBitmapExtended(61, 10, SpriteData::Graal, SpriteData::GRAAL_SPRITE_WIDTH, SpriteData::GRAAL_SPRITE_HEIGHT, WHITE, false);
+	graal1.UpdateShineStar(61, 10, -2, 3, -2, 4);
+
+	// draw the message
+	arduboy.setCursor(19, 30);
+	arduboy.print("Congratulation!");
+	arduboy.setCursor(4, 44);
+	arduboy.print("You found the Graal.");
 }
 
 void MainMenu::DrawGameOver()
 {
-	arduboy.setCursor(GAME_OVER_X, GAME_OVER_Y);
+	arduboy.setCursor(20, 40);
 	arduboy.print("Game Over...");
 }
