@@ -89,6 +89,15 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There&apos;s already a Graal on the Map, and the Map can only have one (this is the final goal, place it in the final puzzle screen)..
+        /// </summary>
+        internal static string ErrorMapCanOnlyHaveOneGraal {
+            get {
+                return ResourceManager.GetString("ErrorMapCanOnlyHaveOneGraal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There&apos;s no Graal in the Map. Please place a Graal item in the last Puzzle screen. The Map cannot be exported..
         /// </summary>
         internal static string ErrorNoEndPuzzleScreen {

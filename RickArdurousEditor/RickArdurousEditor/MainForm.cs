@@ -255,8 +255,14 @@ namespace RickArdurousEditor
 						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
 					else
 					{
-						if (mCurrentSelectedItem == null)
-							mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));
+						try
+						{
+							if (mCurrentSelectedItem == null)
+								mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));
+						}
+						catch (MapSaveException)
+						{
+						}
 					}
 					RedrawLevel();
 					break;

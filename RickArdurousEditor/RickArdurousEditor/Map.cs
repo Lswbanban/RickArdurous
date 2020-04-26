@@ -645,8 +645,15 @@ namespace RickArdurousEditor
 				}
 			}
 
-			// instantiate teh correct item
-			AddItem(Items.Item.GetInstanceTypeFromName(instanceName, isSpecial, isSpecial2), isMirror, new Point(intValues[0], intValues[1]));
+			// instantiate the correct item
+			try
+			{
+				AddItem(Items.Item.GetInstanceTypeFromName(instanceName, isSpecial, isSpecial2), isMirror, new Point(intValues[0], intValues[1]));
+			}
+			catch (MapSaveException)
+			{
+				// ignore exception for example if there's more than one graal in the Map
+			}
 		}
 
 		private void ReadCheckpointRespawn(StreamReader reader, string line)
@@ -763,6 +770,10 @@ namespace RickArdurousEditor
 			// add the list of items of the specified type if not already in the dictionary
 			if (!mItems.ContainsKey(itemType))
 				mItems.Add(itemType, new List<Items.Item>());
+
+			// special case for the graal, there can be only one in the Map
+			if ((itemType == Items.Item.Type.GRAAL) && (mItems[Items.Item.Type.GRAAL].Count == 1))
+				throw new MapSaveException(Properties.Resources.ErrorMapCanOnlyHaveOneGraal, MainForm.LogLevel.WARNING);
 
 			// add the item in the correct list
 			mItems[itemType].Add(new Items.Item(itemType, isMirrored, location.X, location.Y));
