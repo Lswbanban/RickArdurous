@@ -25,6 +25,8 @@
                 <File name="DynamiteCrate.cpp" />
                 <File name="BulletCrate.h" />
                 <File name="BulletCrate.cpp" />
+                <File name="Graal.h" />
+                <File name="Graal.cpp" />
             </Folder>
             <Folder name="Destroyable">
                 <File name="DestroyableItem.h" />

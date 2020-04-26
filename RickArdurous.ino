@@ -5,6 +5,7 @@
 #include "RickArdurous.h"
 #include "Input.h"
 #include "GameManager.h"
+#include "MapData.h"
 
 // instance of the arduboy class
 CustomArduboy arduboy;
@@ -21,6 +22,9 @@ void setup()
 	
 	// init the random generator
 	arduboy.initRandomSeed();
+	
+	// init the progress
+	MapManager::InitProgress(); // call this before the Init of the MapManager
 }
 
 void loop()

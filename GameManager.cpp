@@ -5,7 +5,6 @@
 #include "RickArdurous.h"
 #include "GameManager.h"
 #include "MapManager.h"
-#include "MapData.h"
 #include "HUD.h"
 #include "MainMenu.h"
 #include "Rick.h"
@@ -43,8 +42,7 @@ void GameManager::StartNewGame()
 	Rick::Reset();
 	
 	// call init function of some managers
-	MapManager::InitProgress(); // call this before the Init of the MapManager
-	MapManager::Init(true);
+	MapManager::Reset();
 	
 	// switch the current game state
 	CurrentGameState = GameState::PLAYING;
