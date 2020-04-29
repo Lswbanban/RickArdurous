@@ -8,6 +8,8 @@
 #include "HUD.h"
 #include "MainMenu.h"
 #include "Rick.h"
+#include "MapData.h"
+#include "Graal.h"
 
 GameManager::GameState GameManager::CurrentGameState;
 
@@ -41,6 +43,9 @@ void GameManager::StartNewGame()
 {
 	// reset the life count and inventory of Rick
 	Rick::Reset();
+	
+	// reset the graal
+	graal1.SetProperty(Item::PropertyFlags::ALIVE);
 	
 	// call init function of some managers
 	MapManager::Reset(1, 0, 8);
