@@ -70,35 +70,24 @@ void MainMenu::UpdateGameOver(bool isVictory)
 
 void MainMenu::DrawMainMenu()
 {
-	// draw the title in a frame
-/*	arduboy.fillRect(0, 0, WIDTH, 10, WHITE);
-	arduboy.fillRect(0, 0, 3, 15, WHITE);
-	
-//	unsigned char title[] = "Rick Ardurous";
-//	for (unsigned char i = 0; i < sizeof(title); ++i)
-//		arduboy.drawChar(50 + (i*6), 1, title[i], BLACK, WHITE, 1);
+	// draw an extra line of stones on top of the screen (to fill the gap of the HUD)
+	for (unsigned char i = 0; i < 16; ++i)
+		arduboy.drawBitmapExtended(i * SpriteData::LEVEL_SPRITE_WIDTH, 0,
+				SpriteData::Walls[1 + (i % 2)], SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, (i % 3));
 
-	
-	unsigned char title[] = "Rick";
-	for (unsigned char i = 0; i < sizeof(title)-1; ++i)
-		arduboy.drawChar(3 + (i*12), 1, title[i], BLACK, WHITE, 2);
-	unsigned char title2[] = "Ardurous - -";
-	for (unsigned char i = 0; i < sizeof(title2)-1; ++i)
-		arduboy.drawChar(55 + (i*6), 1, title2[i], BLACK, WHITE, 1);
-*/
+	// draw the title in black over white
+	arduboy.fillRect(1, 1, 84, 11, WHITE);
+	unsigned char title[] = "Rick Ardurous";
+	for (unsigned char i = 0; i < sizeof(title) - 1; ++i)
+		arduboy.drawChar(5 + (i*6), 3, title[i], BLACK, WHITE, 1);
 
-	arduboy.fillRect(0, 0, WIDTH, 2, WHITE);
-	arduboy.setCursor(13, 3);
-	arduboy.print("* Rick Ardurous *");
-	arduboy.fillRect(0, 12, WIDTH, 2, WHITE);
-	
-	// draw some stalactite
-	arduboy.drawBitmapExtended(24, 17, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
-	arduboy.drawBitmapExtended(45, 15, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
-	arduboy.drawBitmapExtended(75, 15, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, true);
-	arduboy.drawBitmapExtended(93, 21, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
-	arduboy.drawBitmapExtended(97, 20, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, true);
-	
+	// draw some stalactites
+	unsigned char x[] = {24, 45, 75, 93, 97 };
+	unsigned char y[] = {17, 15, 15, 21, 20 };
+	for (unsigned char i = 0; i < sizeof(x); ++i)
+		arduboy.drawBitmapExtended(x[i], y[i], SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
+
+	// draw the menu
 	unsigned char menuY[] = { 34, 45 };
 	arduboy.setCursor(MENU_X, menuY[0]);
 	arduboy.print("Play");
