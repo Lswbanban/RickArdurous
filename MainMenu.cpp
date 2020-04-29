@@ -14,7 +14,7 @@
 namespace MainMenu
 {
 	static constexpr int LAST_MENU_OPTION = 1;
-	static constexpr int MENU_X = 56;
+	static constexpr int MENU_X = 46;
 	static constexpr int GAME_OVER_ANIM_SPEED = 4;
 	
 	unsigned char SelectedOption = 0;
@@ -70,7 +70,36 @@ void MainMenu::UpdateGameOver(bool isVictory)
 
 void MainMenu::DrawMainMenu()
 {
-	unsigned char menuY[] = { 30, 42 };
+	// draw the title in a frame
+/*	arduboy.fillRect(0, 0, WIDTH, 10, WHITE);
+	arduboy.fillRect(0, 0, 3, 15, WHITE);
+	
+//	unsigned char title[] = "Rick Ardurous";
+//	for (unsigned char i = 0; i < sizeof(title); ++i)
+//		arduboy.drawChar(50 + (i*6), 1, title[i], BLACK, WHITE, 1);
+
+	
+	unsigned char title[] = "Rick";
+	for (unsigned char i = 0; i < sizeof(title)-1; ++i)
+		arduboy.drawChar(3 + (i*12), 1, title[i], BLACK, WHITE, 2);
+	unsigned char title2[] = "Ardurous - -";
+	for (unsigned char i = 0; i < sizeof(title2)-1; ++i)
+		arduboy.drawChar(55 + (i*6), 1, title2[i], BLACK, WHITE, 1);
+*/
+
+	arduboy.fillRect(0, 0, WIDTH, 2, WHITE);
+	arduboy.setCursor(13, 3);
+	arduboy.print("* Rick Ardurous *");
+	arduboy.fillRect(0, 12, WIDTH, 2, WHITE);
+	
+	// draw some stalactite
+	arduboy.drawBitmapExtended(24, 17, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
+	arduboy.drawBitmapExtended(45, 15, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
+	arduboy.drawBitmapExtended(75, 15, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, true);
+	arduboy.drawBitmapExtended(93, 21, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
+	arduboy.drawBitmapExtended(97, 20, SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, true);
+	
+	unsigned char menuY[] = { 34, 45 };
 	arduboy.setCursor(MENU_X, menuY[0]);
 	arduboy.print("Play");
 	arduboy.setCursor(MENU_X, menuY[1]);

@@ -20,6 +20,7 @@ namespace RickArdurousEditor.Items
 			SKELETON,
 			SCORPION,
 			STALAGMITE,
+			STALACTITE,
 
 			// the type count
 			COUNT,
@@ -113,6 +114,9 @@ namespace RickArdurousEditor.Items
 				case Type.STALAGMITE:
 					mSprite = ImageProvider.GetStalagmiteImage();
 					break;
+				case Type.STALACTITE:
+					mSprite = ImageProvider.GetStalactiteImage();
+					break;
 			}
 		}
 
@@ -151,6 +155,8 @@ namespace RickArdurousEditor.Items
 					return "enemy" + instanceNumberString;
 				case Type.STALAGMITE:
 					return "stalagmite" + instanceNumberString;
+				case Type.STALACTITE:
+					return "stalactite" + instanceNumberString;
 			}
 			return string.Empty;
 		}
@@ -165,6 +171,8 @@ namespace RickArdurousEditor.Items
 				return isSpecial ? Type.SCORPION : (isSpecial2 ? Type.SKELETON : Type.MUMMY);
 			else if (instanceName.StartsWith("stalagmite"))
 				return Type.STALAGMITE;
+			else if (instanceName.StartsWith("stalactite"))
+				return Type.STALACTITE;
 
 			return Type.HORIZONTAL_SPIKE;
 		}
@@ -189,6 +197,9 @@ namespace RickArdurousEditor.Items
 				case Type.STALAGMITE:
 					writer.WriteLine("Stalagmite " + instanceName + ";");
 					break;
+				case Type.STALACTITE:
+					writer.WriteLine("Stalactite " + instanceName + ";");
+					break;
 			}
 		}
 
@@ -202,6 +213,7 @@ namespace RickArdurousEditor.Items
 				case Type.SKELETON:
 				case Type.SCORPION:
 				case Type.STALAGMITE:
+				case Type.STALACTITE:
 					writer.WriteLine("\tProgress::InitItem(&" + instanceName + ", " + instanceCount.ToString() + ");");
 					return true;
 			}
@@ -240,6 +252,7 @@ namespace RickArdurousEditor.Items
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL, shouldRespawn);");
 					break;
 				case Type.STALAGMITE:
+				case Type.STALACTITE:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
 					break;
 			}

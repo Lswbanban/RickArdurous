@@ -58,7 +58,7 @@ namespace Rick
 	bool IsAlive() { return (State < AnimState::DEATH);}
 	
 	// position of Rick
-	int X; // do not init X and Y it will be by the respawn of the first level
+	int X = 200; // do not init X and Y it will be by the respawn of the first level (except that we don't want Rick in the Main Menu)
 	int Y; // do not init X and Y it will be by the respawn of the first level
 	int GetX() { return X; }
 	int GetY() { return Y; }

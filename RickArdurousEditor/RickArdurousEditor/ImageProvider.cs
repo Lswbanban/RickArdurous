@@ -135,8 +135,17 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Stalagmite.png");
 			Bitmap result = new Bitmap(7, 8);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 0f, 1f, 1f, new Rectangle(0, 0, 3, 8));
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 0f, 1f, 1f, new Rectangle(5, 0, 3, 8));
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 1f, 0.65f, 0.1f, new Rectangle(0, 0, 3, 8));
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, true, 1f, 0.65f, 0.1f, new Rectangle(4, 0, 3, 8));
+			return result;
+		}
+
+		public static Bitmap GetStalactiteImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Stalactite.png");
+			Bitmap result = new Bitmap(7, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, false, 1f, 0.65f, 0.1f, new Rectangle(0, 0, 3, 8));
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, true, 1f, 0.65f, 0.1f, new Rectangle(4, 0, 3, 8));
 			return result;
 		}
 
@@ -152,6 +161,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetSkeletonImage());
 			itemImages.Add(GetScorpionImage());
 			itemImages.Add(GetStalagmiteImage());
+			itemImages.Add(GetStalactiteImage());
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;

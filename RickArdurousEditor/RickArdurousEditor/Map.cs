@@ -110,6 +110,7 @@ namespace RickArdurousEditor
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.HORIZONTAL_SPIKE, Items.Item.Type.VERTICAL_SPIKE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.MUMMY, Items.Item.Type.SKELETON, Items.Item.Type.SCORPION }),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALAGMITE } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALACTITE } ),
 				};
 
 		private void WriteHeader(StreamWriter writer)
