@@ -22,7 +22,7 @@
 #define ID(id1,id2) ((id1<< 4) | id2)
 
 const unsigned char MapManager::Level[] PROGMEM = {
-	ID(15,15),ID(15,1),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
+	ID(3,2),ID(1,2),ID(1,3),ID(1,3),ID(1,2),ID(1,2),ID(3,1),ID(2,2),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
 	ID(1,1),ID(4,10),ID(15,1),ID(10,10),ID(10,15),ID(1,10),ID(15,1),ID(4,4),ID(15,1),ID(4,1),ID(5,15),ID(14,5),
 	ID(2,4),ID(15,13),ID(10,0),ID(15,14),ID(5,0),
 	ID(10,15),ID(15,0),ID(15,14),ID(5,0),
@@ -40,7 +40,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(5,5),ID(6,5),ID(5,6),ID(5,5),ID(6,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,22,27,31,35,39,44,48,58,62,67,74,82,91,100,116,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,28,33,37,41,45,50,54,64,68,73,80,88,97,106,122,};
 
 const unsigned char MapManager::LEVEL_WIDTH = 32;
 const unsigned char MapManager::LEVEL_HEIGHT = 16;
