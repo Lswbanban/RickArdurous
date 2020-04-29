@@ -22,14 +22,14 @@
 #define ID(id1,id2) ((id1<< 4) | id2)
 
 const unsigned char MapManager::Level[] PROGMEM = {
-	ID(2,1),ID(2,0),ID(15,9),ID(6,1),ID(2,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,0),
-	ID(1,1),ID(5,15),ID(11,0),ID(6,5),ID(15,14),ID(5,0),
-	ID(2,6),ID(15,14),ID(0,15),ID(14,5),
-	ID(0,5),ID(15,14),ID(0,15),ID(14,5),
+	ID(15,15),ID(15,1),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
+	ID(1,1),ID(4,10),ID(15,1),ID(10,10),ID(10,15),ID(1,10),ID(15,1),ID(4,4),ID(15,1),ID(4,1),ID(5,15),ID(14,5),
+	ID(2,4),ID(15,13),ID(10,0),ID(15,14),ID(5,0),
+	ID(10,15),ID(15,0),ID(15,14),ID(5,0),
 	ID(15,15),ID(15,1),ID(0,15),ID(14,5),
-	ID(15,15),ID(15,1),ID(5,15),ID(14,5),
-	ID(15,13),ID(4,1),ID(2,5),ID(15,15),
-	ID(15,11),ID(4,1),ID(2,1),ID(1,15),ID(15,15),ID(1,0),
+	ID(15,14),ID(4,3),ID(5,15),ID(14,5),
+	ID(13,15),ID(11,4),ID(2,1),ID(2,5),ID(15,15),
+	ID(5,5),ID(4,15),ID(15,15),ID(14,0),
 	ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(0,15),ID(14,5),
 	ID(5,15),ID(15,0),ID(15,14),ID(5,0),
 	ID(5,15),ID(13,11),ID(15,15),ID(15,1),ID(5,0),
@@ -40,7 +40,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(5,5),ID(6,5),ID(5,6),ID(5,5),ID(6,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,13,19,23,27,31,35,39,45,55,59,64,71,79,88,97,113,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,22,27,31,35,39,44,48,58,62,67,74,82,91,100,116,};
 
 const unsigned char MapManager::LEVEL_WIDTH = 32;
 const unsigned char MapManager::LEVEL_HEIGHT = 16;
@@ -54,8 +54,8 @@ void InitScreen0(bool shouldRespawn)
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
-	stalagmite1.Init(23, 51, Item::PropertyFlags::NONE, shouldRespawn);
-	stalagmite2.Init(109, 40, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite1.Init(13, 48, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite2.Init(117, 32, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 void InitScreen1(bool shouldRespawn)
