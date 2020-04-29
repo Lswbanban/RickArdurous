@@ -65,7 +65,6 @@ void MainMenu::UpdateGameOver(bool isVictory)
 		DrawVictory();
 	else
 		DrawGameOver();
-	
 }
 
 void MainMenu::DrawMainMenu()
