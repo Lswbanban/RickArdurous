@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,16 +115,25 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region menu event
+		private string getConstVariableFileName(string mapDataFileName)
+		{
+			FileInfo fileInfo = new FileInfo(mapDataFileName);
+			return fileInfo.Name.Remove(fileInfo.Name.IndexOf(fileInfo.Extension)) + "ConstVariables.h";
+		}
+
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			mMap.Load(Application.StartupPath + Properties.Settings.Default.GameRelativePath + @"MapData.cpp");
+			string folder = Application.StartupPath + Properties.Settings.Default.GameRelativePath;
+			string fileToOpen = @"MapData.cpp";
+			mMap.Load(folder + fileToOpen);
 			RedrawLevel();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			//mMap.Save(Application.StartupPath + @"\MapTest.cpp");
-			mMap.Save(Application.StartupPath + Properties.Settings.Default.GameRelativePath + @"MapData.cpp");
+			string folder = Application.StartupPath + Properties.Settings.Default.GameRelativePath;
+			string fileToSave = @"MapData.cpp";
+			mMap.Save(folder + fileToSave, folder + getConstVariableFileName(fileToSave));
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)

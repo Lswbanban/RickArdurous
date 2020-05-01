@@ -11,17 +11,12 @@ typedef void (*ItemInitFunction)(bool init);
 
 namespace MapManager
 {
-	// size of the level
-	extern const unsigned char LEVEL_WIDTH;
-	extern const unsigned char LEVEL_HEIGHT;
-	
 	// all the map sprite ids of the full level
 	extern const unsigned int LevelLineIndex[];
 	extern const unsigned char Level[];
 	
 	// all the function to init the items in the level split per puzzle screen
 	extern ItemInitFunction ItemInitFunctions[];
-	extern const unsigned char PUZZLE_SCREEN_COUNT;
 	
 	// init the alive status of all the living items
 	void SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad);
