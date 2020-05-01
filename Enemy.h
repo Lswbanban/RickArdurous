@@ -1,9 +1,9 @@
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "Item.h"
+#include "LivingItem.h"
 
-class Enemy : public Item
+class Enemy : public LivingItem
 {
 public:
 	Enemy();

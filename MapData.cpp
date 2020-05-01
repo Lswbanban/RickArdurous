@@ -16,7 +16,6 @@
 #include "DestroyableBlock.h"
 #include "Stalactite.h"
 #include "Stalagmite.h"
-#include "Progress.h"
 #include <avr/pgmspace.h>
 
 #define ID(id1,id2) ((id1<< 4) | id2)
@@ -47,7 +46,14 @@ const unsigned char MapManager::LEVEL_HEIGHT = 16;
 
 Graal graal1;
 Stalagmite stalagmite1;
-Stalagmite stalagmite2;
+Stalactite stalagmite2;
+ArrowLauncher al;
+Enemy en;
+Spike sp;
+Statuette st;
+DynamiteCrate dy;
+BulletCrate b;
+DestroyableBlock db;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -83,9 +89,9 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);
 
 // this function is to init the progress of the living items in eeprom
-void MapManager::InitProgress()
+void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)
 {
-	Progress::InitItem(&graal1, 0);
-	Progress::InitItem(&stalagmite1, 1);
-	Progress::InitItem(&stalagmite2, 2);
+	graal1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	stalagmite2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 }

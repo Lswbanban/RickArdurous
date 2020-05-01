@@ -32,7 +32,6 @@ public:
 	};
 	
 	void Init(int startX, int startY, unsigned char flags);
-	void Init(int startX, int startY, unsigned char flags, bool shouldRespawn);
 	virtual bool Update(UpdateStep step) = 0;
 	
 	void SetProperty(unsigned char flag) { Property |= flag; }
@@ -48,7 +47,6 @@ protected:
 	int Y;
 	unsigned char Property = 0;
 	
-private:
 	void CommonInit(int startX, int startY, unsigned char flags);
 };
 

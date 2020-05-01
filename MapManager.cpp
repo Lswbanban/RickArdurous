@@ -11,7 +11,6 @@
 #include <avr/pgmspace.h>
 #include "Input.h"
 #include "Physics.h"
-#include "Progress.h"
 #include "GameManager.h"
 #include "Graal.h"
 
@@ -641,7 +640,7 @@ void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigne
 			PuzzleScreenMoveDirection = -PuzzleScreenMoveDirection;
 		
 		// dump the progress in eeprom
-		Progress::SaveAndLoadProgress(CurrentPuzzleScreenId, CurrentPuzzleScreenId + PuzzleScreenMoveDirection);
+		SaveAndLoadAliveStatusForAllItems(CurrentPuzzleScreenId, CurrentPuzzleScreenId + PuzzleScreenMoveDirection);
 
 		// increase the puzzle screen according to the direction
 		CurrentPuzzleScreenId += PuzzleScreenMoveDirection;

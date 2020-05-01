@@ -1,9 +1,9 @@
 #ifndef _STALACTITE_H_
 #define _STALACTITE_H_
 
-#include "Item.h"
+#include "LivingItem.h"
 
-class Stalactite : public Item
+class Stalactite : public LivingItem
 {
 public:
 	Stalactite();
