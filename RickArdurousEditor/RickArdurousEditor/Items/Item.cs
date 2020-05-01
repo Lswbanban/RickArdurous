@@ -214,7 +214,7 @@ namespace RickArdurousEditor.Items
 			}
 		}
 
-		public static bool WriteProgressInit(StreamWriter writer, Type type, int instanceNumber, int instanceCount)
+		public static bool WriteSaveAndLoadLivingStatus(StreamWriter writer, Type type, int instanceNumber, int instanceCount)
 		{
 			string instanceName = GetInstanceName(type, instanceNumber);
 			switch (type)
@@ -225,7 +225,7 @@ namespace RickArdurousEditor.Items
 				case Type.SCORPION:
 				case Type.STALAGMITE:
 				case Type.STALACTITE:
-					writer.WriteLine("\tProgress::InitItem(&" + instanceName + ", " + instanceCount.ToString() + ");");
+					writer.WriteLine("\t" + instanceName + ".SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);");
 					return true;
 			}
 			return false;

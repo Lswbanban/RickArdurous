@@ -27,33 +27,28 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(10,15),ID(15,0),ID(15,14),ID(5,0),
 	ID(15,15),ID(15,1),ID(0,15),ID(14,5),
 	ID(15,14),ID(4,3),ID(5,15),ID(14,5),
-	ID(13,15),ID(11,4),ID(2,1),ID(2,5),ID(15,15),
+	ID(15,12),ID(4,2),ID(1,2),ID(5,15),ID(15,0),
 	ID(5,5),ID(4,15),ID(15,15),ID(14,0),
 	ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(0,15),ID(14,5),
 	ID(5,15),ID(15,0),ID(15,14),ID(5,0),
 	ID(5,15),ID(13,11),ID(15,15),ID(15,1),ID(5,0),
 	ID(5,15),ID(4,5),ID(5,12),ID(15,6),ID(11,15),ID(15,15),ID(1,5),
 	ID(5,15),ID(6,11),ID(15,6),ID(11,15),ID(3,4),ID(3,4),ID(15,10),ID(5,0),
-	ID(6,13),ID(15,5),ID(11,15),ID(6,11),ID(15,2),ID(4,2),ID(1,2),ID(15,10),ID(5,0),
+	ID(6,15),ID(6,11),ID(15,6),ID(11,15),ID(2,4),ID(2,1),ID(2,15),ID(10,5),
 	ID(5,15),ID(6,11),ID(15,6),ID(11,15),ID(1,4),ID(1,1),ID(2,2),ID(15,10),ID(5,0),
 	ID(5,5),ID(6,5),ID(5,6),ID(5,5),ID(6,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,28,33,37,41,45,50,54,64,68,73,80,88,97,106,122,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,28,33,37,41,45,50,54,64,68,73,80,88,96,105,121,};
 
 const unsigned char MapManager::LEVEL_WIDTH = 32;
 const unsigned char MapManager::LEVEL_HEIGHT = 16;
 
 Graal graal1;
+Enemy enemy1;
 Stalagmite stalagmite1;
-Stalactite stalagmite2;
-ArrowLauncher al;
-Enemy en;
-Spike sp;
-Statuette st;
-DynamiteCrate dy;
-BulletCrate b;
-DestroyableBlock db;
+Stalagmite stalagmite2;
+ArrowLauncher arrowLauncher1;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -70,6 +65,8 @@ void InitScreen1(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(40, 106);
 
 	// init all the item of the current puzzle screen
+	enemy1.Init(48, 85, Item::PropertyFlags::SPECIAL, shouldRespawn);
+	arrowLauncher1.Init(9, 74, Item::PropertyFlags::NONE, 80);
 }
 
 void InitScreen2(bool shouldRespawn)
@@ -88,10 +85,11 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 // compute the number of items
 const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);
 
-// this function is to init the progress of the living items in eeprom
+// this function is to save and load the living status of the items
 void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)
 {
 	graal1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	enemy1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 }

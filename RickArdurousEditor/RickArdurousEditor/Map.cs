@@ -111,6 +111,7 @@ namespace RickArdurousEditor
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.MUMMY, Items.Item.Type.SKELETON, Items.Item.Type.SCORPION }),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALAGMITE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALACTITE } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.ARROW_LAUNCHER } ),
 				};
 
 		private void WriteHeader(StreamWriter writer)
@@ -133,7 +134,6 @@ namespace RickArdurousEditor
 			writer.WriteLine("#include \"DestroyableBlock.h\"");
 			writer.WriteLine("#include \"Stalactite.h\"");
 			writer.WriteLine("#include \"Stalagmite.h\"");
-			writer.WriteLine("#include \"Progress.h\"");
 			writer.WriteLine("#include <avr/pgmspace.h>");
 			writer.WriteLine();
 			writer.WriteLine("#define ID(id1,id2) ((id1<< 4) | id2)");
@@ -524,11 +524,11 @@ namespace RickArdurousEditor
 			writer.WriteLine("const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);");
 		}
 
-		private void WriteProgressInitFunction(StreamWriter writer)
+		private void WriteSaveAndLoadAliveStatusFunction(StreamWriter writer)
 		{
 			writer.WriteLine();
-			writer.WriteLine("// this function is to init the progress of the living items in eeprom");
-			writer.WriteLine("void MapManager::InitProgress()");
+			writer.WriteLine("// this function is to save and load the living status of the items");
+			writer.WriteLine("void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)");
 			writer.WriteLine("{");
 
 			int instanceCount = 0;
@@ -537,7 +537,7 @@ namespace RickArdurousEditor
 				// get the max number of instances that we need 
 				int maxItemCount = GetMaxItemCount(mSimilarTypes[i]);
 				for (int j = 1; j <= maxItemCount; ++j)
-					if (Items.Item.WriteProgressInit(writer, mSimilarTypes[i][0], j, instanceCount))
+					if (Items.Item.WriteSaveAndLoadLivingStatus(writer, mSimilarTypes[i][0], j, instanceCount))
 						instanceCount++;
 			}
 
@@ -554,7 +554,7 @@ namespace RickArdurousEditor
 				WriteItemInstances(writer);
 				int screenCount = WriteInitFunctions(writer);
 				WriteInitFunctionArray(writer, screenCount);
-				WriteProgressInitFunction(writer);
+				WriteSaveAndLoadAliveStatusFunction(writer);
 			}
 			catch (MapSaveException)
 			{
