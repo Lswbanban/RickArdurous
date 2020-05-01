@@ -21,6 +21,7 @@ namespace RickArdurousEditor.Items
 			SCORPION,
 			STALAGMITE,
 			STALACTITE,
+			ARROW_LAUNCHER,
 
 			// the type count
 			COUNT,
@@ -117,6 +118,9 @@ namespace RickArdurousEditor.Items
 				case Type.STALACTITE:
 					mSprite = ImageProvider.GetStalactiteImage();
 					break;
+				case Type.ARROW_LAUNCHER:
+					mSprite = ImageProvider.GetArrowLauncherImage(mIsMirror);
+					break;
 			}
 		}
 
@@ -157,6 +161,8 @@ namespace RickArdurousEditor.Items
 					return "stalagmite" + instanceNumberString;
 				case Type.STALACTITE:
 					return "stalactite" + instanceNumberString;
+				case Type.ARROW_LAUNCHER:
+					return "arrowLauncher" + instanceNumberString;
 			}
 			return string.Empty;
 		}
@@ -173,6 +179,8 @@ namespace RickArdurousEditor.Items
 				return Type.STALAGMITE;
 			else if (instanceName.StartsWith("stalactite"))
 				return Type.STALACTITE;
+			else if (instanceName.StartsWith("arrowLauncher"))
+				return Type.ARROW_LAUNCHER;
 
 			return Type.HORIZONTAL_SPIKE;
 		}
@@ -199,6 +207,9 @@ namespace RickArdurousEditor.Items
 					break;
 				case Type.STALACTITE:
 					writer.WriteLine("Stalactite " + instanceName + ";");
+					break;
+				case Type.ARROW_LAUNCHER:
+					writer.WriteLine("ArrowLauncher " + instanceName + ";");
 					break;
 			}
 		}
@@ -254,6 +265,13 @@ namespace RickArdurousEditor.Items
 				case Type.STALAGMITE:
 				case Type.STALACTITE:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
+					break;
+				case Type.ARROW_LAUNCHER:
+					// todo: give a proper distance to the ArrowLauncher
+					if (mIsMirror)
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::MIRROR_X, 80);");
+					else
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, 80);");
 					break;
 			}
 		}
