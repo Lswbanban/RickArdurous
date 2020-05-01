@@ -23,8 +23,8 @@ namespace MapManager
 	extern ItemInitFunction ItemInitFunctions[];
 	extern const unsigned char PUZZLE_SCREEN_COUNT;
 	
-	// init the progress with all the living items
-	void InitProgress();
+	// init the alive status of all the living items
+	void SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad);
 };
 
 #endif

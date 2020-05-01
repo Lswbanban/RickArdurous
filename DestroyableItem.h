@@ -1,9 +1,9 @@
 #ifndef _DESTROYABLE_ITEM_H_
 #define _DESTROYABLE_ITEM_H_
 
-#include "Item.h"
+#include "LivingItem.h"
 
-class DestroyableItem : public Item
+class DestroyableItem : public LivingItem
 {
 public:
 	bool CheckLethalDynamite(unsigned char width);

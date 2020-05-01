@@ -44,10 +44,10 @@ void GameManager::StartNewGame()
 	// reset the life count and inventory of Rick
 	Rick::Reset();
 	
-	// reset the graal
-	graal1.SetProperty(Item::PropertyFlags::ALIVE);
+	// reset the alive status of all the items
+	MapManager::SaveAndLoadAliveStatusForAllItems(0, 0);
 	
-	// call init function of some managers
+	// call reset of the MapManger with the first screen id of the game
 	MapManager::Reset(1, 0, 8);
 	
 	// switch the current game state

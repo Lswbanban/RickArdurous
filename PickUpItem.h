@@ -1,9 +1,9 @@
 #ifndef _PICKUP_ITEM_H_
 #define _PICKUP_ITEM_H_
 
-#include "Item.h"
+#include "LivingItem.h"
 
-class PickUpItem : public Item
+class PickUpItem : public LivingItem
 {
 public:
 	void UpdateShineStar(unsigned char screenX, unsigned char screenY, char minX, char maxX, char minY, char maxY);
