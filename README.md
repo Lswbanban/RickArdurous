@@ -8,10 +8,8 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - The main menu
-	- Play
 	- Sound on/off
 	- Help/display controls?
-- The Game Over (+ return to main menu when the life reach zero or when we reach the end of the map)
 - Sound FX
 	- Fire a bullet
 	- Jump
@@ -21,10 +19,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 	- for when the Arrow launcher launch an arrow
 	- for picking up a Statuette?
 	- For Rick Death
-- Save on the flash drive?
-	- Save of the progression?
-	- Save of the time for speed run?
-	- Save of the Music on/off
 - Music ?
 
 # New items to come

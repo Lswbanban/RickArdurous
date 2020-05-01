@@ -58,6 +58,7 @@
             <File name="MapManager.cpp" />
             <File name="MapData.h" />
             <File name="MapData.cpp" />
+            <File name="MapDataConstVariables.h" />
             <File name="SpriteData.h" />
             <File name="SpriteData.cpp" />
         </Folder>

@@ -13,6 +13,12 @@ namespace RickArdurousEditor
 {
 	public partial class MainForm : Form
 	{
+		private enum EditAction
+		{
+			MOVE_ITEM,
+			ADJUST_SENSOR,
+		}
+
 		private Map mMap = new Map();
 
 		// current selection
@@ -25,6 +31,7 @@ namespace RickArdurousEditor
 		private Point mLastMouseDownMapCamera;
 
 		// variable for mouse events
+		private EditAction mCurrentEditAction = EditAction.MOVE_ITEM;
 		private Point mLastMouseDownPosition;
 		private Point mLastMouseMovePosition;
 
@@ -228,9 +235,19 @@ namespace RickArdurousEditor
 			{
 				case MouseButtons.Left:
 					Point mouseInLevelCoord = ConvertMouseCoordToLevelCoord(e.Location);
-					mCurrentSelectedItem = mMap.GetItemAt(mouseInLevelCoord);
-					if (mCurrentSelectedItem != null)
-						mCurrentSelectedItemGrabDelta = new Point(mCurrentSelectedItem.X - mouseInLevelCoord.X, mCurrentSelectedItem.Y - mouseInLevelCoord.Y);
+
+					// check if there is an arrow launcher selected
+					if ((mCurrentSelectedItem != null) && (mCurrentSelectedItem.IsCoordOnMySensorExtrimity(mouseInLevelCoord, 2)))
+					{
+						mCurrentEditAction = EditAction.ADJUST_SENSOR;
+					}
+					else
+					{
+						mCurrentEditAction = EditAction.MOVE_ITEM;
+						mCurrentSelectedItem = mMap.GetItemAt(mouseInLevelCoord);
+						if (mCurrentSelectedItem != null)
+							mCurrentSelectedItemGrabDelta = new Point(mCurrentSelectedItem.X - mouseInLevelCoord.X, mCurrentSelectedItem.Y - mouseInLevelCoord.Y);
+					}
 					break;
 			}
 		}
@@ -243,9 +260,22 @@ namespace RickArdurousEditor
 					if (mCurrentSelectedItem != null)
 					{
 						Point newLocation = ConvertMouseCoordToLevelCoord(e.Location);
-						newLocation.X += mCurrentSelectedItemGrabDelta.X;
-						newLocation.Y += mCurrentSelectedItemGrabDelta.Y;
-						mCurrentSelectedItem.Move(newLocation);
+						switch (mCurrentEditAction)
+						{
+							case EditAction.MOVE_ITEM:
+								newLocation.X += mCurrentSelectedItemGrabDelta.X;
+								newLocation.Y += mCurrentSelectedItemGrabDelta.Y;
+								mCurrentSelectedItem.Move(newLocation);
+								break;
+							case EditAction.ADJUST_SENSOR:
+								Point mouseDownInLevelCoord = ConvertMouseCoordToLevelCoord(mLastMouseMovePosition);
+								int diff = newLocation.X - mouseDownInLevelCoord.X;
+								if (mCurrentSelectedItem.IsMirror)
+									mCurrentSelectedItem.SensorDistance -= diff;
+								else
+									mCurrentSelectedItem.SensorDistance += diff;
+								break;
+						}
 						RedrawLevel();
 					}
 					break;
@@ -268,7 +298,19 @@ namespace RickArdurousEditor
 						try
 						{
 							if (mCurrentSelectedItem == null)
+							{
 								mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));
+							}
+							else if (mCurrentEditAction == EditAction.ADJUST_SENSOR)
+							{
+								Point mouseDownInLevelCoord = ConvertMouseCoordToLevelCoord(mLastMouseMovePosition);
+								Point newLocation = ConvertMouseCoordToLevelCoord(e.Location);
+								int diff = newLocation.X - mouseDownInLevelCoord.X;
+								if (mCurrentSelectedItem.IsMirror)
+									mCurrentSelectedItem.SensorDistance -= diff;
+								else
+									mCurrentSelectedItem.SensorDistance += diff;
+							}
 						}
 						catch (MapSaveException)
 						{
