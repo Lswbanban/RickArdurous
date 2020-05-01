@@ -42,7 +42,7 @@ void LivingItem::SaveAndLoadAliveStatus(unsigned char currentScreenIdToSave, uns
 	// special case, if the currentScreenIdToSave is null, then we reset all
 	if (currentScreenIdToSave == 0)
 	{
-		for (unsigned char i = 0; i < PUZZLE_SCREEN_BYTE_COUNT; ++i)
+		for (unsigned char i = 0; i < MapManager::PUZZLE_SCREEN_BYTE_COUNT; ++i)
 			AlivePerPuzzleScreen[i] = 0xFF;
 	}
 	else

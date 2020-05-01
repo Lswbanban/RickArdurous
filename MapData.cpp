@@ -41,9 +41,6 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,28,33,37,41,45,50,54,64,68,73,80,88,96,105,121,};
 
-const unsigned char MapManager::LEVEL_WIDTH = 32;
-const unsigned char MapManager::LEVEL_HEIGHT = 16;
-
 Graal graal1;
 Enemy enemy1;
 Stalagmite stalagmite1;
@@ -82,8 +79,6 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 	&InitScreen0, &InitScreen1, &InitScreen2, 
 };
 
-// compute the number of items
-const unsigned char MapManager::PUZZLE_SCREEN_COUNT = sizeof(MapManager::ItemInitFunctions) / sizeof(ItemInitFunction);
 
 // this function is to save and load the living status of the items
 void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)

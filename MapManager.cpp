@@ -13,6 +13,7 @@
 #include "Physics.h"
 #include "GameManager.h"
 #include "Graal.h"
+#include "MapDataConstVariables.h"
 
 namespace MapManager
 {

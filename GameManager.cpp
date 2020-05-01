@@ -9,6 +9,7 @@
 #include "MainMenu.h"
 #include "Rick.h"
 #include "MapData.h"
+#include "MapDataConstVariables.h"
 #include "Graal.h"
 
 GameManager::GameState GameManager::CurrentGameState;
@@ -48,7 +49,7 @@ void GameManager::StartNewGame()
 	MapManager::SaveAndLoadAliveStatusForAllItems(0, 0);
 	
 	// call reset of the MapManger with the first screen id of the game
-	MapManager::Reset(1, 0, 8);
+	MapManager::Reset(1, MapManager::FIRST_PUZZLE_SCREEN_CAMERA_X, MapManager::FIRST_PUZZLE_SCREEN_CAMERA_Y);
 	
 	// switch the current game state
 	CurrentGameState = GameState::PLAYING;
@@ -57,7 +58,7 @@ void GameManager::StartNewGame()
 void GameManager::GoToMainMenu()
 {
 	// init the Map Manager with the first screen
-	MapManager::Reset(0, 0, 0);
+	MapManager::Reset(0, MapManager::MAIN_MENU_CAMERA_X, MapManager::MAIN_MENU_CAMERA_Y);
 	
 	// switch the current game state
 	CurrentGameState = GameState::MAIN_MENU;
