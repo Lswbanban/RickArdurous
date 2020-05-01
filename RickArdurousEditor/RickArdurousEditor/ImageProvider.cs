@@ -149,6 +149,14 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetArrowLauncherImage(bool isLeft)
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"ArrowLauncherFace.png");
+			Bitmap result = new Bitmap(4, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 8), ref result, isLeft, 1f, 0f, 1f, new Rectangle(0, 0, 3, 8));
+			return result;
+		}
+
 		public static Bitmap GetItemsSpriteImage()
 		{
 			// get all the image of all the items
@@ -162,6 +170,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetScorpionImage());
 			itemImages.Add(GetStalagmiteImage());
 			itemImages.Add(GetStalactiteImage());
+			itemImages.Add(GetArrowLauncherImage(false));
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;
