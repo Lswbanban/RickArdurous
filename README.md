@@ -10,14 +10,8 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 - The main menu
 	- Sound on/off
 	- Help/display controls?
-- Sound FX
-	- Fire a bullet
+- Sound/LED FX
 	- Jump
-	- Place a dynamite / dynamite fuse?
-	- for picking up an item
-- LED FX
-	- for when the Arrow launcher launch an arrow
-	- for picking up a Statuette?
 	- For Rick Death
 - Music ?
 
