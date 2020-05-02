@@ -63,20 +63,13 @@ void InitScreen1(bool shouldRespawn)
 
 	// init all the item of the current puzzle screen
 	enemy1.Init(48, 85, Item::PropertyFlags::SPECIAL, shouldRespawn);
-	arrowLauncher1.Init(9, 74, Item::PropertyFlags::NONE, 80);
-}
-
-void InitScreen2(bool shouldRespawn)
-{
-	// Add a checkpoint if we need to
-
-	// init all the item of the current puzzle screen
-	graal1.Init(158, 87, Item::PropertyFlags::NONE, shouldRespawn);
+	arrowLauncher1.Init(8, 98, Item::PropertyFlags::NONE, 80);
+	graal1.Init(29, 110, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, &InitScreen2, 
+	&InitScreen0, &InitScreen1, 
 };
 
 

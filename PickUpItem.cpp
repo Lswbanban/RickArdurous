@@ -7,6 +7,7 @@
 #include "PickUpItem.h"
 #include "MapManager.h"
 #include "Rick.h"
+#include "FXManager.h"
 
 /**
  * Do a a collision box check with the specified size to see if the Main character is at the same place as this pickup,
@@ -89,6 +90,7 @@ bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], uns
 		if (DoesRickPickMeUp(spriteWidth, spriteHeight))
 		{
 			ClearProperty(Item::PropertyFlags::ALIVE);
+			FXManager::StartFXCommand(FXManager::BufferId::GAME, {0, 1, 0, 2, 1, 78, 2, 3});
 			return true;
 		}
 		

@@ -12,6 +12,7 @@
 #include "PickUpItem.h"
 #include "MapManager.h"
 #include "Physics.h"
+#include "FXManager.h"
 
 namespace Rick
 {
@@ -344,6 +345,8 @@ void Rick::PlaceDynamite()
 			int dynamiteX = IsLookingLeft ? X - 1: (X + GetWidth() - SpriteData::DYNAMITE_SPRITE_WIDTH - 1);
 			AllDynamites[i].LightUp(dynamiteX, Y + 5);
 			DynamiteCount--;
+			// start FX
+			FXManager::StartFXCommand(FXManager::BufferId::RICK, {0, 0, 1, 4, 26, 60, 0, 5});
 			break;
 		}
 	// reset the dynamite placement flag 
@@ -426,6 +429,7 @@ void Rick::UpdateInput()
 				{
 					AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
 					BulletCount--;
+					FXManager::StartFXCommand(FXManager::BufferId::RICK, {0, 0, 0, 4, 0, 52, 0, 1});
 					break;
 				}
 		}

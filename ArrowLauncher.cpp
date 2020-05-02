@@ -7,6 +7,7 @@
 #include "Rick.h"
 #include "SpriteData.h"
 #include "MapManager.h"
+#include "FXManager.h"
 
 ArrowLauncher::ArrowLauncher()
 : Arrow(true)
@@ -85,6 +86,7 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 		if (isAlive && (Y > trigererY) && (Y < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
 		{
 			Arrow.Fire(X, Y, isShootingTowardLeft);
+			FXManager::StartFXCommand(FXManager::BufferId::GAME, {1, 0, 0, 4, 0, 52, 0, 1});
 			LastLaunchTime = 0;
 		}
 	}
