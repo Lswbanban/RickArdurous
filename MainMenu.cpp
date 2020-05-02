@@ -10,6 +10,7 @@
 #include "SpriteData.h"
 #include "Graal.h"
 #include "Rick.h"
+#include "FXManager.h"
 
 namespace MainMenu
 {
@@ -33,11 +34,19 @@ namespace MainMenu
 
 void MainMenu::UpdateMainMenu()
 {
+	bool playFX = false;
+	
 	// check the input
 	if (Input::IsJustPressed(DOWN_BUTTON) && (SelectedOption < LAST_MENU_OPTION))
+	{
 		SelectedOption++;
+		playFX = true;
+	}
 	else if (Input::IsJustPressed(UP_BUTTON) && (SelectedOption > 0))
+	{
 		SelectedOption--;
+		playFX = true;
+	}
 	else if (Input::IsJustPressed(A_BUTTON) || Input::IsJustPressed(B_BUTTON))
 	{
 		switch (SelectedOption)
@@ -50,6 +59,10 @@ void MainMenu::UpdateMainMenu()
 				break;
 		}
 	}
+	
+	// play the sound fx when moving the menu option
+	if (playFX)
+		FXManager::StartFXCommand(FXManager::BufferId::GAME, {0, 0, 1, 10, 0, 60, 0, 1});
 	
 	// draw the menu
 	DrawMainMenu();

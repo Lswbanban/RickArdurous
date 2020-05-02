@@ -4,6 +4,7 @@
 
 #include "RickArdurous.h"
 #include "Input.h"
+#include "FXManager.h"
 #include "GameManager.h"
 
 // instance of the arduboy class
@@ -37,6 +38,9 @@ void loop()
 
 	// update the input
 	Input::Update();
+
+	// update the Special Effects
+	FXManager::Update();
 	
 	// update the game state
 	GameManager::Update();
