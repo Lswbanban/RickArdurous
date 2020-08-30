@@ -57,20 +57,20 @@ namespace RickArdurousEditor
 
 		private enum WallId
 		{
-			BLOCK_16_8_RIGHT = 0,
+			ROCK_CEILING = 0,
 			ROCK,
 			ROCK_2,
 			ROCK_GROUND,
-			STAIR,
+			BLOCK_16_8_RIGHT,
 			BLOCK_8_8,
 			BLOCK_8_8_SPLIT,
+			STAIR,
 			SMALL_STATUE,
 			BIG_STATUE_TOP,
 			BIG_STATUE_BOTTOM,
 			PLATFORM,
 			LADDER,
 			PLATFORM_WITH_LADDER,
-			ARROW_LAUNCHER,
 			DESTROYABLE_BLOCK,
 			NOTHING = 15,
 		};
@@ -917,7 +917,7 @@ namespace RickArdurousEditor
 					byte spriteId = mLevel[x, y];
 					byte previousSpriteId = mLevel[Math.Max(x - 1, 0), y];
 					bool isMirror = false;
-					if (spriteId <= (int)WallId.ROCK_GROUND)
+					if (spriteId <= (int)WallId.BLOCK_16_8_RIGHT)
 						isMirror = ((x * y) % 2) == 1;
 					else if (spriteId == (int)WallId.STAIR)
 						isMirror = (previousSpriteId == (int)WallId.NOTHING);

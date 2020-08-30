@@ -211,7 +211,7 @@ void MapManager::Update()
 	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();
 	
 	// Draw the static collision of the map
-	Draw(SpriteData::BLOCK_16_8_RIGHT, SpriteData::PLATFORM, rickFeetOnScreen);
+	Draw(0, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// Draw static collision items
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_STATIC_COLLISION);
@@ -739,7 +739,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// then we should only draw the platforms below the feet
 		// Otherwise, if we are in the drawing platform step, we only draw those above the feet,
 		// since the below ones as already been drawn
-		bool shouldDrawPlatforms = ((minSpriteIndex == SpriteData::BLOCK_16_8_RIGHT) && (screenY > rickFeetOnScreen)) ||
+		bool shouldDrawPlatforms = ((minSpriteIndex == 0) && (screenY > rickFeetOnScreen)) ||
 									((minSpriteIndex == SpriteData::PLATFORM) && (screenY <= rickFeetOnScreen));
 		// init the mapX coord with -1 because we will uncompress the whole line, and we want the first sprite to have the coordinate 0
 		unsigned char mapX = 255; // this is -1 but for unsigned char
@@ -806,7 +806,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				// choose a random mirror flag for some sprite that can be mirrored, for display variation
 				// and for the big statue, they are mirror if they are the right one (i.e. if there is the same sprite on their left)
 				bool isMirror = false;
-				if (currentSpriteId <= SpriteData::ROCK_GROUND)
+				if (currentSpriteId <= SpriteData::BLOCK_16_8_RIGHT)
 					isMirror = (mapX * mapY) % 2;
 				else if (currentSpriteId == SpriteData::STAIR)
 					isMirror = (previousSpriteId == SpriteData::NOTHING);

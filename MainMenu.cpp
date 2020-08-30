@@ -94,8 +94,8 @@ void MainMenu::DrawMainMenu()
 		arduboy.drawChar(5 + (i*6), 3, title[i], BLACK, WHITE, 1);
 
 	// draw some stalactites
-	unsigned char x[] = {24, 45, 75, 93, 97 };
-	unsigned char y[] = {17, 15, 15, 21, 20 };
+	unsigned char x[] = {18, 42, 75, 93, 98 };
+	unsigned char y[] = {17, 16, 15, 16, 19 };
 	for (unsigned char i = 0; i < sizeof(x); ++i)
 		arduboy.drawBitmapExtended(x[i], y[i], SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
 
