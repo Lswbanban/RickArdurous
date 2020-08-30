@@ -7,12 +7,14 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 # Bug list
 
 # To do
+- add a new sprite to use the arrow launcher slot
 - The main menu
 	- Sound on/off
 	- Help/display controls?
 - Sound/LED FX
 	- Jump
 	- For Rick Death
+	- different sound for picking crate/statuette/graal
 - Music ?
 
 # New items to come

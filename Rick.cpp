@@ -429,7 +429,7 @@ void Rick::UpdateInput()
 				{
 					AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
 					BulletCount--;
-					FXManager::StartFXCommand(FXManager::BufferId::RICK, {0, 0, 0, 4, 0, 52, 0, 1});
+					FXManager::StartFXCommand(FXManager::BufferId::RICK, {0, 0, 0, 1, 0, 68, -1, 15});
 					break;
 				}
 		}

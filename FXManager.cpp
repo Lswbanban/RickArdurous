@@ -80,7 +80,7 @@ void FXManager::Update()
 					}
 				}		
 			}
-			else
+			if (!Status.IsOn && (Command.RepeatTime != 0))
 			{
 				if ((Status.FrameCount % Command.OffDuration) == 0)
 				{
