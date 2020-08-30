@@ -122,6 +122,7 @@ namespace RickArdurousEditor
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALAGMITE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALACTITE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.ARROW_LAUNCHER } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.DESTROYABLE_BLOCK } ),
 				};
 
 		private void WriteHeader(StreamWriter writer)

@@ -25,6 +25,7 @@ namespace RickArdurousEditor.Items
 			STALAGMITE,
 			STALACTITE,
 			ARROW_LAUNCHER,
+			DESTROYABLE_BLOCK,
 
 			// the type count
 			COUNT,
@@ -147,6 +148,9 @@ namespace RickArdurousEditor.Items
 				case Type.ARROW_LAUNCHER:
 					mSprite = ImageProvider.GetArrowLauncherImage(mIsMirror);
 					break;
+				case Type.DESTROYABLE_BLOCK:
+					mSprite = ImageProvider.GetDestroyableBlockImage();
+					break;
 			}
 		}
 
@@ -195,6 +199,8 @@ namespace RickArdurousEditor.Items
 					return "stalactite" + instanceNumberString;
 				case Type.ARROW_LAUNCHER:
 					return "arrowLauncher" + instanceNumberString;
+				case Type.DESTROYABLE_BLOCK:
+					return "destBlock" + instanceNumberString;
 			}
 			return string.Empty;
 		}
@@ -219,6 +225,8 @@ namespace RickArdurousEditor.Items
 				return Type.STALACTITE;
 			else if (instanceName.StartsWith("arrowLauncher"))
 				return Type.ARROW_LAUNCHER;
+			else if (instanceName.StartsWith("destBlock"))
+				return Type.DESTROYABLE_BLOCK;
 
 			return Type.HORIZONTAL_SPIKE;
 		}
@@ -258,6 +266,9 @@ namespace RickArdurousEditor.Items
 				case Type.ARROW_LAUNCHER:
 					writer.WriteLine("ArrowLauncher " + instanceName + ";");
 					break;
+				case Type.DESTROYABLE_BLOCK:
+					writer.WriteLine("DestroyableBlock " + instanceName + ";");
+					break;
 			}
 		}
 
@@ -275,6 +286,7 @@ namespace RickArdurousEditor.Items
 				case Type.SCORPION:
 				case Type.STALAGMITE:
 				case Type.STALACTITE:
+				case Type.DESTROYABLE_BLOCK:
 					writer.WriteLine("\t" + instanceName + ".SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);");
 					return true;
 			}
@@ -319,6 +331,9 @@ namespace RickArdurousEditor.Items
 					break;
 				case Type.ARROW_LAUNCHER:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", " + mirrorFlag + ", " + mArrowLauncherDistance .ToString() + ");");
+					break;
+				case Type.DESTROYABLE_BLOCK:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
 					break;
 			}
 		}

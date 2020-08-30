@@ -41,14 +41,13 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,27,32,36,40,44,49,53,63,67,72,80,88,97,107,123,};
 
-BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
-Statuette statuette1;
 Graal graal1;
 Enemy enemy1;
 Stalagmite stalagmite1;
 Stalagmite stalagmite2;
 ArrowLauncher arrowLauncher1;
+DestroyableBlock destBlock1;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -65,28 +64,35 @@ void InitScreen1(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(40, 106);
 
 	// init all the item of the current puzzle screen
+	stalagmite1.Init(105, 113, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(48, 85, Item::PropertyFlags::SPECIAL, shouldRespawn);
 	arrowLauncher1.Init(8, 98, Item::PropertyFlags::NONE, 80);
-	graal1.Init(114, 73, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(100, 113, Item::PropertyFlags::NONE, shouldRespawn);
 	dynamiteCrate1.Init(14, 112, Item::PropertyFlags::NONE, shouldRespawn);
-	bulletCrate1.Init(75, 112, Item::PropertyFlags::NONE, shouldRespawn);
+	destBlock1.Init(81, 113, Item::PropertyFlags::NONE, shouldRespawn);
+}
+
+void InitScreen2(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+
+	// init all the item of the current puzzle screen
+	graal1.Init(227, 113, Item::PropertyFlags::NONE, shouldRespawn);
+	destBlock1.Init(159, 89, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, 
+	&InitScreen0, &InitScreen1, &InitScreen2, 
 };
 
 
 // this function is to save and load the living status of the items
 void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)
 {
-	bulletCrate1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	dynamiteCrate1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
-	statuette1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	graal1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	enemy1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	destBlock1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 }

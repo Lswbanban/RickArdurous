@@ -181,6 +181,15 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetDestroyableBlockImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"DestroyableBlock.png");
+			Bitmap result = new Bitmap(15, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 15, 8), ref result, false, 0.5f, 0.5f, 0.5f, new Rectangle(0, 0, 15, 8));
+			return result;
+		}
+
+
 		public static Bitmap GetItemsSpriteImage()
 		{
 			// get all the image of all the items
@@ -198,6 +207,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetStalagmiteImage());
 			itemImages.Add(GetStalactiteImage());
 			itemImages.Add(GetArrowLauncherImage(false));
+			itemImages.Add(GetDestroyableBlockImage());
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;
