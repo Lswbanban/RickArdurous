@@ -78,7 +78,12 @@ void FXManager::Update()
 						if (Command.BaseNote != 0)
 							arduboy.tunes.stopNote(SOUND_CHANNEL);
 					}
-				}		
+					if (Command.OffDuration != 0)
+					{
+						Status.FrameCount = 1;
+						continue;
+					}
+				}
 			}
 			if (!Status.IsOn && (Command.RepeatTime != 0))
 			{
