@@ -41,6 +41,9 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,28,33,37,41,45,50,54,64,68,73,80,88,96,105,121,};
 
+BulletCrate bulletCrate1;
+DynamiteCrate dynamiteCrate1;
+Statuette statuette1;
 Graal graal1;
 Enemy enemy1;
 Stalagmite stalagmite1;
@@ -64,7 +67,10 @@ void InitScreen1(bool shouldRespawn)
 	// init all the item of the current puzzle screen
 	enemy1.Init(48, 85, Item::PropertyFlags::SPECIAL, shouldRespawn);
 	arrowLauncher1.Init(8, 98, Item::PropertyFlags::NONE, 80);
-	graal1.Init(29, 110, Item::PropertyFlags::NONE, shouldRespawn);
+	graal1.Init(114, 73, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette1.Init(100, 113, Item::PropertyFlags::NONE, shouldRespawn);
+	dynamiteCrate1.Init(14, 112, Item::PropertyFlags::NONE, shouldRespawn);
+	bulletCrate1.Init(75, 112, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
@@ -76,6 +82,9 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 // this function is to save and load the living status of the items
 void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)
 {
+	bulletCrate1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	dynamiteCrate1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	statuette1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	graal1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	enemy1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);

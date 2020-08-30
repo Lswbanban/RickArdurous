@@ -113,7 +113,10 @@ namespace RickArdurousEditor
 		#region write
 
 		List<Items.Item.Type>[] mSimilarTypes = new List<Items.Item.Type>[]
-				{   new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.GRAAL } ),
+				{   new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.BULLET_CRATE } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.DYNAMITE_CRATE } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STATUETTE } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.GRAAL } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.HORIZONTAL_SPIKE, Items.Item.Type.VERTICAL_SPIKE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.MUMMY, Items.Item.Type.SKELETON, Items.Item.Type.SCORPION }),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALAGMITE } ),

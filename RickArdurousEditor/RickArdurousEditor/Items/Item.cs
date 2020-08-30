@@ -13,6 +13,9 @@ namespace RickArdurousEditor.Items
 		public enum Type
 		{
 			RICK,
+			BULLET_CRATE,
+			DYNAMITE_CRATE,
+			STATUETTE,
 			GRAAL,
 			HORIZONTAL_SPIKE,
 			VERTICAL_SPIKE,
@@ -108,6 +111,15 @@ namespace RickArdurousEditor.Items
 				case Type.RICK:
 					mSprite = ImageProvider.GetRickImage(mRickRespawnType);
 					break;
+				case Type.BULLET_CRATE:
+					mSprite = ImageProvider.GetBulletCrateImage();
+					break;
+				case Type.DYNAMITE_CRATE:
+					mSprite = ImageProvider.GetDynamiteCrateImage();
+					break;
+				case Type.STATUETTE:
+					mSprite = ImageProvider.GetStatuetteImage();
+					break;
 				case Type.GRAAL:
 					mSprite = ImageProvider.GetGraalImage();
 					break;
@@ -162,6 +174,12 @@ namespace RickArdurousEditor.Items
 			string instanceNumberString = instanceNumber.ToString();
 			switch (type)
 			{
+				case Type.BULLET_CRATE:
+					return "bulletCrate" + instanceNumberString;
+				case Type.DYNAMITE_CRATE:
+					return "dynamiteCrate" + instanceNumberString;
+				case Type.STATUETTE:
+					return "statuette" + instanceNumberString;
 				case Type.GRAAL:
 					return "graal" + instanceNumberString;
 				case Type.HORIZONTAL_SPIKE:
@@ -183,7 +201,13 @@ namespace RickArdurousEditor.Items
 
 		public static Type GetInstanceTypeFromName(string instanceName, bool isSpecial, bool isSpecial2)
 		{
-			if (instanceName.StartsWith("graal"))
+			if (instanceName.StartsWith("bulletCrate"))
+				return Type.BULLET_CRATE;
+			else if (instanceName.StartsWith("dynamiteCrate"))
+				return Type.DYNAMITE_CRATE;
+			else if (instanceName.StartsWith("statuette"))
+				return Type.STATUETTE;
+			else if (instanceName.StartsWith("graal"))
 				return Type.GRAAL;
 			else if (instanceName.StartsWith("spike"))
 				return isSpecial ? Type.HORIZONTAL_SPIKE : Type.VERTICAL_SPIKE;
@@ -204,6 +228,15 @@ namespace RickArdurousEditor.Items
 			string instanceName = GetInstanceName(type, instanceNumber);
 			switch (type)
 			{
+				case Type.BULLET_CRATE:
+					writer.WriteLine("BulletCrate " + instanceName + ";");
+					break;
+				case Type.DYNAMITE_CRATE:
+					writer.WriteLine("DynamiteCrate " + instanceName + ";");
+					break;
+				case Type.STATUETTE:
+					writer.WriteLine("Statuette " + instanceName + ";");
+					break;
 				case Type.GRAAL:
 					writer.WriteLine("Graal " + instanceName + ";");
 					break;
@@ -233,6 +266,9 @@ namespace RickArdurousEditor.Items
 			string instanceName = GetInstanceName(type, instanceNumber);
 			switch (type)
 			{
+				case Type.BULLET_CRATE:
+				case Type.DYNAMITE_CRATE:
+				case Type.STATUETTE:
 				case Type.GRAAL:
 				case Type.MUMMY:
 				case Type.SKELETON:
@@ -256,6 +292,9 @@ namespace RickArdurousEditor.Items
 			string mirrorFlag = mIsMirror ? "Item::PropertyFlags::MIRROR_X" : "Item::PropertyFlags::NONE";
 			switch (mType)
 			{
+				case Type.BULLET_CRATE:
+				case Type.DYNAMITE_CRATE:
+				case Type.STATUETTE:
 				case Type.GRAAL:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
 					break;

@@ -131,6 +131,30 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetStatuetteImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Statuette.png");
+			Bitmap result = new Bitmap(5, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, false, 0f, 1f, 1f);
+			return result;
+		}
+
+		public static Bitmap GetBulletCrateImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"CrateBullet.png");
+			Bitmap result = new Bitmap(11, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, false, 0f, 0.8f, 0.8f);
+			return result;
+		}
+
+		public static Bitmap GetDynamiteCrateImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"CrateDynamite.png");
+			Bitmap result = new Bitmap(11, 8);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, false, 0f, 0.8f, 0.8f);
+			return result;
+		}
+
 		public static Bitmap GetStalagmiteImage()
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Stalagmite.png");
@@ -162,6 +186,9 @@ namespace RickArdurousEditor
 			// get all the image of all the items
 			List<Bitmap> itemImages = new List<Bitmap>();
 			itemImages.Add(GetRickImage(Items.Item.RespawnType.NORMAL));
+			itemImages.Add(GetBulletCrateImage());
+			itemImages.Add(GetDynamiteCrateImage());
+			itemImages.Add(GetStatuetteImage());
 			itemImages.Add(GetGraalImage());
 			itemImages.Add(GetHorizontalSpikeImage());
 			itemImages.Add(GetVerticalSpikeImage(false));
