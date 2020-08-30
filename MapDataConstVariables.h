@@ -12,7 +12,7 @@ namespace MapManager
 	static constexpr int LEVEL_HEIGHT = 16;
 
 	// number of puzzle screen
-	static constexpr int PUZZLE_SCREEN_COUNT = 3;
+	static constexpr int PUZZLE_SCREEN_COUNT = 4;
 	static constexpr int PUZZLE_SCREEN_BYTE_COUNT = 1;
 
 	// coordinates of the first puzzle screen and main menu
