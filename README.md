@@ -5,11 +5,9 @@ Rick Ardurous
 Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
 
 # Bug list
-- Can we simplify the destroyable block edition?
 
 # To do
 - The main menu
-	- Sound on/off
 	- Help/display controls?
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal

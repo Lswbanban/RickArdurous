@@ -22,6 +22,9 @@ namespace FXManager
 		BUFFER_COUNT,
 	};
 
+	// a variable to turn on/off the sound FX
+	extern bool IsSoundOn;
+	
 	// set the command in the specified buffer
 	void StartFXCommand(BufferId id, FXCommand command);
 

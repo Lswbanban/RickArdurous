@@ -15,7 +15,7 @@
 namespace MainMenu
 {
 	static constexpr int LAST_MENU_OPTION = 1;
-	static constexpr int MENU_X = 46;
+	static constexpr int MENU_X = 40;
 	static constexpr int GAME_OVER_ANIM_SPEED = 4;
 	
 	unsigned char SelectedOption = 0;
@@ -56,6 +56,7 @@ void MainMenu::UpdateMainMenu()
 				GameManager::StartNewGame();
 				break;
 			case 1:
+				FXManager::IsSoundOn = !FXManager::IsSoundOn;
 				break;
 		}
 	}
@@ -104,7 +105,11 @@ void MainMenu::DrawMainMenu()
 	arduboy.setCursor(MENU_X, menuY[0]);
 	arduboy.print("Play");
 	arduboy.setCursor(MENU_X, menuY[1]);
-	arduboy.print("Music");
+	arduboy.print("Sound ");
+	if (FXManager::IsSoundOn)
+		arduboy.print("On");
+	else
+		arduboy.print("Off");
 	
 	// draw the selected indicator
 	arduboy.setCursor(MENU_X - 8, menuY[SelectedOption]);

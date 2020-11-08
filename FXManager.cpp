@@ -25,6 +25,8 @@ namespace FXManager
 
 	FXBuffer FXBuffers[BUFFER_COUNT];
 	BufferId  CurrentBufferLightUp = GAME;
+	
+	bool IsSoundOn = true;
 }
 
 void FXManager::StartFXCommand(BufferId id, FXCommand command)
@@ -95,7 +97,7 @@ void FXManager::Update()
 					// memorize which buffer took the led
 					CurrentBufferLightUp = (BufferId)i;
 					// play also the associated note, and increment it for the next time
-					if (Command.BaseNote != 0)
+					if (IsSoundOn && (Command.BaseNote != 0))
 					{
 						arduboy.tunes.playNote(SOUND_CHANNEL, Command.BaseNote);
 						Command.BaseNote += Command.NoteIncrement;
