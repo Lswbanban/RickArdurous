@@ -283,7 +283,7 @@ unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
 		// look at the level sprite above
 		yMap--;
 	}
-	return 0;
+	return SpriteData::LEVEL_SPRITE_HEIGHT + CAMERA_VERTICAL_SHIFT;
 }
 
 bool MapManager::IsThereLadderAt(int xWorld, int yWorld)

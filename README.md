@@ -5,6 +5,8 @@ Rick Ardurous
 Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
 
 # Bug list
+- when you die on the first spike you go to the congratulation screen
+- Can we simplify the destroyable block edition?
 
 # To do
 - The main menu
@@ -12,6 +14,8 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 	- Help/display controls?
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
+	- dynamite explosion
+	- climb lader?
 - Music ?
 
 # New items to come
