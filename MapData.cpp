@@ -25,21 +25,21 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,1),ID(0,0),ID(15,1),ID(11,0),ID(11,0),ID(0,15),ID(1,11),ID(0,11),ID(0,1),ID(5,15),ID(14,5),
 	ID(2,0),ID(15,13),ID(0,5),ID(15,14),ID(5,0),
 	ID(0,15),ID(15,5),ID(15,14),ID(5,0),
-	ID(15,15),ID(15,1),ID(5,15),ID(11,12),ID(15,2),ID(5,0),
-	ID(15,14),ID(7,3),ID(5,15),ID(11,12),ID(15,2),ID(5,0),
-	ID(15,12),ID(7,2),ID(1,2),ID(5,15),ID(11,12),ID(15,2),ID(5,0),
-	ID(5,5),ID(4,15),ID(13,5),ID(15,11),ID(12,15),ID(2,5),
-	ID(4,5),ID(1,2),ID(1,2),ID(1,0),ID(0,0),ID(5,5),ID(5,5),ID(5,5),ID(1,1),ID(4,4),ID(15,8),ID(12,15),ID(2,5),
-	ID(6,2),ID(1,0),ID(15,1),ID(0,15),ID(11,0),ID(5,1),ID(15,8),ID(12,15),ID(2,5),
-	ID(5,0),ID(15,15),ID(15,11),ID(12,15),ID(2,5),
-	ID(5,15),ID(11,11),ID(13,11),ID(11,11),ID(11,15),ID(1,3),ID(15,8),ID(12,15),ID(2,5),
-	ID(8,15),ID(12,12),ID(15,2),ID(1,15),ID(1,7),ID(1,15),ID(8,12),ID(15,2),ID(5,0),
-	ID(6,15),ID(4,9),ID(9,15),ID(6,12),ID(15,2),ID(1,15),ID(11,12),ID(15,2),ID(5,0),
-	ID(5,15),ID(4,10),ID(10,15),ID(2,14),ID(14,15),ID(2,12),ID(15,2),ID(2,7),ID(15,10),ID(12,15),ID(2,5),
+	ID(15,15),ID(15,1),ID(5,15),ID(11,13),ID(15,2),ID(5,0),
+	ID(15,14),ID(7,3),ID(5,15),ID(11,13),ID(15,2),ID(5,0),
+	ID(15,12),ID(7,2),ID(1,2),ID(5,15),ID(11,13),ID(15,2),ID(5,0),
+	ID(5,5),ID(4,15),ID(13,5),ID(15,11),ID(13,15),ID(2,5),
+	ID(4,5),ID(1,2),ID(1,2),ID(1,0),ID(0,0),ID(5,5),ID(5,5),ID(5,5),ID(1,1),ID(4,4),ID(15,8),ID(13,15),ID(2,5),
+	ID(6,2),ID(1,0),ID(15,1),ID(0,15),ID(11,0),ID(5,1),ID(15,8),ID(13,15),ID(2,5),
+	ID(5,0),ID(15,15),ID(15,11),ID(13,15),ID(2,5),
+	ID(5,15),ID(11,12),ID(14,12),ID(12,12),ID(12,15),ID(1,3),ID(15,8),ID(13,15),ID(2,5),
+	ID(8,15),ID(12,13),ID(15,2),ID(1,15),ID(1,7),ID(1,15),ID(8,13),ID(15,2),ID(5,0),
+	ID(6,15),ID(4,9),ID(9,15),ID(6,13),ID(15,2),ID(1,15),ID(11,13),ID(15,2),ID(5,0),
+	ID(5,15),ID(4,10),ID(10,15),ID(6,13),ID(15,2),ID(2,7),ID(15,10),ID(13,15),ID(2,5),
 	ID(5,5),ID(6,5),ID(5,6),ID(5,5),ID(6,5),ID(5,5),ID(5,5),ID(5,5),ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(5,5),ID(5,5),ID(5,5),ID(5,5),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,27,32,36,42,48,55,61,74,83,88,97,106,115,126,142,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,16,27,32,36,42,48,55,61,74,83,88,97,106,115,124,140,};
 
 Graal graal1;
 Enemy enemy1;
@@ -75,8 +75,8 @@ void InitScreen2(bool shouldRespawn)
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
-	arrowLauncher1.Init(191, 104, Item::PropertyFlags::MIRROR_X, 47);
 	destBlock1.Init(145, 80, Item::PropertyFlags::NONE, shouldRespawn);
+	arrowLauncher1.Init(191, 104, Item::PropertyFlags::MIRROR_X, 80);
 }
 
 void InitScreen3(bool shouldRespawn)

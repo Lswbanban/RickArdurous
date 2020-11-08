@@ -68,10 +68,10 @@ namespace RickArdurousEditor
 			SMALL_STATUE,
 			BIG_STATUE_TOP,
 			BIG_STATUE_BOTTOM,
+			NEW_SPRITE_TODO,
 			PLATFORM,
 			LADDER,
 			PLATFORM_WITH_LADDER,
-			DESTROYABLE_BLOCK,
 			NOTHING = 15,
 		};
 
@@ -399,7 +399,7 @@ namespace RickArdurousEditor
 
 		private bool IsAPuzzleScreenExit(byte wallId)
 		{
-			return (wallId >= (byte)WallId.DESTROYABLE_BLOCK) || (wallId == (byte)WallId.LADDER) || (wallId == (byte)WallId.PLATFORM_WITH_LADDER);
+			return (wallId == (byte)WallId.NOTHING) || (wallId == (byte)WallId.LADDER) || (wallId == (byte)WallId.PLATFORM_WITH_LADDER);
 		}
 
 		private bool GetStartOrEndPuzzleScreenCoordinates(bool isStart, out int screenX, out int screenY)

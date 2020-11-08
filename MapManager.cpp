@@ -265,10 +265,10 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
 {
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
-	if (spriteId == SpriteData::DESTROYABLE_BLOCK)
+	if (spriteId == SpriteData::NOTHING)
 		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
 	// otherwise it depends on the type of sprite
-	return (spriteId < SpriteData::WallId::LADDER) || ((spriteId > SpriteData::WallId::PLATFORM_WITH_LADDER) && (spriteId != SpriteData::NOTHING));
+	return (spriteId != SpriteData::WallId::LADDER);
 }
 
 unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
