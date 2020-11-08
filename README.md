@@ -7,8 +7,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 # Bug list
 
 # To do
-- The main menu
-	- Help/display controls?
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
 	- dynamite explosion

@@ -5,6 +5,7 @@ namespace MainMenu
 {
 	void UpdateMainMenu();
 	void UpdateGameOver(bool isVictory);
+	void UpdateHelpScreen();
 }
 
 #endif

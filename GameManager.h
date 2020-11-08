@@ -9,6 +9,7 @@ namespace GameManager
 		PLAYING,
 		GAME_OVER,
 		VICTORY,
+		HELP_SCREEN,
 	};
 	
 	extern GameState CurrentGameState;

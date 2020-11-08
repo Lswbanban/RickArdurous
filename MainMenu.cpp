@@ -14,7 +14,7 @@
 
 namespace MainMenu
 {
-	static constexpr int LAST_MENU_OPTION = 1;
+	static constexpr int LAST_MENU_OPTION = 2;
 	static constexpr int MENU_X = 40;
 	static constexpr int GAME_OVER_ANIM_SPEED = 4;
 	
@@ -29,6 +29,7 @@ namespace MainMenu
 	void DrawStatuetteCount();
 	void DrawVictory();
 	void DrawGameOver();
+	void DrawHelpScreen();
 	void InitGameOver();
 }
 
@@ -57,6 +58,10 @@ void MainMenu::UpdateMainMenu()
 				break;
 			case 1:
 				FXManager::IsSoundOn = !FXManager::IsSoundOn;
+				break;
+			case 2:
+				// switch the current game state
+				GameManager::CurrentGameState = GameManager::GameState::HELP_SCREEN;
 				break;
 		}
 	}
@@ -101,7 +106,7 @@ void MainMenu::DrawMainMenu()
 		arduboy.drawBitmapExtended(x[i], y[i], SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
 
 	// draw the menu
-	unsigned char menuY[] = { 34, 45 };
+	unsigned char menuY[] = { 30, 41, 52 };
 	arduboy.setCursor(MENU_X, menuY[0]);
 	arduboy.print("Play");
 	arduboy.setCursor(MENU_X, menuY[1]);
@@ -110,6 +115,8 @@ void MainMenu::DrawMainMenu()
 		arduboy.print("On");
 	else
 		arduboy.print("Off");
+	arduboy.setCursor(MENU_X, menuY[2]);
+	arduboy.print("Controls");
 	
 	// draw the selected indicator
 	arduboy.setCursor(MENU_X - 8, menuY[SelectedOption]);
@@ -172,4 +179,26 @@ void MainMenu::DrawGameOver()
 	arduboy.setCursor(16, 54);
 	DrawStatuetteCount();
 	arduboy.print("collected");
+}
+
+void MainMenu::UpdateHelpScreen()
+{
+	// wait for user to press a button
+	if (Input::IsJustPressed(A_BUTTON) || Input::IsJustPressed(B_BUTTON))
+		GameManager::GoToMainMenu();
+	
+	DrawHelpScreen();
+}
+
+void MainMenu::DrawHelpScreen()
+{
+	arduboy.setCursor(35, 0);
+	arduboy.println("Controls");
+	arduboy.fillRect(33, 10, 51, 2, WHITE);
+	arduboy.setCursor(0, 20);
+	arduboy.println("         +: Move");
+	arduboy.println("         A: Jump");
+	arduboy.println("         B: Fire");
+	arduboy.println("  Down + B: Dynamite");
+	arduboy.println("Down + <->: Crawl");
 }

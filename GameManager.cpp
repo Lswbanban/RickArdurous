@@ -37,6 +37,10 @@ void GameManager::Update()
 		case GameState::VICTORY:
 			MainMenu::UpdateGameOver(true);
 			break;
+
+		case GameState::HELP_SCREEN:
+			MainMenu::UpdateHelpScreen();
+			break;
 	}
 }
 
