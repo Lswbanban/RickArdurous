@@ -48,6 +48,9 @@ void GameManager::StartNewGame()
 	// reset the alive status of all the items
 	MapManager::SaveAndLoadAliveStatusForAllItems(0, 0);
 	
+	// reset also the graal live state
+	graal1.SetProperty(Item::PropertyFlags::ALIVE);
+	
 	// call reset of the MapManger with the first screen id of the game
 	MapManager::Reset(1, MapManager::FIRST_PUZZLE_SCREEN_CAMERA_X, MapManager::FIRST_PUZZLE_SCREEN_CAMERA_Y);
 	

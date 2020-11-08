@@ -5,7 +5,6 @@ Rick Ardurous
 Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
 
 # Bug list
-- when you die on the first spike you go to the congratulation screen
 - Can we simplify the destroyable block edition?
 
 # To do
