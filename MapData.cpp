@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This is a generated file, use the Editor to modify it.
  */
 
@@ -16,6 +16,7 @@
 #include "DestroyableBlock.h"
 #include "Stalactite.h"
 #include "Stalagmite.h"
+#include "Boulder.h"
 #include <avr/pgmspace.h>
 
 #define ID(id1,id2) ((id1<< 4) | id2)
@@ -48,6 +49,7 @@ Stalagmite stalagmite2;
 Stalactite stalactite1;
 ArrowLauncher arrowLauncher1;
 DestroyableBlock destBlock1;
+Boulder boulder1;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -68,6 +70,7 @@ void InitScreen1(bool shouldRespawn)
 	destBlock1.Init(72, 112, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(89, 106, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(74, 70, Item::PropertyFlags::NONE, shouldRespawn);
+	boulder1.Init(10, 90, Item::PropertyFlags::NONE);
 }
 
 void InitScreen2(bool shouldRespawn)

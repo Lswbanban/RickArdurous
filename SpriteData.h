@@ -150,6 +150,14 @@ namespace SpriteData
 	static constexpr int STALAGMITE_SPRITE_HEIGHT = 8;
 	extern const unsigned char Stalagmite[];
 
+	// big rolling boulder
+	static constexpr int BOULDER_SPRITE_WIDTH = 6;
+	static constexpr int BOULDER_SPRITE_HEIGHT = 16;
+	extern const unsigned char Boulder[];
+	static constexpr int BOULDER_SHADOW_SPRITE_WIDTH = 4;
+	static constexpr int BOULDER_SHADOW_SPRITE_HEIGHT = 8;
+	extern const unsigned char BoulderShadow[][BOULDER_SHADOW_SPRITE_WIDTH * (BOULDER_SHADOW_SPRITE_HEIGHT / 8)];
+
 	// HUD elements
 	static constexpr int HUD_SPRITE_WIDTH = 5;
 	static constexpr int HUD_BULLET_SPRITE_WIDTH = 7;
