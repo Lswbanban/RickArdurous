@@ -71,6 +71,7 @@ void InitScreen1(bool shouldRespawn)
 	enemy1.Init(89, 106, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(74, 70, Item::PropertyFlags::NONE, shouldRespawn);
 	boulder1.Init(10, 90, Item::PropertyFlags::NONE);
+	//boulder1.Init(70, 90, Item::PropertyFlags::MIRROR_X);
 }
 
 void InitScreen2(bool shouldRespawn)

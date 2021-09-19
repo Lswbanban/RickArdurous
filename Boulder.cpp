@@ -11,13 +11,16 @@ bool Boulder::Update(UpdateStep step)
 {
 	if (step == UpdateStep::DRAW_LETHAL)
 	{
+		char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
 		if (arduboy.everyXFrames(ANIM_SPEED))
-		{
-			char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
-			AnimFrameId = (AnimFrameId + movingDirection) % BOULDER_ROLLING_FRAME_COUNT;
 			X += movingDirection;
+		if (arduboy.everyXFrames(ANIM_ROTATION_SPEED))
+		{
+			AnimFrameId++;
+			if (movingDirection < 0)
+				AnimFrameId = (BOULDER_ROLLING_FRAME_COUNT - AnimFrameId);
+			AnimFrameId %= BOULDER_ROLLING_FRAME_COUNT;
 		}
-		
 		// get the coordinate on screen of the boulder
 		int xOnScreen = MapManager::GetXOnScreen(X);
 		int yOnScreen = MapManager::GetYOnScreen(Y);
