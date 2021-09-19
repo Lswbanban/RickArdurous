@@ -7,6 +7,7 @@ namespace Physics
 	extern const char JUMP_AND_FALL_VERTICAL_ANIM_SPEED[];
 	static constexpr int JUMP_AND_FALL_VERTICAL_ANIM_SPEED_COUNT = 12;
 	static constexpr int FALL_VERTICAL_MIN_INDEX = 3; // this variable is used to limite the falling speed on a very long fall
+	static constexpr int PARABOLIC_VELOCITY_Y = -30;
 	static constexpr int INVALID_FALL_ID = 4;
 	static constexpr int INVALID_PARABOLIC_ID = 4;
 
@@ -23,6 +24,6 @@ namespace Physics
 	// function for parabolic trajectories
 	unsigned char StartParabolicTrajectory(int startX, int startY, char velocityX);
 	void StopParabolicTrajectory(unsigned char id);
-	void UpdateParabolicTrajectory(unsigned char id, int &x, int &y);
+	void UpdateParabolicTrajectory(unsigned char id, int &x, int &y, char velocityY = PARABOLIC_VELOCITY_Y);
 }
 #endif

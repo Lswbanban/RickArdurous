@@ -22,7 +22,6 @@ namespace Physics
 
 	// values for the parabolic trajectory
 	static constexpr int PARABOLIC_MOVING_SPEED = 16;
-	static constexpr int PARABOLIC_VELOCITY_Y = -30;
 	static constexpr int HALF_GRAVITY = 1;
 
 	static constexpr int INVALID_PARABOLIC_TRAJECTORY_START_X = -5000;
@@ -156,7 +155,7 @@ void Physics::StopParabolicTrajectory(unsigned char id)
 		ParabolicParameterBuffer[id].StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
 }
 
-void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, int &y)
+void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, int &y, char velocityY)
 {
 	if (id < MAX_PARABOLIC_PARAMETER)
 	{
@@ -166,6 +165,6 @@ void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, int &y)
 		
 		// move the main character according to a projectile trajectory
 		x = ParabolicParameterBuffer[id].StartX + (ParabolicParameterBuffer[id].VelocityX * frameCounter) / PARABOLIC_MOVING_SPEED;
-		y = ParabolicParameterBuffer[id].StartY + ((PARABOLIC_VELOCITY_Y * frameCounter) + (HALF_GRAVITY * frameCounter * frameCounter)) / PARABOLIC_MOVING_SPEED;
+		y = ParabolicParameterBuffer[id].StartY + ((velocityY * frameCounter) + (HALF_GRAVITY * frameCounter * frameCounter)) / PARABOLIC_MOVING_SPEED;
 	}
 }

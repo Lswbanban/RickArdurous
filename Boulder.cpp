@@ -20,17 +20,15 @@ bool Boulder::Update(UpdateStep step)
 		{
 			// move the boulder
 			char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
+			bool isFalling = (PhysicsFallId != Physics::INVALID_PARABOLIC_ID);
 			if (arduboy.everyXFrames(ANIM_SPEED))
 			{
-				// check if we need to fall or start to fall
+				// check if we need to start or stop to fall
 				char hasCollisionUnder = MapManager::IsThereStaticCollisionAt(X+4, Y+12);
-				bool isFalling = (PhysicsFallId != Physics::INVALID_PARABOLIC_ID);
 				if (!hasCollisionUnder)
 				{
-					if (isFalling)
-						Physics::UpdateParabolicTrajectory(PhysicsFallId, X, Y);
-					else
-						PhysicsFallId = Physics::StartParabolicTrajectory(X, Y, ANIM_SPEED);
+					if (!isFalling)
+						PhysicsFallId = Physics::StartParabolicTrajectory(X, Y, FALL_INITIAL_VELOCITY_X);
 				}
 				else if (isFalling)
 				{
@@ -41,6 +39,9 @@ bool Boulder::Update(UpdateStep step)
 				if (!isFalling)
 					X += movingDirection;
 			}
+			// move the boulder if it is falling
+			if (isFalling)
+				Physics::UpdateParabolicTrajectory(PhysicsFallId, X, Y, 0);
 			// compute the correct animation id
 			if (arduboy.everyXFrames(ANIM_ROTATION_SPEED))
 			{
