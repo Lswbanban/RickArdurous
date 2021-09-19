@@ -15,6 +15,8 @@ private:
 	static constexpr int BOULDER_ROLLING_FRAME_COUNT = 4;
 	unsigned char AnimFrameId = 0;
 	unsigned char PhysicsFallId;
+	
+	void Draw();
 };
 
 #endif
