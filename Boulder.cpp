@@ -10,38 +10,54 @@
 
 bool Boulder::Update(UpdateStep step)
 {
+	char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
+	bool isBoulderRolling = !IsPropertySet(SPECIAL);
+	
 	switch (step)
 	{
 		case UpdateStep::RESPAWN:
 			PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
+			ClearProperty(SPECIAL);
 			break;
 
-		case UpdateStep::DRAW_LETHAL:
+		case UpdateStep::CHECK_STATIC_COLLISION:
 		{
 			// move the boulder
-			char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
 			bool isFalling = (PhysicsFallId != Physics::INVALID_PARABOLIC_ID);
-			if (arduboy.everyXFrames(ANIM_SPEED))
+			// check if we need to start or stop to fall
+			bool hasCollisionUnder = MapManager::IsThereAnyHorizontalCollisionAt(X+4, Y+12, 4);
+			if (!hasCollisionUnder)
 			{
-				// check if we need to start or stop to fall
-				char hasCollisionUnder = MapManager::IsThereStaticCollisionAt(X+4, Y+12);
-				if (!hasCollisionUnder)
-				{
-					if (!isFalling)
-						PhysicsFallId = Physics::StartParabolicTrajectory(X, Y, FALL_INITIAL_VELOCITY_X);
-				}
-				else if (isFalling)
-				{
-					Physics::StopParabolicTrajectory(PhysicsFallId);
-					PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
-				}
-				// move if we are not falling
-				if (!isFalling)
-					X += movingDirection;
+				if (isFalling)
+					Physics::UpdateParabolicTrajectory(PhysicsFallId, X, Y, 0);
+				else
+					PhysicsFallId = Physics::StartParabolicTrajectory(X, Y, movingDirection * FALL_INITIAL_VELOCITY_X);
 			}
-			// move the boulder if it is falling
-			if (isFalling)
-				Physics::UpdateParabolicTrajectory(PhysicsFallId, X, Y, 0);
+			else if (isFalling)
+			{
+				Physics::StopParabolicTrajectory(PhysicsFallId);
+				PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
+				// move the boulder up outside the ground collision
+				//while (MapManager::IsThereAnyHorizontalCollisionAt(X+4, Y+11, 4))
+				//	Y--;
+			}
+			else if (arduboy.everyXFrames(ANIM_SPEED) && isBoulderRolling)
+			{
+				// move if we are not falling
+				X += movingDirection;
+				// check if I bump in a wall
+				char wallCheckX = (movingDirection > 0) ? X + SpriteData::BOULDER_SPRITE_WIDTH * 2 : X;
+				if (MapManager::IsThereStaticCollisionAt(wallCheckX, Y) ||
+					MapManager::IsThereStaticCollisionAt(wallCheckX, Y+8))
+					{
+						SetProperty(SPECIAL);
+						X -= movingDirection;
+					}
+			}
+			break;
+		}
+		case UpdateStep::DRAW_LETHAL:
+		{
 			// get the coordinate on screen of the boulder
 			int xOnScreen = MapManager::GetXOnScreen(X);
 			int yOnScreen = MapManager::GetYOnScreen(Y);
@@ -50,7 +66,7 @@ bool Boulder::Update(UpdateStep step)
 			arduboy.drawBitmapExtended(xOnScreen + SpriteData::BOULDER_SPRITE_WIDTH, yOnScreen, SpriteData::Boulder, SpriteData::BOULDER_SPRITE_WIDTH, SpriteData::BOULDER_SPRITE_HEIGHT, WHITE, true);
 			
 			// compute the correct animation id
-			if (arduboy.everyXFrames(ANIM_ROTATION_SPEED))
+			if (arduboy.everyXFrames(ANIM_ROTATION_SPEED) && isBoulderRolling)
 				AnimFrameId = (AnimFrameId + 1) % BOULDER_ROLLING_FRAME_COUNT;
 			char localAnimFrameId = (movingDirection > 0) ? AnimFrameId : (BOULDER_ROLLING_FRAME_COUNT - AnimFrameId) % BOULDER_ROLLING_FRAME_COUNT;
 			// draw the rotating shadow
