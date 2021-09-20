@@ -809,8 +809,13 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				// choose a random mirror flag for some sprite that can be mirrored, for display variation
 				// and for the big statue, they are mirror if they are the right one (i.e. if there is the same sprite on their left)
 				bool isMirror = false;
-				if (currentSpriteId <= SpriteData::BLOCK_16_8_RIGHT)
-					isMirror = (mapX * mapY) % 2;
+				if ((currentSpriteId <= SpriteData::BLOCK_16_8_RIGHT) || (currentSpriteId == SpriteData::ROCK_CEILING_THIN))
+				{
+					unsigned char randomValue = (mapY << 4) | mapX;
+					randomValue ^= randomValue << 2;
+					randomValue ^= randomValue >> 3;
+					isMirror = randomValue % 2;
+				}
 				else if (currentSpriteId == SpriteData::STAIR)
 					isMirror = (previousSpriteId == SpriteData::NOTHING);
 				else if ((currentSpriteId == SpriteData::BIG_STATUE_TOP) || (currentSpriteId == SpriteData::BIG_STATUE_BOTTOM))

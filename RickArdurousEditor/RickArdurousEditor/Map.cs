@@ -68,7 +68,7 @@ namespace RickArdurousEditor
 			SMALL_STATUE,
 			BIG_STATUE_TOP,
 			BIG_STATUE_BOTTOM,
-			NEW_SPRITE_TODO,
+			ROCK_CEILING_THIN,
 			PLATFORM,
 			LADDER,
 			PLATFORM_WITH_LADDER,
@@ -920,8 +920,13 @@ namespace RickArdurousEditor
 					byte spriteId = mLevel[x, y];
 					byte previousSpriteId = mLevel[Math.Max(x - 1, 0), y];
 					bool isMirror = false;
-					if (spriteId <= (int)WallId.BLOCK_16_8_RIGHT)
-						isMirror = ((x * y) % 2) == 1;
+					if ((spriteId <= (int)WallId.BLOCK_16_8_RIGHT) || (spriteId == (int)WallId.ROCK_CEILING_THIN))
+					{
+						int randomValue = ((y & 0xFF) << 4) | (x & 0xFF);
+						randomValue ^= randomValue << 2;
+						randomValue ^= randomValue >> 3;
+						isMirror = (randomValue % 2) == 1;
+					}
 					else if (spriteId == (int)WallId.STAIR)
 						isMirror = (previousSpriteId == (int)WallId.NOTHING);
 					else if ((spriteId == (int)WallId.BIG_STATUE_TOP) || (spriteId == (int)WallId.BIG_STATUE_BOTTOM))
