@@ -29,7 +29,7 @@ namespace Rick
 	static constexpr int DEATH_VELOCITY_X = 9;
 	// The standing sprite are stored on 2 bytes vertically, whereas the crawl sprite only use one.
 	// When switching from stand to crawl state, we don't change the Y, but just draw the sprite lower
-	// Thia constant value, store the difference between those two sprites visually speaking
+	// This constant value, store the difference between those two sprites visually speaking
 	static constexpr int VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL = 5;
 	// The distance from the left edge of the sprite, from which we check the collision under the feet
 	static constexpr int LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET = 2;
@@ -724,7 +724,9 @@ bool Rick::IsThereAnyCeilingAboveCrawl()
 	int xWorld = X;
 	if (!IsLookingLeft)
 		xWorld += WIDTH_DIFF_BETWEEN_CRAWL_AND_STAND;
-	return MapManager::IsThereAnyHorizontalCollisionAt(xWorld, Y, SpriteData::RICK_SPRITE_WIDTH);
+	// do not add VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL to Y, it is too low
+	// add +2 or +3 otherwise the check is done on the separated line of the separated stone
+	return MapManager::IsThereAnyHorizontalCollisionAt(xWorld, Y+2, SpriteData::RICK_SPRITE_WIDTH);
 }
 
 /**

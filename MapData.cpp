@@ -32,13 +32,13 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,0),ID(12,12),ID(12,12),ID(12,12),ID(12,12),ID(12,12),ID(12,12),ID(12,1),ID(1,1),ID(1,1),ID(1,1),ID(1,1),ID(1,1),ID(1,1),ID(1,1),ID(1,1),
 	ID(2,15),ID(14,1),ID(0,0),ID(1,1),ID(0,15),ID(9,0),ID(1,0),
 	ID(1,15),ID(2,7),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,12),ID(12,12),ID(15,2),ID(6,5),ID(15,11),ID(1,0),
-	ID(1,15),ID(8,0),ID(1,1),ID(0,15),ID(15,15),ID(1,7),ID(3,1),
+	ID(1,15),ID(8,0),ID(1,1),ID(0,15),ID(9,11),ID(15,6),ID(7,3),ID(1,0),
 	ID(1,7),ID(15,8),ID(0,0),ID(15,3),ID(3,3),ID(3,3),ID(3,7),ID(15,10),ID(1,0),
 	ID(1,1),ID(3,3),ID(3,3),ID(7,15),ID(8,1),ID(1,1),ID(1,1),ID(3,3),ID(3,15),ID(2,3),ID(3,7),ID(15,3),ID(1,0),
 	ID(1,1),ID(1,1),ID(1,1),ID(15,8),ID(3,1),ID(2,1),ID(1,1),ID(1,1),ID(1,15),ID(2,1),ID(1,1),ID(7,15),ID(2,1),
 	ID(1,1),ID(1,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,1),ID(1,1),ID(1,1),ID(1,1),ID(1,1),ID(1,15),ID(2,1),
-	ID(15,15),ID(15,1),ID(12,12),ID(12,12),ID(12,12),ID(12,12),ID(0,12),ID(0,12),ID(12,15),ID(2,1),
-	ID(15,15),ID(15,15),ID(15,1),ID(1,0),
+	ID(15,15),ID(15,1),ID(12,12),ID(12,12),ID(11,12),ID(12,12),ID(0,12),ID(0,12),ID(12,15),ID(2,1),
+	ID(15,15),ID(15,5),ID(11,15),ID(10,1),
 	ID(15,15),ID(15,1),ID(1,12),ID(12,14),ID(12,12),ID(12,12),ID(15,1),ID(2,2),ID(15,2),ID(7,3),ID(1,0),
 	ID(15,15),ID(15,1),ID(1,15),ID(2,13),ID(15,5),ID(1,2),ID(15,2),ID(1,1),ID(1,0),
 	ID(15,15),ID(15,1),ID(1,15),ID(2,13),ID(15,5),ID(2,2),ID(15,2),ID(1,1),ID(1,0),
@@ -47,7 +47,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(15,15),ID(15,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(1,1),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,69,81,88,97,110,123,139,149,153,164,173,182,192,199,209,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,69,81,89,98,111,124,140,150,154,165,174,183,193,200,210,};
 
 Statuette statuette1;
 Graal graal1;
@@ -57,7 +57,6 @@ Spike spike3;
 Spike spike4;
 Spike spike5;
 Spike spike6;
-Spike spike7;
 Enemy enemy1;
 Stalagmite stalagmite1;
 Stalagmite stalagmite2;
@@ -85,8 +84,8 @@ void InitScreen2(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(132, 83);
 
 	// init all the item of the current puzzle screen
-	stalagmite1.Init(193, 95, Item::PropertyFlags::NONE, shouldRespawn);
-	stalagmite2.Init(185, 95, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite1.Init(193, 112, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite2.Init(185, 112, Item::PropertyFlags::NONE, shouldRespawn);
 	statuette1.Init(235, 80, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
@@ -96,16 +95,15 @@ void InitScreen3(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(236, 131);
 
 	// init all the item of the current puzzle screen
-	graal1.Init(139, 135, Item::PropertyFlags::NONE, shouldRespawn);
 	statuette1.Init(190, 160, Item::PropertyFlags::NONE, shouldRespawn);
+	graal1.Init(139, 135, Item::PropertyFlags::NONE, shouldRespawn);
 	spike1.Init(216, 165, Item::PropertyFlags::MIRROR_X);
 	spike2.Init(216, 169, Item::PropertyFlags::MIRROR_X);
 	spike3.Init(196, 159, Item::PropertyFlags::NONE);
 	spike4.Init(196, 153, Item::PropertyFlags::NONE);
-	spike5.Init(213, 136, Item::PropertyFlags::SPECIAL);
-	spike6.Init(209, 136, Item::PropertyFlags::SPECIAL);
-	spike7.Init(205, 136, Item::PropertyFlags::SPECIAL);
-	enemy1.Init(160, 130, Item::PropertyFlags::SPECIAL_2, shouldRespawn);
+	spike5.Init(211, 136, Item::PropertyFlags::SPECIAL);
+	spike6.Init(206, 136, Item::PropertyFlags::SPECIAL);
+	enemy1.Init(161, 130, Item::PropertyFlags::SPECIAL_2, shouldRespawn);
 }
 
 // The array that contains all the items

@@ -802,8 +802,9 @@ bool CustomArduboy::CheckWhitePixelsInRow(uint8_t x, uint8_t y, uint8_t w)
 	unsigned char row = y >> 3;
 	unsigned char yLineToCheck = 1 << (y % 8);
 	int startX = (row*WIDTH) + x;
+	unsigned char* localBuffer = &(sBuffer[startX]);
 	for (unsigned char i = 0; i < w; ++i)
-		if (sBuffer[startX + i] & yLineToCheck)
+		if (localBuffer[i] & yLineToCheck)
 			return true;
 	return false;
 }

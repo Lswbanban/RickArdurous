@@ -403,6 +403,8 @@ bool MapManager::IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigne
 			width += leftOnScreen;
 			leftOnScreen = 0;
 		}
+		if (rightOnScreen >= WIDTH)
+			width -= (rightOnScreen - (WIDTH-1));
 		return arduboy.CheckWhitePixelsInRow(leftOnScreen, yOnScreen, width);
 	}
 	// finally no collision found
