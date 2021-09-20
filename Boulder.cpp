@@ -16,7 +16,6 @@ bool Boulder::Update(UpdateStep step)
 	{
 		case UpdateStep::RESPAWN:
 			PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
-			ClearProperty(SPECIAL);
 			break;
 
 		case UpdateStep::CHECK_STATIC_COLLISION:
