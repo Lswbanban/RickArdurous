@@ -261,14 +261,15 @@ bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned ch
 	return (xOnScreen + spriteWidth >= 0) && (xOnScreen < WIDTH) && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
 }
 
-bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld)
+bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCeilingSprites)
 {
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
 	if (spriteId == SpriteData::NOTHING)
 		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
 	// otherwise it depends on the type of sprite
-	return (spriteId != SpriteData::WallId::LADDER);
+	return (!ignoreCeilingSprites && (spriteId != SpriteData::WallId::LADDER)) ||
+			(ignoreCeilingSprites && (spriteId < SpriteData::WallId::ROCK_CEILING_THIN));
 }
 
 unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)

@@ -21,7 +21,7 @@ namespace MapManager
 	bool IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned char spriteHeight);
 	
 	// Check if there's a solid sprite (static collision) or ladder at the specified world coodinates
-	bool IsThereStaticCollisionAt(int xWorld, int yWorld);
+	bool IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCeilingSprites = false);
 	bool IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigned char width);
 	bool IsThereLadderAt(int xWorld, int yWorld);
 	unsigned char GetCeillingScreenPositionAbove(int xWorld, int yWorld);
