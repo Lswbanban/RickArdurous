@@ -50,8 +50,20 @@ bool Boulder::Update(UpdateStep step)
 				if (MapManager::IsThereStaticCollisionAt(wallCheckX, Y, true) ||
 					MapManager::IsThereStaticCollisionAt(wallCheckX, Y+8))
 					{
-						SetProperty(SPECIAL);
+						// move the boulder out of the wall
 						X -= movingDirection;
+						// check if there is at least 2 wall sprite under the boulder
+						if (MapManager::IsThereStaticCollisionAt(X, Y+16) &&
+							MapManager::IsThereStaticCollisionAt(X+8, Y+16))
+						{
+							// if yes, the boulder can stop
+							SetProperty(SPECIAL);
+						}
+						else
+						{
+							// if no, the boulder continue to opposite direction
+							InverseProperty(MIRROR_X);
+						}
 					}
 			}
 			break;

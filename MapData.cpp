@@ -32,12 +32,12 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(5,5),ID(4,15),ID(15,15),ID(14,0),
 	ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,1),ID(1,2),ID(1,1),ID(1,2),ID(1,1),ID(1,1),ID(2,1),ID(1,1),ID(1,1),
 	ID(2,15),ID(14,1),ID(0,0),ID(1,2),ID(0,11),ID(15,3),ID(11,0),ID(11,15),ID(2,0),ID(1,0),
-	ID(1,15),ID(2,7),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,0),ID(11,11),ID(15,2),ID(6,5),ID(15,11),ID(2,0),
-	ID(1,15),ID(8,0),ID(2,1),ID(0,15),ID(15,15),ID(1,7),ID(3,1),
+	ID(1,15),ID(2,11),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,0),ID(11,11),ID(15,2),ID(6,5),ID(15,11),ID(2,0),
+	ID(1,15),ID(4,11),ID(11,11),ID(15,1),ID(0,2),ID(1,0),ID(15,15),ID(15,1),ID(7,3),ID(1,0),
 	ID(1,7),ID(15,8),ID(0,0),ID(15,3),ID(3,3),ID(3,3),ID(3,7),ID(15,10),ID(1,0),
-	ID(1,1),ID(3,3),ID(3,3),ID(7,15),ID(8,1),ID(1,2),ID(2,1),ID(3,3),ID(7,15),ID(2,7),ID(3,7),ID(15,3),ID(1,0),
-	ID(1,2),ID(1,2),ID(1,1),ID(15,8),ID(3,2),ID(2,1),ID(1,2),ID(2,1),ID(1,15),ID(2,1),ID(2,1),ID(7,15),ID(2,2),
-	ID(2,1),ID(1,1),ID(2,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,2),ID(1,2),ID(1,1),ID(1,1),ID(1,2),ID(1,15),ID(2,1),
+	ID(1,1),ID(3,3),ID(0,0),ID(11,15),ID(8,1),ID(1,2),ID(2,1),ID(3,3),ID(7,15),ID(2,7),ID(3,7),ID(15,3),ID(1,0),
+	ID(1,2),ID(1,2),ID(7,15),ID(10,2),ID(2,1),ID(1,2),ID(2,1),ID(1,15),ID(2,1),ID(2,1),ID(7,15),ID(2,2),
+	ID(2,1),ID(1,1),ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,2),ID(1,2),ID(1,1),ID(1,1),ID(1,2),ID(1,15),ID(2,1),
 	ID(15,15),ID(15,1),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(0,11),ID(0,11),ID(11,15),ID(2,1),
 	ID(15,15),ID(15,15),ID(15,1),ID(1,0),
 	ID(15,15),ID(15,1),ID(1,12),ID(12,14),ID(12,12),ID(12,12),ID(15,1),ID(2,2),ID(15,2),ID(7,3),ID(1,0),
@@ -48,7 +48,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(15,15),ID(15,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(1,1),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,72,84,91,100,113,126,142,152,156,167,176,185,195,202,212,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,72,84,94,103,116,128,144,154,158,169,178,187,197,204,214,};
 
 Statuette statuette1;
 Graal graal1;
@@ -75,10 +75,10 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(69, 67);
+	MapManager::MemorizeCheckPoint(62, 67);
 
 	// init all the item of the current puzzle screen
-	boulder1.Init(98, 68, Item::PropertyFlags::MIRROR_X);
+	boulder1.Init(107, 68, Item::PropertyFlags::MIRROR_X);
 }
 
 void InitScreen2(bool shouldRespawn)
