@@ -550,7 +550,8 @@ namespace RickArdurousEditor
 
 		private void SaveMapData(string mapDataFileName)
 		{
-			StreamWriter writer = new StreamWriter(mapDataFileName, false, System.Text.Encoding.UTF8);
+			System.Text.Encoding utf8WithoutBom = new System.Text.UTF8Encoding(false);
+			StreamWriter writer = new StreamWriter(mapDataFileName, false, utf8WithoutBom);
 			try
 			{
 				WriteHeader(writer);
@@ -569,7 +570,8 @@ namespace RickArdurousEditor
 
 		private void SaveConstVariables(string constVariablesFileName)
 		{
-			StreamWriter writer = new StreamWriter(constVariablesFileName, false, System.Text.Encoding.UTF8);
+			System.Text.Encoding utf8WithoutBom = new System.Text.UTF8Encoding(false);
+			StreamWriter writer = new StreamWriter(constVariablesFileName, false, utf8WithoutBom);
 			try
 			{
 				writer.WriteLine("#ifndef _MAP_DATA_CONST_VARIABLES_H_");

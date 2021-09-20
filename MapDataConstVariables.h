@@ -9,7 +9,7 @@ namespace MapManager
 {
 	// size of the level
 	static constexpr int LEVEL_WIDTH = 32;
-	static constexpr int LEVEL_HEIGHT = 16;
+	static constexpr int LEVEL_HEIGHT = 24;
 
 	// number of puzzle screen
 	static constexpr int PUZZLE_SCREEN_COUNT = 4;
