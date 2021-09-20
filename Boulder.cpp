@@ -56,7 +56,7 @@ bool Boulder::Update(UpdateStep step)
 			}
 			break;
 		}
-		case UpdateStep::DRAW_LETHAL:
+		case UpdateStep::DRAW_LETHAL_BESIDE:
 		{
 			if (isBoulderRolling)
 				Draw();

@@ -18,7 +18,7 @@ bool Stalagmite::Update(UpdateStep step)
 			break;
 		}
 		
-		case Item::UpdateStep::CHECK_LETHAL:
+		case Item::UpdateStep::CHECK_LETHAL_BESIDE:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{

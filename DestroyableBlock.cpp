@@ -14,7 +14,7 @@ bool DestroyableBlock::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case Item::UpdateStep::CHECK_LETHAL:
+		case Item::UpdateStep::CHECK_LETHAL_BESIDE:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{

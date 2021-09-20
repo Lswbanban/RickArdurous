@@ -187,6 +187,13 @@ void MapManager::Update()
 {
 	// update the input of the main character
 	Rick::UpdateInput();
+
+	// draw items that are lethal when other items are next to them, such ase the dynamite explosion
+	// (which will stay in screen buffer as Lethal, so it is also lethal when overlapping)
+	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL_BESIDE);
+	
+	// update the entities who wants to check if there's a lethal element next to them
+	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL_BESIDE);
 	
 	// update the lethal entities
 	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL);
