@@ -140,7 +140,7 @@ void MainMenu::DrawVictory()
 	arduboy.setCursor(21, 26);
 	arduboy.print("Congratulation!");
 	arduboy.setCursor(7, 46);
-	arduboy.print("You found the Graal");
+	arduboy.print("You found the Grail");
 	arduboy.setCursor(43, 56);
 	arduboy.print("and ");
 	DrawStatuetteCount();
@@ -175,7 +175,7 @@ void MainMenu::DrawGameOver()
 	arduboy.setCursor(16, 26);
 	arduboy.print("You died before");
 	arduboy.setCursor(16, 36);
-	arduboy.print("reaching the Graal");
+	arduboy.print("reaching the Grail");
 	arduboy.setCursor(16, 54);
 	DrawStatuetteCount();
 	arduboy.print("collected");

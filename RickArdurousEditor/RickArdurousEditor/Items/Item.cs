@@ -26,6 +26,7 @@ namespace RickArdurousEditor.Items
 			STALACTITE,
 			ARROW_LAUNCHER,
 			DESTROYABLE_BLOCK,
+			BOULDER,
 
 			// the type count
 			COUNT,
@@ -151,6 +152,9 @@ namespace RickArdurousEditor.Items
 				case Type.DESTROYABLE_BLOCK:
 					mSprite = ImageProvider.GetDestroyableBlockImage();
 					break;
+				case Type.BOULDER:
+					mSprite = ImageProvider.GetBoulderImage();
+					break;
 			}
 		}
 
@@ -201,6 +205,8 @@ namespace RickArdurousEditor.Items
 					return "arrowLauncher" + instanceNumberString;
 				case Type.DESTROYABLE_BLOCK:
 					return "destBlock" + instanceNumberString;
+				case Type.BOULDER:
+					return "boulder" + instanceNumberString;
 			}
 			return string.Empty;
 		}
@@ -227,6 +233,8 @@ namespace RickArdurousEditor.Items
 				return Type.ARROW_LAUNCHER;
 			else if (instanceName.StartsWith("destBlock"))
 				return Type.DESTROYABLE_BLOCK;
+			else if (instanceName.StartsWith("boulder"))
+				return Type.BOULDER;
 
 			return Type.HORIZONTAL_SPIKE;
 		}
@@ -268,6 +276,9 @@ namespace RickArdurousEditor.Items
 					break;
 				case Type.DESTROYABLE_BLOCK:
 					writer.WriteLine("DestroyableBlock " + instanceName + ";");
+					break;
+				case Type.BOULDER:
+					writer.WriteLine("Boulder " + instanceName + ";");
 					break;
 			}
 		}
@@ -334,6 +345,9 @@ namespace RickArdurousEditor.Items
 					break;
 				case Type.DESTROYABLE_BLOCK:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
+					break;
+				case Type.BOULDER:
+					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", " + mirrorFlag + ");");
 					break;
 			}
 		}

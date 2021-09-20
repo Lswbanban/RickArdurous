@@ -16,6 +16,7 @@
 #include "DestroyableBlock.h"
 #include "Stalactite.h"
 #include "Stalagmite.h"
+#include "Boulder.h"
 #include <avr/pgmspace.h>
 
 #define ID(id1,id2) ((id1<< 4) | id2)
@@ -60,6 +61,7 @@ Spike spike6;
 Enemy enemy1;
 Stalagmite stalagmite1;
 Stalagmite stalagmite2;
+Boulder boulder1;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -76,6 +78,7 @@ void InitScreen1(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(69, 67);
 
 	// init all the item of the current puzzle screen
+	boulder1.Init(98, 68, Item::PropertyFlags::MIRROR_X);
 }
 
 void InitScreen2(bool shouldRespawn)

@@ -189,6 +189,13 @@ namespace RickArdurousEditor
 			return result;
 		}
 
+		public static Bitmap GetBoulderImage()
+		{
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"HalfBoulder.png");
+			Bitmap result = new Bitmap(6, 12);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, false, 0.8f, 0.5f, 0.35f, new Rectangle(0, 0, 6, 12));
+			return result;
+		}
 
 		public static Bitmap GetItemsSpriteImage()
 		{
@@ -208,6 +215,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetStalactiteImage());
 			itemImages.Add(GetArrowLauncherImage(false));
 			itemImages.Add(GetDestroyableBlockImage());
+			itemImages.Add(GetBoulderImage());
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;

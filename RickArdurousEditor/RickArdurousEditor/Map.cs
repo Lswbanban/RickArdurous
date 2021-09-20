@@ -123,6 +123,7 @@ namespace RickArdurousEditor
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.STALACTITE } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.ARROW_LAUNCHER } ),
 					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.DESTROYABLE_BLOCK } ),
+					new List<Items.Item.Type>(new Items.Item.Type[] { Items.Item.Type.BOULDER } ),
 				};
 
 		private void WriteHeader(StreamWriter writer)
@@ -145,6 +146,7 @@ namespace RickArdurousEditor
 			writer.WriteLine("#include \"DestroyableBlock.h\"");
 			writer.WriteLine("#include \"Stalactite.h\"");
 			writer.WriteLine("#include \"Stalagmite.h\"");
+			writer.WriteLine("#include \"Boulder.h\"");
 			writer.WriteLine("#include <avr/pgmspace.h>");
 			writer.WriteLine();
 			writer.WriteLine("#define ID(id1,id2) ((id1<< 4) | id2)");

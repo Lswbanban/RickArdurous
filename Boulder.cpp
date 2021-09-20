@@ -47,7 +47,7 @@ bool Boulder::Update(UpdateStep step)
 				X += movingDirection;
 				// check if I bump in a wall
 				char wallCheckX = (movingDirection > 0) ? X + SpriteData::BOULDER_SPRITE_WIDTH * 2 : X;
-				if (MapManager::IsThereStaticCollisionAt(wallCheckX, Y) ||
+				if (MapManager::IsThereStaticCollisionAt(wallCheckX, Y, true) ||
 					MapManager::IsThereStaticCollisionAt(wallCheckX, Y+8))
 					{
 						SetProperty(SPECIAL);
