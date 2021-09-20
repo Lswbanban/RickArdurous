@@ -697,8 +697,8 @@ namespace RickArdurousEditor
 				}
 				else if (token.Contains(propertyFlagType))
 				{
-					isSpecial = token.Contains("SPECIAL");
 					isSpecial2 = token.Contains("SPECIAL_2");
+					isSpecial = !isSpecial2 && token.Contains("SPECIAL");
 					isMirror = token.Contains("MIRROR_X");
 				}
 			}
