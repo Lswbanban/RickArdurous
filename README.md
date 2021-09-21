@@ -8,11 +8,12 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Tutorial
-	- Walk: boulder
-	- Jump
 	- ladders
-	- Gun fire
-	- Dynamite + crawl
+	- scorpion
+	- Mummy
+	- stalagtite
+	- arrow launcher
+	- 2 crates
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
 	- dynamite explosion

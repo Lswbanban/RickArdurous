@@ -19,7 +19,7 @@ namespace Rick
 	static constexpr int WALK_ANIM_SPEED = 3;
 	static constexpr int NO_HORIZONTAL_MOVE_AIR_CONTROL_ANIM_SPEED = 1;
 	static constexpr int MIN_AIR_CONTROL_ANIM_SPEED = 3;
-	static constexpr int MAX_AIR_CONTROL_ANIM_SPEED = 8;
+	static constexpr int MAX_AIR_CONTROL_ANIM_SPEED = 6;
 	static constexpr int FIRE_ANIM_SPEED = 3;
 	static constexpr int CROUCH_STAND_ANIM_SPEED = 3;
 	static constexpr int CRAWL_ANIM_SPEED = 3;
