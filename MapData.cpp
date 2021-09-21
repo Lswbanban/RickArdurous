@@ -47,8 +47,8 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,7),ID(15,13),ID(2,1),ID(7,15),ID(1,13),ID(15,9),ID(2,1),ID(1,0),
 	ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,7),ID(15,2),ID(7,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(1,1),
 	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(15,15),ID(15,1),
-	ID(6,15),ID(11,14),ID(4,5),ID(6,15),ID(15,15),ID(1,0),
-	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(13,9),ID(9,5),ID(15,15),ID(15,1),
+	ID(6,15),ID(12,4),ID(5,6),ID(15,15),ID(15,1),
+	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(14,9),ID(9,5),ID(15,15),ID(15,1),
 	ID(5,6),ID(15,5),ID(6,15),ID(4,13),ID(10,10),ID(6,15),ID(15,15),ID(1,0),
 	ID(4,5),ID(15,5),ID(4,12),ID(12,12),ID(12,12),ID(0,5),ID(5,15),ID(15,15),ID(1,0),
 	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,6),ID(11,6),ID(15,15),ID(15,1),
@@ -56,7 +56,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,15),ID(13,0),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,73,84,93,102,115,127,143,159,166,177,192,207,219,227,243,253,259,268,276,285,293,298,309,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,73,84,93,102,115,127,143,159,166,177,192,207,219,227,243,253,258,267,275,284,292,297,308,};
 
 BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
@@ -88,23 +88,7 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(233, 130);
-	MapManager::MemorizeCheckPoint(236, 131);
-
-	// init all the item of the current puzzle screen
-	statuette1.Init(190, 160, Item::PropertyFlags::NONE, shouldRespawn);
-	spike1.Init(216, 165, Item::PropertyFlags::MIRROR_X);
-	spike2.Init(216, 169, Item::PropertyFlags::MIRROR_X);
-	spike3.Init(196, 159, Item::PropertyFlags::NONE);
-	spike4.Init(196, 153, Item::PropertyFlags::NONE);
-	spike5.Init(211, 136, Item::PropertyFlags::SPECIAL);
-	spike6.Init(205, 136, Item::PropertyFlags::SPECIAL);
-	enemy1.Init(161, 130, Item::PropertyFlags::SPECIAL_2, shouldRespawn);
-}
-
-void InitScreen2(bool shouldRespawn)
-{
-	// Add a checkpoint if we need to
+	MapManager::MemorizeCheckPoint(84, 171);
 	MapManager::MemorizeCheckPoint(99, 187);
 
 	// init all the item of the current puzzle screen
@@ -115,22 +99,22 @@ void InitScreen2(bool shouldRespawn)
 	dynamiteCrate1.Init(90, 144, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
-void InitScreen3(bool shouldRespawn)
+void InitScreen2(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
 	graal1.Init(109, 240, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(39, 195, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy2.Init(70, 210, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy3.Init(93, 234, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy4.Init(27, 218, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy1.Init(39, 192, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy2.Init(71, 208, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy3.Init(80, 230, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy4.Init(28, 216, Item::PropertyFlags::NONE, shouldRespawn);
 	bulletCrate1.Init(26, 240, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, 
+	&InitScreen0, &InitScreen1, &InitScreen2, 
 };
 
 

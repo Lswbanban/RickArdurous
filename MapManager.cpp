@@ -735,13 +735,13 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 	unsigned char endMapX = CameraX.Current + NB_HORIZONTAL_SPRITE_PER_SCREEN + CameraX.EndDrawSprite;
 	unsigned char startMapY = CameraY.Current + CameraY.StartDrawSprite;
 	unsigned char endMapY = CameraY.Current + NB_VERTICAL_SPRITE_PER_SCREEN;
-	int endLineIndex = pgm_read_byte(&(LevelLineIndex[startMapY]));
+	unsigned int endLineIndex = pgm_read_byte(&(LevelLineIndex[startMapY]));
 	// iterate on the line first before iterating on the columns
 	for (unsigned char mapY = startMapY; mapY < endMapY; ++mapY)
 	{
 		// compute start and end index in the array of sprite ids, since we start a new line, the start is the end of the previous loop
-		int startLineIndex = endLineIndex;
-		endLineIndex = pgm_read_byte(&(LevelLineIndex[mapY + 1]));
+		unsigned int startLineIndex = endLineIndex;
+		endLineIndex = pgm_read_word(&(LevelLineIndex[mapY + 1]));
 		// compute the screen y coordinate for the sprite
 		char screenY = (SpriteData::LEVEL_SPRITE_HEIGHT * (mapY - CameraY.Current)) + CAMERA_VERTICAL_SHIFT - CameraY.Transition;
 		// determines if we need to draw the platforms.
@@ -759,7 +759,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		bool isReadingHighBit = true;
 		bool shouldReadEmptySpaceCount = false;
 		unsigned char packedId;
-		for (int i = startLineIndex; i < endLineIndex; isReadingHighBit = !isReadingHighBit, i += isReadingHighBit)
+		for (unsigned int i = startLineIndex; i < endLineIndex; isReadingHighBit = !isReadingHighBit, i += isReadingHighBit)
 		{
 			// read the current sprite id which is stored on 4 bits, either the high bits or the low bits
 			if (isReadingHighBit)
