@@ -189,11 +189,16 @@ namespace RickArdurousEditor
 			return result;
 		}
 
-		public static Bitmap GetBoulderImage()
+		public static Bitmap GetBoulderImage(bool isMirrored)
 		{
+			// load the boulder image and write it two times, with one time mirrored
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"HalfBoulder.png");
-			Bitmap result = new Bitmap(6, 12);
+			Bitmap result = new Bitmap(12, 12);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, true, 0.8f, 0.5f, 0.35f, new Rectangle(0, 0, 6, 12));
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, false, 0.8f, 0.5f, 0.35f, new Rectangle(0, 0, 6, 12));
+			// load the shadow and write it in the same image
+			sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"BoulderShadow.png");
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 4), ref result, !isMirrored, 0.0f, 0.0f, 0.0f, new Rectangle(2, 2, 4, 4));
 			return result;
 		}
 
@@ -215,7 +220,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetStalactiteImage());
 			itemImages.Add(GetArrowLauncherImage(false));
 			itemImages.Add(GetDestroyableBlockImage());
-			itemImages.Add(GetBoulderImage());
+			itemImages.Add(GetBoulderImage(false));
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;

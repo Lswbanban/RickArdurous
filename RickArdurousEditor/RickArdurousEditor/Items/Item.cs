@@ -153,7 +153,7 @@ namespace RickArdurousEditor.Items
 					mSprite = ImageProvider.GetDestroyableBlockImage();
 					break;
 				case Type.BOULDER:
-					mSprite = ImageProvider.GetBoulderImage();
+					mSprite = ImageProvider.GetBoulderImage(mIsMirror);
 					break;
 			}
 		}
