@@ -26,7 +26,9 @@ namespace SpriteData
 	// sprite of the walls
 	// the sprite width and height in pixel
 	static constexpr int LEVEL_SPRITE_WIDTH = 8;
+	static constexpr int LEVEL_SPRITE_WIDTH_BIT_SHIFT = 3; // the bit shift equivalent when you want to divide by LEVEL_SPRITE_WIDTH
 	static constexpr int LEVEL_SPRITE_HEIGHT = 8;
+	static constexpr int LEVEL_SPRITE_HEIGHT_BIT_SHIFT = 3; // the bit shift equivalent when you want to divide by LEVEL_SPRITE_HEIGHT
 	extern const unsigned char Walls[][LEVEL_SPRITE_WIDTH * (LEVEL_SPRITE_HEIGHT / 8)];
 	
 	// destroyable Blocks

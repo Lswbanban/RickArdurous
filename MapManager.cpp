@@ -273,7 +273,8 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCei
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
 	if (spriteId == SpriteData::NOTHING)
-		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH, yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
+		return IsDestroyableBlockAlive(xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT,
+									yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT);
 	// otherwise it depends on the type of sprite
 	return (!ignoreCeilingSprites && (spriteId != SpriteData::WallId::LADDER)) ||
 			(ignoreCeilingSprites && (spriteId < SpriteData::WallId::ROCK_CEILING_THIN));
@@ -282,8 +283,8 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCei
 unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
 {
 	// convert the world coordinate into index for the sprite map
-	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
-	int yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
+	int xMap = xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT;
+	int yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
 	while (yMap % NB_VERTICAL_SPRITE_PER_SCREEN)
 	{
 		if (GetLevelSpriteAt(xMap, yMap) != SpriteData::NOTHING)
@@ -303,8 +304,8 @@ bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
 unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld)
 {
 	// convert the world coordinate into index for the sprite map
-	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
-	int yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
+	int xMap = xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT;
+	int yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
 	if ((xMap < 0) || (xMap >= MapManager::LEVEL_WIDTH) || (yMap < 0) || (yMap >= MapManager::LEVEL_HEIGHT))
@@ -316,8 +317,8 @@ unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld
 unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMap)
 {
 	// compute start and end index in the array of sprite ids
-	int startLineIndex = pgm_read_byte(&(LevelLineIndex[yMap]));
-	int endLineIndex = pgm_read_byte(&(LevelLineIndex[yMap + 1]));
+	int startLineIndex = pgm_read_word(&(LevelLineIndex[yMap]));
+	int endLineIndex = pgm_read_word(&(LevelLineIndex[yMap + 1]));
 	
 	// get the index of the sprite in the one dimentionnal array
 	int targetSpriteIndex = xMap + 1;
@@ -735,7 +736,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 	unsigned char endMapX = CameraX.Current + NB_HORIZONTAL_SPRITE_PER_SCREEN + CameraX.EndDrawSprite;
 	unsigned char startMapY = CameraY.Current + CameraY.StartDrawSprite;
 	unsigned char endMapY = CameraY.Current + NB_VERTICAL_SPRITE_PER_SCREEN;
-	unsigned int endLineIndex = pgm_read_byte(&(LevelLineIndex[startMapY]));
+	unsigned int endLineIndex = pgm_read_word(&(LevelLineIndex[startMapY]));
 	// iterate on the line first before iterating on the columns
 	for (unsigned char mapY = startMapY; mapY < endMapY; ++mapY)
 	{

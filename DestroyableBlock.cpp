@@ -54,5 +54,5 @@ void DestroyableBlock::InitDeath()
 
 bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY)
 {
-	return (mapY == (Y >> 3)) && ((mapX == (X >> 3)) || (mapX == ((X + SpriteData::LEVEL_SPRITE_WIDTH) >> 3)));
+	return (mapY == (Y >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT)) && ((mapX == (X >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT)) || (mapX == ((X + SpriteData::LEVEL_SPRITE_WIDTH) >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT)));
 }

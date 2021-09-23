@@ -46,17 +46,17 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(6,15),ID(3,11),ID(15,8),ID(11,11),ID(1,1),ID(15,2),ID(13,15),ID(3,7),ID(3,2),ID(1,15),ID(2,1),ID(1,2),
 	ID(1,7),ID(15,13),ID(2,1),ID(7,15),ID(1,13),ID(15,9),ID(2,1),ID(1,0),
 	ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,7),ID(15,2),ID(7,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(1,1),
-	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(15,15),ID(15,1),
-	ID(6,15),ID(12,4),ID(5,6),ID(15,15),ID(15,1),
-	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(14,9),ID(9,5),ID(15,15),ID(15,1),
-	ID(5,6),ID(15,5),ID(6,15),ID(4,13),ID(10,10),ID(6,15),ID(15,15),ID(1,0),
-	ID(4,5),ID(15,5),ID(4,12),ID(12,12),ID(12,12),ID(0,5),ID(5,15),ID(15,15),ID(1,0),
-	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,6),ID(11,6),ID(15,15),ID(15,1),
-	ID(5,10),ID(10,15),ID(2,13),ID(15,15),ID(15,11),
-	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,15),ID(13,0),
+	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(1,11),ID(11,0),ID(5,4),ID(5,0),ID(11,11),ID(11,11),ID(11,11),ID(11,0),
+	ID(6,15),ID(11,14),ID(12,5),ID(6,1),ID(15,5),ID(6,15),ID(9,0),
+	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(13,9),ID(9,5),ID(1,3),ID(14,2),ID(5,6),ID(5,15),ID(9,0),
+	ID(5,6),ID(15,5),ID(6,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,0),
+	ID(4,5),ID(15,5),ID(4,12),ID(12,12),ID(12,12),ID(0,5),ID(5,0),ID(15,2),ID(11,0),ID(1,5),ID(15,1),ID(13,15),ID(6,1),
+	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,6),ID(1,15),ID(6,0),ID(6,4),ID(5,3),ID(7,15),ID(4,1),
+	ID(5,10),ID(10,15),ID(2,13),ID(15,12),ID(5,15),ID(10,7),ID(3,1),
+	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,73,84,93,102,115,127,143,159,166,177,192,207,219,227,243,253,258,267,275,284,292,297,308,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,73,84,93,102,115,127,143,159,166,177,192,207,219,227,243,259,266,278,292,305,316,323,339,};
 
 BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
@@ -74,6 +74,7 @@ Enemy enemy3;
 Enemy enemy4;
 Stalagmite stalagmite1;
 Stalagmite stalagmite2;
+Stalactite stalactite1;
 DestroyableBlock destBlock1;
 
 void InitScreen0(bool shouldRespawn)
@@ -88,33 +89,20 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(84, 171);
-	MapManager::MemorizeCheckPoint(99, 187);
+	MapManager::MemorizeCheckPoint(143, 226);
 
 	// init all the item of the current puzzle screen
-	stalagmite1.Init(34, 176, Item::PropertyFlags::NONE, shouldRespawn);
-	stalagmite2.Init(48, 176, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(112, 176, Item::PropertyFlags::NONE, shouldRespawn);
-	destBlock1.Init(72, 144, Item::PropertyFlags::NONE, shouldRespawn);
-	dynamiteCrate1.Init(90, 144, Item::PropertyFlags::NONE, shouldRespawn);
-}
-
-void InitScreen2(bool shouldRespawn)
-{
-	// Add a checkpoint if we need to
-
-	// init all the item of the current puzzle screen
-	graal1.Init(109, 240, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(39, 192, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy2.Init(71, 208, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy3.Init(80, 230, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy4.Init(28, 216, Item::PropertyFlags::NONE, shouldRespawn);
-	bulletCrate1.Init(26, 240, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette1.Init(166, 200, Item::PropertyFlags::NONE, shouldRespawn);
+	graal1.Init(250, 207, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy1.Init(207, 202, Item::PropertyFlags::SPECIAL_2, shouldRespawn);
+	destBlock1.Init(184, 240, Item::PropertyFlags::NONE, shouldRespawn);
+	stalactite1.Init(237, 195, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy2.Init(213, 244, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, &InitScreen2, 
+	&InitScreen0, &InitScreen1, 
 };
 
 
@@ -131,5 +119,6 @@ void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenId
 	enemy4.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	stalactite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	destBlock1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 }
