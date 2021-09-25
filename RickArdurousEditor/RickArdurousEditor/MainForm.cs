@@ -376,6 +376,16 @@ namespace RickArdurousEditor
 			existingMessages.Add(message);
 			mainForm.textBoxLog.Lines = existingMessages.ToArray();
 		}
+
+		private void toolStripMenuItemClear_Click(object sender, EventArgs e)
+		{
+			this.textBoxLog.Clear();
+		}
+
+		private void toolStripMenuItemCopyToClipboard_Click(object sender, EventArgs e)
+		{
+			Clipboard.SetText(this.textBoxLog.Text);
+		}
 		#endregion
 	}
 }

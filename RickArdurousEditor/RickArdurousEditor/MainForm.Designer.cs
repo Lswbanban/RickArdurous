@@ -28,11 +28,13 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.ToolBar = new System.Windows.Forms.ToolStrip();
 			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonDeleteItem = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonRespawnPointType = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonShowPuzzlePath = new System.Windows.Forms.ToolStripButton();
 			this.SplitContainerToolAndLevel = new System.Windows.Forms.SplitContainer();
 			this.SplitContainerWallAndItems = new System.Windows.Forms.SplitContainer();
 			this.PictureBoxWallSprites = new System.Windows.Forms.PictureBox();
@@ -46,7 +48,9 @@
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripButtonShowPuzzlePath = new System.Windows.Forms.ToolStripButton();
+			this.contextMenuStripLogWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.toolStripMenuItemClear = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemCopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -64,6 +68,7 @@
 			this.splitContainerMapAndLogWindow.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
 			this.MenuStripMain.SuspendLayout();
+			this.contextMenuStripLogWindow.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ToolBar
@@ -107,6 +112,17 @@
 			this.toolStripButtonRespawnPointType.Size = new System.Drawing.Size(23, 22);
 			this.toolStripButtonRespawnPointType.Text = "toolStripButton1";
 			this.toolStripButtonRespawnPointType.Click += new System.EventHandler(this.toolStripButtonRespawnPointType_Click);
+			// 
+			// toolStripButtonShowPuzzlePath
+			// 
+			this.toolStripButtonShowPuzzlePath.CheckOnClick = true;
+			this.toolStripButtonShowPuzzlePath.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonShowPuzzlePath.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowPuzzlePath.Image")));
+			this.toolStripButtonShowPuzzlePath.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonShowPuzzlePath.Name = "toolStripButtonShowPuzzlePath";
+			this.toolStripButtonShowPuzzlePath.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonShowPuzzlePath.Text = "toolStripButton1";
+			this.toolStripButtonShowPuzzlePath.CheckedChanged += new System.EventHandler(this.toolStripButtonShowPuzzlePath_CheckedChanged);
 			// 
 			// SplitContainerToolAndLevel
 			// 
@@ -203,10 +219,12 @@
 			// 
 			// textBoxLog
 			// 
+			this.textBoxLog.ContextMenuStrip = this.contextMenuStripLogWindow;
 			this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.textBoxLog.Location = new System.Drawing.Point(0, 0);
 			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";
+			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.textBoxLog.Size = new System.Drawing.Size(697, 85);
 			this.textBoxLog.TabIndex = 0;
 			// 
@@ -233,39 +251,51 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(100, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// toolStripButtonShowPuzzlePath
+			// contextMenuStripLogWindow
 			// 
-			this.toolStripButtonShowPuzzlePath.CheckOnClick = true;
-			this.toolStripButtonShowPuzzlePath.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonShowPuzzlePath.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowPuzzlePath.Image")));
-			this.toolStripButtonShowPuzzlePath.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonShowPuzzlePath.Name = "toolStripButtonShowPuzzlePath";
-			this.toolStripButtonShowPuzzlePath.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonShowPuzzlePath.Text = "toolStripButton1";
-			this.toolStripButtonShowPuzzlePath.CheckedChanged += new System.EventHandler(this.toolStripButtonShowPuzzlePath_CheckedChanged);
+			this.contextMenuStripLogWindow.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemClear,
+            this.toolStripMenuItemCopyToClipboard});
+			this.contextMenuStripLogWindow.Name = "contextMenuStripLogWindow";
+			this.contextMenuStripLogWindow.Size = new System.Drawing.Size(181, 70);
+			this.contextMenuStripLogWindow.Text = "Clear";
+			// 
+			// toolStripMenuItemClear
+			// 
+			this.toolStripMenuItemClear.Name = "toolStripMenuItemClear";
+			this.toolStripMenuItemClear.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemClear.Text = "Clear";
+			this.toolStripMenuItemClear.Click += new System.EventHandler(this.toolStripMenuItemClear_Click);
+			// 
+			// toolStripMenuItemCopyToClipboard
+			// 
+			this.toolStripMenuItemCopyToClipboard.Name = "toolStripMenuItemCopyToClipboard";
+			this.toolStripMenuItemCopyToClipboard.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemCopyToClipboard.Text = "Copy to Clipboard";
+			this.toolStripMenuItemCopyToClipboard.Click += new System.EventHandler(this.toolStripMenuItemCopyToClipboard_Click);
 			// 
 			// MainForm
 			// 
@@ -301,6 +331,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
 			this.MenuStripMain.ResumeLayout(false);
 			this.MenuStripMain.PerformLayout();
+			this.contextMenuStripLogWindow.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -326,6 +357,9 @@
 		private System.Windows.Forms.SplitContainer splitContainerMapAndLogWindow;
 		private System.Windows.Forms.TextBox textBoxLog;
 		private System.Windows.Forms.ToolStripButton toolStripButtonShowPuzzlePath;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStripLogWindow;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClear;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCopyToClipboard;
 	}
 }
 
