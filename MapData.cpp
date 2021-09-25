@@ -31,15 +31,15 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(15,12),ID(7,2),ID(1,2),ID(15,15),ID(15,1),
 	ID(5,5),ID(4,15),ID(15,15),ID(14,0),
 	ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,2),ID(1,1),ID(1,2),ID(1,1),ID(1,2),ID(1,1),ID(1,1),ID(2,1),ID(1,1),ID(1,1),
-	ID(2,15),ID(12,1),ID(0,0),ID(0,2),ID(1,2),ID(2,11),ID(15,3),ID(11,0),ID(11,15),ID(2,0),ID(1,0),
-	ID(1,15),ID(2,11),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,0),ID(15,4),ID(0,2),ID(0,15),ID(10,2),
-	ID(1,15),ID(4,11),ID(11,11),ID(0,1),ID(2,0),ID(11,15),ID(15,15),ID(1,7),ID(3,1),
+	ID(8,15),ID(12,1),ID(0,0),ID(0,2),ID(1,2),ID(1,11),ID(15,3),ID(11,0),ID(11,15),ID(2,0),ID(1,0),
+	ID(8,15),ID(2,11),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,0),ID(15,4),ID(0,2),ID(0,15),ID(10,8),
+	ID(8,15),ID(4,11),ID(11,11),ID(0,1),ID(2,0),ID(11,15),ID(15,15),ID(1,7),ID(3,1),
 	ID(1,7),ID(15,7),ID(0,11),ID(15,4),ID(7,3),ID(3,3),ID(3,7),ID(15,10),ID(1,0),
-	ID(1,1),ID(3,3),ID(3,0),ID(11,15),ID(8,2),ID(1,2),ID(2,1),ID(3,3),ID(7,15),ID(2,7),ID(3,7),ID(15,3),ID(1,0),
-	ID(1,2),ID(1,2),ID(1,15),ID(10,2),ID(2,1),ID(1,2),ID(2,1),ID(1,15),ID(2,1),ID(2,1),ID(7,15),ID(2,2),
-	ID(2,1),ID(1,1),ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,2),ID(1,2),ID(1,1),ID(1,1),ID(1,2),ID(1,4),ID(4,1),
-	ID(2,2),ID(2,0),ID(11,11),ID(0,2),ID(1,1),ID(1,1),ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(0,11),ID(0,11),ID(11,11),ID(11,1),
-	ID(1,0),ID(11,15),ID(5,11),ID(4,6),ID(11,15),ID(15,15),ID(4,1),
+	ID(1,1),ID(3,3),ID(3,0),ID(11,15),ID(8,8),ID(1,2),ID(2,1),ID(3,3),ID(7,15),ID(2,7),ID(3,7),ID(15,3),ID(8,0),
+	ID(1,2),ID(1,2),ID(8,15),ID(10,8),ID(2,1),ID(1,2),ID(2,1),ID(8,15),ID(2,8),ID(2,1),ID(7,15),ID(2,2),
+	ID(2,1),ID(1,1),ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,2),ID(1,2),ID(1,1),ID(1,1),ID(1,2),ID(8,15),ID(2,8),
+	ID(2,2),ID(2,0),ID(11,11),ID(0,2),ID(1,1),ID(1,1),ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(0,11),ID(0,11),ID(11,15),ID(2,1),
+	ID(1,0),ID(11,15),ID(5,11),ID(4,6),ID(11,15),ID(15,15),ID(4,8),
 	ID(2,15),ID(14,7),ID(1,12),ID(12,14),ID(12,12),ID(12,12),ID(15,1),ID(2,1),ID(15,2),ID(7,3),ID(1,0),
 	ID(1,15),ID(2,7),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(1,15),ID(2,13),ID(15,5),ID(1,1),ID(15,2),ID(1,1),ID(1,0),
 	ID(5,15),ID(2,0),ID(1,2),ID(0,11),ID(11,15),ID(1,11),ID(11,0),ID(1,6),ID(5,1),ID(15,2),ID(13,15),ID(5,2),ID(1,15),ID(2,1),ID(2,1),
@@ -58,20 +58,10 @@ const unsigned char MapManager::Level[] PROGMEM = {
 
 const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,10,21,26,30,33,37,42,46,62,73,84,93,102,115,127,143,159,166,177,192,207,219,227,243,259,266,278,292,305,316,323,339,};
 
-BulletCrate bulletCrate1;
-DynamiteCrate dynamiteCrate1;
 Statuette statuette1;
 Graal graal1;
-Spike spike1;
-Spike spike2;
-Spike spike3;
-Spike spike4;
-Spike spike5;
-Spike spike6;
 Enemy enemy1;
 Enemy enemy2;
-Enemy enemy3;
-Enemy enemy4;
 Stalagmite stalagmite1;
 Stalagmite stalagmite2;
 Stalactite stalactite1;
@@ -109,14 +99,10 @@ ItemInitFunction MapManager::ItemInitFunctions[] = {
 // this function is to save and load the living status of the items
 void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad)
 {
-	bulletCrate1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
-	dynamiteCrate1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	statuette1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	graal1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	enemy1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	enemy2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
-	enemy3.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
-	enemy4.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalactite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);

@@ -65,7 +65,7 @@ namespace RickArdurousEditor
 			BLOCK_8_8,
 			BLOCK_8_8_SPLIT,
 			STAIR,
-			SMALL_STATUE,
+			ROCK_LEFT_WALL,
 			BIG_STATUE_TOP,
 			BIG_STATUE_BOTTOM,
 			ROCK_CEILING_THIN,
@@ -929,7 +929,7 @@ namespace RickArdurousEditor
 						randomValue ^= randomValue >> 3;
 						isMirror = (randomValue % 2) == 1;
 					}
-					else if (spriteId == (int)WallId.STAIR)
+					else if ((spriteId == (int)WallId.STAIR) || (spriteId == (int)WallId.ROCK_LEFT_WALL))
 						isMirror = (previousSpriteId == (int)WallId.NOTHING);
 					else if ((spriteId == (int)WallId.BIG_STATUE_TOP) || (spriteId == (int)WallId.BIG_STATUE_BOTTOM))
 						isMirror = (previousSpriteId == spriteId);

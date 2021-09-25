@@ -824,7 +824,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 					randomValue ^= randomValue >> 3;
 					isMirror = randomValue % 2;
 				}
-				else if (currentSpriteId == SpriteData::STAIR)
+				else if ((currentSpriteId == SpriteData::STAIR) || (currentSpriteId == SpriteData::ROCK_LEFT_WALL))
 					isMirror = (previousSpriteId == SpriteData::NOTHING);
 				else if ((currentSpriteId == SpriteData::BIG_STATUE_TOP) || (currentSpriteId == SpriteData::BIG_STATUE_BOTTOM))
 					isMirror = (previousSpriteId == currentSpriteId);
