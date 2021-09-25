@@ -262,6 +262,12 @@ namespace RickArdurousEditor
 
 		private void PictureBoxLevel_MouseMove(object sender, MouseEventArgs e)
 		{
+			// change the cursor, if we move hover a sensor
+			if ((mCurrentSelectedItem != null) && (mCurrentSelectedItem.IsCoordOnMySensorExtrimity(ConvertMouseCoordToLevelCoord(e.Location), 2)))
+				this.Cursor = Cursors.VSplit;
+			else
+				this.Cursor = Cursors.Default;
+
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
@@ -305,7 +311,7 @@ namespace RickArdurousEditor
 						{
 							if (mCurrentSelectedItem == null)
 							{
-								mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));
+								mCurrentSelectedItem = mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));								
 							}
 							else if (mCurrentEditAction == EditAction.ADJUST_SENSOR)
 							{
