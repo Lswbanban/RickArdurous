@@ -8,10 +8,12 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Editor
+	- export all the items even in levels not in the puzzle path
 	- Snap the destroyable block on wall sprite grid (because the game engine needs it)
-	- change the mouse button (left=items, middle=pan view, right=wall sprite)
 	- a button to clear the log window
 	- improve the path finding of the puzzle, for when you temporary move the spawn point
+	- change the mouse cursor when adjusting the arrow launcher size
+	- add undo/redo feature
 - Tutorial
 	- scorpion
 	- stalagtite

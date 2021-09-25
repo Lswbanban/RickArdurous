@@ -279,7 +279,7 @@ namespace RickArdurousEditor
 						RedrawLevel();
 					}
 					break;
-				case MouseButtons.Right:
+				case MouseButtons.Middle:
 					PanLevelCamera(e.Location);
 					break;
 			}
@@ -291,11 +291,9 @@ namespace RickArdurousEditor
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
-					if (mCurrentSelectedSpriteId < 16)
-						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
-					else
+					try
 					{
-						try
+						if (mCurrentSelectedSpriteId >= 16)
 						{
 							if (mCurrentSelectedItem == null)
 							{
@@ -312,14 +310,21 @@ namespace RickArdurousEditor
 									mCurrentSelectedItem.SensorDistance += diff;
 							}
 						}
-						catch (MapSaveException)
-						{
-						}
+					}
+					catch (MapSaveException)
+					{
 					}
 					RedrawLevel();
 					break;
-				case MouseButtons.Right:
+
+				case MouseButtons.Middle:
 					PanLevelCamera(e.Location);
+					break;
+
+				case MouseButtons.Right:
+					if (mCurrentSelectedSpriteId < 16)
+						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
+					RedrawLevel();
 					break;
 			}
 		}
