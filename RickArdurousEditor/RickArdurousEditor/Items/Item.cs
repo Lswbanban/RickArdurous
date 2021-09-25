@@ -99,8 +99,7 @@ namespace RickArdurousEditor.Items
 		public Item(Type type, bool isMirrored, int x, int y)
 		{
 			mType = type;
-			mX = x;
-			mY = y;
+			Move(new Point(x, y)); // use the Move function because the destroyable block snap to grid
 			mIsMirror = isMirrored;
 			UpdateSprite();
 		}
@@ -166,8 +165,17 @@ namespace RickArdurousEditor.Items
 
 		public void Move(Point location)
 		{
-			mX = location.X;
-			mY = location.Y;
+			if (mType == Type.DESTROYABLE_BLOCK)
+			{
+				// snap the destroyable block on the grid of the map, because the game engine needs it
+				mX = (location.X >> 3) << 3;
+				mY = ((location.Y + 4) >> 3) << 3;
+			}
+			else
+			{
+				mX = location.X;
+				mY = location.Y;
+			}
 		}
 		#endregion
 
