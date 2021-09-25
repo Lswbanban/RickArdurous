@@ -23,6 +23,9 @@ namespace RickArdurousEditor
 		private Bitmap[] mWallSpritesMirrored = new Bitmap[WALL_SPRITE_COUNT];
 
 		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.CornflowerBlue, 2);
+		private Pen mValidPuzzlePathLinePen = new Pen(Color.LawnGreen, 4);
+		private Pen mInvalidPuzzlePathLinePen = new Pen(Color.OrangeRed, 4);
+
 
 		// variable computed during the save of the map and needed to be exported
 		private int mLevelWidth = 0;
@@ -53,7 +56,35 @@ namespace RickArdurousEditor
 					mPixelSize = 2;
 			}
 		}
+
+		public bool IsPuzzlePathDrawn
+		{
+			get;
+			set;
+		}
 		#endregion
+
+		/// <summary>
+		/// A small struct to store a puzzle id and coordinate for storing the puzzle path
+		/// </summary>
+		private struct PuzzlePathNode
+		{
+			public int screenId;
+			public int screenX;
+			public int screenY;
+
+			public PuzzlePathNode(int id, int x, int y)
+			{
+				screenId = id;
+				screenX = x;
+				screenY = y;
+			}
+		}
+
+		/// <summary>
+		/// List of all the puzzle screens that create the puzzle path
+		/// </summary>
+		private List<PuzzlePathNode> mPuzzlePath = new List<PuzzlePathNode>();
 
 		private enum WallId
 		{
@@ -429,91 +460,15 @@ namespace RickArdurousEditor
 			// write the init function of the Main Menu
 			WriteInitFunctionForOneScreen(writer, 0, 0, 0);
 
-			// get the coordinate of the start and End screen
-			int endScreenX;
-			int endScreenY;
-			if (!GetStartOrEndPuzzleScreenCoordinates(true, out mFirstPuzzleScreenCameraX, out mFirstPuzzleScreenCameraY))
-				throw new MapSaveException(Properties.Resources.ErrorNoStartPuzzleScreen, MainForm.LogLevel.ERROR);
-			if (!GetStartOrEndPuzzleScreenCoordinates(false, out endScreenX, out endScreenY))
-				throw new MapSaveException(Properties.Resources.ErrorNoEndPuzzleScreen, MainForm.LogLevel.ERROR);
+			// rebuild the path
+			BuildPuzzlePath();
 
-			// declare a list for storing all the puzzle screen already exported
-			List<Point> exportedPuzzleScreenCoord = new List<Point>();
-
-			// init the current screen coord with the start one
-			Point currentScreen = new Point(mFirstPuzzleScreenCameraX, mFirstPuzzleScreenCameraY);
-			Point previousScreen = new Point(mFirstPuzzleScreenCameraX, mFirstPuzzleScreenCameraY);
-			int screenId = 1;
-			while ((currentScreen.X != endScreenX) || (currentScreen.Y != endScreenY))
-			{
-				// check if we didn't already exported the current puzzle screen, otherwise that means we have a cyclic path
-				if (exportedPuzzleScreenCoord.Contains(currentScreen))
-					throw new MapSaveException(Properties.Resources.ErrorCyclicPuzzlePathDetected, MainForm.LogLevel.ERROR);
-				exportedPuzzleScreenCoord.Add(currentScreen);
-
-				// write the init function of the current screen
-				WriteInitFunctionForOneScreen(writer, screenId, currentScreen.X, currentScreen.Y);
-				screenId++;
-
-				// get the next screen coordinates above or below
-				bool isExitFound = false;
-				for (int x = currentScreen.X + 1; x < currentScreen.X + ARDUBOY_PUZZLE_SCREEN_WIDTH - 2; ++x)
-				{
-					if ((currentScreen.Y > 0) && 
-						(currentScreen.Y - ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.Y) &&
-						IsAPuzzleScreenExit(mLevel[x, currentScreen.Y]))
-					{
-						previousScreen.Y = currentScreen.Y;
-						currentScreen.Y -= ARDUBOY_PUZZLE_SCREEN_HEIGHT;
-						isExitFound = true;
-						break;
-					}
-					if ((currentScreen.Y < LEVEL_HEIGHT - ARDUBOY_PUZZLE_SCREEN_HEIGHT) &&
-						(currentScreen.Y + ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.Y) &&
-						IsAPuzzleScreenExit(mLevel[x, currentScreen.Y + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
-					{
-						previousScreen.Y = currentScreen.Y;
-						currentScreen.Y += ARDUBOY_PUZZLE_SCREEN_HEIGHT;
-						isExitFound = true;
-						break;
-					}
-				}
-
-				// get the next screen coordinates
-				if (!isExitFound)
-				{
-					for (int y = currentScreen.Y + 1; y < currentScreen.Y + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 2; ++y)
-					{
-						if ((currentScreen.X > 0) &&
-							(currentScreen.X - ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.X) &&
-							IsAPuzzleScreenExit(mLevel[currentScreen.X, y]))
-						{
-							previousScreen.X = currentScreen.X;
-							currentScreen.X -= ARDUBOY_PUZZLE_SCREEN_WIDTH;
-							isExitFound = true;
-							break;
-						}
-						if ((currentScreen.X < LEVEL_WIDTH - ARDUBOY_PUZZLE_SCREEN_WIDTH) &&
-							(currentScreen.X + ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.X) &&
-							IsAPuzzleScreenExit(mLevel[currentScreen.X + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
-						{
-							previousScreen.X = currentScreen.X;
-							currentScreen.X += ARDUBOY_PUZZLE_SCREEN_WIDTH;
-							isExitFound = true;
-							break;
-						}
-					}
-				}
-
-				// if we didn't found any exit, and didn't reach the last screen, we are in a dead end!
-				if (!isExitFound && ((currentScreen.X != endScreenX) || (currentScreen.Y != endScreenY)))
-					throw new MapSaveException(Properties.Resources.ErrorDeadEndNotExitFound, MainForm.LogLevel.ERROR, currentScreen.X.ToString(), currentScreen.Y.ToString());
-			}
-			// write the init function of the last screen
-			WriteInitFunctionForOneScreen(writer, screenId, endScreenX, endScreenY);
+			// write the init function for all the screens
+			foreach (PuzzlePathNode screenPathNode in mPuzzlePath)
+				WriteInitFunctionForOneScreen(writer, screenPathNode.screenId, screenPathNode.screenX, screenPathNode.screenY);
 
 			// return the number of screens
-			return screenId + 1;
+			return mPuzzlePath.Count + 1;
 		}
 
 		private void WriteInitFunctionArray(StreamWriter writer, int screenCount)
@@ -796,6 +751,99 @@ namespace RickArdurousEditor
 			// return the point computed
 			return new Point(mapX, mapY);
 		}
+
+		private void BuildPuzzlePath()
+		{
+			// get the coordinate of the start and End screen
+			int endScreenX;
+			int endScreenY;
+			if (!GetStartOrEndPuzzleScreenCoordinates(true, out mFirstPuzzleScreenCameraX, out mFirstPuzzleScreenCameraY))
+				throw new MapSaveException(Properties.Resources.ErrorNoStartPuzzleScreen, MainForm.LogLevel.ERROR);
+			if (!GetStartOrEndPuzzleScreenCoordinates(false, out endScreenX, out endScreenY))
+				throw new MapSaveException(Properties.Resources.ErrorNoEndPuzzleScreen, MainForm.LogLevel.ERROR);
+
+			// clear the puzzle path before rebuilding it
+			mPuzzlePath.Clear();
+
+			// init the current screen coord with the start one
+			int currentScreenId = 1;
+			PuzzlePathNode currentScreen = new PuzzlePathNode(currentScreenId, mFirstPuzzleScreenCameraX, mFirstPuzzleScreenCameraY);
+			PuzzlePathNode previousScreen = new PuzzlePathNode(currentScreenId, mFirstPuzzleScreenCameraX, mFirstPuzzleScreenCameraY);
+			while ((currentScreen.screenX != endScreenX) || (currentScreen.screenY != endScreenY))
+			{
+				// check if we didn't already exported the current puzzle screen, otherwise that means we have a cyclic path
+				if (mPuzzlePath.Contains(currentScreen))
+					throw new MapSaveException(Properties.Resources.ErrorCyclicPuzzlePathDetected, MainForm.LogLevel.ERROR);
+
+				// set the current screen id and add it in the path
+				mPuzzlePath.Add(new PuzzlePathNode(currentScreenId, currentScreen.screenX, currentScreen.screenY));
+
+				// increase the current screen id
+				currentScreenId++;
+
+				// get the next screen coordinates above or below
+				bool isExitFound = false;
+				for (int x = currentScreen.screenX + 1; x < currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 2; ++x)
+				{
+					if ((currentScreen.screenY > 0) &&
+						(currentScreen.screenY - ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.screenY) &&
+						IsAPuzzleScreenExit(mLevel[x, currentScreen.screenY]))
+					{
+						previousScreen.screenX = currentScreen.screenX;
+						previousScreen.screenY = currentScreen.screenY;
+						currentScreen.screenY -= ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+						isExitFound = true;
+						break;
+					}
+					if ((currentScreen.screenY < LEVEL_HEIGHT - ARDUBOY_PUZZLE_SCREEN_HEIGHT) &&
+						(currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.screenY) &&
+						IsAPuzzleScreenExit(mLevel[x, currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
+					{
+						previousScreen.screenX = currentScreen.screenX;
+						previousScreen.screenY = currentScreen.screenY;
+						currentScreen.screenY += ARDUBOY_PUZZLE_SCREEN_HEIGHT;
+						isExitFound = true;
+						break;
+					}
+				}
+
+				// get the next screen coordinates on left or right
+				if (!isExitFound)
+				{
+					for (int y = currentScreen.screenY + 1; y < currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 2; ++y)
+					{
+						if ((currentScreen.screenX > 0) &&
+							(currentScreen.screenX - ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.screenX) &&
+							IsAPuzzleScreenExit(mLevel[currentScreen.screenX, y]))
+						{
+							previousScreen.screenX = currentScreen.screenX;
+							previousScreen.screenY = currentScreen.screenY;
+							currentScreen.screenX -= ARDUBOY_PUZZLE_SCREEN_WIDTH;
+							isExitFound = true;
+							break;
+						}
+						if ((currentScreen.screenX < LEVEL_WIDTH - ARDUBOY_PUZZLE_SCREEN_WIDTH) &&
+							(currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.screenX) &&
+							IsAPuzzleScreenExit(mLevel[currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
+						{
+							previousScreen.screenX = currentScreen.screenX;
+							previousScreen.screenY = currentScreen.screenY;
+							currentScreen.screenX += ARDUBOY_PUZZLE_SCREEN_WIDTH;
+							isExitFound = true;
+							break;
+						}
+					}
+				}
+
+				// if we didn't found any exit, and didn't reach the last screen, we are in a dead end!
+				if (!isExitFound && ((currentScreen.screenX != endScreenX) || (currentScreen.screenY != endScreenY)))
+					throw new MapSaveException(Properties.Resources.ErrorDeadEndNotExitFound, MainForm.LogLevel.ERROR, currentScreen.screenX.ToString(), currentScreen.screenY.ToString());
+			}
+
+			// add the last screen
+			mPuzzlePath.Add(new PuzzlePathNode(currentScreenId, currentScreen.screenX, currentScreen.screenY));
+		}
+
 		#endregion
 
 		#region map edition
@@ -851,6 +899,9 @@ namespace RickArdurousEditor
 		{
 			DrawLevelWalls(gc, width, height, cameraX, cameraY);
 			DrawItems(gc, width, height, cameraX, cameraY, selectedItem);
+			// draw a line following all the puzzle chain
+			if (IsPuzzlePathDrawn)
+				DrawPuzzlePath(gc, width, height, cameraX, cameraY);
 		}
 
 		private void DrawLevelWalls(Graphics gc, int width, int height, int cameraX, int cameraY)
@@ -965,6 +1016,42 @@ namespace RickArdurousEditor
 			foreach (List<Items.Item> itemList in mItems.Values)
 				foreach (Items.Item item in itemList)
 					item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld, (selectedItem == item));
+		}
+
+		private void DrawPuzzlePath(Graphics gc, int width, int height, int cameraX, int cameraY)
+		{
+			// start to use the valid pen, and if the Build of the puzzle throw an exception, change to invalid pen
+			Pen drawingPen = mValidPuzzlePathLinePen;
+
+			try
+			{
+				// rebuild the path
+				BuildPuzzlePath();
+			}
+			catch (Exception)
+			{
+				drawingPen = mInvalidPuzzlePathLinePen;
+			}
+
+			// declare variables to store the pixel coordinates of the previous screen
+			int previousXPixel = 0;
+			int previousYPixel = 0;
+
+			// iterate on the path to draw all the lines
+			for (int i = 0; i < mPuzzlePath.Count; ++i)
+			{
+				// convert the screen coordinate into pixel coordinate
+				int currentXPixel = ((mPuzzlePath[i].screenX + 8 - cameraX) * DrawSpriteWidth);
+				int currentYPixel = ((mPuzzlePath[i].screenY + 4 - cameraY) * DrawSpriteHeight);
+
+				// draw the line, except for the first point
+				if (i > 0)
+					gc.DrawLine(drawingPen, previousXPixel, previousYPixel, currentXPixel, currentYPixel);
+
+				// store the current screen coordinate in the previous variables
+				previousXPixel = currentXPixel;
+				previousYPixel = currentYPixel;
+			}
 		}
 		#endregion
 	}

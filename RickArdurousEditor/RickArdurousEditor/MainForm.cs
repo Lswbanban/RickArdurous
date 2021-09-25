@@ -174,6 +174,14 @@ namespace RickArdurousEditor
 				RedrawLevel();
 			}
 		}
+
+		private void toolStripButtonShowPuzzlePath_CheckedChanged(object sender, EventArgs e)
+		{
+			// set the flag on the map
+			mMap.IsPuzzlePathDrawn = toolStripButtonShowPuzzlePath.Checked;
+			// then redraw the map
+			RedrawLevel();
+		}
 		#endregion
 
 		#region edition event

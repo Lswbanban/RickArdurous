@@ -46,6 +46,7 @@
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripButtonShowPuzzlePath = new System.Windows.Forms.ToolStripButton();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -70,7 +71,8 @@
 			this.ToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonMirrorItem,
             this.toolStripButtonDeleteItem,
-            this.toolStripButtonRespawnPointType});
+            this.toolStripButtonRespawnPointType,
+            this.toolStripButtonShowPuzzlePath});
 			this.ToolBar.Location = new System.Drawing.Point(0, 24);
 			this.ToolBar.Name = "ToolBar";
 			this.ToolBar.Size = new System.Drawing.Size(800, 25);
@@ -225,34 +227,45 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "File";
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(92, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// toolStripButtonShowPuzzlePath
+			// 
+			this.toolStripButtonShowPuzzlePath.CheckOnClick = true;
+			this.toolStripButtonShowPuzzlePath.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonShowPuzzlePath.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowPuzzlePath.Image")));
+			this.toolStripButtonShowPuzzlePath.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonShowPuzzlePath.Name = "toolStripButtonShowPuzzlePath";
+			this.toolStripButtonShowPuzzlePath.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonShowPuzzlePath.Text = "toolStripButton1";
+			this.toolStripButtonShowPuzzlePath.CheckedChanged += new System.EventHandler(this.toolStripButtonShowPuzzlePath_CheckedChanged);
 			// 
 			// MainForm
 			// 
@@ -312,6 +325,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripButtonRespawnPointType;
 		private System.Windows.Forms.SplitContainer splitContainerMapAndLogWindow;
 		private System.Windows.Forms.TextBox textBoxLog;
+		private System.Windows.Forms.ToolStripButton toolStripButtonShowPuzzlePath;
 	}
 }
 
