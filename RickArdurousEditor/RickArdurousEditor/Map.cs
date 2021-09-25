@@ -415,7 +415,10 @@ namespace RickArdurousEditor
 			// add the items in the map manager
 			writer.WriteLine("\t// Add a checkpoint if we need to");
 			foreach (Items.Item item in itemsOnScreen)
+			{
 				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
+				item.WasSaved = true;
+			}
 			writer.WriteLine();
 
 			// reset the item count array
@@ -424,7 +427,10 @@ namespace RickArdurousEditor
 			// init the position of the item
 			writer.WriteLine("\t// init all the item of the current puzzle screen");
 			foreach (Items.Item item in itemsOnScreen)
+			{
 				item.WriteInit(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
+				item.WasSaved = true;
+			}
 
 			// finish the init function
 			writer.WriteLine("}");
@@ -457,6 +463,11 @@ namespace RickArdurousEditor
 
 		private int WriteInitFunctions(StreamWriter writer)
 		{
+			// first clear all the flag that tell that an item has been saved
+			foreach (KeyValuePair<Items.Item.Type, List<Items.Item>> itemList in mItems)
+				foreach (Items.Item item in itemList.Value)
+					item.WasSaved = false;
+
 			// write the init function of the Main Menu
 			WriteInitFunctionForOneScreen(writer, 0, 0, 0);
 
@@ -505,6 +516,25 @@ namespace RickArdurousEditor
 			writer.WriteLine("}");
 		}
 
+		private void WriteNotUsedItems(StreamWriter writer)
+		{
+			writer.WriteLine();
+			writer.WriteLine("// The following items are not used in the game, but they are written here,");
+			writer.WriteLine("// in order for the Editor to reload them.");
+			writer.WriteLine("/*");
+
+			// Iterate on all the items and saved those that have not been saved
+			foreach (KeyValuePair<Items.Item.Type, List<Items.Item>> itemList in mItems)
+				foreach (Items.Item item in itemList.Value)
+					if (!item.WasSaved)
+					{
+						item.WriteInit(writer, 1);
+						item.WasSaved = true;
+					}
+
+			writer.WriteLine("*/");
+		}
+
 		private void SaveMapData(string mapDataFileName)
 		{
 			System.Text.Encoding utf8WithoutBom = new System.Text.UTF8Encoding(false);
@@ -517,6 +547,7 @@ namespace RickArdurousEditor
 				mScreenCount = WriteInitFunctions(writer);
 				WriteInitFunctionArray(writer, mScreenCount);
 				WriteSaveAndLoadAliveStatusFunction(writer);
+				WriteNotUsedItems(writer); // to save them, if you want to reload the map without loosing them
 			}
 			catch (MapSaveException)
 			{

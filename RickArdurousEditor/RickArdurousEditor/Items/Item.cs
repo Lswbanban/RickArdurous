@@ -94,6 +94,12 @@ namespace RickArdurousEditor.Items
 			get { return mArrowLauncherDistance; }
 			set { mArrowLauncherDistance = value; }
 		}
+
+		public bool WasSaved
+		{
+			get;
+			set;
+		}
 		#endregion
 
 		public Item(Type type, bool isMirrored, int x, int y)

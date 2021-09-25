@@ -66,6 +66,7 @@ Stalagmite stalagmite1;
 Stalagmite stalagmite2;
 Stalactite stalactite1;
 DestroyableBlock destBlock1;
+Boulder boulder1;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -79,7 +80,7 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(64, 67);
+	MapManager::MemorizeCheckPoint(65, 169);
 
 	// init all the item of the current puzzle screen
 }
@@ -92,27 +93,6 @@ void InitScreen2(bool shouldRespawn)
 }
 
 void InitScreen3(bool shouldRespawn)
-{
-	// Add a checkpoint if we need to
-
-	// init all the item of the current puzzle screen
-}
-
-void InitScreen4(bool shouldRespawn)
-{
-	// Add a checkpoint if we need to
-
-	// init all the item of the current puzzle screen
-}
-
-void InitScreen5(bool shouldRespawn)
-{
-	// Add a checkpoint if we need to
-
-	// init all the item of the current puzzle screen
-}
-
-void InitScreen6(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
 	MapManager::MemorizeCheckPoint(131, 234);
@@ -128,7 +108,7 @@ void InitScreen6(bool shouldRespawn)
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4, &InitScreen5, &InitScreen6, 
+	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, 
 };
 
 
@@ -144,3 +124,12 @@ void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenId
 	stalactite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	destBlock1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 }
+
+// The following items are not used in the game, but they are written here,
+// in order for the Editor to reload them.
+/*
+	stalagmite0.Init(185, 112, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite0.Init(193, 112, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette0.Init(235, 80, Item::PropertyFlags::NONE, shouldRespawn);
+	boulder0.Init(91, 68, Item::PropertyFlags::NONE);
+*/
