@@ -783,7 +783,7 @@ namespace RickArdurousEditor
 
 				// get the next screen coordinates above or below
 				bool isExitFound = false;
-				for (int x = currentScreen.screenX + 1; x < currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 2; ++x)
+				for (int x = currentScreen.screenX + 1; x < currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1; ++x)
 				{
 					if ((currentScreen.screenY > 0) &&
 						(currentScreen.screenY - ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.screenY) &&
@@ -810,7 +810,7 @@ namespace RickArdurousEditor
 				// get the next screen coordinates on left or right
 				if (!isExitFound)
 				{
-					for (int y = currentScreen.screenY + 1; y < currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 2; ++y)
+					for (int y = currentScreen.screenY + 1; y < currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1; ++y)
 					{
 						if ((currentScreen.screenX > 0) &&
 							(currentScreen.screenX - ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.screenX) &&

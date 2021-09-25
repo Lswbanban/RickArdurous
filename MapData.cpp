@@ -51,7 +51,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(13,9),ID(9,5),ID(1,3),ID(14,2),ID(5,6),ID(5,15),ID(9,0),
 	ID(5,6),ID(15,5),ID(6,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,0),
 	ID(4,5),ID(15,5),ID(4,12),ID(12,12),ID(12,12),ID(0,5),ID(5,0),ID(15,2),ID(11,0),ID(1,5),ID(15,1),ID(13,15),ID(6,1),
-	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,6),ID(1,15),ID(6,0),ID(6,4),ID(5,3),ID(7,15),ID(4,1),
+	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,7),ID(6,15),ID(5,0),ID(6,4),ID(5,3),ID(7,15),ID(4,1),
 	ID(5,10),ID(10,15),ID(2,13),ID(15,12),ID(5,15),ID(10,7),ID(3,1),
 	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),
 };
@@ -79,7 +79,43 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(143, 226);
+	MapManager::MemorizeCheckPoint(64, 67);
+
+	// init all the item of the current puzzle screen
+}
+
+void InitScreen2(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+
+	// init all the item of the current puzzle screen
+}
+
+void InitScreen3(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+
+	// init all the item of the current puzzle screen
+}
+
+void InitScreen4(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+
+	// init all the item of the current puzzle screen
+}
+
+void InitScreen5(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+
+	// init all the item of the current puzzle screen
+}
+
+void InitScreen6(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+	MapManager::MemorizeCheckPoint(131, 234);
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(166, 200, Item::PropertyFlags::NONE, shouldRespawn);
@@ -92,7 +128,7 @@ void InitScreen1(bool shouldRespawn)
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, 
+	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4, &InitScreen5, &InitScreen6, 
 };
 
 
