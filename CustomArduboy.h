@@ -37,27 +37,11 @@ class Arduboy : public Print, public ArduboyCore
 public:
   Arduboy();
 
-  /// Returns true if the button mask passed in is pressed.
-  /**
-   * if (pressed(LEFT_BUTTON + A_BUTTON))
-   */
-  boolean pressed(uint8_t buttons);
-
-  /// Returns true if the button mask passed in not pressed.
-  /**
-   * if (notPressed(LEFT_BUTTON))
-   */
-  boolean notPressed(uint8_t buttons);
-
   /// Initializes the hardware (but with no boot logo)
   void beginNoLogo();
 
-  /// Boot utils such as flashlight, etc
-  void inline bootUtils() __attribute__((always_inline));
-
   /// Clears display.
   void clear();
-  void clearDisplay() __attribute__ ((deprecated("use clear() instead")));
 
   /// Copies the contents of the screen buffer to the screen.
   /**
@@ -73,30 +57,6 @@ public:
 
   uint8_t getPixel(uint8_t x, uint8_t y);
 
-  /// Draw a circle of a defined radius.
-  /**
-   * Draws a circle in white or black. X and Y are the center point of the circle.
-   */
-  void drawCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color);
-
-  /// Draws one or more "corners" of a circle.
-  void drawCircleHelper(int16_t x0, int16_t y0, uint8_t r, uint8_t cornername, uint8_t color);
-
-  /// Draws a filled-in circle.
-  void fillCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color);
-
-   /// Draws one or both vertical halves of a filled-in circle.
-  void fillCircleHelper(int16_t x0, int16_t y0, uint8_t r, uint8_t cornername, int16_t delta, uint8_t color);
-
-  /// Draws a line between two points.
-  /**
-   * Uses Bresenham's algorithm.
-   */
-  void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color);
-
-  /// Draws a rectangle of a width and height.
-  void drawRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color);
-
   /// Draws vertical line.
   void drawFastVLine(int16_t x, int16_t y, uint8_t h, uint8_t color);
 
@@ -108,30 +68,6 @@ public:
 
   /// Fills the screen buffer with white or black.
   void fillScreen(uint8_t color);
-
-  /// Draws a rectangle with rounded edges.
-  void drawRoundRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t r, uint8_t color);
-
-  /// Draws a filled-in rectangle with rounded edges.
-  void fillRoundRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t r, uint8_t color);
-
-   /// Draws the outline of a triangle.
-  void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color);
-
-  /// Draws a filled-in triangle.
-  void fillTriangle (int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color);
-
-  /// Draws a bitmap from program memory to a specific X/Y
-  void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color);
-
-  /// Draws images that are bit-oriented horizontally.
-  /**
-   * This requires a lot of additional CPU power and will draw images slower
-   * than drawBitmap, where the images are stored in a format that
-   * allows them to be directly written to the screen. It is
-   * recommended you use drawBitmap when possible.
-   */
-  void drawSlowXYBitmap(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color);
 
   /// Draws an ASCII character at a point.
   void drawChar(int16_t x, int16_t y, unsigned char c, uint8_t color, uint8_t bg, uint8_t size);
