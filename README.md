@@ -8,7 +8,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Editor
-	- improve the path finding of the puzzle, for when you temporary move the spawn point
 	- add undo/redo feature
 - Tutorial
 	- scorpion

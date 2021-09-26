@@ -79,6 +79,15 @@ namespace RickArdurousEditor
 				screenX = x;
 				screenY = y;
 			}
+
+			public static bool operator ==(PuzzlePathNode obj1, PuzzlePathNode obj2)
+			{
+				return (obj1.screenX == obj2.screenX) && (obj1.screenY == obj2.screenY);
+			}
+			public static bool operator !=(PuzzlePathNode obj1, PuzzlePathNode obj2)
+			{
+				return (obj1.screenX != obj2.screenX) || (obj1.screenY != obj2.screenY);
+			}
 		}
 
 		/// <summary>
@@ -785,6 +794,31 @@ namespace RickArdurousEditor
 
 		private void BuildPuzzlePath()
 		{
+			PuzzlePathNode emptyNode = new PuzzlePathNode(-1, -1, -1);
+
+			// first let the algorithm search from the first exit that it can find
+			bool isPathFound = BuildPuzzlePath(emptyNode);
+
+			// no path was found but at least a path was started, then  search again, from the other exit (so excluding the second puzzle screen)
+			if (!isPathFound && (mPuzzlePath.Count >= 2))
+				isPathFound = BuildPuzzlePath(mPuzzlePath[1]);
+
+			// if path was still not found on the other exit then throw the exception
+			if (!isPathFound)
+			{
+				int screenX = 0;
+				int screenY = 0;
+				if (mPuzzlePath.Count > 0)
+				{
+					screenX = mPuzzlePath[mPuzzlePath.Count - 1].screenX;
+					screenY = mPuzzlePath[mPuzzlePath.Count - 1].screenY;
+				}
+				throw new MapSaveException(Properties.Resources.ErrorDeadEndNotExitFound, MainForm.LogLevel.ERROR, screenX.ToString(), screenY.ToString());
+			}
+		}
+
+		private bool BuildPuzzlePath(PuzzlePathNode pathNodeToExclude)
+		{
 			// get the coordinate of the start and End screen
 			int endScreenX;
 			int endScreenY;
@@ -818,6 +852,7 @@ namespace RickArdurousEditor
 				{
 					if ((currentScreen.screenY > 0) &&
 						(currentScreen.screenY - ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.screenY) &&
+						((pathNodeToExclude.screenX != currentScreen.screenX) || (pathNodeToExclude.screenY != currentScreen.screenY - ARDUBOY_PUZZLE_SCREEN_HEIGHT)) &&
 						IsAPuzzleScreenExit(mLevel[x, currentScreen.screenY]))
 					{
 						previousScreen.screenX = currentScreen.screenX;
@@ -828,6 +863,7 @@ namespace RickArdurousEditor
 					}
 					if ((currentScreen.screenY < LEVEL_HEIGHT - ARDUBOY_PUZZLE_SCREEN_HEIGHT) &&
 						(currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT != previousScreen.screenY) &&
+						((pathNodeToExclude.screenX != currentScreen.screenX) || (pathNodeToExclude.screenY != currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT)) &&
 						IsAPuzzleScreenExit(mLevel[x, currentScreen.screenY + ARDUBOY_PUZZLE_SCREEN_HEIGHT - 1]))
 					{
 						previousScreen.screenX = currentScreen.screenX;
@@ -845,6 +881,7 @@ namespace RickArdurousEditor
 					{
 						if ((currentScreen.screenX > 0) &&
 							(currentScreen.screenX - ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.screenX) &&
+							((pathNodeToExclude.screenX != currentScreen.screenX - ARDUBOY_PUZZLE_SCREEN_WIDTH) || (pathNodeToExclude.screenY != currentScreen.screenY)) &&
 							IsAPuzzleScreenExit(mLevel[currentScreen.screenX, y]))
 						{
 							previousScreen.screenX = currentScreen.screenX;
@@ -855,6 +892,7 @@ namespace RickArdurousEditor
 						}
 						if ((currentScreen.screenX < LEVEL_WIDTH - ARDUBOY_PUZZLE_SCREEN_WIDTH) &&
 							(currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH != previousScreen.screenX) &&
+							((pathNodeToExclude.screenX != currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH) || (pathNodeToExclude.screenY != currentScreen.screenY)) &&
 							IsAPuzzleScreenExit(mLevel[currentScreen.screenX + ARDUBOY_PUZZLE_SCREEN_WIDTH - 1, y]))
 						{
 							previousScreen.screenX = currentScreen.screenX;
@@ -868,11 +906,14 @@ namespace RickArdurousEditor
 
 				// if we didn't found any exit, and didn't reach the last screen, we are in a dead end!
 				if (!isExitFound && ((currentScreen.screenX != endScreenX) || (currentScreen.screenY != endScreenY)))
-					throw new MapSaveException(Properties.Resources.ErrorDeadEndNotExitFound, MainForm.LogLevel.ERROR, currentScreen.screenX.ToString(), currentScreen.screenY.ToString());
+					return false;
 			}
 
 			// add the last screen
 			mPuzzlePath.Add(new PuzzlePathNode(currentScreenId, currentScreen.screenX, currentScreen.screenY));
+
+			// we found a path, so return true
+			return true;
 		}
 
 		#endregion
