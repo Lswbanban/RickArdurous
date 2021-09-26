@@ -97,7 +97,7 @@ void MainMenu::DrawMainMenu()
 	arduboy.fillRect(1, 1, 84, 11, WHITE);
 	unsigned char title[] = "Rick Ardurous";
 	for (unsigned char i = 0; i < sizeof(title) - 1; ++i)
-		arduboy.drawChar(5 + (i*6), 3, title[i], BLACK, WHITE, 1);
+		arduboy.drawChar(5 + (i*6), 3, title[i], BLACK, WHITE);
 
 	// draw some stalactites
 	unsigned char x[] = {18, 42, 75, 93, 98 };
@@ -193,12 +193,16 @@ void MainMenu::UpdateHelpScreen()
 void MainMenu::DrawHelpScreen()
 {
 	arduboy.setCursor(35, 0);
-	arduboy.println("Controls");
+	arduboy.print("Controls");
 	arduboy.fillRect(33, 10, 51, 2, WHITE);
-	arduboy.setCursor(0, 20);
-	arduboy.println("         +: Move");
-	arduboy.println("         A: Jump");
-	arduboy.println("         B: Fire");
-	arduboy.println("  Down + B: Dynamite");
-	arduboy.println("Down + <->: Crawl");
+	arduboy.setCursor(9, 20);
+	arduboy.print("+: Move");
+	arduboy.setCursor(9, 28);
+	arduboy.print("A: Jump");
+	arduboy.setCursor(9, 36);
+	arduboy.print("B: Fire");
+	arduboy.setCursor(2, 44);
+	arduboy.print("Down + B: Dynamite");
+	arduboy.setCursor(0, 52);
+	arduboy.print("Down + <->: Crawl");
 }
