@@ -138,6 +138,16 @@ namespace RickArdurousEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PuzzlePathIcon {
+            get {
+                object obj = ResourceManager.GetObject("PuzzlePathIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RespawnPointType {
             get {
                 object obj = ResourceManager.GetObject("RespawnPointType", resourceCulture);

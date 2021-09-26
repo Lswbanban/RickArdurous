@@ -96,5 +96,8 @@
   <ItemGroup>
     <None Include="Resources\RespawnPointType.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PuzzlePathIcon.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

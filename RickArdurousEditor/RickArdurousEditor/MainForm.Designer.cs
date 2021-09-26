@@ -42,15 +42,15 @@
 			this.splitContainerMapAndLogWindow = new System.Windows.Forms.SplitContainer();
 			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
 			this.textBoxLog = new System.Windows.Forms.TextBox();
+			this.contextMenuStripLogWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.toolStripMenuItemClear = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemCopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.contextMenuStripLogWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.toolStripMenuItemClear = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemCopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -67,8 +67,8 @@
 			this.splitContainerMapAndLogWindow.Panel2.SuspendLayout();
 			this.splitContainerMapAndLogWindow.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).BeginInit();
-			this.MenuStripMain.SuspendLayout();
 			this.contextMenuStripLogWindow.SuspendLayout();
+			this.MenuStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ToolBar
@@ -117,7 +117,7 @@
 			// 
 			this.toolStripButtonShowPuzzlePath.CheckOnClick = true;
 			this.toolStripButtonShowPuzzlePath.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonShowPuzzlePath.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowPuzzlePath.Image")));
+			this.toolStripButtonShowPuzzlePath.Image = global::RickArdurousEditor.Properties.Resources.PuzzlePathIcon;
 			this.toolStripButtonShowPuzzlePath.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonShowPuzzlePath.Name = "toolStripButtonShowPuzzlePath";
 			this.toolStripButtonShowPuzzlePath.Size = new System.Drawing.Size(23, 22);
@@ -228,6 +228,29 @@
 			this.textBoxLog.Size = new System.Drawing.Size(697, 85);
 			this.textBoxLog.TabIndex = 0;
 			// 
+			// contextMenuStripLogWindow
+			// 
+			this.contextMenuStripLogWindow.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemClear,
+            this.toolStripMenuItemCopyToClipboard});
+			this.contextMenuStripLogWindow.Name = "contextMenuStripLogWindow";
+			this.contextMenuStripLogWindow.Size = new System.Drawing.Size(172, 48);
+			this.contextMenuStripLogWindow.Text = "Clear";
+			// 
+			// toolStripMenuItemClear
+			// 
+			this.toolStripMenuItemClear.Name = "toolStripMenuItemClear";
+			this.toolStripMenuItemClear.Size = new System.Drawing.Size(171, 22);
+			this.toolStripMenuItemClear.Text = "Clear";
+			this.toolStripMenuItemClear.Click += new System.EventHandler(this.toolStripMenuItemClear_Click);
+			// 
+			// toolStripMenuItemCopyToClipboard
+			// 
+			this.toolStripMenuItemCopyToClipboard.Name = "toolStripMenuItemCopyToClipboard";
+			this.toolStripMenuItemCopyToClipboard.Size = new System.Drawing.Size(171, 22);
+			this.toolStripMenuItemCopyToClipboard.Text = "Copy to Clipboard";
+			this.toolStripMenuItemCopyToClipboard.Click += new System.EventHandler(this.toolStripMenuItemCopyToClipboard_Click);
+			// 
 			// MenuStripMain
 			// 
 			this.MenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -274,29 +297,6 @@
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// contextMenuStripLogWindow
-			// 
-			this.contextMenuStripLogWindow.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemClear,
-            this.toolStripMenuItemCopyToClipboard});
-			this.contextMenuStripLogWindow.Name = "contextMenuStripLogWindow";
-			this.contextMenuStripLogWindow.Size = new System.Drawing.Size(181, 70);
-			this.contextMenuStripLogWindow.Text = "Clear";
-			// 
-			// toolStripMenuItemClear
-			// 
-			this.toolStripMenuItemClear.Name = "toolStripMenuItemClear";
-			this.toolStripMenuItemClear.Size = new System.Drawing.Size(180, 22);
-			this.toolStripMenuItemClear.Text = "Clear";
-			this.toolStripMenuItemClear.Click += new System.EventHandler(this.toolStripMenuItemClear_Click);
-			// 
-			// toolStripMenuItemCopyToClipboard
-			// 
-			this.toolStripMenuItemCopyToClipboard.Name = "toolStripMenuItemCopyToClipboard";
-			this.toolStripMenuItemCopyToClipboard.Size = new System.Drawing.Size(180, 22);
-			this.toolStripMenuItemCopyToClipboard.Text = "Copy to Clipboard";
-			this.toolStripMenuItemCopyToClipboard.Click += new System.EventHandler(this.toolStripMenuItemCopyToClipboard_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -329,9 +329,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMapAndLogWindow)).EndInit();
 			this.splitContainerMapAndLogWindow.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
+			this.contextMenuStripLogWindow.ResumeLayout(false);
 			this.MenuStripMain.ResumeLayout(false);
 			this.MenuStripMain.PerformLayout();
-			this.contextMenuStripLogWindow.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
