@@ -25,8 +25,6 @@
 // eeprom settings above are neded for audio
 #include "Arduboy_audio.h"
 
-#define PIXEL_SAFE_MODE
-
 // compare Vcc to 1.1 bandgap
 #define ADC_VOLTAGE (_BV(REFS0) | _BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1))
 // compare temperature to 2.5 internal reference and _BV(MUX5)
@@ -54,18 +52,18 @@ public:
   void display();
 
   /// Sets a single pixel on the screen buffer to white or black.
-  void drawPixel(int x, int y, uint8_t color);
+  void drawPixel(uint8_t x, uint8_t y, uint8_t color);
 
   uint8_t getPixel(uint8_t x, uint8_t y);
 
   /// Draws vertical line.
-  void drawFastVLine(int16_t x, int16_t y, uint8_t h, uint8_t color);
+  void drawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint8_t color);
 
   /// Draws a horizontal line.
-  void drawFastHLine(int16_t x, int16_t y, uint8_t w, uint8_t color);
+  void drawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint8_t color);
 
   /// Draws a filled-in rectangle.
-  void fillRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color);
+  void fillRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t color);
 
   /// Fills the screen buffer with white or black.
   void fillScreen(uint8_t color);
@@ -88,9 +86,6 @@ public:
    * events
    */
   void initRandomSeed();
-
-  /// Swap the references of two pointers.
-  void swap(int16_t& a, int16_t& b);
 
   ArduboyTunes tunes;
   ArduboyAudio audio;

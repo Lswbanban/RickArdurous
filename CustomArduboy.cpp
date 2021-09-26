@@ -112,23 +112,16 @@ uint16_t Arduboy::rawADC(byte adc_bits)
 /* Graphics */
 
 
-void Arduboy::drawPixel(int x, int y, uint8_t color)
+void Arduboy::drawPixel(uint8_t x, uint8_t y, uint8_t color)
 {
-  #ifdef PIXEL_SAFE_MODE
-  if (x < 0 || x > (WIDTH-1) || y < 0 || y > (HEIGHT-1))
-  {
-    return;
-  }
-  #endif
-
-  uint8_t row = (uint8_t)y / 8;
+  uint8_t row = y / 8;
   if (color)
   {
-    sBuffer[(row*WIDTH) + (uint8_t)x] |=   _BV((uint8_t)y % 8);
+    sBuffer[(row*WIDTH) + x] |=   _BV(y % 8);
   }
   else
   {
-    sBuffer[(row*WIDTH) + (uint8_t)x] &= ~ _BV((uint8_t)y % 8);
+    sBuffer[(row*WIDTH) + x] &= ~ _BV(y % 8);
   }
 }
 
@@ -140,30 +133,30 @@ uint8_t Arduboy::getPixel(uint8_t x, uint8_t y)
 }
 
 void Arduboy::drawFastVLine
-(int16_t x, int16_t y, uint8_t h, uint8_t color)
+(uint8_t x, uint8_t y, uint8_t h, uint8_t color)
 {
-  int end = y+h;
-  for (int a = max(0,y); a < min(end,HEIGHT); a++)
+  uint8_t end = y+h;
+  for (uint8_t a = y; a < end; a++)
   {
     drawPixel(x,a,color);
   }
 }
 
 void Arduboy::drawFastHLine
-(int16_t x, int16_t y, uint8_t w, uint8_t color)
+(uint8_t x, uint8_t y, uint8_t w, uint8_t color)
 {
-  int end = x+w;
-  for (int a = max(0,x); a < min(end,WIDTH); a++)
+  uint8_t end = x+w;
+  for (uint8_t a = x; a < end; a++)
   {
     drawPixel(a,y,color);
   }
 }
 
 void Arduboy::fillRect
-(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color)
+(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t color)
 {
   // stupidest version - update in subclasses if desired!
-  for (int16_t i=x; i<x+w; i++)
+  for (uint8_t i=x; i<x+w; i++)
   {
     drawFastVLine(i, y, h, color);
   }
@@ -259,13 +252,6 @@ unsigned char* Arduboy::getBuffer()
   return sBuffer;
 }
 
-void Arduboy::swap(int16_t& a, int16_t& b)
-{
-  int temp = a;
-  a = b;
-  b = temp;
-}
-  
 unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color, bool mirrorX)
 {
 	// no need to draw at all if we're offscreen
