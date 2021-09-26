@@ -62,16 +62,16 @@ BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
 Statuette statuette1;
 Graal graal1;
-//Spike spike1;
-//Spike spike2;
-//Spike spike3;
-//Spike spike4;
-//Spike spike5;
-//Spike spike6;
+Spike spike1;
+Spike spike2;
+Spike spike3;
+Spike spike4;
+Spike spike5;
+Spike spike6;
 Enemy enemy1;
 Enemy enemy2;
-//Enemy enemy3;
-//Enemy enemy4;
+Enemy enemy3;
+Enemy enemy4;
 Stalagmite stalagmite1;
 Stalagmite stalagmite2;
 Stalactite stalactite1;
@@ -80,7 +80,7 @@ ArrowLauncher arrowLauncher2;
 ArrowLauncher arrowLauncher3;
 ArrowLauncher arrowLauncher4;
 DestroyableBlock destBlock1;
-//Boulder boulder1;
+Boulder boulder1;
 
 void InitScreen0(bool shouldRespawn)
 {
@@ -94,7 +94,31 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(155, 234);
+	MapManager::MemorizeCheckPoint(109, 139);
+
+	// init all the item of the current puzzle screen
+	stalagmite1.Init(34, 176, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite2.Init(48, 176, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette1.Init(112, 176, Item::PropertyFlags::NONE, shouldRespawn);
+	destBlock1.Init(72, 144, Item::PropertyFlags::NONE, shouldRespawn);
+	dynamiteCrate1.Init(90, 144, Item::PropertyFlags::NONE, shouldRespawn);
+}
+
+void InitScreen2(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
+
+	// init all the item of the current puzzle screen
+	enemy1.Init(39, 195, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy2.Init(70, 210, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy3.Init(80, 234, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy4.Init(27, 218, Item::PropertyFlags::NONE, shouldRespawn);
+	bulletCrate1.Init(110, 240, Item::PropertyFlags::NONE, shouldRespawn);
+}
+
+void InitScreen3(bool shouldRespawn)
+{
+	// Add a checkpoint if we need to
 	MapManager::MemorizeCheckPoint(131, 234);
 
 	// init all the item of the current puzzle screen
@@ -105,20 +129,20 @@ void InitScreen1(bool shouldRespawn)
 	enemy2.Init(213, 244, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
 
-void InitScreen2(bool shouldRespawn)
+void InitScreen4(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
 	MapManager::MemorizeCheckPoint(257, 203);
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(302, 200, Item::PropertyFlags::NONE, shouldRespawn);
-	arrowLauncher1.Init(280, 199, Item::PropertyFlags::NONE, 32);
-	arrowLauncher2.Init(372, 232, Item::PropertyFlags::MIRROR_X, 112);
-	arrowLauncher3.Init(320, 212, Item::PropertyFlags::NONE, 56);
-	arrowLauncher4.Init(372, 192, Item::PropertyFlags::MIRROR_X, 56);
+	arrowLauncher1.Init(280, 199, Item::PropertyFlags::NONE, 80);
+	arrowLauncher2.Init(372, 232, Item::PropertyFlags::MIRROR_X, 80);
+	arrowLauncher3.Init(320, 212, Item::PropertyFlags::NONE, 80);
+	arrowLauncher4.Init(372, 192, Item::PropertyFlags::MIRROR_X, 80);
 }
 
-void InitScreen3(bool shouldRespawn)
+void InitScreen5(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
 
@@ -128,7 +152,7 @@ void InitScreen3(bool shouldRespawn)
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, 
+	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4, &InitScreen5, 
 };
 
 
@@ -141,8 +165,8 @@ void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenId
 	graal1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	enemy1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	enemy2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
-//	enemy3.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
-//	enemy4.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	enemy3.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
+	enemy4.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalagmite2.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
 	stalactite1.SaveAndLoadAliveStatus(currentScreenIdToSave, newScreenIdToLoad);
@@ -152,20 +176,10 @@ void MapManager::SaveAndLoadAliveStatusForAllItems(unsigned char currentScreenId
 // The following items are not used in the game, but they are written here,
 // in order for the Editor to reload them.
 /*
-	stalagmite1.Init(34, 176, Item::PropertyFlags::NONE, shouldRespawn);
-	stalagmite1.Init(48, 176, Item::PropertyFlags::NONE, shouldRespawn);
 	stalagmite1.Init(193, 112, Item::PropertyFlags::NONE, shouldRespawn);
 	stalagmite1.Init(185, 112, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(112, 176, Item::PropertyFlags::NONE, shouldRespawn);
 	statuette1.Init(235, 80, Item::PropertyFlags::NONE, shouldRespawn);
 	statuette1.Init(190, 160, Item::PropertyFlags::NONE, shouldRespawn);
-	destBlock1.Init(72, 144, Item::PropertyFlags::NONE, shouldRespawn);
-	dynamiteCrate1.Init(90, 144, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(39, 195, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(70, 210, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(80, 234, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(27, 218, Item::PropertyFlags::NONE, shouldRespawn);
-	bulletCrate1.Init(110, 240, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(161, 130, Item::PropertyFlags::SPECIAL_2, shouldRespawn);
 	boulder1.Init(91, 68, Item::PropertyFlags::NONE);
 	spike1.Init(216, 165, Item::PropertyFlags::MIRROR_X);
