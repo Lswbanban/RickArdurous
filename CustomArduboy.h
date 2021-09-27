@@ -22,6 +22,8 @@
 // we reserve the first 16 byte of EEPROM for system use
 #define EEPROM_STORAGE_SPACE_START 16 // and onward
 
+//#define PROFILING
+
 // eeprom settings above are neded for audio
 #include "Arduboy_audio.h"
 
@@ -90,7 +92,6 @@ public:
   ArduboyTunes tunes;
   ArduboyAudio audio;
 
-  void setFrameRate(uint8_t rate);
   bool nextFrame();
   bool everyXFrames(uint8_t frames);
   
@@ -100,15 +101,19 @@ public:
    * frames.  This number can be higher than 100 if your app is rendering
    * really slowly.
    */
+#ifdef PROFILING
   int cpuLoad();
-  
-  uint8_t frameRate;
+#endif
+
+  static constexpr uint8_t eachFrameMillis = 16; // for a frame rate of 60 = 1000/60;
   uint16_t frameCount;
-  uint8_t eachFrameMillis;
   long lastFrameStart;
   long nextFrameStart;
   bool post_render;
+
+#ifdef PROFILING
   uint8_t lastFrameDurationMs;
+#endif
 
   /// useful for getting raw approximate voltage values
   uint16_t rawADC(byte adc_bits);

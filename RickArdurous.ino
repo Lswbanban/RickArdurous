@@ -12,12 +12,13 @@ CustomArduboy arduboy;
 
 void setup()
 {
+#ifdef PROFILING
 	// init the debug serial communication
-//	Serial.begin(9600);
-//	while(!Serial);
-  
+	Serial.begin(9600);
+	while(!Serial);
+#endif
+
 	arduboy.beginNoLogo();
-//	arduboy.begin();
 	arduboy.clear();
 	
 	// init the random generator
@@ -32,6 +33,10 @@ void loop()
 	// early exit if the frame is not ready
 	if (!arduboy.nextFrame())
 		return;
+
+#ifdef PROFILING
+	Serial.println(arduboy.cpuLoad());
+#endif
 
 	// clear the screen
 	arduboy.clear();

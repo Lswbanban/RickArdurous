@@ -9,7 +9,6 @@
 Arduboy::Arduboy()
 {
   // frame management
-  setFrameRate(60);
   frameCount = 0;
   nextFrameStart = 0;
   post_render = false;
@@ -37,12 +36,6 @@ void Arduboy::beginNoLogo()
 
 /* Frame management */
 
-void Arduboy::setFrameRate(uint8_t rate)
-{
-  frameRate = rate;
-  eachFrameMillis = 1000/rate;
-}
-
 bool Arduboy::everyXFrames(uint8_t frames)
 {
   return frameCount % frames == 0;
@@ -54,14 +47,18 @@ bool Arduboy::nextFrame()
   uint8_t remaining;
 
   // post render
-  if (post_render) {
+  if (post_render)
+  {
+	#ifdef PROFILING
     lastFrameDurationMs = now - lastFrameStart;
+	#endif
     frameCount++;
     post_render = false;
   }
 
   // if it's not time for the next frame yet
-  if (now < nextFrameStart) {
+  if (now < nextFrameStart)
+  {
     remaining = nextFrameStart - now;
     // if we have more than 1ms to spare, lets sleep
     // we should be woken up by timer0 every 1ms, so this should be ok
@@ -82,10 +79,12 @@ bool Arduboy::nextFrame()
   return post_render;
 }
 
+#ifdef PROFILING
 int Arduboy::cpuLoad()
 {
   return lastFrameDurationMs*100 / eachFrameMillis;
 }
+#endif
 
 void Arduboy::initRandomSeed()
 {
