@@ -29,24 +29,8 @@ public:
   /// Assign a timer to an output pin.
   void initChannel(byte pin, byte chan);
 
-  /// Start playing a polyphonic score.
-  void playScore(const byte *score);
-
-  /// Stop playing the score.
-  void stopScore();
-
-  /// Delay in milliseconds.
-  void delay(unsigned msec);
-
   /// Stop all timers.
   void closeChannels();
-
-  bool playing();
-  void tone(unsigned int frequency, unsigned long duration);
-
-  // called via interrupt
-  void static step();
-  void static soundOutput();
 
   void static playNote (byte chan, byte note);
   void static stopNote (byte chan);

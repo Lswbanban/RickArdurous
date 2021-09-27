@@ -7,14 +7,6 @@ volatile byte _tunes_timer1_pin_mask;
 volatile byte *_tunes_timer3_pin_port;
 volatile byte _tunes_timer3_pin_mask;
 byte _tune_pins[AVAILABLE_TIMERS];
-volatile boolean tune_playing; // is the score still playing?
-volatile unsigned wait_timer_frequency2;       /* its current frequency */
-volatile boolean wait_timer_playing = false;   /* is it currently playing a note? */
-volatile unsigned long wait_toggle_count;      /* countdown score waits */
-
-// pointers to your musical score and your position in said score
-volatile const byte *score_start = 0;
-volatile const byte *score_cursor = 0;
 
 #define LOWEST_NOTE 52
 #define FIRST_NOTE_IN_INT_ARRAY 52
@@ -60,7 +52,6 @@ void ArduboyAudio::off()
 
 void ArduboyAudio::begin()
 {
-  tune_playing = false;
   on();
 }
 
@@ -138,8 +129,6 @@ void ArduboyTunes::playNote(byte chan, byte note)
     case 3:
       TCCR3B = (TCCR3B & 0b11111000) | prescalar_bits;
       OCR3A = ocr;
-      wait_timer_frequency2 = frequency2;  // for "tune_delay" function
-      wait_timer_playing = true;
       bitWrite(TIMSK3, OCIE3A, 1);
       break;
   }
@@ -155,65 +144,8 @@ void ArduboyTunes::stopNote(byte chan)
       *_tunes_timer1_pin_port &= ~(_tunes_timer1_pin_mask);   // keep pin low after stop
       break;
     case 3:
-      wait_timer_playing = false;
       *_tunes_timer3_pin_port &= ~(_tunes_timer3_pin_mask);   // keep pin low after stop
       break;
-  }
-}
-
-void ArduboyTunes::playScore(const byte *score)
-{
-  score_start = score;
-  score_cursor = score_start;
-  step();  /* execute initial commands */
-  tune_playing = true;  /* release the interrupt routine */
-}
-
-void ArduboyTunes::stopScore (void)
-{
-  for (uint8_t i = 0; i < AVAILABLE_TIMERS; i++)
-    stopNote(i);
-  tune_playing = false;
-}
-
-bool ArduboyTunes::playing()
-{
-  return tune_playing;
-}
-
-/* Do score commands until a "wait" is found, or the score is stopped.
-This is called initially from tune_playcore, but then is called
-from the interrupt routine when waits expire.
-*/
-/* if CMD < 0x80, then the other 7 bits and the next byte are a 15-bit big-endian number of msec to wait */
-void ArduboyTunes::step()
-{
-  byte command, opcode, chan;
-  unsigned duration;
-
-  while (1) {
-    command = pgm_read_byte(score_cursor++);
-    opcode = command & 0xf0;
-    chan = command & 0x0f;
-    if (opcode == TUNE_OP_STOPNOTE) { /* stop note */
-      stopNote(chan);
-    }
-    else if (opcode == TUNE_OP_PLAYNOTE) { /* play note */
-      playNote(chan, pgm_read_byte(score_cursor++));
-    }
-    else if (opcode == TUNE_OP_RESTART) { /* restart score */
-      score_cursor = score_start;
-    }
-    else if (opcode == TUNE_OP_STOP) { /* stop score */
-      tune_playing = false;
-      break;
-    }
-    else if (opcode < 0x80) { /* wait count in msec. */
-      duration = ((unsigned)command << 8) | (pgm_read_byte(score_cursor++));
-      wait_toggle_count = ((unsigned long) wait_timer_frequency2 * duration + 500) / 1000;
-      if (wait_toggle_count == 0) wait_toggle_count = 1;
-      break;
-    }
   }
 }
 
@@ -232,18 +164,6 @@ void ArduboyTunes::closeChannels(void)
     }
     digitalWrite(_tune_pins[chan], 0);
   }
-  tune_playing = false;
-}
-
-void ArduboyTunes::soundOutput()
-{
-  if (wait_timer_playing) { // toggle the pin if we're sounding a note
-    *_tunes_timer3_pin_port ^= _tunes_timer3_pin_mask;
-  }
-  if (tune_playing && wait_toggle_count && --wait_toggle_count == 0) {
-    // end of a score wait, so execute more score commands
-    ArduboyTunes::step();  // execute commands
-  }
 }
 
 // TIMER 1
@@ -255,8 +175,5 @@ ISR(TIMER1_COMPA_vect)
 // TIMER 3
 ISR(TIMER3_COMPA_vect)
 {
-  // Timer 3 is the one assigned first, so we keep it running always
-  // and use it to time score waits, whether or not it is playing a note.
-  ArduboyTunes::soundOutput();
 }
 
