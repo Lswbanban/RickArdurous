@@ -204,6 +204,9 @@ void Arduboy::drawChar
 {
   boolean draw_background = bg != color;
 
+	// the first 32 char as been removed from the font array
+	c -= 32;
+
   for (int8_t i=0; i<6; i++ )
   {
     uint8_t line;
