@@ -94,10 +94,10 @@ void MainMenu::DrawMainMenu()
 				SpriteData::Walls[1 + (i % 2)], SpriteData::LEVEL_SPRITE_WIDTH, SpriteData::LEVEL_SPRITE_HEIGHT, WHITE, (i % 3));
 
 	// draw the title in black over white
-	arduboy.fillRect(1, 1, 84, 11, WHITE);
+	arduboy.fillRect(24, 1, 84, 11, WHITE);
 	unsigned char title[] = "Rick Ardurous";
 	for (unsigned char i = 0; i < sizeof(title) - 1; ++i)
-		arduboy.drawChar(5 + (i*6), 3, title[i], BLACK, WHITE);
+		arduboy.drawChar(28 + (i*6), 3, title[i], BLACK, WHITE);
 
 	// draw some stalactites
 	unsigned char x[] = {18, 42, 75, 93, 98 };
@@ -105,16 +105,19 @@ void MainMenu::DrawMainMenu()
 	for (unsigned char i = 0; i < sizeof(x); ++i)
 		arduboy.drawBitmapExtended(x[i], y[i], SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
 
+	// draw the main character
+	arduboy.drawBitmapExtended(99, 40, SpriteData::Rick[SpriteData::RickAnimFrameId::IDLE], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, true);
+	
 	// draw the menu
 	unsigned char menuY[] = { 30, 41, 52 };
 	arduboy.setCursor(MENU_X, menuY[0]);
 	arduboy.print("Play");
 	arduboy.setCursor(MENU_X, menuY[1]);
-	arduboy.print("Sound ");
+	arduboy.print("Sound O");
 	if (FXManager::IsSoundOn)
-		arduboy.print("On");
+		arduboy.print("n");
 	else
-		arduboy.print("Off");
+		arduboy.print("ff");
 	arduboy.setCursor(MENU_X, menuY[2]);
 	arduboy.print("Controls");
 	

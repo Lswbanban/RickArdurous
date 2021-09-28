@@ -9,6 +9,8 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 # To do
 - Editor
 	- add undo/redo feature
+- Game Engine Optim
+	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 - Tutorial
 	- 2 crates
 - Sound/LED FX

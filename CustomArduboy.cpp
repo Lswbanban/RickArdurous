@@ -254,14 +254,14 @@ unsigned char* Arduboy::getBuffer()
   return sBuffer;
 }
 
-unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color, bool mirrorX)
+unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color, bool mirrorX)
 {
 	// no need to draw at all if we're offscreen
-	if (x+w < 0 || x > WIDTH-1 || y+h < 0 || y > HEIGHT-1)
+	if (x+w < 0 /*|| x > WIDTH-1*/ || y+h < 0 || y > HEIGHT-1)
 		return 0;
 
 	unsigned char yOffset = abs(y) % 8;
-	int sRow = y / 8; // cannot use a ">> 3" to preserve the sign, in case y is negative (above the top of the screen)
+	char sRow = y / 8; // cannot use a ">> 3" to preserve the sign, in case y is negative (above the top of the screen)
 	if (y < 0)
 	{
 		sRow--;
@@ -272,20 +272,20 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
 	if (h%8 != 0)
 		rows++;
 	// compute the start and end X (clamp if outside the screen)
-	int startX = (x<0) ? -x : 0;
-	int endX = (x+w > (WIDTH-1)) ? WIDTH-x : w;
+	char startX = (x<0) ? -x : 0;
+	char endX = (WIDTH-x < w) ? WIDTH-x : w;
 	// a flag to check if there is white pixels under the drawn pixels of the bitmap
 	unsigned int collisionDetected = 0;
 	// iterate on the rows
 	for (unsigned char a = 0; a < rows; ++a)
 	{
-		int bRow = sRow + a;
+		char bRow = sRow + a;
 		if (bRow > (HEIGHT/8)-1)
 			break;
 		if (bRow > -2)
 		{
 			// inverse the horizontal iteration inside the bitmap if we are mirrored on x
-			int iCol = startX;
+			char iCol = startX;
 			char iColDirection = 1;
 			if (mirrorX)
 			{
@@ -294,9 +294,9 @@ unsigned int CustomArduboy::drawBitmapExtended(int16_t x, int16_t y, const uint8
 			}
 			int bRowShift = bRow*WIDTH;
 			int nextBRowShift = (bRow+1)*WIDTH;
-			for (int xCol = startX; xCol < endX; xCol++, iCol += iColDirection)
+			for (char xCol = startX; xCol < endX; xCol++, iCol += iColDirection)
 			{
-				int currentX = x + xCol;
+				char currentX = x + xCol;
 				uint8_t unshiftedByteToWrite = pgm_read_byte(bitmap+(a*w)+iCol);
 				if (bRow >= 0)
 				{

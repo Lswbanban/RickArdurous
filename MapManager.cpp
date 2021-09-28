@@ -123,9 +123,6 @@ void MapManager::AddItem(Item * item)
 		// add the item to the last position of the array
 		ItemsToUpdate[ItemsToUpdateCount++] = item;
 	}
-	
-	//Serial.print("Item Added, Count:");
-	//Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(unsigned char index)
@@ -134,9 +131,6 @@ void MapManager::RemoveItem(unsigned char index)
 	ItemsToUpdateCount--;
 	// if the array is not empty, move the last item to the empty place
 	ItemsToUpdate[index] = ItemsToUpdate[ItemsToUpdateCount];
-	
-	//Serial.print("Item Removed, Count:");
-	//Serial.println(ItemsToUpdateCount);
 }
 
 void MapManager::RemoveItem(Item * item)

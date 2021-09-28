@@ -87,8 +87,8 @@ bool Boulder::Update(UpdateStep step)
 void Boulder::Draw()
 {
 	// get the coordinate on screen of the boulder
-	int xOnScreen = MapManager::GetXOnScreen(X);
-	int yOnScreen = MapManager::GetYOnScreen(Y);
+	char xOnScreen = MapManager::GetXOnScreen(X);
+	char yOnScreen = MapManager::GetYOnScreen(Y);
 	// draw the two halves of it
 	arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::Boulder, SpriteData::BOULDER_SPRITE_WIDTH, SpriteData::BOULDER_SPRITE_HEIGHT, WHITE, false);
 	arduboy.drawBitmapExtended(xOnScreen + SpriteData::BOULDER_SPRITE_WIDTH, yOnScreen, SpriteData::Boulder, SpriteData::BOULDER_SPRITE_WIDTH, SpriteData::BOULDER_SPRITE_HEIGHT, WHITE, true);
