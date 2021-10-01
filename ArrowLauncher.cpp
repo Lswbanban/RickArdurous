@@ -44,10 +44,8 @@ bool ArrowLauncher::Update(UpdateStep step)
 		
 		case UpdateStep::DRAW_STATIC_COLLISION:
 			{
-				bool isShootingTowardLeft = IsPropertySet(Item::PropertyFlags::MIRROR_X);
-				int drawX = isShootingTowardLeft ? X - 3: X - 1;
 				// draw the statue that launch the arrow
-				arduboy.drawBitmapExtended(MapManager::GetXOnScreen(drawX), MapManager::GetYOnScreen(Y - 6), SpriteData::ArrowLauncherFace, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_WIDTH, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_HEIGHT, WHITE, isShootingTowardLeft);
+				arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::ArrowLauncherFace, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_WIDTH, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_HEIGHT, WHITE, IsPropertySet(Item::PropertyFlags::MIRROR_X));
 			}
 			break;
 			
@@ -70,22 +68,27 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 	{
 		int minX;
 		int maxX;
+		int throwingX;
 		bool isShootingTowardLeft = IsPropertySet(Item::PropertyFlags::MIRROR_X);
 		if (isShootingTowardLeft)
 		{
 			minX = X - DetectionWidth;
 			maxX = X;
+			throwingX = X - 8;
 		}
 		else
 		{
-			minX = X;
+			minX = X + 1;
 			maxX = X + DetectionWidth;
+			throwingX = X + 1;
 		}
-
+		// compute my triggering Y
+		int throwingY = Y + 6;
+		
 		// check if the main character is inside the detection range
-		if (isAlive && (Y > trigererY) && (Y < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
+		if (isAlive && (throwingY > trigererY) && (throwingY < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
 		{
-			Arrow.Fire(X, Y, isShootingTowardLeft);
+			Arrow.Fire(throwingX, throwingY, isShootingTowardLeft);
 			FXManager::StartFXCommand(FXManager::BufferId::GAME, {1, 0, 0, 1, 0, 66, 2, 8});
 			LastLaunchTime = 0;
 		}
