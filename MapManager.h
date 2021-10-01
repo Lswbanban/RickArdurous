@@ -16,8 +16,8 @@ namespace MapManager
 	void RemoveItem(Item * item);
 	
 	// function to get local coordinates
-	char GetXOnScreen(int worldX);
-	char GetYOnScreen(int worldY);
+	char GetXOnScreen(int xWorld);
+	char GetYOnScreen(int yWorld);
 	bool IsOnScreen(int xWorld, int yWorld, unsigned char spriteWidth, unsigned char spriteHeight);
 	
 	// Check if there's a solid sprite (static collision) or ladder at the specified world coodinates

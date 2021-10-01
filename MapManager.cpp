@@ -243,14 +243,14 @@ void MapManager::Update()
 	AnimateShutterTransition();
 }
 
-char MapManager::GetXOnScreen(int worldX)
+char MapManager::GetXOnScreen(int xWorld)
 {
-	return worldX - ((int)CameraX.Current * SpriteData::LEVEL_SPRITE_WIDTH) - CameraX.Transition;
+	return xWorld - ((int)CameraX.Current * SpriteData::LEVEL_SPRITE_WIDTH) - CameraX.Transition;
 }
 
-char MapManager::GetYOnScreen(int worldY)
+char MapManager::GetYOnScreen(int yWorld)
 {
-	return worldY - ((int)CameraY.Current * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraY.Transition + CAMERA_VERTICAL_SHIFT;
+	return yWorld - ((int)CameraY.Current * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraY.Transition + CAMERA_VERTICAL_SHIFT;
 }
 
 bool MapManager::IsOnScreen(int xWorld, int yWorld, unsigned char spriteWidth, unsigned char spriteHeight)
@@ -315,9 +315,9 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 	int endLineIndex = pgm_read_word(&(LevelLineIndex[yMap + 1]));
 	
 	// get the index of the sprite in the one dimentionnal array
-	int targetSpriteIndex = xMap + 1;
+	unsigned char targetSpriteIndex = xMap + 1;
 	// iterate through the array to find the correct index
-	int spriteIndex = 0;
+	unsigned char spriteIndex = 0;
 	bool shouldReadEmptySpaceCount = false;
 	for (int i = startLineIndex; i < endLineIndex; ++i)
 	{
@@ -445,14 +445,6 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 		LastCheckPointPuzzleScreenEdgeCoordY = LastPuzzleScreenEdgeCoordY;
 		WasLastCheckPointLastTransitionHorizontal = WasLastTransitionHorizontal;
 	}
-	//Serial.print("memo checkpoint:");
-	//Serial.println(CurrentPuzzleScreenId);
-	//Serial.print("last checkpoint:");
-	//Serial.println(LastCheckPointPuzzleScreenId);
-	//Serial.print("last edge coord:");
-	//Serial.println(LastCheckPointPuzzleScreenEdgeCoord);
-	//Serial.print("last edge horiz:");
-	//Serial.println(IsLastCheckPointPuzzleScreenEdgeHorisontal);
 	
 	// respawn the player at the correct location
 	Rick::CheckPointRespawn(rickX, rickY);
@@ -460,9 +452,6 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 
 void MapManager::TeleportAndRespawnToLastCheckpoint()
 {
-	//Serial.print("Restart to screen id:");
-	//Serial.println(LastCheckPointPuzzleScreenId);
-	
 	// check if Rick still has some life
 	if (Rick::LifeCount == 0)
 	{
@@ -656,12 +645,6 @@ void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigne
 		if (isRickReachedANewPuzzle)
 			FarestPuzzleScreenIdReached = CurrentPuzzleScreenId;
 		
-		//Serial.println("---------------------");
-		//Serial.print("Switch to screen id:");
-		//Serial.println(CurrentPuzzleScreenId);
-		//Serial.print("Current screen dir:");
-		//Serial.println((int)PuzzleScreenMoveDirection);
-
 		// init the items of the new puzzle screen
 		Init(isRickReachedANewPuzzle);
 	}
@@ -683,7 +666,7 @@ void MapManager::AnimateCameraTransition()
 	if (Rick::IsAlive())
 	{
 		// Check if we should start a camera transition (if the main character exit the screen)
-		// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking if equivalent to the computation
+		// because NB_VERTICAL_SPRITE_PER_SCREEN=8 then the masking is equivalent to the computation
 		int screenPuzzleY = CameraY.Current & 0xF8; // i.e. (CameraY.Current / NB_VERTICAL_SPRITE_PER_SCREEN) * NB_VERTICAL_SPRITE_PER_SCREEN
 		if (Rick::GetBottomForScreenTransition() <= (screenPuzzleY * SpriteData::LEVEL_SPRITE_HEIGHT))
 		{

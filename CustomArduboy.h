@@ -129,7 +129,7 @@ protected:
 };
 
 
-const uint8_t TRANSPARENT = 3;
+static constexpr uint8_t TRANSPARENT = 3;
 
 class CustomArduboy : public Arduboy
 {
