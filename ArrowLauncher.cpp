@@ -74,7 +74,7 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 		{
 			minX = X - DetectionWidth;
 			maxX = X;
-			throwingX = X - 8;
+			throwingX = X - ArrowBullet::ARROW_WIDTH;
 		}
 		else
 		{

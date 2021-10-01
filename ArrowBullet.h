@@ -6,6 +6,8 @@
 class ArrowBullet : public Item
 {
 public:
+	static constexpr int ARROW_WIDTH = 8;
+
 	ArrowBullet();
 	ArrowBullet(bool isArrow);
 	virtual bool Update(UpdateStep step);
@@ -16,7 +18,6 @@ private:
 	static constexpr int BULLET_SPEED = 4;
 	static constexpr int BULLET_WIDTH = 3;
 	static constexpr int ARROW_SPEED = 2;
-	static constexpr int ARROW_WIDTH = 8;
 	static constexpr int SPARKS_ANIM_SPEED = 3;
 	static constexpr int NO_PIXEL_FOUND = 60000; // special return value for SearchForPixelColorAlongBulletRay() when no color is found
 	
