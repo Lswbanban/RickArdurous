@@ -89,7 +89,7 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 		if (isAlive && (throwingY > trigererY) && (throwingY < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
 		{
 			Arrow.Fire(throwingX, throwingY, isShootingTowardLeft);
-			FXManager::StartFXCommand(FXManager::BufferId::GAME, {1, 0, 0, 1, 0, 66, 2, 8});
+			FXManager::StartFXCommand(FXManager::BufferId::GAME, {1, 1, 0, 0, 0, 66, 2, 8});
 			LastLaunchTime = 0;
 		}
 	}

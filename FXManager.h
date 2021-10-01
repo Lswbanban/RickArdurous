@@ -5,12 +5,12 @@ namespace FXManager
 {
 	struct FXCommand
 	{
-		unsigned int Red			:1;
-		unsigned int Green			:1;
-		unsigned int Blue			:1;
-		unsigned int OnDuration		:6;
-		unsigned int OffDuration	:7;
-		unsigned char BaseNote;		
+		unsigned char OnDuration	:6;
+		unsigned char Red			:1;
+		unsigned char Green			:1;
+		unsigned char Blue			:1;
+		unsigned char OffDuration	:7;
+		unsigned char BaseNote;
 		char NoteIncrement			:4; // increment can be negative
 		unsigned char RepeatTime	:4;
 	};

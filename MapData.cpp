@@ -49,8 +49,8 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(1,11),ID(11,0),ID(5,4),ID(5,0),ID(11,11),ID(11,11),ID(11,11),ID(11,0),ID(4,5),ID(6,11),ID(11,11),ID(11,6),ID(15,1),ID(13,15),ID(5,6),
 	ID(6,15),ID(11,14),ID(12,5),ID(6,8),ID(15,5),ID(6,15),ID(11,5),ID(15,4),ID(5,15),ID(1,13),ID(15,5),ID(5,0),
 	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(13,9),ID(9,5),ID(1,3),ID(14,2),ID(5,6),ID(5,15),ID(14,9),ID(9,5),ID(15,1),ID(12,12),ID(12,13),ID(15,2),ID(5,0),
-	ID(5,6),ID(15,5),ID(6,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,5),ID(15,4),ID(10,10),ID(6,15),ID(4,13),ID(15,2),ID(5,0),
-	ID(4,5),ID(15,5),ID(4,12),ID(12,12),ID(12,12),ID(0,5),ID(5,0),ID(15,2),ID(11,0),ID(1,5),ID(15,1),ID(13,15),ID(6,1),ID(6,12),ID(14,12),ID(12,6),ID(4,5),ID(15,4),ID(13,15),ID(2,6),
+	ID(5,6),ID(15,5),ID(5,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,5),ID(15,4),ID(10,10),ID(6,15),ID(4,13),ID(15,2),ID(5,0),
+	ID(4,5),ID(15,5),ID(5,12),ID(12,12),ID(12,12),ID(0,5),ID(5,0),ID(15,2),ID(11,0),ID(1,5),ID(15,1),ID(13,15),ID(6,1),ID(6,12),ID(14,12),ID(12,6),ID(4,5),ID(15,4),ID(13,15),ID(2,6),
 	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,7),ID(6,15),ID(5,0),ID(6,4),ID(5,3),ID(7,15),ID(4,8),ID(5,15),ID(1,13),ID(15,9),ID(13,15),ID(2,5),
 	ID(5,10),ID(10,15),ID(2,13),ID(15,12),ID(5,15),ID(10,7),ID(3,1),ID(5,15),ID(1,13),ID(15,9),ID(13,15),ID(1,4),ID(5,0),
 	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),
@@ -103,6 +103,7 @@ void InitScreen1(bool shouldRespawn)
 void InitScreen2(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
+	MapManager::MemorizeCheckPoint(132, 83);
 
 	// init all the item of the current puzzle screen
 	stalagmite1.Init(193, 112, Item::PropertyFlags::NONE, shouldRespawn);
@@ -113,6 +114,7 @@ void InitScreen2(bool shouldRespawn)
 void InitScreen3(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
+	MapManager::MemorizeCheckPoint(236, 131);
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(190, 160, Item::PropertyFlags::NONE, shouldRespawn);
@@ -140,6 +142,7 @@ void InitScreen4(bool shouldRespawn)
 void InitScreen5(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
+	MapManager::MemorizeCheckPoint(102, 195);
 
 	// init all the item of the current puzzle screen
 	enemy1.Init(39, 195, Item::PropertyFlags::NONE, shouldRespawn);
@@ -152,7 +155,7 @@ void InitScreen5(bool shouldRespawn)
 void InitScreen6(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(131, 234);
+	MapManager::MemorizeCheckPoint(132, 235);
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(166, 200, Item::PropertyFlags::NONE, shouldRespawn);

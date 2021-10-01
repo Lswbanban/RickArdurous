@@ -90,7 +90,7 @@ bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], uns
 		if (DoesRickPickMeUp(spriteWidth, spriteHeight))
 		{
 			ClearProperty(Item::PropertyFlags::ALIVE);
-			FXManager::StartFXCommand(FXManager::BufferId::GAME, {0, 1, 0, 2, 1, 78, 2, 3});
+			FXManager::StartFXCommand(FXManager::BufferId::GAME, {2, 0, 1, 0, 1, 78, 2, 3});
 			return true;
 		}
 		
