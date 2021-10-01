@@ -347,8 +347,8 @@ bool Enemy::UpdateDeath()
 
 int Enemy::Draw(unsigned char color)
 {
-	int xOnScreen = MapManager::GetXOnScreen(X);
-	int yOnScreen = MapManager::GetYOnScreen(Y);
+	char xOnScreen = MapManager::GetXOnScreen(X);
+	char yOnScreen = MapManager::GetYOnScreen(Y);
 	bool isMirror = IsPropertySet(PropertyFlags::MIRROR_X);
 	if (IsSkeleton())
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen,

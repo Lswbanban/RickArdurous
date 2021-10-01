@@ -95,8 +95,8 @@ bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], uns
 		}
 		
 		// draw the sprite
-		unsigned char screenX = MapManager::GetXOnScreen(X);
-		unsigned char screenY = MapManager::GetYOnScreen(Y);
+		char screenX = MapManager::GetXOnScreen(X);
+		char screenY = MapManager::GetYOnScreen(Y);
 		arduboy.drawBitmapExtended(screenX, screenY, sprite, spriteWidth, spriteHeight, WHITE, false);
 		
 		// draw the shiny star

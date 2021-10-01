@@ -9,12 +9,12 @@
 bool DestroyableItem::CheckLethalDynamite(unsigned char width)
 {
 	// get my y coordinate on screen
-	int yOnScreen = MapManager::GetYOnScreen(Y);
+	char yOnScreen = MapManager::GetYOnScreen(Y);
 	// check if I'm on screen
 	if ((yOnScreen >= 0) && (yOnScreen < HEIGHT))
 	{
 		// get my x coordinate on screen
-		int xOnScreen = MapManager::GetXOnScreen(X);
+		char xOnScreen = MapManager::GetXOnScreen(X);
 		
 		// iterate on a certain distance
 		for (unsigned char i = 1; i <= EXPLOSION_DETECTION_DISTANCE; ++i)

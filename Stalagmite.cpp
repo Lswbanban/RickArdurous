@@ -35,8 +35,8 @@ bool Stalagmite::Update(UpdateStep step)
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
 			// get my screen coords
-			unsigned char screenX = MapManager::GetXOnScreen(X);
-			unsigned char screenY = MapManager::GetYOnScreen(Y);
+			char screenX = MapManager::GetXOnScreen(X);
+			char screenY = MapManager::GetYOnScreen(Y);
 			
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -103,8 +103,8 @@ void Stalagmite::InitDrop()
 
 void Stalagmite::Draw()
 {
-	unsigned char screenX = MapManager::GetXOnScreen(X);
-	unsigned char screenY = MapManager::GetYOnScreen(Y);
+	char screenX = MapManager::GetXOnScreen(X);
+	char screenY = MapManager::GetYOnScreen(Y);
 	for (unsigned char i = 0; i < 2; ++i)
 		arduboy.drawBitmapExtended(
 			screenX + (i * (SpriteData::STALAGMITE_SPRITE_WIDTH + 1)),

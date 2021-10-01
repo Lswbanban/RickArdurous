@@ -81,8 +81,8 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 {
 	// get the ray cast positions
 	int worldStartX = GetBulletRayCastStartX();
-	int startXOnScreen = MapManager::GetXOnScreen(worldStartX);
-	int yOnScreen = MapManager::GetYOnScreen(Y);
+	char startXOnScreen = MapManager::GetXOnScreen(worldStartX);
+	char yOnScreen = MapManager::GetYOnScreen(Y);
 	// iterate on the frame buffer to check if any pixel is set
 	for (unsigned char i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
 		if (arduboy.getPixel(startXOnScreen + i, yOnScreen) == color)
@@ -140,7 +140,7 @@ bool ArrowBullet::Update(UpdateStep step)
 				CurrentBulletSpeed = IsPropertySet(Item::PropertyFlags::SPECIAL) ? ARROW_SPEED : BULLET_SPEED;
 				
 				// draw the bullet
-				int xOnScreen = MapManager::GetXOnScreen(X);
+				char xOnScreen = MapManager::GetXOnScreen(X);
 				arduboy.drawFastHLine(xOnScreen, MapManager::GetYOnScreen(Y), GetWidth(), WHITE);
 				
 				// check if the bullet collided on the static collision along its movement, if yes prepare the sparks fx for the next frame

@@ -168,7 +168,7 @@ int Rick::GetBottomForScreenTransition()
 
 unsigned char Rick::GetFeetYOnScreen()
 {
-	int feetOnScreen = MapManager::GetYOnScreen(Y) + 12;
+	char feetOnScreen = MapManager::GetYOnScreen(Y) + 12;
 	if (State == AnimState::FALL)
 		feetOnScreen -= Physics::JUMP_AND_FALL_VERTICAL_MOVE[JumpAndFallAnimSpeedIndex] + 1;
 	if (feetOnScreen >= HEIGHT)
@@ -845,8 +845,8 @@ void Rick::Draw()
  */
 unsigned int Rick::Draw(unsigned char color)
 {
-	int xOnScreen = MapManager::GetXOnScreen(X);
-	int yOnScreen = MapManager::GetYOnScreen(Y);
+	char xOnScreen = MapManager::GetXOnScreen(X);
+	char yOnScreen = MapManager::GetYOnScreen(Y);
 	if (State == AnimState::CRAWL)
 		return arduboy.drawBitmapExtended(xOnScreen, yOnScreen + VISUAL_HEIGHT_DIFF_BETWEEN_STAND_AND_CRAWL, SpriteData::RickCrawl[CurrentAnimFrame], SpriteData::RICK_CRAWL_SPRITE_WIDTH, SpriteData::RICK_CRAWL_SPRITE_HEIGHT, color, IsLookingLeft);
 	else

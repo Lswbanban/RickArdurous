@@ -36,8 +36,8 @@ bool BlockFragment::Update(UpdateStep step)
 			// update the trajectory of the stone
 			Physics::UpdateParabolicTrajectory(StoneFallIndex, X, Y);
 			
-			int xOnScreen = MapManager::GetXOnScreen(X);
-			int yOnScreen = MapManager::GetYOnScreen(Y);
+			char xOnScreen = MapManager::GetXOnScreen(X);
+			char yOnScreen = MapManager::GetYOnScreen(Y);
 			arduboy.drawBitmapExtended(xOnScreen, yOnScreen,
 								SpriteData::BlockFragment,
 								SpriteData::BLOCK_FRAGMENT_SPRITE_WIDTH, SpriteData::BLOCK_FRAGMENT_SPRITE_HEIGHT,

@@ -23,8 +23,8 @@ bool Spike::Update(UpdateStep step)
 		}
 		
 		// special spikes are horizontal
-		int xOnScreen = MapManager::GetXOnScreen(X);
-		int yOnScreen = MapManager::GetYOnScreen(Y);
+		char xOnScreen = MapManager::GetXOnScreen(X);
+		char yOnScreen = MapManager::GetYOnScreen(Y);
 		if (IsPropertySet(PropertyFlags::SPECIAL))
 		{
 			arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));

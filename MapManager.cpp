@@ -243,23 +243,23 @@ void MapManager::Update()
 	AnimateShutterTransition();
 }
 
-int MapManager::GetXOnScreen(int worldX)
+char MapManager::GetXOnScreen(int worldX)
 {
 	return worldX - ((int)CameraX.Current * SpriteData::LEVEL_SPRITE_WIDTH) - CameraX.Transition;
 }
 
-int MapManager::GetYOnScreen(int worldY)
+char MapManager::GetYOnScreen(int worldY)
 {
 	return worldY - ((int)CameraY.Current * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraY.Transition + CAMERA_VERTICAL_SHIFT;
 }
 
-bool MapManager::IsOnScreen(int x, int y, unsigned char spriteWidth, unsigned char spriteHeight)
+bool MapManager::IsOnScreen(int xWorld, int yWorld, unsigned char spriteWidth, unsigned char spriteHeight)
 {
 	// translate global coord to coord local to the screen
-	int xOnScreen = MapManager::GetXOnScreen(x);
-	int yOnScreen = MapManager::GetYOnScreen(y);
+	char xOnScreen = MapManager::GetXOnScreen(xWorld);
+	char yOnScreen = MapManager::GetYOnScreen(yWorld);
 	// check that the part of the main character (including the sprite width and height) is inside the screen dimension
-	return (xOnScreen + spriteWidth >= 0) && (xOnScreen < WIDTH) && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
+	return (xOnScreen + spriteWidth >= 0) /*&& (xOnScreen < WIDTH)*/ && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
 }
 
 bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCeilingSprites)
@@ -382,7 +382,7 @@ bool MapManager::IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap)
 bool MapManager::IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigned char width)
 {
 	// get the y coordinate first on screen (and check if it is on screen)
-	int yOnScreen = MapManager::GetYOnScreen(yWorld);
+	char yOnScreen = MapManager::GetYOnScreen(yWorld);
 	int rightWorld = xWorld + width;
 	// check if the Y coordinate is out of the screen, if yes ask the map manager if there is a sprite below the scrren
 	if ((yOnScreen < 0) || (yOnScreen >= HEIGHT))
@@ -390,24 +390,24 @@ bool MapManager::IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigne
 				MapManager::IsThereStaticCollisionAt(rightWorld, yWorld);
 	// get the left coordinates to check if it is outside the screen in that case, check the sprite
 	// and if we find a collision stop here, otherwise continue to check
-	int leftOnScreen = MapManager::GetXOnScreen(xWorld);
-	if (((leftOnScreen < 0) || (leftOnScreen >= WIDTH)) && MapManager::IsThereStaticCollisionAt(xWorld, yWorld))
+	char leftOnScreen = MapManager::GetXOnScreen(xWorld);
+	if (((leftOnScreen < 0) /*|| (leftOnScreen >= WIDTH)*/) && MapManager::IsThereStaticCollisionAt(xWorld, yWorld))
 		return true;
 	// get the right coordinates to check if it is outside the screen in that case, check the sprite
 	// and if we find a collision stop here, otherwise continue to check
-	int rightOnScreen = MapManager::GetXOnScreen(rightWorld);
-	if (((rightOnScreen < 0) || (rightOnScreen >= WIDTH)) && MapManager::IsThereStaticCollisionAt(rightWorld, yWorld))
+	char rightOnScreen = MapManager::GetXOnScreen(rightWorld);
+	if (((rightOnScreen < 0) /*|| (rightOnScreen >= WIDTH)*/) && MapManager::IsThereStaticCollisionAt(rightWorld, yWorld))
 		return true;
 	// if no collision found so far, and at least it is partially (or totally) on screen
-	if ((leftOnScreen < WIDTH) && (rightOnScreen >= 0))
+	if (rightOnScreen >= 0)
 	{
-		if (leftOnScreen < 0)
+		if (WIDTH - leftOnScreen < width)
+			width = WIDTH - leftOnScreen;
+		else if (leftOnScreen < 0)
 		{
 			width += leftOnScreen;
 			leftOnScreen = 0;
 		}
-		if (rightOnScreen >= WIDTH)
-			width -= (rightOnScreen - (WIDTH-1));
 		return arduboy.CheckWhitePixelsInRow(leftOnScreen, yOnScreen, width);
 	}
 	// finally no collision found
