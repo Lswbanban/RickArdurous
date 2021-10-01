@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RickArdurousEditor.Items
 {
@@ -102,11 +97,12 @@ namespace RickArdurousEditor.Items
 		}
 		#endregion
 
-		public Item(Type type, bool isMirrored, int x, int y)
+		public Item(Type type, bool isMirrored, int x, int y, int additionalParameter)
 		{
 			mType = type;
 			Move(new Point(x, y)); // use the Move function because the destroyable block snap to grid
 			mIsMirror = isMirrored;
+			mArrowLauncherDistance = additionalParameter;
 			UpdateSprite();
 		}
 

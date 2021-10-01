@@ -703,7 +703,7 @@ namespace RickArdurousEditor
 			// instantiate the correct item
 			try
 			{
-				AddItem(Items.Item.GetInstanceTypeFromName(instanceName, isSpecial, isSpecial2), isMirror, new Point(intValues[0], intValues[1]));
+				AddItem(Items.Item.GetInstanceTypeFromName(instanceName, isSpecial, isSpecial2), isMirror, new Point(intValues[0], intValues[1]), intValues[2]);
 			}
 			catch (MapSaveException)
 			{
@@ -945,7 +945,7 @@ namespace RickArdurousEditor
 			return null;
 		}
 
-		public Items.Item AddItem(Items.Item.Type itemType, bool isMirrored, Point location)
+		public Items.Item AddItem(Items.Item.Type itemType, bool isMirrored, Point location, int additionalParameter = 80)
 		{
 			// add the list of items of the specified type if not already in the dictionary
 			if (!mItems.ContainsKey(itemType))
@@ -956,7 +956,7 @@ namespace RickArdurousEditor
 				throw new MapSaveException(Properties.Resources.ErrorMapCanOnlyHaveOneGraal, MainForm.LogLevel.WARNING);
 
 			// add the item in the correct list and return it
-			Items.Item newItem = new Items.Item(itemType, isMirrored, location.X, location.Y);
+			Items.Item newItem = new Items.Item(itemType, isMirrored, location.X, location.Y, additionalParameter);
 			mItems[itemType].Add(newItem);
 			return newItem;
 		}

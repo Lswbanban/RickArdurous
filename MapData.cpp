@@ -136,10 +136,10 @@ void InitScreen4(bool shouldRespawn)
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(302, 200, Item::PropertyFlags::NONE, shouldRespawn);
-	arrowLauncher1.Init(280, 199, Item::PropertyFlags::NONE, 80);
-	arrowLauncher2.Init(372, 232, Item::PropertyFlags::MIRROR_X, 80);
-	arrowLauncher3.Init(320, 212, Item::PropertyFlags::NONE, 80);
-	arrowLauncher4.Init(372, 192, Item::PropertyFlags::MIRROR_X, 80);
+	arrowLauncher1.Init(280, 199, Item::PropertyFlags::NONE, 33);
+	arrowLauncher2.Init(372, 232, Item::PropertyFlags::MIRROR_X, 112);
+	arrowLauncher3.Init(320, 212, Item::PropertyFlags::NONE, 57);
+	arrowLauncher4.Init(372, 192, Item::PropertyFlags::MIRROR_X, 56);
 }
 
 void InitScreen5(bool shouldRespawn)
