@@ -6,6 +6,7 @@
 #include "SpriteData.h"
 #include "HUD.h"
 #include "Rick.h"
+
 namespace HUD
 {
 	static constexpr int LIFE_POS = 3;
@@ -21,7 +22,6 @@ void HUD::Update()
 {
 	// clear the top area where HUD will be drawn
 	arduboy.fillRect(0,0, WIDTH, 6, BLACK);
-	//arduboy.drawFastHLine(0, 5, WIDTH, WHITE);
 	
 	// draw each sprites from the HUD
 	// draw the life count

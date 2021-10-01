@@ -166,7 +166,7 @@ int Rick::GetBottomForScreenTransition()
 	return Y + 10;
 }
 
-unsigned char Rick::GetFeetYOnScreen()
+char Rick::GetFeetYOnScreen()
 {
 	char feetOnScreen = MapManager::GetYOnScreen(Y) + 12;
 	if (State == AnimState::FALL)

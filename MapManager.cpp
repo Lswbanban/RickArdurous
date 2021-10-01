@@ -77,7 +77,7 @@ namespace MapManager
 	void AnimateShutterTransition();
 	void BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY);
 	void EndSwitchPuzzleScreen();
-	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen);
+	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, char rickFeetOnScreen);
 	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
 	unsigned char GetLevelSpriteAt(unsigned char xMap, unsigned char yMap);
 	bool IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap);
@@ -209,7 +209,7 @@ void MapManager::Update()
 	Rick::CheckLethalCollision();
 
 	// get the position of the feet of rick in screen coordinate
-	unsigned char rickFeetOnScreen = Rick::GetFeetYOnScreen();
+	char rickFeetOnScreen = Rick::GetFeetYOnScreen();
 	
 	// Draw the static collision of the map
 	Draw(0, SpriteData::PLATFORM, rickFeetOnScreen);
@@ -706,7 +706,7 @@ void MapManager::AnimateCameraTransition()
 /**
  * This function draw the map based on the current position of the camera.
  */
-void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, unsigned char rickFeetOnScreen)
+void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, char rickFeetOnScreen)
 {
 	// compute the start and end coordinate of the sprites to draw, in the level array coordinates
 	unsigned char startMapX = CameraX.Current + CameraX.StartDrawSprite;

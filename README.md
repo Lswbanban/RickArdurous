@@ -8,6 +8,7 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Editor
+	- Rick::MAX_STATUETTE_COUNT should be exported by the editor
 	- add undo/redo feature
 - Game Engine Optim
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
