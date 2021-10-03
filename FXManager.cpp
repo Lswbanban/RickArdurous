@@ -20,7 +20,7 @@ namespace FXManager
 	struct FXBuffer
 	{
 		FXStatus	Status = {0,0};
-		FXCommand	Command = {0,0,0,0,0,0};
+		FXCommand	Command = {0,0,0,0,0,0,0,0};
 	};
 
 	FXBuffer FXBuffers[BUFFER_COUNT];
@@ -41,12 +41,12 @@ void FXManager::ClearFXCommand(BufferId id)
 
 	if (id == BUFFER_COUNT)
 	{
-		FXBuffers[GAME].Command = {0,0,0,0,0,0};
-		FXBuffers[RICK].Command = {0,0,0,0,0,0};
+		FXBuffers[GAME].Command = {0,0,0,0,0,0,0,0};
+		FXBuffers[RICK].Command = {0,0,0,0,0,0,0,0};
 	}
 	else
 	{
-		FXBuffers[id].Command = {0,0,0,0,0,0};
+		FXBuffers[id].Command = {0,0,0,0,0,0,0,0};
 		needToTurnOffLedAndNote = (CurrentBufferLightUp == id);
 	}
 
