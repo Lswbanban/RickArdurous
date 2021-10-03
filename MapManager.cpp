@@ -121,7 +121,9 @@ void MapManager::AddItem(Item * item)
 			if (ItemsToUpdate[i] == item)
 				return;
 		// add the item to the last position of the array
-		ItemsToUpdate[ItemsToUpdateCount++] = item;
+		ItemsToUpdate[ItemsToUpdateCount] = item;
+		// increase the item count
+		ItemsToUpdateCount++;
 	}
 }
 
@@ -148,7 +150,7 @@ void MapManager::RemoveItem(Item * item)
 void MapManager::RemoveAllItemsOutsideOfTheScreen()
 {
 	// remove items outside of the screen
-	for (unsigned char i = 0; i < ItemsToUpdateCount; i++)
+	for (unsigned char i = 0; i < ItemsToUpdateCount; ++i)
 	{
 		Item * currentItem = ItemsToUpdate[i];
 		if (!IsOnScreen(currentItem->GetX(), currentItem->GetY(), 8, 8))
