@@ -392,9 +392,30 @@ namespace RickArdurousEditor.Items
 			return mIsMirror ? mX + mSprite.Width - mArrowLauncherDistance : mX + mArrowLauncherDistance;
 		}
 
-		public void Draw(Graphics gc, int pixelSize, int cameraXWorld, int cameraYWorld, bool isSelected)
+		public void Draw(Graphics gc, int pixelSize, int drawPuzzleScreenWidth, int drawPuzzleScreenHeight, int puzzleLineSeparatorWidth, int cameraXWorld, int cameraYWorld, bool isSelected)
 		{
-			Rectangle drawArea = new Rectangle((mX - cameraXWorld) * pixelSize, (mY - cameraYWorld) * pixelSize, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
+			// get the drawing coordinate from the world coord of the item and the camera world coord
+			int itemXDraw = (mX - cameraXWorld) * pixelSize;
+			int itemYDraw = (mY - cameraYWorld) * pixelSize;
+
+			// add one pixel for each puzzle screen line drawn
+			// First compute how much shift from the border is the camera
+			int cameraShiftX = (cameraXWorld * pixelSize) % drawPuzzleScreenWidth;
+			int lineCountX = (itemXDraw + cameraShiftX) / drawPuzzleScreenWidth;
+			if (cameraShiftX == 0)
+				lineCountX++;
+
+			int cameraShiftY = (cameraYWorld * pixelSize) % drawPuzzleScreenHeight;
+			int lineCountY = (itemYDraw + cameraShiftY) / drawPuzzleScreenHeight;
+			if (cameraShiftY == 0)
+				lineCountY++;
+
+			// add the width of the lines
+			itemXDraw += lineCountX * puzzleLineSeparatorWidth;
+			itemYDraw += lineCountY * puzzleLineSeparatorWidth;
+
+			// compute the rectangle in which the item will be drawn
+			Rectangle drawArea = new Rectangle(itemXDraw, itemYDraw, mSprite.Width * pixelSize, mSprite.Height * pixelSize);
 			gc.DrawImage(mSprite, drawArea);
 			if (isSelected)
 				gc.DrawRectangle(mSelectedPen, drawArea);
@@ -402,8 +423,8 @@ namespace RickArdurousEditor.Items
 			// special case for the Arrow launcher, draw the sensor area
 			if (mType == Type.ARROW_LAUNCHER)
 			{
-				int x = mIsMirror ? mX + mSprite.Width - mArrowLauncherDistance : mX;
-				Rectangle arrowLauncherArea = new Rectangle((x - cameraXWorld) * pixelSize, (mY - cameraYWorld) * pixelSize, mArrowLauncherDistance * pixelSize, mSprite.Height * pixelSize);
+				int sensorX = mIsMirror ? (((mX + mSprite.Width - mArrowLauncherDistance) - cameraXWorld) * pixelSize) + (lineCountX * puzzleLineSeparatorWidth) : itemXDraw;
+				Rectangle arrowLauncherArea = new Rectangle(sensorX, itemYDraw, mArrowLauncherDistance * pixelSize, mSprite.Height * pixelSize);
 				gc.DrawRectangle(mArrowLauncherPen, arrowLauncherArea);
 			}
 		}

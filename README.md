@@ -12,10 +12,10 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 	- add undo/redo feature
 - Game Engine Optim
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
+	- Try to fix the walk on spike bug for Rick
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
 	- dynamite explosion
-	- climb lader?
 
 # New items to come
 - And I don't want to do the trigger + moving platform. But we can have trigger plate + door or trigger plate + boulder.

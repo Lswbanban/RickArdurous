@@ -45,6 +45,16 @@ namespace RickArdurousEditor
 			get { return WALL_SPRITE_HEIGHT * mPixelSize; }
 		}
 
+		public int DrawPuzzleScreenWidth
+		{
+			get { return ARDUBOY_PUZZLE_SCREEN_WIDTH * WALL_SPRITE_WIDTH * mPixelSize; }
+		}
+
+		public int DrawPuzzleScreenHeight
+		{
+			get { return ARDUBOY_PUZZLE_SCREEN_HEIGHT * WALL_SPRITE_HEIGHT * mPixelSize; }
+		}
+
 		private int mPixelSize = 2;
 		public int PixelSize
 		{
@@ -1087,9 +1097,10 @@ namespace RickArdurousEditor
 			// compute the camera position in game world coordinates
 			int cameraXWorld = cameraX * WALL_SPRITE_WIDTH;
 			int cameraYWorld = cameraY * WALL_SPRITE_HEIGHT;
+			int puzzleLineSeparatorWidth = (int)mPuzzleScreenSeparatorLinePen.Width;
 			foreach (List<Items.Item> itemList in mItems.Values)
 				foreach (Items.Item item in itemList)
-					item.Draw(gc, mPixelSize, cameraXWorld, cameraYWorld, (selectedItem == item));
+					item.Draw(gc, mPixelSize, DrawPuzzleScreenWidth, DrawPuzzleScreenHeight, puzzleLineSeparatorWidth, cameraXWorld, cameraYWorld, (selectedItem == item));
 		}
 
 		private void DrawPuzzlePath(Graphics gc, int width, int height, int cameraX, int cameraY)
