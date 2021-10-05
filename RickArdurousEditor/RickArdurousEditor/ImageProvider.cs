@@ -99,27 +99,27 @@ namespace RickArdurousEditor
 			return result;
 		}
 
-		public static Bitmap GetMummyImage()
+		public static Bitmap GetMummyImage(bool isLeft)
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Mummy.png");
 			Bitmap result = new Bitmap(9, 16);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, false, 1f, 1f, 0f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, isLeft, 1f, 1f, 0f);
 			return result;
 		}
 
-		public static Bitmap GetSkeletonImage()
+		public static Bitmap GetSkeletonImage(bool isLeft)
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Skeleton.png");
 			Bitmap result = new Bitmap(6, 16);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 16), ref result, false, 1f, 1f, 0f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 16), ref result, isLeft, 1f, 1f, 0f);
 			return result;
 		}
 
-		public static Bitmap GetScorpionImage()
+		public static Bitmap GetScorpionImage(bool isLeft)
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Scorpion.png");
 			Bitmap result = new Bitmap(8, 4);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 8, 4), ref result, false, 1f, 1f, 0f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 8, 4), ref result, isLeft, 1f, 1f, 0f);
 			return result;
 		}
 
@@ -213,9 +213,9 @@ namespace RickArdurousEditor
 			itemImages.Add(GetGraalImage());
 			itemImages.Add(GetHorizontalSpikeImage());
 			itemImages.Add(GetVerticalSpikeImage(false));
-			itemImages.Add(GetMummyImage());
-			itemImages.Add(GetSkeletonImage());
-			itemImages.Add(GetScorpionImage());
+			itemImages.Add(GetMummyImage(false));
+			itemImages.Add(GetSkeletonImage(false));
+			itemImages.Add(GetScorpionImage(false));
 			itemImages.Add(GetStalagmiteImage());
 			itemImages.Add(GetStalactiteImage());
 			itemImages.Add(GetArrowLauncherImage(false));

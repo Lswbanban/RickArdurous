@@ -133,13 +133,13 @@ namespace RickArdurousEditor.Items
 					mSprite = ImageProvider.GetVerticalSpikeImage(mIsMirror);
 					break;
 				case Type.MUMMY:
-					mSprite = ImageProvider.GetMummyImage();
+					mSprite = ImageProvider.GetMummyImage(mIsMirror);
 					break;
 				case Type.SKELETON:
-					mSprite = ImageProvider.GetSkeletonImage();
+					mSprite = ImageProvider.GetSkeletonImage(mIsMirror);
 					break;
 				case Type.SCORPION:
-					mSprite = ImageProvider.GetScorpionImage();
+					mSprite = ImageProvider.GetScorpionImage(mIsMirror);
 					break;
 				case Type.STALAGMITE:
 					mSprite = ImageProvider.GetStalagmiteImage();
@@ -338,14 +338,29 @@ namespace RickArdurousEditor.Items
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", " + mirrorFlag  + ");");
 					break;
 				case Type.MUMMY:
-					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
-					break;
+					{
+						string flags = ", Item::PropertyFlags::TRAP_TRIGERER";
+						if (mIsMirror)
+							flags += " | Item::PropertyFlags::MIRROR_X";
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + flags + ", shouldRespawn);");
+						break;
+					}
 				case Type.SKELETON:
-					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL_2, shouldRespawn);");
-					break;
+					{
+						string flags = ", Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::SPECIAL_2";
+						if (mIsMirror)
+							flags += " | Item::PropertyFlags::MIRROR_X";
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + flags + ", shouldRespawn);");
+						break;
+					}
 				case Type.SCORPION:
-					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL, shouldRespawn);");
-					break;
+					{
+						string flags = ", Item::PropertyFlags::SPECIAL";
+						if (mIsMirror)
+							flags += " | Item::PropertyFlags::MIRROR_X";
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + flags + ", shouldRespawn);");
+						break;
+					}
 				case Type.STALAGMITE:
 				case Type.STALACTITE:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");

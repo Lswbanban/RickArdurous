@@ -134,10 +134,6 @@ bool Enemy::Update(UpdateStep step)
 		}
 		case Item::UpdateStep::RESPAWN:
 		{
-			// mummy and Skeleton are trap trigerer but not the scorpion
-			// so set this flag in the respawn because the Property flag has been overriden in the Init function
-			if (!IsScorpion())
-				SetProperty(Item::PropertyFlags::TRAP_TRIGERER);
 			// and start to walk (if we are not alive, this update is not even called)
 			InitWalk();
 			break;
