@@ -93,8 +93,7 @@ bool Boulder::Update(UpdateStep step)
 
 		case UpdateStep::DRAW_STATIC_COLLISION:
 		{
-			if (!isBoulderRolling)
-				Draw();
+			Draw();
 			break;
 		}
 	}

@@ -79,14 +79,23 @@ void ArrowBullet::DrawBulletRay(unsigned char color)
  */
 int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 {
-	// get the ray cast positions
-	int worldStartX = GetBulletRayCastStartX();
-	char startXOnScreen = MapManager::GetXOnScreen(worldStartX);
+	// get the ray cast world position and direction
+	char startXOnScreen = 0;
+	char endXOnScreen = CurrentBulletSpeed + GetWidth() - 1;
+	char direction = 1;
+	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
+	{
+		startXOnScreen = GetWidth() - 1;
+		endXOnScreen = -CurrentBulletSpeed;
+		direction = -1;
+	}
+	// get the ray cast positions on screen
+	char xOnScreen = MapManager::GetXOnScreen(X);
 	char yOnScreen = MapManager::GetYOnScreen(Y);
 	// iterate on the frame buffer to check if any pixel is set
-	for (unsigned char i = 0; i < CurrentBulletSpeed + GetWidth(); ++i)
-		if (arduboy.getPixel(startXOnScreen + i, yOnScreen) == color)
-				return (worldStartX + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
+	for (char i = startXOnScreen; i != endXOnScreen; i += direction)
+		if (arduboy.getPixel(xOnScreen + i, yOnScreen) == color)
+				return (X + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
 	// no collision found
 	return NO_PIXEL_FOUND;
 }
