@@ -606,6 +606,9 @@ namespace RickArdurousEditor
 				writer.WriteLine("\tstatic constexpr int MAIN_MENU_CAMERA_Y = 0;");
 				writer.WriteLine("\tstatic constexpr int FIRST_PUZZLE_SCREEN_CAMERA_X = " + mFirstPuzzleScreenCameraX.ToString() + ";");
 				writer.WriteLine("\tstatic constexpr int FIRST_PUZZLE_SCREEN_CAMERA_Y = " + mFirstPuzzleScreenCameraY.ToString() + ";");
+				writer.WriteLine();
+				writer.WriteLine("\t// Number of statuettes to collect");
+				writer.WriteLine("\tstatic constexpr int MAX_STATUETTE_COUNT = " + mItems[Items.Item.Type.STATUETTE].Count + ";");
 				writer.WriteLine("};");
 				writer.WriteLine();
 				writer.WriteLine("#endif");

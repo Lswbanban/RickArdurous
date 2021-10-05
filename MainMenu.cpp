@@ -122,14 +122,16 @@ void MainMenu::DrawMainMenu()
 	arduboy.print("Controls");
 	
 	// draw the selected indicator
-	arduboy.setCursor(MENU_X - 8, menuY[SelectedOption]);
-	arduboy.print('>');
+	arduboy.drawChar(MENU_X - 8, menuY[SelectedOption], '>', WHITE, BLACK);
 }
 
 void MainMenu::DrawStatuetteCount()
 {
 	arduboy.print(Rick::StatuetteCount, DEC);
+	//arduboy.print("/");
+	//arduboy.print(MapManager::MAX_STATUETTE_COUNT, DEC);
 	arduboy.drawBitmapExtended(arduboy.GetCursorX() + 2, arduboy.GetCursorY() -1, SpriteData::Statuette, SpriteData::STATUETTE_SPRITE_WIDTH, SpriteData::STATUETTE_SPRITE_HEIGHT, WHITE, false);
+	// add a space and the width of the statuette for the cursor
 	arduboy.setCursor(arduboy.GetCursorX() + (8 + SpriteData::STATUETTE_SPRITE_WIDTH), arduboy.GetCursorY());
 }
 

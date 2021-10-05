@@ -6,6 +6,7 @@
 #include "SpriteData.h"
 #include "HUD.h"
 #include "Rick.h"
+#include "MapDataConstVariables.h"
 
 namespace HUD
 {
@@ -40,7 +41,7 @@ void HUD::Update()
 	arduboy.drawBitmapExtended(STATUETTE_POS, 0, SpriteData::HUDStatuette, SpriteData::HUD_SPRITE_WIDTH, SpriteData::HUD_SPRITE_HEIGHT, WHITE, false);
 	unsigned char posX = drawNumber(STATUETTE_POS + SpriteData::HUD_SPRITE_WIDTH + GAP_BETWEEN_LOGO_AND_NUMBER, Rick::StatuetteCount);
 	arduboy.drawBitmapExtended(posX + 1, 0, SpriteData::HUDSlash, SpriteData::HUD_SLASH_SPRITE_WIDTH, SpriteData::NUMBERS_SPRITE_HEIGHT, WHITE, false);
-	drawNumber(posX + SpriteData::HUD_SLASH_SPRITE_WIDTH + 3, Rick::MAX_STATUETTE_COUNT);
+	drawNumber(posX + SpriteData::HUD_SLASH_SPRITE_WIDTH + 3, MapManager::MAX_STATUETTE_COUNT);
 }
 
 unsigned char HUD::drawNumber(unsigned char posX, unsigned char num)

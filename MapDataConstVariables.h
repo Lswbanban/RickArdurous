@@ -20,6 +20,9 @@ namespace MapManager
 	static constexpr int MAIN_MENU_CAMERA_Y = 0;
 	static constexpr int FIRST_PUZZLE_SCREEN_CAMERA_X = 0;
 	static constexpr int FIRST_PUZZLE_SCREEN_CAMERA_Y = 8;
+
+	// Number of statuettes to collect
+	static constexpr int MAX_STATUETTE_COUNT = 5;
 };
 
 #endif

@@ -8,11 +8,11 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Editor
-	- Rick::MAX_STATUETTE_COUNT should be exported by the editor
 	- add undo/redo feature
 - Game Engine Optim
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 	- Try to fix the walk on spike bug for Rick
+	- add the PSTR()/F() macro around the menu strings?
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
 	- dynamite explosion

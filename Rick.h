@@ -4,7 +4,6 @@
 namespace Rick
 {
 	static constexpr int MAX_LIFE_COUNT = 6;
-	static constexpr int MAX_STATUETTE_COUNT = 20;
 	static constexpr int MAX_BULLET_COUNT = 5;
 	static constexpr int MAX_DYNAMITE_COUNT = 5;
 	
