@@ -372,8 +372,13 @@ namespace RickArdurousEditor.Items
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
 					break;
 				case Type.BOULDER:
-					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", " + mirrorFlag + ");");
-					break;
+					{
+						string flags = ", Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE ";
+						if (mIsMirror)
+							flags += " | Item::PropertyFlags::MIRROR_X";
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + flags + ");");
+						break;
+					}
 			}
 		}
 		#endregion

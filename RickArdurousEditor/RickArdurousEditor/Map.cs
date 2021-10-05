@@ -707,9 +707,9 @@ namespace RickArdurousEditor
 				}
 				else if (token.Contains(propertyFlagType))
 				{
-					isSpecial2 = token.Contains("SPECIAL_2");
-					isSpecial = !isSpecial2 && token.Contains("SPECIAL");
-					isMirror = token.Contains("MIRROR_X");
+					isSpecial = isSpecial || (!token.Contains("SPECIAL_2") && token.Contains("SPECIAL"));
+					isSpecial2 = isSpecial2 || token.Contains("SPECIAL_2");
+					isMirror = isMirror || token.Contains("MIRROR_X");
 				}
 			}
 
