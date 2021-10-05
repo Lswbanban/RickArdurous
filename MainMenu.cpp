@@ -26,6 +26,7 @@ namespace MainMenu
 	char GameOverAnimDirection = -1;
 	
 	void DrawMainMenu();
+	void PrintNumber(unsigned char number);
 	void DrawStatuetteCount();
 	void DrawVictory();
 	void DrawGameOver();
@@ -125,11 +126,38 @@ void MainMenu::DrawMainMenu()
 	arduboy.drawChar(MENU_X - 8, menuY[SelectedOption], '>', WHITE, BLACK);
 }
 
+void MainMenu::PrintNumber(unsigned char number)
+{
+	// count how many character we need to print the specified number
+	unsigned char charCount = 0;
+	unsigned char numberCopy = number;
+	do
+	{
+		charCount++;
+		numberCopy /= 10;
+	} while (numberCopy > 0);
+	
+	// get the current cursor position, and reset it at the end of the number
+	unsigned char x = arduboy.GetCursorX() + ((charCount - 1) * 6);
+	unsigned char y = arduboy.GetCursorY();
+	arduboy.setCursor(x + 6, y);
+	
+	// iterate on the number of charecter to draw
+	for (unsigned char i = 0; i < charCount; ++i)
+	{
+		arduboy.drawChar(x, y, (unsigned char)(48 + (number % 10)), WHITE, BLACK);
+		number /= 10;
+		x -= 6;
+	}
+}
+
 void MainMenu::DrawStatuetteCount()
 {
-	arduboy.print(Rick::StatuetteCount, DEC);
-	//arduboy.print("/");
-	//arduboy.print(MapManager::MAX_STATUETTE_COUNT, DEC);
+	// print the statuette count and the max statuette count
+	PrintNumber(Rick::StatuetteCount);
+	arduboy.print("/");
+	PrintNumber(MapManager::MAX_STATUETTE_COUNT);
+	// draw the statuette icon
 	arduboy.drawBitmapExtended(arduboy.GetCursorX() + 2, arduboy.GetCursorY() -1, SpriteData::Statuette, SpriteData::STATUETTE_SPRITE_WIDTH, SpriteData::STATUETTE_SPRITE_HEIGHT, WHITE, false);
 	// add a space and the width of the statuette for the cursor
 	arduboy.setCursor(arduboy.GetCursorX() + (8 + SpriteData::STATUETTE_SPRITE_WIDTH), arduboy.GetCursorY());
