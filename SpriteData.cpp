@@ -29,8 +29,12 @@ namespace SpriteData
 	};
 
 	
-	const unsigned char SpikeHorizontal[][SPIKE_HORIZONTAL_SPRITE_WIDTH * (SPIKE_HORIZONTAL_SPRITE_HEIGHT / 8)] PROGMEM = {
+	const unsigned char SpikeHorizontalBottom[][SPIKE_HORIZONTAL_SPRITE_WIDTH * (SPIKE_HORIZONTAL_SPRITE_HEIGHT / 8)] PROGMEM = {
 		{0xc0, 0xf0, 0xc0, },{0xc0, 0xe0, 0xc0, },{0x80, 0xd0, 0xc0, },{0x40, 0xb0, 0xc0, },{0xc0, 0x70, 0x80, },{0xc0, 0xf0, 0x40, },
+	};
+
+	const unsigned char SpikeHorizontalTop[][SPIKE_HORIZONTAL_SPRITE_WIDTH * (SPIKE_HORIZONTAL_SPRITE_HEIGHT / 8)] PROGMEM = {
+		{0x03, 0x0f, 0x03, },{0x03, 0x07, 0x03, },{0x01, 0x0b, 0x03, },{0x02, 0x0d, 0x03, },{0x03, 0x0e, 0x01, },{0x03, 0x0f, 0x02, },
 	};
 
 	const unsigned char SpikeVertical[][SPIKE_VERTICAL_SPRITE_WIDTH * (SPIKE_VERTICAL_SPRITE_HEIGHT / 8)] PROGMEM = {

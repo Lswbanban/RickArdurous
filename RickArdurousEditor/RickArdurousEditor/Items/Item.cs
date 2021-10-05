@@ -127,7 +127,7 @@ namespace RickArdurousEditor.Items
 					mSprite = ImageProvider.GetGraalImage();
 					break;
 				case Type.HORIZONTAL_SPIKE:
-					mSprite = ImageProvider.GetHorizontalSpikeImage();
+					mSprite = ImageProvider.GetHorizontalSpikeImage(mIsMirror);
 					break;
 				case Type.VERTICAL_SPIKE:
 					mSprite = ImageProvider.GetVerticalSpikeImage(mIsMirror);
@@ -332,8 +332,13 @@ namespace RickArdurousEditor.Items
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::NONE, shouldRespawn);");
 					break;
 				case Type.HORIZONTAL_SPIKE:
-					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", Item::PropertyFlags::SPECIAL);");
-					break;
+					{
+						string flags = ", Item::PropertyFlags::SPECIAL";
+						if (mIsMirror)
+							flags += " | Item::PropertyFlags::MIRROR_X";
+						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + flags + ");");
+						break;
+					}
 				case Type.VERTICAL_SPIKE:
 					writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + ", " + mirrorFlag  + ");");
 					break;

@@ -27,7 +27,10 @@ bool Spike::Update(UpdateStep step)
 		char yOnScreen = MapManager::GetYOnScreen(Y);
 		if (IsPropertySet(PropertyFlags::SPECIAL))
 		{
-			arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::SpikeHorizontal[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, IsPropertySet(PropertyFlags::MIRROR_X));
+			if (IsPropertySet(PropertyFlags::MIRROR_X))
+				arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::SpikeHorizontalTop[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, false);
+			else
+				arduboy.drawBitmapExtended(xOnScreen, yOnScreen, SpriteData::SpikeHorizontalBottom[AnimFrameId], SpriteData::SPIKE_HORIZONTAL_SPRITE_WIDTH, SpriteData::SPIKE_HORIZONTAL_SPRITE_HEIGHT, WHITE, false);
 		}
 		else
 		{

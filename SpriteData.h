@@ -81,7 +81,8 @@ namespace SpriteData
 	static constexpr int SPIKE_SPRITE_FRAME_COUNT = 6;
 	static constexpr int SPIKE_HORIZONTAL_SPRITE_WIDTH = 3;
 	static constexpr int SPIKE_HORIZONTAL_SPRITE_HEIGHT = 8;
-	extern const unsigned char SpikeHorizontal[][SPIKE_HORIZONTAL_SPRITE_WIDTH * (SPIKE_HORIZONTAL_SPRITE_HEIGHT / 8)];
+	extern const unsigned char SpikeHorizontalBottom[][SPIKE_HORIZONTAL_SPRITE_WIDTH * (SPIKE_HORIZONTAL_SPRITE_HEIGHT / 8)];
+	extern const unsigned char SpikeHorizontalTop[][SPIKE_HORIZONTAL_SPRITE_WIDTH * (SPIKE_HORIZONTAL_SPRITE_HEIGHT / 8)];
 
 	// animation for the shiny vertical spikes
 	static constexpr int SPIKE_VERTICAL_SPRITE_WIDTH = 4;
