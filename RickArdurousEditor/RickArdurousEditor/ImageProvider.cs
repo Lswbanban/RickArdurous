@@ -83,7 +83,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetHorizontalSpikeImage(bool isTop)
 		{
-			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"SpikeHorizontal.png");
+			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"SpikeHorizontalBottom.png");
 			Bitmap result = new Bitmap(3, 8);
 			RotateFlipType rotateFlipOperation = isTop ? RotateFlipType.RotateNoneFlipY : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, rotateFlipOperation, 1f, 0f, 0f);

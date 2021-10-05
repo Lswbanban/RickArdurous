@@ -1,9 +1,9 @@
 #ifndef _STALAGMITE_H_
 #define _STALAGMITE_H_
 
-#include "DestroyableItem.h"
+#include "LivingItem.h"
 
-class Stalagmite : public DestroyableItem
+class Stalagmite : public LivingItem
 {
 public:
 	virtual bool Update(UpdateStep step);

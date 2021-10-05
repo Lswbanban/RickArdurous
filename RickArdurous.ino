@@ -12,7 +12,7 @@ CustomArduboy arduboy;
 
 void setup()
 {
-#ifdef PROFILING
+#ifdef SERIAL_DEBUG || PROFILING
 	// init the debug serial communication
 	Serial.begin(9600);
 	while(!Serial);

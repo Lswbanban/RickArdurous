@@ -27,8 +27,6 @@
                 <File name="Graal.cpp" />
             </Folder>
             <Folder name="Destroyable">
-                <File name="DestroyableItem.h" />
-                <File name="DestroyableItem.cpp" />
                 <File name="DestroyableBlock.h" />
                 <File name="DestroyableBlock.cpp" />
                 <File name="BlockFragment.h" />

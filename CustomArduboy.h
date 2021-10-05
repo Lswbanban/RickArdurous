@@ -22,8 +22,6 @@
 // we reserve the first 16 byte of EEPROM for system use
 #define EEPROM_STORAGE_SPACE_START 16 // and onward
 
-//#define PROFILING
-
 // eeprom settings above are neded for audio
 #include "Arduboy_audio.h"
 

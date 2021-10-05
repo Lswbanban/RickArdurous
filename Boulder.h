@@ -2,6 +2,7 @@
 #define _BOULDER_H_
 
 #include "Item.h"
+#include "Physics.h"
 
 class Boulder : public Item
 {
@@ -14,7 +15,7 @@ private:
 	static constexpr int FALL_INITIAL_VELOCITY_X = 6;
 	static constexpr int BOULDER_ROLLING_FRAME_COUNT = 4;
 	unsigned char AnimFrameId = 0;
-	unsigned char PhysicsFallId;
+	unsigned char PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
 	
 	void Draw();
 };

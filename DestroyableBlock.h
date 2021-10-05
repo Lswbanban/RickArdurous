@@ -1,10 +1,10 @@
 #ifndef _DESTROYABLE_BLOCK_H_
 #define _DESTROYABLE_BLOCK_H_
 
-#include "DestroyableItem.h"
+#include "LivingItem.h"
 class BlockFragment;
 
-class DestroyableBlock : public DestroyableItem
+class DestroyableBlock : public LivingItem
 {
 public:
 	virtual bool Update(UpdateStep step);

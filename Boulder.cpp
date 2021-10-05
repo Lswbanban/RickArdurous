@@ -11,18 +11,35 @@
 bool Boulder::Update(UpdateStep step)
 {
 	bool isBoulderRolling = !IsPropertySet(SPECIAL);
-	
+	bool isFalling = (PhysicsFallId != Physics::INVALID_PARABOLIC_ID);
+
 	switch (step)
 	{
 		case UpdateStep::RESPAWN:
 			PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
 			break;
 
+		case Item::UpdateStep::CHECK_LETHAL_BESIDE:
+		{
+			if (!isBoulderRolling && !isFalling)
+			{
+				Item::Side explosionSide = CheckLethalDynamite(SpriteData::BOULDER_SPRITE_WIDTH << 1, 8);
+				if (explosionSide != Item::Side::NO_SIDE)
+				{
+					//start rolling
+					ClearProperty(SPECIAL | MIRROR_X);
+					// set the side
+					if (explosionSide == Item::Side::RIGHT)
+						SetProperty(MIRROR_X);
+				}
+			}
+			break;
+		}
+
 		case UpdateStep::CHECK_STATIC_COLLISION:
 		{
 			// move the boulder
 			char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
-			bool isFalling = (PhysicsFallId != Physics::INVALID_PARABOLIC_ID);
 			// check if we need to start or stop to fall
 			bool hasCollisionUnder = MapManager::IsThereAnyHorizontalCollisionAt(X+4, Y+12, 4);
 			if (!hasCollisionUnder)
@@ -45,7 +62,7 @@ bool Boulder::Update(UpdateStep step)
 				// move if we are not falling
 				X += movingDirection;
 				// check if I bump in a wall
-				char wallCheckX = (movingDirection > 0) ? X + SpriteData::BOULDER_SPRITE_WIDTH * 2 : X;
+				int wallCheckX = (movingDirection > 0) ? X + (SpriteData::BOULDER_SPRITE_WIDTH * 2) : X;
 				if (MapManager::IsThereStaticCollisionAt(wallCheckX, Y, true) ||
 					MapManager::IsThereStaticCollisionAt(wallCheckX, Y+8))
 					{

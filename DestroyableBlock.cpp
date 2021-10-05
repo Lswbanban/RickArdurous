@@ -19,7 +19,7 @@ bool DestroyableBlock::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// spawn block fragment and remove myself from the manager
-				if (CheckLethalDynamite(SpriteData::LEVEL_SPRITE_WIDTH << 1))
+				if (CheckLethalDynamite(SpriteData::LEVEL_SPRITE_WIDTH << 1, 0))
 				{
 					InitDeath();
 					return true;

@@ -32,6 +32,13 @@ public:
 		DRAW_IGNORED_BY_ENEMIES,
 		RESPAWN,
 	};
+
+	enum Side
+	{
+		NO_SIDE = 0,
+		LEFT,
+		RIGHT,
+	};
 	
 	void Init(int startX, int startY, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;
@@ -44,12 +51,17 @@ public:
 	int GetX() { return X; }
 	int GetY() { return Y; }
 
+	Side CheckLethalDynamite(unsigned char width, unsigned char checkHeight);
+
 protected:
 	int X;
 	int Y;
 	unsigned char Property = 0;
 	
 	void CommonInit(int startX, int startY, unsigned char flags);
+	
+private:
+	static constexpr int EXPLOSION_DETECTION_DISTANCE = 5;
 };
 
 #endif
