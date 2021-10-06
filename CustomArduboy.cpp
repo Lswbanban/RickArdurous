@@ -135,8 +135,7 @@ uint8_t Arduboy::getPixel(uint8_t x, uint8_t y)
   return (sBuffer[(row*WIDTH) + x] & _BV(bit_position)) >> bit_position;
 }
 
-void Arduboy::drawFastVLine
-(uint8_t x, uint8_t y, uint8_t h, uint8_t color)
+void Arduboy::drawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint8_t color)
 {
   uint8_t end = y+h;
   for (uint8_t a = y; a < end; a++)
@@ -145,8 +144,7 @@ void Arduboy::drawFastVLine
   }
 }
 
-void Arduboy::drawFastHLine
-(uint8_t x, uint8_t y, uint8_t w, uint8_t color)
+void Arduboy::drawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint8_t color)
 {
   uint8_t end = x+w;
   for (uint8_t a = x; a < end; a++)
@@ -155,8 +153,7 @@ void Arduboy::drawFastHLine
   }
 }
 
-void Arduboy::fillRect
-(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t color)
+void Arduboy::fillRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t color)
 {
   // stupidest version - update in subclasses if desired!
   for (uint8_t i=x; i<x+w; i++)
@@ -203,37 +200,42 @@ void Arduboy::fillScreen(uint8_t color)
   );
 }
 
-void Arduboy::drawChar
-(uint8_t x, uint8_t y, unsigned char c, uint8_t color, uint8_t bg)
+void Arduboy::drawChar(uint8_t x, uint8_t y, unsigned char c, uint8_t color, uint8_t bg)
 {
-  boolean draw_background = bg != color;
+	// remove the drawing of the background (not used in this game)
+	//boolean draw_background = bg != color;
 
 	// the first 32 char as been removed from the font array
 	c -= 32;
 
-  for (int8_t i=0; i<6; i++ )
-  {
-    uint8_t line;
-    if (i == 5)
-    {
-      line = 0x0;
-    }
-    else
-    {
-      line = pgm_read_byte(font+(c*5)+i);
-    }
+	for (int8_t i=0; i<6; i++ )
+	{
+		uint8_t line;
+		if (i == 5)
+		{
+			line = 0x0;
+		}
+		else
+		{
+			line = pgm_read_byte(font+(c*5)+i);
+		}
 
-    for (int8_t j = 0; j<8; j++)
-    {
-      uint8_t draw_color = (line & 0x1) ? color : bg;
-
-      if (draw_color || draw_background)
-	  {
-        drawPixel(x + i, y + j, draw_color);
-      }
-      line >>= 1;
-    }
-  }
+		for (int8_t j = 0; j<8; j++)
+		{
+			/*
+			uint8_t draw_color = (line & 0x1) ? color : bg;
+			if (draw_color || draw_background)
+			{
+				drawPixel(x + i, y + j, draw_color);
+			}
+			*/
+			
+			if (line & 0x1)
+				drawPixel(x + i, y + j, color);
+			
+			line >>= 1;
+		}
+	}
 }
 
 void Arduboy::setCursor(uint8_t x, uint8_t y)
@@ -265,28 +267,27 @@ unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t
 		return 0;
 
 	unsigned char yOffset = abs(y) % 8;
-	char sRow = y / 8; // cannot use a ">> 3" to preserve the sign, in case y is negative (above the top of the screen)
+	char bufferRow = y / 8; // cannot use a ">> 3" to preserve the sign, in case y is negative (above the top of the screen)
 	if (y < 0)
 	{
-		sRow--;
+		bufferRow--;
 		yOffset = 8 - yOffset;
 	}
 	unsigned char yOffsetComplement = 8 - yOffset;
-	unsigned char rows = h >> 3;
+	unsigned char bitmapRows = h >> 3;
 	if (h%8 != 0)
-		rows++;
+		bitmapRows++;
 	// compute the start and end X (clamp if outside the screen)
 	char startX = (x<0) ? -x : 0;
 	char endX = (WIDTH-x < w) ? WIDTH-x : w;
 	// a flag to check if there is white pixels under the drawn pixels of the bitmap
 	unsigned int collisionDetected = 0;
-	// iterate on the rows
-	for (unsigned char a = 0; a < rows; ++a)
+	// iterate on the bitmapRows
+	for (unsigned char a = 0; a < bitmapRows; ++a)
 	{
-		char bRow = sRow + a;
-		if (bRow > (HEIGHT/8)-1)
+		if (bufferRow > (HEIGHT/8)-1)
 			break;
-		if (bRow > -2)
+		if (bufferRow > -2)
 		{
 			// inverse the horizontal iteration inside the bitmap if we are mirrored on x
 			char iCol = startX;
@@ -296,13 +297,13 @@ unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t
 				iCol = w-1-startX;
 				iColDirection = -1;
 			}
-			int bRowShift = bRow*WIDTH;
-			int nextBRowShift = (bRow+1)*WIDTH;
+			int bRowShift = bufferRow*WIDTH;
+			int nextBRowShift = (bufferRow+1)*WIDTH;
 			for (char xCol = startX; xCol < endX; xCol++, iCol += iColDirection)
 			{
 				char currentX = x + xCol;
 				uint8_t unshiftedByteToWrite = pgm_read_byte(bitmap+(a*w)+iCol);
-				if (bRow >= 0)
+				if (bufferRow >= 0)
 				{
 					int bufferPosition = bRowShift + currentX;
 					uint8_t byteToWrite = unshiftedByteToWrite << yOffset;
@@ -315,7 +316,7 @@ unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t
 					else if (color == INVERT)
 						sBuffer[bufferPosition] ^= byteToWrite;
 				}
-				if (yOffset && bRow<(HEIGHT/8)-1)
+				if (yOffset && bufferRow<(HEIGHT/8)-1)
 				{
 					int bufferPosition = nextBRowShift + currentX;
 					uint8_t byteToWrite = unshiftedByteToWrite >> yOffsetComplement;
@@ -330,6 +331,7 @@ unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t
 				}
 			}
 		}
+		bufferRow++;
 	}
 	return collisionDetected;
 }
