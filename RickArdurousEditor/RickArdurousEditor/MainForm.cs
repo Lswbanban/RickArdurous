@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RickArdurousEditor
@@ -165,12 +160,19 @@ namespace RickArdurousEditor
 
 		private void toolStripButtonRespawnPointType_Click(object sender, EventArgs e)
 		{
-			if ((mCurrentSelectedItem != null) && (mCurrentSelectedItem.ItemType == Items.Item.Type.RICK))
+			if (mCurrentSelectedItem != null)
 			{
-				if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.NORMAL)
-					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.START;
-				else
-					mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
+				if (mCurrentSelectedItem.ItemType == Items.Item.Type.RICK)
+				{
+					if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.NORMAL)
+						mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.START;
+					else
+						mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
+				}
+				else if (mCurrentSelectedItem.ItemType == Items.Item.Type.BOULDER)
+				{
+					mCurrentSelectedItem.IsSpecial = !mCurrentSelectedItem.IsSpecial;
+				}
 				RedrawLevel();
 			}
 		}
@@ -311,7 +313,7 @@ namespace RickArdurousEditor
 						{
 							if (mCurrentSelectedItem == null)
 							{
-								mCurrentSelectedItem = mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, ConvertMouseCoordToLevelCoord(e.Location));								
+								mCurrentSelectedItem = mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, false, ConvertMouseCoordToLevelCoord(e.Location));								
 							}
 							else if (mCurrentEditAction == EditAction.ADJUST_SENSOR)
 							{

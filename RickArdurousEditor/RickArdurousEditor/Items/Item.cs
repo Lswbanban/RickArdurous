@@ -39,6 +39,7 @@ namespace RickArdurousEditor.Items
 		// type of the item
 		private Type mType = Type.HORIZONTAL_SPIKE;
 		private bool mIsMirror = false;
+		private bool mIsSpecial = false;
 
 		// two special flags for the Rick type of Item that can identify the first and last puzzle screen
 		private RespawnType mRickRespawnType = RespawnType.NORMAL;
@@ -69,6 +70,16 @@ namespace RickArdurousEditor.Items
 			get { return mIsMirror; }
 		}
 
+		public bool IsSpecial
+		{
+			get { return mIsSpecial; }
+			set
+			{
+				mIsSpecial = value;
+				UpdateSprite();
+			}
+		}
+
 		public Type ItemType
 		{
 			get { return mType; }
@@ -97,11 +108,12 @@ namespace RickArdurousEditor.Items
 		}
 		#endregion
 
-		public Item(Type type, bool isMirrored, int x, int y, int additionalParameter)
+		public Item(Type type, bool isMirrored, bool isSpecial, int x, int y, int additionalParameter)
 		{
 			mType = type;
 			Move(new Point(x, y)); // use the Move function because the destroyable block snap to grid
 			mIsMirror = isMirrored;
+			mIsSpecial = isSpecial;
 			mArrowLauncherDistance = additionalParameter;
 			UpdateSprite();
 		}
@@ -154,7 +166,7 @@ namespace RickArdurousEditor.Items
 					mSprite = ImageProvider.GetDestroyableBlockImage();
 					break;
 				case Type.BOULDER:
-					mSprite = ImageProvider.GetBoulderImage(mIsMirror);
+					mSprite = ImageProvider.GetBoulderImage(mIsMirror, mIsSpecial);
 					break;
 			}
 		}
@@ -381,6 +393,8 @@ namespace RickArdurousEditor.Items
 						string flags = ", Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE ";
 						if (mIsMirror)
 							flags += " | Item::PropertyFlags::MIRROR_X";
+						if (mIsSpecial)
+							flags += " | Item::PropertyFlags::SPECIAL";
 						writer.WriteLine("\t" + GetInstanceName(instanceNumber) + ".Init(" + mX.ToString() + ", " + mY.ToString() + flags + ");");
 						break;
 					}

@@ -193,13 +193,18 @@ namespace RickArdurousEditor
 			return result;
 		}
 
-		public static Bitmap GetBoulderImage(bool isMirrored)
+		public static Bitmap GetBoulderImage(bool isMirrored, bool isSpecial)
 		{
 			// load the boulder image and write it two times, with one time mirrored
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"HalfBoulder.png");
 			Bitmap result = new Bitmap(12, 12);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, RotateFlipType.RotateNoneFlipX, 0.8f, 0.5f, 0.35f, new Rectangle(0, 0, 6, 12));
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, RotateFlipType.RotateNoneFlipNone, 0.8f, 0.5f, 0.35f, new Rectangle(0, 0, 6, 12));
+			// the special flag will change the color
+			float red = isSpecial ? 0.5f : 0.8f;
+			float green = isSpecial ? 0.2f : 0.5f;
+			float blue = isSpecial ? 0.05f : 0.35f;
+			// create the sprite
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, RotateFlipType.RotateNoneFlipX, red, green, blue, new Rectangle(0, 0, 6, 12));
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, RotateFlipType.RotateNoneFlipNone, red, green, blue, new Rectangle(0, 0, 6, 12));
 			// load the shadow and write it in the same image
 			sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"BoulderShadow.png");
 			RotateFlipType rotateFlipOperation = !isMirrored ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
@@ -225,7 +230,7 @@ namespace RickArdurousEditor
 			itemImages.Add(GetStalactiteImage());
 			itemImages.Add(GetArrowLauncherImage(false));
 			itemImages.Add(GetDestroyableBlockImage());
-			itemImages.Add(GetBoulderImage(false));
+			itemImages.Add(GetBoulderImage(false, false));
 
 			// declare the size, and numbers of items in the toolbars
 			const int itemRows = 8;
