@@ -32,12 +32,12 @@ private:
 	unsigned char AnimFrameCount;
 	unsigned char AnimState;
 	unsigned char PhysicsId;
+	unsigned char MyWidth;
+	unsigned char MyHeight;
 	
 	inline bool IsScorpion() { return IsPropertySet(Item::PropertyFlags::SPECIAL); }
 	inline bool IsSkeleton() { return IsPropertySet(Item::PropertyFlags::SPECIAL_2); }
 	int GetYUnderFeet();
-	unsigned char GetWidth();
-	unsigned char GetHeight();
 	bool IsThereAnyGroundCollisionAt(int yWorld);
 	bool IsThereWallCollisionOrGap(bool shouldCheckGap);
 	void MoveAccordingToOrientation();

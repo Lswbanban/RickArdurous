@@ -24,7 +24,7 @@ bool Enemy::Update(UpdateStep step)
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
-				if (MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
+				if (MapManager::IsOnScreen(X, Y, MyWidth, MyHeight))
 				{
 					// set the visible flag if we are on screen and update the logic normally
 					SetProperty(Item::PropertyFlags::IS_VISIBLE);
@@ -57,7 +57,7 @@ bool Enemy::Update(UpdateStep step)
 					if (collision != 0)
 					{
 						// compute the horizontal velocity for the death trajectory
-						bool isCollisionOnLeftHalfOfSprite = collision < (1 << (GetWidth() >> 1));
+						bool isCollisionOnLeftHalfOfSprite = collision < (1 << (MyWidth >> 1));
 						char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
 						// if we are falling stop the fall before reusing the physics id
 						if (AnimState == State::FALL)
@@ -134,6 +134,10 @@ bool Enemy::Update(UpdateStep step)
 		}
 		case Item::UpdateStep::RESPAWN:
 		{
+			// memorize my size based on the type of enemy
+			MyWidth = IsSkeleton() ? SpriteData::SKELETON_SPRITE_WIDTH : 
+						(IsScorpion() ? SpriteData::SCORPION_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH);
+			MyHeight = IsScorpion() ? 4 : 12;
 			// and start to walk (if we are not alive, this update is not even called)
 			InitWalk();
 			break;
@@ -147,17 +151,6 @@ int Enemy::GetYUnderFeet()
 	return IsScorpion() ? Y + 4 : Y + 14;
 }
 
-unsigned char Enemy::GetWidth()
-{
-	return IsSkeleton() ? SpriteData::SKELETON_SPRITE_WIDTH : 
-			(IsScorpion() ? SpriteData::SCORPION_SPRITE_WIDTH : SpriteData::MUMMY_SPRITE_WIDTH);
-}
-
-unsigned char Enemy::GetHeight()
-{
-	return IsScorpion() ? 4 : 12;
-}
-
 void Enemy::MoveAccordingToOrientation()
 {
 	// move the X depending on the direction
@@ -169,7 +162,7 @@ void Enemy::MoveAccordingToOrientation()
 
 bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 {
-	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
+	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + MyWidth + WALL_COLLISION_DETECTION_DISTANCE;
 	unsigned char gapHeightShift = IsScorpion() ? 0 : 1;
 	return (MapManager::IsThereStaticCollisionAt(wallX, Y, true) || 
 		(!IsScorpion() && MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT)) ||
@@ -179,7 +172,7 @@ bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
 {
 	// ask the MapManager to check for the collisions (using one pixel less on the left and on the right)
-	return MapManager::IsThereAnyHorizontalCollisionAt(X + 1, yWorld, GetWidth() - 2);
+	return MapManager::IsThereAnyHorizontalCollisionAt(X + 1, yWorld, MyWidth - 2);
 }
 
 void Enemy::UpdateSkeletonBehavior()
@@ -328,7 +321,7 @@ bool Enemy::UpdateDeath()
 	Physics::UpdateParabolicTrajectory(PhysicsId, X, Y);
 	
 	// check if I'm still on screen
-	if (!MapManager::IsOnScreen(X, Y, GetWidth(), GetHeight()))
+	if (!MapManager::IsOnScreen(X, Y, MyWidth, MyHeight))
 	{
 		// stop the parabolic trajectory
 		Physics::StopParabolicTrajectory(PhysicsId);
