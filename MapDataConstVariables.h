@@ -12,7 +12,7 @@ namespace MapManager
 	static constexpr int LEVEL_HEIGHT = 32;
 
 	// number of puzzle screen
-	static constexpr int PUZZLE_SCREEN_COUNT = 10;
+	static constexpr int PUZZLE_SCREEN_COUNT = 11;
 	static constexpr int PUZZLE_SCREEN_BYTE_COUNT = 2;
 
 	// coordinates of the first puzzle screen and main menu
@@ -22,7 +22,7 @@ namespace MapManager
 	static constexpr int FIRST_PUZZLE_SCREEN_CAMERA_Y = 8;
 
 	// Number of statuettes to collect
-	static constexpr int MAX_STATUETTE_COUNT = 5;
+	static constexpr int MAX_STATUETTE_COUNT = 6;
 };
 
 #endif
