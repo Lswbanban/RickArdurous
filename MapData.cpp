@@ -37,12 +37,12 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,7),ID(15,7),ID(0,11),ID(15,4),ID(7,3),ID(3,3),ID(3,7),ID(15,10),ID(1,15),ID(15,15),ID(1,0),
 	ID(1,1),ID(3,3),ID(3,0),ID(11,15),ID(8,8),ID(1,2),ID(2,1),ID(3,3),ID(7,15),ID(2,7),ID(3,7),ID(15,3),ID(8,15),ID(15,15),ID(1,0),
 	ID(1,2),ID(1,2),ID(8,15),ID(10,8),ID(2,1),ID(1,2),ID(2,1),ID(8,15),ID(2,8),ID(2,1),ID(7,15),ID(2,2),ID(15,15),ID(15,1),
-	ID(2,1),ID(1,1),ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,2),ID(1,2),ID(1,1),ID(1,1),ID(1,2),ID(8,15),ID(2,8),ID(15,12),ID(13,15),ID(3,0),
-	ID(2,2),ID(2,0),ID(11,11),ID(0,2),ID(1,1),ID(1,1),ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(0,11),ID(0,11),ID(11,15),ID(2,1),ID(2,1),ID(0,11),ID(11,11),ID(11,0),ID(2,1),ID(1,8),ID(13,8),ID(2,1),
-	ID(2,0),ID(11,15),ID(5,11),ID(4,6),ID(11,15),ID(15,15),ID(4,8),ID(2,0),ID(15,6),ID(0,11),ID(11,0),ID(13,11),ID(0,2),
-	ID(8,15),ID(14,7),ID(1,12),ID(12,14),ID(12,12),ID(12,12),ID(15,1),ID(8,8),ID(15,2),ID(7,3),ID(1,8),ID(15,11),ID(13,15),ID(2,6),
-	ID(8,15),ID(2,7),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(8,15),ID(2,13),ID(15,5),ID(1,8),ID(15,2),ID(8,1),ID(1,8),ID(15,11),ID(13,15),ID(2,5),
-	ID(5,15),ID(2,0),ID(1,2),ID(0,11),ID(11,15),ID(1,11),ID(11,0),ID(1,6),ID(5,8),ID(15,2),ID(13,15),ID(5,2),ID(8,15),ID(2,8),ID(2,1),ID(8,15),ID(2,7),ID(3,7),ID(15,6),ID(13,15),ID(2,2),
+	ID(2,1),ID(1,1),ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(2,2),ID(1,2),ID(1,2),ID(1,1),ID(1,1),ID(1,2),ID(8,15),ID(2,8),ID(15,11),ID(13,15),ID(4,0),
+	ID(2,2),ID(2,0),ID(11,11),ID(0,2),ID(1,1),ID(1,1),ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(0,11),ID(0,11),ID(11,15),ID(2,1),ID(2,1),ID(0,11),ID(11,11),ID(11,0),ID(2,1),ID(1,13),ID(1,8),ID(2,1),
+	ID(2,0),ID(11,15),ID(5,11),ID(4,6),ID(11,15),ID(15,15),ID(4,8),ID(2,0),ID(15,7),ID(11,11),ID(13,11),ID(11,0),ID(2,0),
+	ID(8,15),ID(14,7),ID(1,12),ID(12,14),ID(12,12),ID(12,12),ID(15,1),ID(8,8),ID(15,2),ID(7,3),ID(1,8),ID(15,10),ID(13,15),ID(3,6),
+	ID(8,15),ID(2,7),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(8,15),ID(2,13),ID(15,5),ID(1,8),ID(15,2),ID(8,1),ID(1,8),ID(15,10),ID(13,15),ID(3,5),
+	ID(5,15),ID(2,0),ID(1,2),ID(0,11),ID(11,15),ID(1,11),ID(11,0),ID(1,6),ID(5,8),ID(15,2),ID(13,15),ID(5,2),ID(8,15),ID(2,8),ID(2,1),ID(8,15),ID(2,7),ID(3,7),ID(15,5),ID(13,15),ID(2,7),ID(2,0),
 	ID(6,15),ID(3,11),ID(15,8),ID(11,11),ID(1,8),ID(15,2),ID(13,15),ID(3,7),ID(3,2),ID(1,15),ID(2,8),ID(1,2),ID(8,15),ID(3,11),ID(11,11),ID(11,11),ID(11,0),ID(3,3),ID(3,3),ID(1,0),
 	ID(1,7),ID(15,13),ID(8,1),ID(7,15),ID(1,13),ID(15,9),ID(8,1),ID(1,8),ID(7,15),ID(9,0),ID(11,0),ID(2,2),
 	ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,7),ID(15,2),ID(7,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(1,1),ID(1,1),ID(3,3),ID(3,3),ID(3,12),ID(14,15),ID(5,11),ID(5,0),
@@ -56,7 +56,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,6),ID(4,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,11,23,29,34,38,43,49,54,72,85,98,109,120,135,149,168,192,205,219,237,258,278,290,313,336,346,364,384,406,426,439,463,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,11,23,29,34,38,43,49,54,72,85,98,109,120,135,149,168,192,205,219,237,259,279,291,314,337,347,365,385,407,427,440,464,};
 
 BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
@@ -92,7 +92,7 @@ void InitScreen0(bool shouldRespawn)
 void InitScreen1(bool shouldRespawn)
 {
 	// Add a checkpoint if we need to
-	MapManager::MemorizeCheckPoint(53, 67);
+	MapManager::MemorizeCheckPoint(52, 67);
 
 	// init all the item of the current puzzle screen
 	boulder1.Init(91, 68, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE  | Item::PropertyFlags::MIRROR_X);
@@ -180,14 +180,15 @@ void InitScreen8(bool shouldRespawn)
 
 	// init all the item of the current puzzle screen
 	boulder1.Init(290, 148, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE );
-	spike1.Init(272, 134, Item::PropertyFlags::MIRROR_X);
-	spike2.Init(320, 137, Item::PropertyFlags::SPECIAL);
-	spike3.Init(306, 129, Item::PropertyFlags::SPECIAL);
-	spike4.Init(346, 138, Item::PropertyFlags::SPECIAL);
-	stalactite1.Init(333, 138, Item::PropertyFlags::NONE, shouldRespawn);
+	spike1.Init(263, 158, Item::PropertyFlags::MIRROR_X);
+	spike2.Init(320, 136, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+	spike3.Init(302, 130, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+	spike4.Init(340, 139, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+	spike5.Init(359, 138, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
+	stalactite1.Init(328, 138, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(343, 164, Item::PropertyFlags::SPECIAL, shouldRespawn);
-	enemy2.Init(321, 164, Item::PropertyFlags::SPECIAL, shouldRespawn);
-	arrowLauncher1.Init(371, 151, Item::PropertyFlags::MIRROR_X, 70);
+	enemy2.Init(321, 164, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X, shouldRespawn);
+	arrowLauncher1.Init(371, 151, Item::PropertyFlags::MIRROR_X, 71);
 }
 
 void InitScreen9(bool shouldRespawn)
@@ -195,7 +196,7 @@ void InitScreen9(bool shouldRespawn)
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
-	graal1.Init(353, 111, Item::PropertyFlags::NONE, shouldRespawn);
+	graal1.Init(344, 111, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items

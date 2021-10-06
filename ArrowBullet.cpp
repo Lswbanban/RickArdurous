@@ -51,24 +51,18 @@ unsigned char ArrowBullet::GetWidth()
 }
 
 /**
- * Return the start x position of the bullet in world coordinates
- */
-int ArrowBullet::GetBulletRayCastStartX()
-{
-	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
-		return X - CurrentBulletSpeed;
-	else
-		return X;
-}
-
-/**
  * Draw a full ray of the bullet with the specified color.
  * The ray length equals to the bullet length + the speed of the bullet.
  */
 void ArrowBullet::DrawBulletRay(unsigned char color)
 {
+	// compute the start position of the raycast
+	int bulletRayCastStartX = X;
+	if (IsPropertySet(Item::PropertyFlags::MIRROR_X))
+		bulletRayCastStartX = X - CurrentBulletSpeed;
+
 	// draw the line of the ray cast
-	arduboy.drawFastHLine(MapManager::GetXOnScreen(GetBulletRayCastStartX()),
+	arduboy.drawFastHLine(MapManager::GetXOnScreen(bulletRayCastStartX),
 							MapManager::GetYOnScreen(Y), CurrentBulletSpeed + GetWidth(), color);
 }
 
@@ -162,7 +156,7 @@ bool ArrowBullet::Update(UpdateStep step)
 					Y -= (SpriteData::SPARKS_SPRITE_HEIGHT >> 1);
 					SparksAnimFrameId = 0;
 				}
-				else if ((xOnScreen < 0) || (xOnScreen >= WIDTH))
+				else if ((xOnScreen < 0) /*|| (xOnScreen >= WIDTH)*/)
 				{
 					// if the bullet is outside the screen, kill it immediately without playing sparks
 					KillBulletWithoutSparks();
