@@ -56,9 +56,6 @@ public:
 
   uint8_t getPixel(uint8_t x, uint8_t y);
 
-  /// Draws vertical line.
-  void drawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint8_t color);
-
   /// Draws a horizontal line.
   void drawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint8_t color);
 

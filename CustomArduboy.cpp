@@ -135,15 +135,6 @@ uint8_t Arduboy::getPixel(uint8_t x, uint8_t y)
   return (sBuffer[(row*WIDTH) + x] & _BV(bit_position)) >> bit_position;
 }
 
-void Arduboy::drawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint8_t color)
-{
-  uint8_t end = y+h;
-  for (uint8_t a = y; a < end; a++)
-  {
-    drawPixel(x,a,color);
-  }
-}
-
 void Arduboy::drawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint8_t color)
 {
   uint8_t end = x+w;
@@ -155,11 +146,10 @@ void Arduboy::drawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint8_t color)
 
 void Arduboy::fillRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t color)
 {
-  // stupidest version - update in subclasses if desired!
-  for (uint8_t i=x; i<x+w; i++)
-  {
-    drawFastVLine(i, y, h, color);
-  }
+	// stupidest version - update in subclasses if desired!
+	uint8_t end = y+h;
+	for (uint8_t i = y; i < end; ++i)
+		drawFastHLine(x, i, w, color);
 }
 
 void Arduboy::fillScreen(uint8_t color)
