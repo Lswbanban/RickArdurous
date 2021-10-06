@@ -53,18 +53,19 @@ bool Stalagmite::Update(UpdateStep step)
 					
 					// get the top coord of the stalagmite
 					screenY += 6;
+					screenX += DropX;
 					
 					// if we reach the stalagmite, and finished to play the sparks, then go to wait mode
 					if (DropY >= screenY + SpriteData::SPARKS_SPRITE_FRAME_COUNT)
 						DropY = 255;
 					else if (DropY >= screenY) // otherwise play the sparks
-						arduboy.drawBitmapExtended(screenX + DropX - 2, screenY - 10,
+						arduboy.drawBitmapExtended(screenX - 2, screenY - 10,
 							SpriteData::Sparks[DropY % SpriteData::SPARKS_SPRITE_FRAME_COUNT],
 							SpriteData::SPARKS_SPRITE_WIDTH,
 							SpriteData::SPARKS_SPRITE_HEIGHT,
 							INVERT, false);
-					else // otherwise draw the drop
-						arduboy.drawPixel(screenX + DropX, DropY, WHITE);
+					else if ((screenX >= 0) && (screenX < WIDTH) && (DropY >= 0) && (DropY < HEIGHT)) // otherwise draw the drop
+						arduboy.drawPixel(screenX, DropY, WHITE);
 				}
 			}
 			else

@@ -113,9 +113,6 @@ uint16_t Arduboy::rawADC(byte adc_bits)
 
 void Arduboy::drawPixel(uint8_t x, uint8_t y, uint8_t color)
 {
-  // check if pixel is inside the screen to avoid patching the memory
-  if ((x >= WIDTH) || (y >= HEIGHT))
-	  return;
   // draw the pixel at the correct place
   uint8_t row = y >> 3;
   if (color)
@@ -137,11 +134,16 @@ uint8_t Arduboy::getPixel(uint8_t x, uint8_t y)
 
 void Arduboy::drawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint8_t color)
 {
-  uint8_t end = x+w;
-  for (uint8_t a = x; a < end; a++)
-  {
-    drawPixel(a,y,color);
-  }
+	// compute the end
+	uint8_t end = x+w;
+	
+	// check if pixel is inside the screen to avoid patching the memory
+	if ((end > WIDTH) || (y >= HEIGHT))
+		return;
+	
+	// draw all the pixels of the line
+	for (uint8_t a = x; a < end; a++)
+		drawPixel(a,y,color);
 }
 
 void Arduboy::fillRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t color)
