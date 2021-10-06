@@ -142,10 +142,10 @@ void InitScreen5(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(102, 195);
 
 	// init all the item of the current puzzle screen
-	enemy1.Init(39, 195, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
+	enemy1.Init(37, 194, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
 	enemy2.Init(70, 210, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
 	enemy3.Init(80, 234, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
-	enemy4.Init(27, 218, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
+	enemy4.Init(32, 218, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::MIRROR_X, shouldRespawn);
 	bulletCrate1.Init(110, 240, Item::PropertyFlags::NONE, shouldRespawn);
 }
 

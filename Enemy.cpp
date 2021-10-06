@@ -171,7 +171,7 @@ bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 {
 	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + GetWidth() + WALL_COLLISION_DETECTION_DISTANCE;
 	unsigned char gapHeightShift = IsScorpion() ? 0 : 1;
-	return (MapManager::IsThereStaticCollisionAt(wallX, Y) || 
+	return (MapManager::IsThereStaticCollisionAt(wallX, Y, true) || 
 		(!IsScorpion() && MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT)) ||
 		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << gapHeightShift))));
 }
