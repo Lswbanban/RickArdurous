@@ -826,7 +826,18 @@ void Rick::CheckLethalCollision()
 	{
 		unsigned int collision = Draw(BLACK);
 		if (collision != 0)
+		{
 			InitDeath(collision);
+		}
+		else if (State == AnimState::FALL)
+		{
+			// special case when falling, because Rick falling anim has split legs which may not
+			// touch the lethal pixel in the Draw function, bug then later the ground collision
+			// check may detect the lethal pixels and consider them as ground
+			int yFeet = Y + 12;
+			if (arduboy.CheckWhitePixelsInRow(MapManager::GetXOnScreen(X) + LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET, MapManager::GetYOnScreen(yFeet), RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_STAND - LEFT_X_SHIFT_FOR_COLLISION_UNDER_FEET))
+				InitDeath(32); // any number to indicate a collision pixel
+		}
 	}
 }
 

@@ -328,13 +328,17 @@ unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t
 
 bool CustomArduboy::CheckWhitePixelsInRow(uint8_t x, uint8_t y, uint8_t w)
 {
-	unsigned char row = y >> 3;
-	unsigned char yLineToCheck = 1 << (y % 8);
-	int startX = (row*WIDTH) + x;
-	unsigned char* localBuffer = &(sBuffer[startX]);
-	for (unsigned char i = 0; i < w; ++i)
-		if (localBuffer[i] & yLineToCheck)
-			return true;
+	// need to check the y, because sometimes this function can be called with a y outside the screen
+	if (y < HEIGHT)
+	{
+		unsigned char row = y >> 3;
+		unsigned char yLineToCheck = 1 << (y % 8);
+		int startX = (row*WIDTH) + x;
+		unsigned char* localBuffer = &(sBuffer[startX]);
+		for (unsigned char i = 0; i < w; ++i)
+			if (localBuffer[i] & yLineToCheck)
+				return true;
+	}
 	return false;
 }
 
