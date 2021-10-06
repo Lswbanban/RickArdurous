@@ -113,7 +113,11 @@ uint16_t Arduboy::rawADC(byte adc_bits)
 
 void Arduboy::drawPixel(uint8_t x, uint8_t y, uint8_t color)
 {
-  uint8_t row = y / 8;
+  // check if pixel is inside the screen to avoid patching the memory
+  if ((x >= WIDTH) || (y >= HEIGHT))
+	  return;
+  // draw the pixel at the correct place
+  uint8_t row = y >> 3;
   if (color)
   {
     sBuffer[(row*WIDTH) + x] |=   _BV(y % 8);

@@ -129,6 +129,7 @@ void MapManager::AddItem(Item * item)
 
 void MapManager::RemoveItem(unsigned char index)
 {
+	// when this function is called, normally ItemsToUpdateCount is always > 0
 	// decrease the item count
 	ItemsToUpdateCount--;
 	// if the array is not empty, move the last item to the empty place
