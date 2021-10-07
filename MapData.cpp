@@ -89,8 +89,6 @@ void InitScreen0(bool shouldRespawn)
 	// init all the item of the current puzzle screen
 	stalagmite1.Init(14, 40, Item::PropertyFlags::NONE, shouldRespawn);
 	stalagmite2.Init(108, 32, Item::PropertyFlags::NONE, shouldRespawn);
-	graal1.Init(61, 32, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(8, 40, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(81, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite2.Init(40, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite3.Init(17, 10, Item::PropertyFlags::NONE, shouldRespawn);
@@ -164,9 +162,9 @@ void InitScreen6(bool shouldRespawn)
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(166, 200, Item::PropertyFlags::NONE, shouldRespawn);
+	stalactite1.Init(237, 195, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(207, 202, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::SPECIAL_2, shouldRespawn);
 	destBlock1.Init(184, 240, Item::PropertyFlags::NONE, shouldRespawn);
-	stalactite1.Init(237, 195, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy2.Init(213, 244, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
 
@@ -189,13 +187,13 @@ void InitScreen8(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(311, 171);
 
 	// init all the item of the current puzzle screen
+	stalactite1.Init(328, 138, Item::PropertyFlags::NONE, shouldRespawn);
 	boulder1.Init(290, 148, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE  | Item::PropertyFlags::SPECIAL);
 	spike1.Init(263, 158, Item::PropertyFlags::MIRROR_X);
 	spike2.Init(320, 136, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	spike3.Init(302, 130, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	spike4.Init(340, 139, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	spike5.Init(359, 138, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
-	stalactite1.Init(328, 138, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(343, 164, Item::PropertyFlags::SPECIAL, shouldRespawn);
 	enemy2.Init(321, 164, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X, shouldRespawn);
 	arrowLauncher1.Init(371, 151, Item::PropertyFlags::MIRROR_X, 71);
@@ -208,6 +206,7 @@ void InitScreen9(bool shouldRespawn)
 
 	// init all the item of the current puzzle screen
 	statuette1.Init(269, 112, Item::PropertyFlags::NONE, shouldRespawn);
+	stalactite1.Init(312, 72, Item::PropertyFlags::NONE, shouldRespawn);
 	spike1.Init(263, 109, Item::PropertyFlags::MIRROR_X);
 	spike2.Init(271, 95, Item::PropertyFlags::MIRROR_X);
 	spike3.Init(268, 103, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
@@ -217,7 +216,6 @@ void InitScreen9(bool shouldRespawn)
 	enemy2.Init(343, 90, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::MIRROR_X, shouldRespawn);
 	enemy3.Init(329, 74, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
 	bulletCrate1.Init(363, 112, Item::PropertyFlags::NONE, shouldRespawn);
-	stalactite1.Init(312, 72, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy4.Init(277, 116, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
 
@@ -237,8 +235,8 @@ void InitScreen11(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(246, 3);
 
 	// init all the item of the current puzzle screen
-	boulder1.Init(207, 20, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE  | Item::PropertyFlags::MIRROR_X | Item::PropertyFlags::SPECIAL);
 	statuette1.Init(156, 48, Item::PropertyFlags::NONE, shouldRespawn);
+	boulder1.Init(207, 20, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE  | Item::PropertyFlags::MIRROR_X | Item::PropertyFlags::SPECIAL);
 	spike1.Init(168, 22, Item::PropertyFlags::MIRROR_X);
 	spike2.Init(180, 6, Item::PropertyFlags::NONE);
 	spike3.Init(136, 9, Item::PropertyFlags::MIRROR_X);

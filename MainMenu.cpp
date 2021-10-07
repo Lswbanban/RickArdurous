@@ -101,7 +101,7 @@ void MainMenu::DrawMainMenu()
 		arduboy.drawChar(28 + (i*6), 3, title[i], BLACK, WHITE);
 	
 	// draw a black rectangle to erase the center of the level
-	arduboy.fillRect(56, 38, 16, 24, BLACK);
+	arduboy.fillRect(56, 46, 16, 16, BLACK);
 	arduboy.fillRect(19, 62, 109, 2, BLACK);
 
 	// draw the menu

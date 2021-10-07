@@ -447,6 +447,10 @@ namespace RickArdurousEditor
 			writer.WriteLine("\t// init all the item of the current puzzle screen");
 			foreach (Items.Item item in itemsOnScreen)
 			{
+				// special hard coded case for the level 0 (the main menu), do not export grail and statuette
+				if ((screenId == 0) && (item.ItemType == Items.Item.Type.GRAAL || item.ItemType == Items.Item.Type.STATUETTE))
+					continue;
+
 				item.WriteInit(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 				item.WasSaved = true;
 			}
