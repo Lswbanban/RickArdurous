@@ -99,16 +99,11 @@ void MainMenu::DrawMainMenu()
 	unsigned char title[] = "Rick Ardurous";
 	for (unsigned char i = 0; i < sizeof(title) - 1; ++i)
 		arduboy.drawChar(28 + (i*6), 3, title[i], BLACK, WHITE);
-
-	// draw some stalactites
-	unsigned char x[] = {18, 42, 75, 93, 98 };
-	unsigned char y[] = {17, 16, 15, 16, 19 };
-	for (unsigned char i = 0; i < sizeof(x); ++i)
-		arduboy.drawBitmapExtended(x[i], y[i], SpriteData::Stalactite, SpriteData::STALACTITE_SPRITE_WIDTH, SpriteData::STALACTITE_SPRITE_HEIGHT, WHITE, false);
-
-	// draw the main character
-	arduboy.drawBitmapExtended(99, 40, SpriteData::Rick[SpriteData::RickAnimFrameId::IDLE], SpriteData::RICK_SPRITE_WIDTH, SpriteData::RICK_SPRITE_HEIGHT, WHITE, true);
 	
+	// draw a black rectangle to erase the center of the level
+	arduboy.fillRect(56, 38, 16, 24, BLACK);
+	arduboy.fillRect(19, 62, 109, 2, BLACK);
+
 	// draw the menu
 	unsigned char menuY[] = { 30, 41, 52 };
 	arduboy.setCursor(MENU_X, menuY[0]);

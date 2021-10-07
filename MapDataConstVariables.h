@@ -22,7 +22,7 @@ namespace MapManager
 	static constexpr int FIRST_PUZZLE_SCREEN_CAMERA_Y = 8;
 
 	// Number of statuettes to collect
-	static constexpr int MAX_STATUETTE_COUNT = 7;
+	static constexpr int MAX_STATUETTE_COUNT = 8;
 };
 
 #endif
