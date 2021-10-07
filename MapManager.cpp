@@ -57,12 +57,12 @@ namespace MapManager
 	// a variable to indicate in which direction the player goes when traversing the puzzle screens
 	char PuzzleScreenMoveDirection;
 	// coordinates of the edge between the current puzzle screen and the previous screen
-	unsigned char LastPuzzleScreenEdgeCoordX;
-	unsigned char LastPuzzleScreenEdgeCoordY;
-	unsigned char LastCheckPointPuzzleScreenEdgeCoordX;
-	unsigned char LastCheckPointPuzzleScreenEdgeCoordY;
-	bool WasLastTransitionHorizontal;
-	bool WasLastCheckPointLastTransitionHorizontal;
+	unsigned char PreviousPuzzleScreenCoordX;
+	unsigned char PreviousPuzzleScreenCoordY;
+	unsigned char LastCheckPointPreviousPuzzleScreenCoordX;
+	unsigned char LastCheckPointPreviousPuzzleScreenCoordY;
+	unsigned char LastCheckPointPuzzleScreenCoordX;
+	unsigned char LastCheckPointPuzzleScreenCoordY;
 	
 	// variable use the draw the Shutter animation after a Respawn
 	char ShutterHeight;
@@ -91,12 +91,12 @@ void MapManager::Reset(unsigned char startScreenId, unsigned char startScreenCam
 	CurrentPuzzleScreenId = startScreenId;
 	FarestPuzzleScreenIdReached = startScreenId;
 	PuzzleScreenMoveDirection = 1;
-	LastPuzzleScreenEdgeCoordY = startScreenCameraY;
-	LastCheckPointPuzzleScreenEdgeCoordX = startScreenCameraX;
-	LastPuzzleScreenEdgeCoordX = startScreenCameraX;
-	LastCheckPointPuzzleScreenEdgeCoordY = startScreenCameraY;
-	WasLastTransitionHorizontal = false;
-	WasLastCheckPointLastTransitionHorizontal = false;
+	LastCheckPointPuzzleScreenCoordX = startScreenCameraX;
+	LastCheckPointPuzzleScreenCoordY = startScreenCameraY;
+	PreviousPuzzleScreenCoordX = startScreenCameraX;
+	LastCheckPointPreviousPuzzleScreenCoordX = startScreenCameraX;
+	PreviousPuzzleScreenCoordY = startScreenCameraY;
+	LastCheckPointPreviousPuzzleScreenCoordY = startScreenCameraY;
 	
 	// init the current camera
 	CameraX.Current = startScreenCameraX;
@@ -443,10 +443,12 @@ void MapManager::MemorizeCheckPoint(int rickX, int rickY)
 	{
 		// memorize the current screen id
 		LastCheckPointPuzzleScreenId = CurrentPuzzleScreenId;
-		// memorize also the edge transition from the previous screen
-		LastCheckPointPuzzleScreenEdgeCoordX = LastPuzzleScreenEdgeCoordX;
-		LastCheckPointPuzzleScreenEdgeCoordY = LastPuzzleScreenEdgeCoordY;
-		WasLastCheckPointLastTransitionHorizontal = WasLastTransitionHorizontal;
+		// memorise the current screen coordinates
+		LastCheckPointPuzzleScreenCoordX = CameraX.Target;
+		LastCheckPointPuzzleScreenCoordY = CameraY.Target;
+		// memorize also the previous screen coordinates (to restore them after a respawn)
+		LastCheckPointPreviousPuzzleScreenCoordX = PreviousPuzzleScreenCoordX;
+		LastCheckPointPreviousPuzzleScreenCoordY = PreviousPuzzleScreenCoordY;
 	}
 	
 	// respawn the player at the correct location
@@ -467,16 +469,15 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 		FarestPuzzleScreenIdReached = LastCheckPointPuzzleScreenId;
 		PuzzleScreenMoveDirection = 1;
 		
-		// reset the edge transition to the previous screen before last checkpoint
-		LastPuzzleScreenEdgeCoordX = LastCheckPointPuzzleScreenEdgeCoordX;
-		LastPuzzleScreenEdgeCoordY = LastCheckPointPuzzleScreenEdgeCoordY;
-		WasLastTransitionHorizontal = WasLastCheckPointLastTransitionHorizontal;
+		// reset the previous screen coordinates before the last checkpoint
+		PreviousPuzzleScreenCoordX = LastCheckPointPreviousPuzzleScreenCoordX;
+		PreviousPuzzleScreenCoordY = LastCheckPointPreviousPuzzleScreenCoordY;
 
 		// teleport the camera to avoid a transition when restarting to last checkpoint
-		CameraX.Current = LastCheckPointPuzzleScreenEdgeCoordX;
-		CameraX.Target = LastCheckPointPuzzleScreenEdgeCoordX;
-		CameraY.Current = LastCheckPointPuzzleScreenEdgeCoordY;
-		CameraY.Target = LastCheckPointPuzzleScreenEdgeCoordY;
+		CameraX.Current = LastCheckPointPuzzleScreenCoordX;
+		CameraX.Target = LastCheckPointPuzzleScreenCoordX;
+		CameraY.Current = LastCheckPointPuzzleScreenCoordY;
+		CameraY.Target = LastCheckPointPuzzleScreenCoordY;
 
 		// remove all the items, by clearing the whole array
 		ItemsToUpdateCount = 0;
@@ -615,19 +616,13 @@ void MapManager::BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigne
 	bool isVerticalTransition = (newTargetCameraY != CameraY.Target);
 	if (isHorizontalTransition || isVerticalTransition)
 	{
-		// get the edge of the transition (which is the max of the two target camera)
-		unsigned char newEdgeCoordX = (newTargetCameraX > CameraX.Target) ? newTargetCameraX : CameraX.Target;
-		unsigned char newEdgeCoordY = (newTargetCameraY > CameraY.Target) ? newTargetCameraY : CameraY.Target;
-		
 		// if Rick just crossed the same edge as before, he is returning back
-		bool isRickReturning = (WasLastTransitionHorizontal == isHorizontalTransition) && 
-								(LastPuzzleScreenEdgeCoordX == newEdgeCoordX) &&
-								(LastPuzzleScreenEdgeCoordY == newEdgeCoordY);
+		bool isRickReturning = 	(newTargetCameraX == PreviousPuzzleScreenCoordX) &&
+								(newTargetCameraY == PreviousPuzzleScreenCoordY);
 
-		// memorise the new edge coordinates
-		LastPuzzleScreenEdgeCoordX = newEdgeCoordX;
-		LastPuzzleScreenEdgeCoordY = newEdgeCoordY;
-		WasLastTransitionHorizontal = isHorizontalTransition;
+		// put the current camera in the previous before setting the current with the new
+		PreviousPuzzleScreenCoordX = CameraX.Target;
+		PreviousPuzzleScreenCoordY = CameraY.Target;
 		
 		// set the new target camera
 		CameraX.Target = newTargetCameraX;

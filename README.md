@@ -15,7 +15,6 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 	- add the PSTR()/F() macro around the menu strings?
 	- bug in Rick state machine, from Fall to Death (for example jump in dynamite explosion)
 	- the mirror of the left wall is not correct for the coordinate x=0 (example in the main menu level)
-	- bug in the checkpoint for puzzle screen 9
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
 	- dynamite explosion

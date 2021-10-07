@@ -49,7 +49,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(1,11),ID(11,0),ID(5,4),ID(5,0),ID(11,11),ID(11,11),ID(11,11),ID(11,0),ID(5,6),ID(0,11),ID(11,11),ID(11,15),ID(1,13),ID(15,6),ID(6,0),
 	ID(6,15),ID(11,14),ID(12,5),ID(6,8),ID(15,5),ID(5,15),ID(15,5),ID(15,1),ID(13,15),ID(6,5),
 	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(13,9),ID(9,5),ID(1,3),ID(14,2),ID(5,6),ID(5,15),ID(13,5),ID(9,9),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,0),
-	ID(5,6),ID(15,5),ID(5,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,5),ID(15,3),ID(5,10),ID(10,15),ID(1,13),ID(15,6),ID(5,0),
+	ID(5,6),ID(15,5),ID(5,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(15,1),ID(12,12),ID(12,12),ID(12,5),ID(5,15),ID(3,5),ID(10,10),ID(15,1),ID(13,15),ID(6,5),
 	ID(4,5),ID(15,5),ID(5,12),ID(12,12),ID(12,12),ID(0,5),ID(5,0),ID(15,2),ID(11,0),ID(1,5),ID(15,1),ID(13,15),ID(6,1),ID(6,12),ID(14,12),ID(4,5),ID(6,15),ID(1,13),ID(15,2),ID(5,14),ID(4,5),ID(6,0),
 	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,7),ID(6,15),ID(5,0),ID(6,4),ID(5,3),ID(7,15),ID(4,8),ID(5,15),ID(1,13),ID(15,3),ID(11,11),ID(11,11),ID(11,11),ID(13,15),ID(1,9),ID(9,0),
 	ID(5,10),ID(10,15),ID(2,13),ID(15,12),ID(5,15),ID(10,7),ID(3,1),ID(5,15),ID(1,13),ID(15,9),ID(13,15),ID(1,10),ID(10,0),
@@ -162,9 +162,9 @@ void InitScreen6(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(132, 235);
 
 	// init all the item of the current puzzle screen
-	statuette1.Init(166, 200, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(237, 195, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(207, 202, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::SPECIAL_2, shouldRespawn);
+	statuette1.Init(166, 200, Item::PropertyFlags::NONE, shouldRespawn);
+	enemy1.Init(219, 202, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::SPECIAL_2 | Item::PropertyFlags::MIRROR_X, shouldRespawn);
 	destBlock1.Init(184, 240, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy2.Init(213, 244, Item::PropertyFlags::SPECIAL, shouldRespawn);
 }
@@ -206,8 +206,8 @@ void InitScreen9(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(331, 107);
 
 	// init all the item of the current puzzle screen
-	statuette1.Init(269, 112, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(312, 72, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette1.Init(269, 112, Item::PropertyFlags::NONE, shouldRespawn);
 	spike1.Init(263, 109, Item::PropertyFlags::MIRROR_X);
 	spike2.Init(271, 95, Item::PropertyFlags::MIRROR_X);
 	spike3.Init(268, 103, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
@@ -227,7 +227,6 @@ void InitScreen10(bool shouldRespawn)
 	// init all the item of the current puzzle screen
 	statuette1.Init(352, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(342, 18, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::SPECIAL_2 | Item::PropertyFlags::MIRROR_X, shouldRespawn);
-	enemy2.Init(298, 52, Item::PropertyFlags::SPECIAL, shouldRespawn);
 	arrowLauncher1.Init(283, 40, Item::PropertyFlags::MIRROR_X, 24);
 	arrowLauncher2.Init(372, 8, Item::PropertyFlags::MIRROR_X, 32);
 }
@@ -238,15 +237,15 @@ void InitScreen11(bool shouldRespawn)
 	MapManager::MemorizeCheckPoint(246, 3);
 
 	// init all the item of the current puzzle screen
-	graal1.Init(143, 48, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(156, 48, Item::PropertyFlags::NONE, shouldRespawn);
 	boulder1.Init(207, 20, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::ALIVE  | Item::PropertyFlags::MIRROR_X | Item::PropertyFlags::SPECIAL);
+	statuette1.Init(156, 48, Item::PropertyFlags::NONE, shouldRespawn);
 	spike1.Init(167, 22, Item::PropertyFlags::MIRROR_X);
 	spike2.Init(180, 6, Item::PropertyFlags::NONE);
 	spike3.Init(136, 9, Item::PropertyFlags::MIRROR_X);
 	spike4.Init(136, 43, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	spike5.Init(137, 32, Item::PropertyFlags::SPECIAL);
 	destBlock1.Init(184, 24, Item::PropertyFlags::NONE, shouldRespawn);
+	graal1.Init(143, 48, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
