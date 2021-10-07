@@ -33,7 +33,7 @@ bool Stalactite::Update(UpdateStep step)
 					MapManager::CallMeBackForEachTrapTriggerer(this, &CheckTrigererCallback);
 
 					// compute a shaking x variation
-					char shakingMove[] = {1, -1, 0, 2, 0, -2, 1, -1};
+					char shakingMove[] = {1, -1, 0, 1, 0, -1, 0};
 					for (unsigned char i = 0; i < sizeof(shakingMove); ++i)
 						if (arduboy.everyXFrames(SHAKING_SPEED + i))
 						{

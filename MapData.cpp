@@ -87,10 +87,10 @@ void InitScreen0(bool shouldRespawn)
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
-	stalagmite1.Init(15, 40, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite1.Init(14, 40, Item::PropertyFlags::NONE, shouldRespawn);
 	stalagmite2.Init(108, 32, Item::PropertyFlags::NONE, shouldRespawn);
 	graal1.Init(61, 32, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(9, 40, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette1.Init(8, 40, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(81, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite2.Init(40, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite3.Init(17, 10, Item::PropertyFlags::NONE, shouldRespawn);
@@ -252,10 +252,10 @@ void InitScreen12(bool shouldRespawn)
 	// Add a checkpoint if we need to
 
 	// init all the item of the current puzzle screen
-	stalagmite1.Init(15, 40, Item::PropertyFlags::NONE, shouldRespawn);
+	stalagmite1.Init(14, 40, Item::PropertyFlags::NONE, shouldRespawn);
 	stalagmite2.Init(108, 32, Item::PropertyFlags::NONE, shouldRespawn);
 	graal1.Init(61, 32, Item::PropertyFlags::NONE, shouldRespawn);
-	statuette1.Init(9, 40, Item::PropertyFlags::NONE, shouldRespawn);
+	statuette1.Init(8, 40, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite1.Init(81, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite2.Init(40, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite3.Init(17, 10, Item::PropertyFlags::NONE, shouldRespawn);

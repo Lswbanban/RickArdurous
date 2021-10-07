@@ -31,6 +31,24 @@ bool Stalagmite::Update(UpdateStep step)
 			}
 			break;
 		}
+
+		case Item::UpdateStep::CHECK_LETHAL:
+		{
+			// for check lethal, just check one pixel in between the two stalagmite,
+			// if this pixel is white, that means a lethal object traversed me
+			if (IsPropertySet(Item::PropertyFlags::ALIVE))
+			{
+				char xOnScreen = MapManager::GetXOnScreen(X + SpriteData::STALAGMITE_SPRITE_WIDTH);
+				char yOnScreen = MapManager::GetYOnScreen(Y);
+				// spawn sparks if the dynamite kill me
+				if (arduboy.getPixel(xOnScreen, yOnScreen) == WHITE)
+				{
+					ClearProperty(Item::PropertyFlags::ALIVE);
+					SparksAnimFrameId = 0;
+				}
+			}
+			break;
+		}
 		
 		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
