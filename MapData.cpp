@@ -26,9 +26,9 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(3,2),ID(1,2),ID(1,3),ID(1,3),ID(1,2),ID(1,2),ID(3,1),ID(2,2),ID(2,0),ID(11,11),ID(11,11),ID(0,9),ID(9,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,0),ID(1,0),ID(11,11),ID(11,1),
 	ID(1,1),ID(11,0),ID(11,15),ID(1,0),ID(11,11),ID(11,15),ID(1,11),ID(0,0),ID(1,1),ID(8,15),ID(6,10),ID(10,15),ID(15,15),ID(2,0),ID(15,4),ID(8,0),
 	ID(2,0),ID(15,12),ID(0,1),ID(8,15),ID(6,6),ID(5,15),ID(2,11),ID(11,11),ID(11,3),ID(6,4),ID(5,12),ID(12,12),ID(14,12),ID(15,3),ID(12,12),ID(15,2),ID(8,0),
-	ID(8,15),ID(14,8),ID(1,15),ID(2,7),ID(5,15),ID(10,8),ID(4,5),ID(15,4),ID(13,15),ID(6,12),ID(15,1),ID(8,0),
-	ID(8,15),ID(14,8),ID(1,15),ID(3,6),ID(5,3),ID(3,3),ID(3,3),ID(3,11),ID(15,2),ID(8,5),ID(15,4),ID(4,3),ID(0,11),ID(0,3),ID(3,7),ID(15,1),ID(12,2),
-	ID(8,15),ID(6,9),ID(9,15),ID(4,7),ID(3,3),ID(0,11),ID(15,3),ID(11,11),ID(11,11),ID(11,11),ID(15,4),ID(8,5),ID(15,3),ID(6,11),ID(11,15),ID(4,11),ID(0,3),ID(3,1),
+	ID(8,15),ID(14,8),ID(1,15),ID(2,7),ID(5,15),ID(10,8),ID(4,5),ID(15,4),ID(13,15),ID(8,8),
+	ID(8,15),ID(14,8),ID(1,15),ID(3,6),ID(5,3),ID(3,3),ID(3,3),ID(3,11),ID(15,2),ID(8,5),ID(15,4),ID(4,3),ID(0,11),ID(0,3),ID(3,7),ID(12,15),ID(1,2),
+	ID(8,15),ID(6,9),ID(9,15),ID(4,7),ID(3,3),ID(0,11),ID(15,3),ID(11,11),ID(11,11),ID(11,11),ID(15,4),ID(8,15),ID(4,6),ID(11,11),ID(15,4),ID(11,0),ID(3,3),ID(1,0),
 	ID(8,3),ID(7,15),ID(4,10),ID(10,15),ID(15,15),ID(6,7),ID(1,6),ID(15,3),ID(5,15),ID(8,8),ID(1,1),
 	ID(1,1),ID(1,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(5,14),ID(3,3),ID(5,14),ID(4,3),ID(3,3),ID(5,14),ID(3,1),ID(1,1),
 	ID(1,0),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,2),ID(1,1),ID(1,2),ID(1,1),ID(1,2),ID(1,1),ID(1,1),ID(2,1),ID(1,1),ID(1,1),ID(8,13),ID(0,2),ID(0,13),ID(6,1),ID(0,11),ID(0,13),ID(0,2),ID(2,1),
@@ -57,7 +57,7 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,24,40,57,69,86,104,115,139,163,180,197,214,228,249,263,287,311,324,338,356,378,398,410,433,456,468,486,506,528,548,562,586,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,24,40,57,67,84,102,113,137,161,178,195,212,226,247,261,285,309,322,336,354,376,396,408,431,454,466,484,504,526,546,560,584,};
 
 BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
@@ -221,7 +221,7 @@ void InitScreen9(bool shouldRespawn)
 	spike3.Init(268, 103, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	spike4.Init(367, 106, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	destBlock1.Init(288, 112, Item::PropertyFlags::NONE, shouldRespawn);
-	enemy1.Init(279, 74, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
+	enemy1.Init(280, 74, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
 	enemy2.Init(343, 90, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::MIRROR_X, shouldRespawn);
 	enemy3.Init(329, 74, Item::PropertyFlags::TRAP_TRIGERER, shouldRespawn);
 	bulletCrate1.Init(363, 112, Item::PropertyFlags::NONE, shouldRespawn);
@@ -235,7 +235,8 @@ void InitScreen10(bool shouldRespawn)
 	// init all the item of the current puzzle screen
 	statuette1.Init(352, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	enemy1.Init(342, 18, Item::PropertyFlags::TRAP_TRIGERER | Item::PropertyFlags::SPECIAL_2 | Item::PropertyFlags::MIRROR_X, shouldRespawn);
-	arrowLauncher1.Init(283, 40, Item::PropertyFlags::MIRROR_X, 24);
+	enemy2.Init(334, 52, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X, shouldRespawn);
+	arrowLauncher1.Init(257, 39, Item::PropertyFlags::NONE, 31);
 	arrowLauncher2.Init(372, 8, Item::PropertyFlags::MIRROR_X, 32);
 }
 
