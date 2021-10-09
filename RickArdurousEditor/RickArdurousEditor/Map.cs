@@ -185,6 +185,7 @@ namespace RickArdurousEditor
 			writer.WriteLine("#include \"MapData.h\"");
 			writer.WriteLine("#include \"SpriteData.h\"");
 			writer.WriteLine("#include \"MapManager.h\"");
+			writer.WriteLine("#include \"GameManager.h\"");
 			writer.WriteLine("#include \"ArrowLauncher.h\"");
 			writer.WriteLine("#include \"Spike.h\"");
 			writer.WriteLine("#include \"Statuette.h\"");
@@ -418,10 +419,26 @@ namespace RickArdurousEditor
 			return 0;
 		}
 
-		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop)
+		private void WriteInitFunctionForOneScreen(StreamWriter writer, int screenId, int screenLeft, int screenTop, bool isMainMenuScreen)
 		{
 			// get all the items on the specified screen
 			List<Items.Item> itemsOnScreen = GetItemsOnScreen(screenLeft, screenTop);
+			List<Items.Item> itemsOnScreenWhilePlaying = new List<Items.Item>();
+
+			// special case the main menu, we split the items in two list
+			if (isMainMenuScreen)
+			{
+				for (int i = 0; i < itemsOnScreen.Count; ++i)
+				{
+					Items.Item item = itemsOnScreen[i];
+					if (item.ItemType != Items.Item.Type.RICK && item.ItemType != Items.Item.Type.STALACTITE && item.ItemType != Items.Item.Type.STALAGMITE)
+					{
+						itemsOnScreenWhilePlaying.Add(item);
+						itemsOnScreen.RemoveAt(i);
+						--i;
+					}
+				}
+			}
 
 			// declare an array to count the items per type for the current screen
 			int[] itemCount = new int[mSimilarTypes.Length];
@@ -434,7 +451,7 @@ namespace RickArdurousEditor
 			// add the items in the map manager
 			writer.WriteLine("\t// Add a checkpoint if we need to");
 			foreach (Items.Item item in itemsOnScreen)
-			{
+			{				
 				item.WriteCheckpoint(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 				item.WasSaved = true;
 			}
@@ -447,12 +464,24 @@ namespace RickArdurousEditor
 			writer.WriteLine("\t// init all the item of the current puzzle screen");
 			foreach (Items.Item item in itemsOnScreen)
 			{
-				// special hard coded case for the level 0 (the main menu), do not export grail and statuette
-				if ((screenId == 0) && (item.ItemType == Items.Item.Type.GRAAL || item.ItemType == Items.Item.Type.STATUETTE))
-					continue;
-
 				item.WriteInit(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
 				item.WasSaved = true;
+			}
+
+			// special hard coded case for the level 0 (the main menu), init only some specific items in playing state of the game
+			if (isMainMenuScreen)
+			{
+				writer.WriteLine();
+				writer.WriteLine("\t// The following items must only be init for the game, and not in the main menu");
+				writer.WriteLine("\tif (GameManager::CurrentGameState == GameManager::PLAYING)");
+				writer.WriteLine("\t{");
+				foreach (Items.Item item in itemsOnScreenWhilePlaying)
+				{
+					writer.Write("\t");
+					item.WriteInit(writer, IncreaseItemCounterAndGetId(ref itemCount, item));
+					item.WasSaved = true;
+				}
+				writer.WriteLine("\t}");
 			}
 
 			// finish the init function
@@ -492,28 +521,45 @@ namespace RickArdurousEditor
 					item.WasSaved = false;
 
 			// write the init function of the Main Menu
-			WriteInitFunctionForOneScreen(writer, 0, 0, 0);
+			WriteInitFunctionForOneScreen(writer, 0, 0, 0, true);
 
 			// rebuild the path
 			BuildPuzzlePath();
 
 			// write the init function for all the screens
-			foreach (PuzzlePathNode screenPathNode in mPuzzlePath)
-				WriteInitFunctionForOneScreen(writer, screenPathNode.screenId, screenPathNode.screenX, screenPathNode.screenY);
+			for (int i = 0; i < mPuzzlePath.Count; ++i)
+			{
+				// get the current screen path node
+				PuzzlePathNode screenPathNode = mPuzzlePath[i];
+
+				// special hard code case, if one of the screen of the puzzle path, is the main menu, then just skip it
+				// because we already wrote the init funtion
+				if ((screenPathNode.screenX == 0) && (screenPathNode.screenY == 0))
+				{
+					mPuzzlePath[i] = new PuzzlePathNode(screenPathNode.screenX, screenPathNode.screenY, 0);
+					continue;
+				}
+
+				// write the init function for the current path node
+				WriteInitFunctionForOneScreen(writer, screenPathNode.screenId, screenPathNode.screenX, screenPathNode.screenY, false);
+			}
 
 			// return the number of screens
 			return mPuzzlePath.Count + 1;
 		}
 
-		private void WriteInitFunctionArray(StreamWriter writer, int screenCount)
+		private void WriteInitFunctionArray(StreamWriter writer)
 		{
 			// write the array of init function
 			writer.WriteLine();
 			writer.WriteLine("// The array that contains all the items");
 			writer.WriteLine("ItemInitFunction MapManager::ItemInitFunctions[] = {");
 			writer.Write("\t");
-			for (int i = 0; i < screenCount; ++i)
-				writer.Write("&InitScreen" + i.ToString() + ", ");
+			// init the Screen 0 (which is the main menu) which is not in the mPuzzlePath
+			writer.Write("&InitScreen0, ");
+			// init the other screens
+			foreach (PuzzlePathNode screenPathNode in mPuzzlePath)
+				writer.Write("&InitScreen" + screenPathNode.screenId.ToString() + ", ");
 			writer.WriteLine();
 			writer.WriteLine("};");
 			writer.WriteLine();
@@ -568,7 +614,7 @@ namespace RickArdurousEditor
 				WriteLevelData(writer);
 				WriteItemInstances(writer);
 				mScreenCount = WriteInitFunctions(writer);
-				WriteInitFunctionArray(writer, mScreenCount);
+				WriteInitFunctionArray(writer);
 				WriteSaveAndLoadAliveStatusFunction(writer);
 				WriteNotUsedItems(writer); // to save them, if you want to reload the map without loosing them
 			}

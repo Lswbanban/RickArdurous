@@ -10,8 +10,8 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 - Editor
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 	- add undo/redo feature
-	- Stalagmite instance are duplicated in puzzle screen zero when it is the end of the game, because the puzzle screen is exported two times (as puzzle 0 and puzzle 12)
 - Game Engine Optim
+	- Main Character position at the end of the game
 	- add the PSTR()/F() macro around the menu strings?
 	- bug in Rick state machine, from Fall to Death (for example jump in dynamite explosion)
 	- the mirror of the left wall is not correct for the coordinate x=0 (example in the main menu level)

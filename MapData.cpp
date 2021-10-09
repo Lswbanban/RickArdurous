@@ -5,6 +5,7 @@
 #include "MapData.h"
 #include "SpriteData.h"
 #include "MapManager.h"
+#include "GameManager.h"
 #include "ArrowLauncher.h"
 #include "Spike.h"
 #include "Statuette.h"
@@ -46,17 +47,17 @@ const unsigned char MapManager::Level[] PROGMEM = {
 	ID(6,15),ID(3,11),ID(15,8),ID(11,11),ID(1,8),ID(15,2),ID(13,15),ID(3,7),ID(3,2),ID(1,15),ID(2,8),ID(1,2),ID(8,15),ID(3,11),ID(11,11),ID(11,11),ID(11,0),ID(3,3),ID(3,3),ID(1,0),
 	ID(1,7),ID(15,13),ID(8,1),ID(7,15),ID(1,13),ID(15,9),ID(8,1),ID(1,8),ID(7,15),ID(9,0),ID(11,0),ID(2,2),
 	ID(2,2),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,7),ID(15,2),ID(7,1),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,1),ID(1,1),ID(1,1),ID(3,3),ID(3,3),ID(3,12),ID(14,15),ID(5,11),ID(5,0),
-	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(1,11),ID(11,0),ID(5,4),ID(5,0),ID(11,11),ID(11,11),ID(11,11),ID(11,0),ID(5,6),ID(0,11),ID(11,11),ID(11,15),ID(1,13),ID(15,6),ID(6,0),
-	ID(6,15),ID(11,14),ID(12,5),ID(6,8),ID(15,5),ID(5,15),ID(15,5),ID(15,1),ID(13,15),ID(6,5),
+	ID(1,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(11,11),ID(15,2),ID(4,5),ID(1,11),ID(11,0),ID(5,4),ID(5,0),ID(0,1),ID(1,0),ID(11,11),ID(11,0),ID(5,6),ID(0,11),ID(11,11),ID(11,15),ID(1,13),ID(15,6),ID(6,0),
+	ID(6,15),ID(11,14),ID(12,5),ID(6,8),ID(15,5),ID(5,15),ID(2,0),ID(11,15),ID(11,5),ID(15,1),ID(13,15),ID(6,5),
 	ID(5,15),ID(2,12),ID(12,12),ID(12,5),ID(15,4),ID(13,9),ID(9,5),ID(1,3),ID(14,2),ID(5,6),ID(5,15),ID(13,5),ID(9,9),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,0),
-	ID(5,6),ID(15,5),ID(5,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(15,1),ID(12,12),ID(12,12),ID(12,5),ID(5,15),ID(3,5),ID(10,10),ID(15,1),ID(13,15),ID(6,5),
+	ID(5,6),ID(15,5),ID(5,15),ID(4,13),ID(10,10),ID(6,1),ID(1,13),ID(1,1),ID(4,5),ID(12,14),ID(12,12),ID(12,12),ID(12,12),ID(5,5),ID(15,3),ID(5,10),ID(10,15),ID(1,13),ID(15,6),ID(5,0),
 	ID(4,5),ID(15,5),ID(5,12),ID(12,12),ID(12,12),ID(0,5),ID(5,0),ID(15,2),ID(11,0),ID(1,5),ID(15,1),ID(13,15),ID(6,1),ID(6,12),ID(14,12),ID(4,5),ID(6,15),ID(1,13),ID(15,2),ID(5,14),ID(4,5),ID(6,0),
-	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,7),ID(6,15),ID(5,0),ID(6,4),ID(5,3),ID(7,15),ID(4,8),ID(5,15),ID(1,13),ID(15,3),ID(11,11),ID(11,11),ID(11,11),ID(13,15),ID(1,9),ID(9,0),
-	ID(5,10),ID(10,15),ID(2,13),ID(15,12),ID(5,15),ID(10,7),ID(3,1),ID(5,15),ID(1,13),ID(15,9),ID(13,15),ID(1,10),ID(10,0),
+	ID(6,9),ID(9,12),ID(12,14),ID(12,11),ID(15,7),ID(6,15),ID(5,0),ID(6,4),ID(5,12),ID(14,15),ID(4,8),ID(5,15),ID(1,13),ID(15,3),ID(11,11),ID(11,11),ID(11,11),ID(13,15),ID(1,9),ID(9,0),
+	ID(5,10),ID(10,15),ID(2,13),ID(15,12),ID(5,15),ID(7,13),ID(15,2),ID(7,3),ID(1,5),ID(15,1),ID(13,15),ID(9,13),ID(15,1),ID(10,10),
 	ID(4,5),ID(6,5),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(1,1),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),ID(3,3),
 };
 
-const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,24,40,57,69,86,104,115,139,163,180,197,214,228,249,263,287,311,324,338,356,378,398,410,433,456,466,484,504,526,546,559,583,};
+const unsigned int MapManager::LevelLineIndex[] PROGMEM = {0,24,40,57,69,86,104,115,139,163,180,197,214,228,249,263,287,311,324,338,356,378,398,410,433,456,468,486,506,528,548,562,586,};
 
 BulletCrate bulletCrate1;
 DynamiteCrate dynamiteCrate1;
@@ -92,6 +93,13 @@ void InitScreen0(bool shouldRespawn)
 	stalactite1.Init(81, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite2.Init(40, 8, Item::PropertyFlags::NONE, shouldRespawn);
 	stalactite3.Init(17, 10, Item::PropertyFlags::NONE, shouldRespawn);
+
+	// The following items must only be init for the game, and not in the main menu
+	if (GameManager::CurrentGameState == GameManager::PLAYING)
+	{
+		statuette1.Init(8, 40, Item::PropertyFlags::NONE, shouldRespawn);
+		graal1.Init(61, 32, Item::PropertyFlags::NONE, shouldRespawn);
+	}
 }
 
 void InitScreen1(bool shouldRespawn)
@@ -245,12 +253,11 @@ void InitScreen11(bool shouldRespawn)
 	spike4.Init(136, 43, Item::PropertyFlags::SPECIAL | Item::PropertyFlags::MIRROR_X);
 	spike5.Init(137, 32, Item::PropertyFlags::SPECIAL);
 	destBlock1.Init(184, 24, Item::PropertyFlags::NONE, shouldRespawn);
-	graal1.Init(143, 48, Item::PropertyFlags::NONE, shouldRespawn);
 }
 
 // The array that contains all the items
 ItemInitFunction MapManager::ItemInitFunctions[] = {
-	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4, &InitScreen5, &InitScreen6, &InitScreen7, &InitScreen8, &InitScreen9, &InitScreen10, &InitScreen11, 
+	&InitScreen0, &InitScreen1, &InitScreen2, &InitScreen3, &InitScreen4, &InitScreen5, &InitScreen6, &InitScreen7, &InitScreen8, &InitScreen9, &InitScreen10, &InitScreen11, &InitScreen0, 
 };
 
 
