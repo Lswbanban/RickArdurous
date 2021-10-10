@@ -17,7 +17,7 @@ protected:
 	unsigned char FallAnimSpeedIndex;
 
 	static void CheckTrigererCallback(Item * me, Item * trigerer);
-	void CheckTrigerer(bool isAlive, int trigererX, int trigererY);
+	void CheckTrigerer(bool isAlive, int trigererX, unsigned char trigererY);
 	void Draw(char shakeX);
 };
 

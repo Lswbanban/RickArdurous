@@ -9,7 +9,7 @@
 #include "LivingItem.h"
 #include "MapManager.h"
 
-void LivingItem::Init(int startX, int startY, unsigned char flags, bool shouldRespawn)
+void LivingItem::Init(int startX, unsigned char startY, unsigned char flags, bool shouldRespawn)
 {
 	// if we are not forced to respaw, check our alive status that as been correctly set by the progress
 	if (!shouldRespawn)

@@ -6,7 +6,7 @@
 #include "Item.h"
 #include "MapManager.h"
 
-void Item::CommonInit(int startX, int startY, unsigned char flags)
+void Item::CommonInit(int startX, unsigned char startY, unsigned char flags)
 {
 	X = startX;
 	Y = startY;
@@ -16,7 +16,7 @@ void Item::CommonInit(int startX, int startY, unsigned char flags)
 	Update(Item::UpdateStep::RESPAWN);
 }
 
-void Item::Init(int startX, int startY, unsigned char flags)
+void Item::Init(int startX, unsigned char startY, unsigned char flags)
 {
 	// for items that can never die, add it to the manager anyway
 	MapManager::AddItem(this);

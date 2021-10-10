@@ -78,7 +78,7 @@ namespace MapManager
 	void BeginSwitchPuzzleScreen(unsigned char newTargetCameraX, unsigned char newTargetCameraY);
 	void EndSwitchPuzzleScreen();
 	void Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex, char rickFeetOnScreen);
-	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld);
+	unsigned char GetLevelSpriteAtWorldCoordinate(int xWorld, unsigned char yWorld);
 	unsigned char GetLevelSpriteAt(unsigned char xMap, unsigned char yMap);
 	bool IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap);
 }
@@ -251,12 +251,12 @@ char MapManager::GetXOnScreen(int xWorld)
 	return xWorld - ((int)CameraX.Current * SpriteData::LEVEL_SPRITE_WIDTH) - CameraX.Transition;
 }
 
-char MapManager::GetYOnScreen(int yWorld)
+char MapManager::GetYOnScreen(unsigned char yWorld)
 {
-	return yWorld - ((int)CameraY.Current * SpriteData::LEVEL_SPRITE_HEIGHT) - CameraY.Transition + CAMERA_VERTICAL_SHIFT;
+	return (char)(yWorld - (CameraY.Current * SpriteData::LEVEL_SPRITE_HEIGHT)) - CameraY.Transition + CAMERA_VERTICAL_SHIFT;
 }
 
-bool MapManager::IsOnScreen(int xWorld, int yWorld, unsigned char spriteWidth, unsigned char spriteHeight)
+bool MapManager::IsOnScreen(int xWorld, unsigned char yWorld, unsigned char spriteWidth, unsigned char spriteHeight)
 {
 	// translate global coord to coord local to the screen
 	char xOnScreen = MapManager::GetXOnScreen(xWorld);
@@ -265,7 +265,7 @@ bool MapManager::IsOnScreen(int xWorld, int yWorld, unsigned char spriteWidth, u
 	return (xOnScreen + spriteWidth >= 0) /*&& (xOnScreen < WIDTH)*/ && (yOnScreen + spriteHeight >= 0) && (yOnScreen < HEIGHT);
 }
 
-bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCeilingSprites)
+bool MapManager::IsThereStaticCollisionAt(int xWorld, unsigned char yWorld, bool ignoreCeilingSprites)
 {
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
@@ -277,11 +277,11 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, int yWorld, bool ignoreCei
 			(ignoreCeilingSprites && (spriteId < SpriteData::WallId::ROCK_CEILING_THIN));
 }
 
-unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
+unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, unsigned char yWorld)
 {
 	// convert the world coordinate into index for the sprite map
-	int xMap = xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT;
-	int yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
+	unsigned char xMap = xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT; // we don't care about negative xWorld here?
+	unsigned char yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
 	while (yMap % NB_VERTICAL_SPRITE_PER_SCREEN)
 	{
 		if (GetLevelSpriteAt(xMap, yMap) != SpriteData::NOTHING)
@@ -292,20 +292,20 @@ unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, int yWorld)
 	return SpriteData::LEVEL_SPRITE_HEIGHT + CAMERA_VERTICAL_SHIFT;
 }
 
-bool MapManager::IsThereLadderAt(int xWorld, int yWorld)
+bool MapManager::IsThereLadderAt(int xWorld, unsigned char yWorld)
 {
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	return (spriteId == SpriteData::WallId::LADDER) || (spriteId == SpriteData::WallId::PLATFORM_WITH_LADDER);
 }
 
-unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, int yWorld)
+unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, unsigned char yWorld)
 {
 	// convert the world coordinate into index for the sprite map
-	int xMap = xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT;
-	int yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
+	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH; // use division instead of (>> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT) as xWorld may be negative
+	unsigned char yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
-	if ((xMap < 0) || (xMap >= MapManager::LEVEL_WIDTH) || (yMap < 0) || (yMap >= MapManager::LEVEL_HEIGHT))
+	if ((xMap < 0) || (xMap >= MapManager::LEVEL_WIDTH) || /*(yMap < 0) ||*/ (yMap >= MapManager::LEVEL_HEIGHT))
 		return SpriteData::BLOCK_16_8_RIGHT;
 	// call the function to get the sprite inside the map
 	return GetLevelSpriteAt(xMap, yMap);
@@ -382,7 +382,7 @@ bool MapManager::IsDestroyableBlockAlive(unsigned char xMap, unsigned char yMap)
  * a sprite at that place in the level, to still have accurate collision event if the ground or ceiling is outside the
  * the screen.
  */
-bool MapManager::IsThereAnyHorizontalCollisionAt(int xWorld, int yWorld, unsigned char width)
+bool MapManager::IsThereAnyHorizontalCollisionAt(int xWorld, unsigned char yWorld, unsigned char width)
 {
 	// get the y coordinate first on screen (and check if it is on screen)
 	char yOnScreen = MapManager::GetYOnScreen(yWorld);
@@ -436,7 +436,7 @@ void MapManager::Init(bool shouldInitItem)
  * @param rickX the X location where Rick should respawn in world coordinate
  * @param rickY the Y location where Rick should respawn in world coordinate
  */
-void MapManager::MemorizeCheckPoint(int rickX, int rickY)
+void MapManager::MemorizeCheckPoint(int rickX, unsigned char rickY)
 {
 	// check if we reach a NEW checkpoint (farer than the last one memorized)
 	if (CurrentPuzzleScreenId > LastCheckPointPuzzleScreenId)

@@ -40,7 +40,7 @@ public:
 		RIGHT,
 	};
 	
-	void Init(int startX, int startY, unsigned char flags);
+	void Init(int startX, unsigned char startY, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;
 	
 	void SetProperty(unsigned char flag) { Property |= flag; }
@@ -49,16 +49,16 @@ public:
 	bool IsPropertySet(unsigned char flag) { return (Property & flag) == flag; }
 
 	int GetX() { return X; }
-	int GetY() { return Y; }
+	unsigned char GetY() { return Y; }
 
 	Side CheckLethalDynamite(unsigned char width, unsigned char checkHeight);
 
 protected:
 	int X;
-	int Y;
+	unsigned char Y;
 	unsigned char Property = 0;
 	
-	void CommonInit(int startX, int startY, unsigned char flags);
+	void CommonInit(int startX, unsigned char startY, unsigned char flags);
 	
 private:
 	static constexpr int EXPLOSION_DETECTION_DISTANCE = 5;

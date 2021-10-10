@@ -169,7 +169,7 @@ bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << gapHeightShift))));
 }
 
-bool Enemy::IsThereAnyGroundCollisionAt(int yWorld)
+bool Enemy::IsThereAnyGroundCollisionAt(unsigned char yWorld)
 {
 	// ask the MapManager to check for the collisions (using one pixel less on the left and on the right)
 	return MapManager::IsThereAnyHorizontalCollisionAt(X + 1, yWorld, MyWidth - 2);

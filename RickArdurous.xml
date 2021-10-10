@@ -50,8 +50,8 @@
             <File name="Enemy.cpp" />
             <File name="Stalactite.h" />
             <File name="Stalactite.cpp" />
-            <File name="Boulder.cpp" />
             <File name="Boulder.h" />
+            <File name="Boulder.cpp" />
         </Folder>
         <Folder name="MapManager">
             <File name="MapManager.h" />

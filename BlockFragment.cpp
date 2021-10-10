@@ -13,7 +13,7 @@ StoneFallIndex(Physics::INVALID_FALL_ID)
 {
 }
 
-void BlockFragment::Spawn(int startX, int startY, unsigned char id)
+void BlockFragment::Spawn(int startX, unsigned char startY, unsigned char id)
 {
 	// choose a random velocity
 	unsigned char velocityX = (id == 0) ? random(-16, -10) : ((id == 1) ? random(-6, 6) : random(10, 16));

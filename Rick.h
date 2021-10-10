@@ -15,14 +15,14 @@ namespace Rick
 	char GetFeetYOnScreen();
 	void Draw();
 	bool IsAlive();
-	void CheckPointRespawn(int respawnWorldX, int respawnWorldY);
+	void CheckPointRespawn(int respawnWorldX, unsigned char respawnWorldY);
 	void InitWaitForRespawn();
 
 	// function to get the coordinate of the sprite of the main character
 	int GetX();
-	int GetY();
+	unsigned char GetY();
 	int GetCenterX();
-	int GetCenterY();
+	unsigned char GetCenterY();
 	// function to get the coordinate when the screen should do a transition
 	int GetLeftForScreenTransition();
 	int GetRightForScreenTransition();

@@ -16,14 +16,14 @@ namespace Physics
 	
 	// function for the fall
 	unsigned char StartFall();
-	unsigned char UpdateFall(unsigned char id, int &y);
+	unsigned char UpdateFall(unsigned char id, unsigned char &y);
 	void StopFall(unsigned char id);
 	unsigned char GetCurrentFallSpeed(unsigned char id);
 	void LimitFallSpeed(unsigned char id, unsigned char maxSpeed);
 
 	// function for parabolic trajectories
-	unsigned char StartParabolicTrajectory(int startX, int startY, char velocityX);
+	unsigned char StartParabolicTrajectory(int startX, unsigned char startY, char velocityX);
 	void StopParabolicTrajectory(unsigned char id);
-	void UpdateParabolicTrajectory(unsigned char id, int &x, int &y, char velocityY = PARABOLIC_VELOCITY_Y);
+	void UpdateParabolicTrajectory(unsigned char id, int &x, unsigned char &y, char velocityY = PARABOLIC_VELOCITY_Y);
 }
 #endif

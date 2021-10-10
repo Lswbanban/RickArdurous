@@ -29,7 +29,7 @@ namespace Physics
 	{
 	public:
 		int StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
-		int StartY = 0;
+		unsigned char StartY = 0;
 		unsigned char FrameCounter = 0;
 		char VelocityX = 0;
 	};
@@ -85,7 +85,7 @@ void Physics::StopFall(unsigned char id)
  * @param y a reference to the y parameter to modify due to the fall
  * @return 0 if the y was not updated, otherwise, the number of time it was updated since the beggining of the fall
  */
-unsigned char Physics::UpdateFall(unsigned char id, int &y)
+unsigned char Physics::UpdateFall(unsigned char id, unsigned char &y)
 {
 	if (id < MAX_FALL_PARAMETER)
 	{
@@ -127,7 +127,7 @@ void Physics::LimitFallSpeed(unsigned char id, unsigned char maxSpeed)
 	}
 }
 
-unsigned char Physics::StartParabolicTrajectory(int startX, int startY, char velocityX)
+unsigned char Physics::StartParabolicTrajectory(int startX, unsigned char startY, char velocityX)
 {
 	// search for a free parameter 
 	unsigned char returnId = MAX_PARABOLIC_PARAMETER;
@@ -155,7 +155,7 @@ void Physics::StopParabolicTrajectory(unsigned char id)
 		ParabolicParameterBuffer[id].StartX = INVALID_PARABOLIC_TRAJECTORY_START_X;
 }
 
-void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, int &y, char velocityY)
+void Physics::UpdateParabolicTrajectory(unsigned char id, int &x, unsigned char &y, char velocityY)
 {
 	if (id < MAX_PARABOLIC_PARAMETER)
 	{

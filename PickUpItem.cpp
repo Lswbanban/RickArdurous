@@ -82,6 +82,15 @@ void PickUpItem::UpdateShineStar(unsigned char screenX, unsigned char screenY, c
 							INVERT, false);
 }
 
+/**
+ * Common Update function for the pickup, with some specific parameter comming from the derivated classes.
+ * @param step the step parameter comming from the virtual Update function
+ * @param sprite the sprite of the pickup to draw
+ * @param spriteWidth width in pixel of the sprite to draw
+ * @param spriteHeight height in pixel of the sprite to draw
+ * @param isCrate true if this pickup is a crate (this is used to know where to draw the shining stars)
+ * @return true if Rick has picked up this item during this frame
+ */
 bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], unsigned char spriteWidth, unsigned char spriteHeight, bool isCrate)
 {
 	if ((step == UpdateStep::DRAW_IGNORED_BY_ENEMIES) && IsPropertySet(Item::PropertyFlags::ALIVE))

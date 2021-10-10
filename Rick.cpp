@@ -60,11 +60,11 @@ namespace Rick
 	
 	// position of Rick
 	int X = 200; // do not init X and Y it will be by the respawn of the first level (except that we don't want Rick in the Main Menu)
-	int Y; // do not init X and Y it will be by the respawn of the first level
+	unsigned char Y; // do not init X and Y it will be by the respawn of the first level
 	int GetX() { return X; }
-	int GetY() { return Y; }
+	unsigned char GetY() { return Y; }
 	int GetCenterX() { return X + 4; }
-	int GetCenterY() { return Y + 10; }
+	unsigned char GetCenterY() { return Y + 10; }
 	unsigned char GetWidth() { return (State == AnimState::CRAWL) ? SpriteData::RICK_CRAWL_SPRITE_WIDTH : SpriteData::RICK_SPRITE_WIDTH; }
 	unsigned char GetHeight() { return (State == AnimState::CRAWL) ? 8 : 12; }
 	
@@ -116,7 +116,7 @@ namespace Rick
 	void HandleInput();
 	void SetNextAnimFrame(unsigned char startFrameId, unsigned char endFrameId, bool isLooping);
 	void UpdateAirControl(bool towardLeftDirection);
-	bool IsThereAnyGroundOrCeilingCollisionAt(int y);
+	bool IsThereAnyGroundOrCeilingCollisionAt(unsigned char y);
 	bool IsThereAnyCeilingAboveCrawl();
 	unsigned int Draw(unsigned char color);
 }
@@ -184,7 +184,7 @@ char Rick::GetFeetYOnScreen()
  * @param respawnWorldX the X coord where we should respawn in world coordinate
  * @param respawnWorldY the Y coord where we should respawn in world coordinate
  */
-void Rick::CheckPointRespawn(int respawnWorldX, int respawnWorldY)
+void Rick::CheckPointRespawn(int respawnWorldX, unsigned char respawnWorldY)
 {
 	// if we are not alive we should respawn, otherwise this is a checkpoint, we should memorize some stuffs
 	if (!IsAlive())
@@ -707,7 +707,7 @@ void Rick::UpdateAirControl(bool towardLeftDirection)
  * a sprite at that place in the level, to still have accurate collision event if the ground or ceiling is outside the
  * the screen.
  */
-bool Rick::IsThereAnyGroundOrCeilingCollisionAt(int yWorld)
+bool Rick::IsThereAnyGroundOrCeilingCollisionAt(unsigned char yWorld)
 {
 	// compute the width that should be used for checking the collisions
 	unsigned char width;

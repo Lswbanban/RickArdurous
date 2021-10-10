@@ -11,7 +11,7 @@ public:
 	ArrowBullet();
 	ArrowBullet(bool isArrow);
 	virtual bool Update(UpdateStep step);
-	void Fire(int x, int y, bool isMovingToLeft);
+	void Fire(int x, unsigned char y, bool isMovingToLeft);
 	void KillBulletWithoutSparks();
 
 private:

@@ -14,7 +14,7 @@ ArrowLauncher::ArrowLauncher()
 {
 }
 
-void ArrowLauncher::Init(int startX, int startY, unsigned char flags, unsigned char detectionWidth)
+void ArrowLauncher::Init(int startX, unsigned char startY, unsigned char flags, unsigned char detectionWidth)
 {
 	// set my detection
 	DetectionWidth = detectionWidth;
@@ -62,7 +62,7 @@ void ArrowLauncher::CheckTrigererCallback(Item * me, Item * trigerer)
 	((ArrowLauncher *)me)->CheckTrigerer(trigerer->IsPropertySet(Item::PropertyFlags::ALIVE), trigerer->GetX(), trigerer->GetY());
 }
 
-void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
+void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, unsigned char trigererY)
 {
 	if (LastLaunchTime == CAN_LAUNCH_ARROW)
 	{
@@ -83,7 +83,7 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
 			throwingX = X + 1;
 		}
 		// compute my triggering Y
-		int throwingY = Y + 6;
+		unsigned char throwingY = Y + 6;
 		
 		// check if the main character is inside the detection range
 		if (isAlive && (throwingY > trigererY) && (throwingY < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))

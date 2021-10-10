@@ -7,7 +7,7 @@ class ArrowLauncher : public Item
 {
 public:
 	ArrowLauncher();
-	void Init(int startX, int startY, unsigned char flags, unsigned char detectionWidth);
+	void Init(int startX, unsigned char startY, unsigned char flags, unsigned char detectionWidth);
 	virtual bool Update(UpdateStep step);
 
 private:
@@ -19,7 +19,7 @@ private:
 	unsigned char DetectionWidth;
 	
 	static void CheckTrigererCallback(Item * me, Item * trigerer);
-	void CheckTrigerer(bool isAlive, int trigererX, int trigererY);
+	void CheckTrigerer(bool isAlive, int trigererX, unsigned char trigererY);
 };
 
 #endif

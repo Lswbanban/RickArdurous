@@ -104,7 +104,7 @@ void Stalactite::CheckTrigererCallback(Item * me, Item * trigerer)
 	((Stalactite *)me)->CheckTrigerer(trigerer->IsPropertySet(Item::PropertyFlags::ALIVE), trigerer->GetX(), trigerer->GetY());
 }
 
-void Stalactite::CheckTrigerer(bool isAlive, int trigererX, int trigererY)
+void Stalactite::CheckTrigerer(bool isAlive, int trigererX, unsigned char trigererY)
 {
 	// check if the trigerer is alive and inside the detection range,
 	// and that the stalactite is not alreay falling

@@ -7,7 +7,7 @@
 #include "SpriteData.h"
 #include "MapManager.h"
 
-void Dynamite::LightUp(int x, int y)
+void Dynamite::LightUp(int x, unsigned char y)
 {
 	X = x;
 	Y = y;

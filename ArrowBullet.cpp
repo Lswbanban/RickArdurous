@@ -23,7 +23,7 @@ ArrowBullet::ArrowBullet(bool isArrow)
  * @param the y position of the muzzle of the gun
  * @param isMovingToLeft if true, then the bullet will move to the left of the screen, otherwise to the right.
  */
-void ArrowBullet::Fire(int x, int y, bool isMovingToLeft)
+void ArrowBullet::Fire(int x, unsigned char y, bool isMovingToLeft)
 {
 	// make the bullet alive
 	SetProperty(Item::PropertyFlags::ALIVE);
@@ -45,6 +45,11 @@ void ArrowBullet::Fire(int x, int y, bool isMovingToLeft)
 	MapManager::AddItem(this);
 }
 
+/**
+ * Get the Width of the arrow/bullet depending of its type.
+ * The Arrows are usually longer than the bullets.
+ * @return ARROW_WIDTH if this instance is an arrow, or BULLET_WIDTH if it is a bullet
+ */
 unsigned char ArrowBullet::GetWidth()
 {
 	return IsPropertySet(Item::PropertyFlags::SPECIAL) ? ARROW_WIDTH : BULLET_WIDTH;
@@ -94,6 +99,11 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 	return NO_PIXEL_FOUND;
 }
 
+/**
+ * Kill this Instance without playing a sparks VFX.
+ * This function can be called if the bullet move outside the screen,
+ * or touches a soft body such as an enemy that don't generate sparks.
+ */
 void ArrowBullet::KillBulletWithoutSparks()
 {
 	ClearProperty(Item::PropertyFlags::ALIVE);

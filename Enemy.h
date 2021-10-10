@@ -38,7 +38,7 @@ private:
 	inline bool IsScorpion() { return IsPropertySet(Item::PropertyFlags::SPECIAL); }
 	inline bool IsSkeleton() { return IsPropertySet(Item::PropertyFlags::SPECIAL_2); }
 	int GetYUnderFeet();
-	bool IsThereAnyGroundCollisionAt(int yWorld);
+	bool IsThereAnyGroundCollisionAt(unsigned char yWorld);
 	bool IsThereWallCollisionOrGap(bool shouldCheckGap);
 	void MoveAccordingToOrientation();
 	

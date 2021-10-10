@@ -7,7 +7,7 @@
 class LivingItem: public Item
 {
 public:
-	void Init(int startX, int startY, unsigned char flags, bool shouldRespawn);
+	void Init(int startX, unsigned char startY, unsigned char flags, bool shouldRespawn);
 	void SaveAndLoadAliveStatus(unsigned char currentScreenIdToSave, unsigned char newScreenIdToLoad);
 
 private:

@@ -7,7 +7,7 @@ class Dynamite : public Item
 {
 public:
 	virtual bool Update(UpdateStep step);
-	void LightUp(int x, int y);
+	void LightUp(int x, unsigned char y);
 	void Kill();
 
 private:
