@@ -8,9 +8,8 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Editor
-	- limit the vertical puzzle screen to 4
-	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 	- add undo/redo feature
+	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 - Game Engine Optim
 	- add the PSTR()/F() macro around the menu strings?
 	- bug in Rick state machine, from Fall to Death (for example jump in dynamite explosion)

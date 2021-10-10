@@ -10,7 +10,7 @@ namespace RickArdurousEditor
 		private const int ARDUBOY_PUZZLE_SCREEN_WIDTH = 16;
 		private const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
 		private const int LEVEL_WIDTH = 256;
-		private const int LEVEL_HEIGHT = 256;
+		private const int LEVEL_HEIGHT = 32;
 		public const int WALL_SPRITE_WIDTH = 8;
 		public const int WALL_SPRITE_HEIGHT = 8;
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
@@ -1034,29 +1034,33 @@ namespace RickArdurousEditor
 		#region draw
 		public void Redraw(Graphics gc, int width, int height, int cameraX, int cameraY, Items.Item selectedItem)
 		{
-			DrawLevelWalls(gc, width, height, cameraX, cameraY);
-			DrawItems(gc, width, height, cameraX, cameraY, selectedItem);
+			// compute the limit of the camera coordinates
+			Point startCamera;
+			Point endCamera;
+			int availableSpriteCountX;
+			int availableSpriteCountY;
+			ComputeCameraCoordinateLimits(width, height, cameraX, cameraY, out startCamera, out endCamera, out availableSpriteCountX, out availableSpriteCountY);
+
+			// draw the various element on screen
+			DrawLevelWalls(gc, width, height, startCamera, endCamera, availableSpriteCountX, availableSpriteCountY);
+			DrawItems(gc, width, height, startCamera.X, startCamera.Y, selectedItem);
 			// draw a line following all the puzzle chain
 			if (IsPuzzlePathDrawn)
-				DrawPuzzlePath(gc, width, height, cameraX, cameraY);
+				DrawPuzzlePath(gc, width, height, startCamera.X, startCamera.Y);
 		}
 
-		private void DrawLevelWalls(Graphics gc, int width, int height, int cameraX, int cameraY)
+		private void ComputeCameraCoordinateLimits(int width, int height, int cameraX, int cameraY, out Point startCamera, out Point endCamera, out int availableSpriteCountX, out int availableSpriteCountY)
 		{
-			// set the drawing mode
-			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-
 			// compute the number of puzzle screens that can be displayed in the available space
 			int horizontalPuzzleScreenCount = width / DrawSpriteWidth / ARDUBOY_PUZZLE_SCREEN_WIDTH;
 			int verticalPuzzleScreenCount = height / DrawSpriteWidth / ARDUBOY_PUZZLE_SCREEN_WIDTH;
 
 			// compute the number of sprite that we can draw on the available space
-			int availableSpriteCountX = 1 + ((width - ((int)mPuzzleScreenSeparatorLinePen.Width * horizontalPuzzleScreenCount)) / DrawSpriteWidth);
-			int availableSpriteCountY = 1 + ((height - ((int)mPuzzleScreenSeparatorLinePen.Width * verticalPuzzleScreenCount)) / DrawSpriteHeight);
+			availableSpriteCountX = 1 + ((width - ((int)mPuzzleScreenSeparatorLinePen.Width * horizontalPuzzleScreenCount)) / DrawSpriteWidth);
+			availableSpriteCountY = 1 + ((height - ((int)mPuzzleScreenSeparatorLinePen.Width * verticalPuzzleScreenCount)) / DrawSpriteHeight);
 
 			// compute the last sprite to be drawn
-			Point endCamera = new Point(cameraX + availableSpriteCountX, cameraY + availableSpriteCountY);
+			endCamera = new Point(cameraX + availableSpriteCountX, cameraY + availableSpriteCountY);
 			ClampCoordinatesInsideLevel(ref endCamera);
 
 			// avoid to start drawing too close to the end
@@ -1066,8 +1070,22 @@ namespace RickArdurousEditor
 			int maxCameraY = endCamera.Y - availableSpriteCountY;
 			if (cameraY > maxCameraY)
 				cameraY = maxCameraY;
-			Point startCamera = new Point(cameraX, cameraY);
+			startCamera = new Point(cameraX, cameraY);
 			ClampCoordinatesInsideLevel(ref startCamera);
+
+			// shift the camera by one line, if we need to draw the bottom of the level
+			if ((endCamera.Y == LEVEL_HEIGHT) && (startCamera.Y > 0))
+				startCamera.Y++;
+			// shift the camera by one line, if we need to draw the right of the level
+			if ((endCamera.X == LEVEL_WIDTH) && (startCamera.X > 0))
+				startCamera.X++;
+		}
+
+		private void DrawLevelWalls(Graphics gc, int width, int height, Point startCamera, Point endCamera, int availableSpriteCountX, int availableSpriteCountY)
+		{
+			// set the drawing mode
+			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
 			// compute the width and height of the lines
 			availableSpriteCountX = endCamera.X - startCamera.X;
