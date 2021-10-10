@@ -23,6 +23,7 @@ namespace Rick
 	unsigned char GetY();
 	int GetCenterX();
 	unsigned char GetCenterY();
+	void MoveOutsideMainMenu();
 	// function to get the coordinate when the screen should do a transition
 	int GetLeftForScreenTransition();
 	int GetRightForScreenTransition();

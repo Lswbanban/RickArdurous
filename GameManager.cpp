@@ -67,6 +67,9 @@ void GameManager::GoToMainMenu()
 	// init the Map Manager with the first screen
 	MapManager::Reset(0, MapManager::MAIN_MENU_CAMERA_X, MapManager::MAIN_MENU_CAMERA_Y);
 	
+	// move Rick out the screen
+	Rick::MoveOutsideMainMenu();
+	
 	// switch the current game state
 	CurrentGameState = GameState::MAIN_MENU;
 }

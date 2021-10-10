@@ -134,6 +134,15 @@ void Rick::Reset()
 	State = AnimState::DEATH;
 }
 
+/**
+ * This function can be called to move Rick character outside of the main menu,
+ * so that he's not drawn while the main menu is active.
+ */
+void Rick::MoveOutsideMainMenu()
+{
+	X = 200;
+}
+
 int Rick::GetLeftForScreenTransition()
 {
 	// remove 2, one for being the first pixel of the next screen,
