@@ -730,7 +730,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 		// init the mapX coord with -1 because we will uncompress the whole line, and we want the first sprite to have the coordinate 0
 		unsigned char mapX = 255; // this is -1 but for unsigned char
 		// declare and init variable necessary for iterating on the columns
-		unsigned char previousSpriteId = SpriteData::NOTHING;
+		unsigned char previousSpriteId = SpriteData::BLOCK_8_8;
 		unsigned char currentSpriteId = SpriteData::NOTHING;
 		bool isReadingHighBit = true;
 		bool shouldReadEmptySpaceCount = false;
