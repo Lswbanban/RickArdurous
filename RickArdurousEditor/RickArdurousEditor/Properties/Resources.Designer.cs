@@ -61,6 +61,15 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Item ¤.
+        /// </summary>
+        internal static string ActionDeleteItem {
+            get {
+                return ResourceManager.GetString("ActionDeleteItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap DeleteIcon {

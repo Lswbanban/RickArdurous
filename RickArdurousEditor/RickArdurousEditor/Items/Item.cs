@@ -3,7 +3,7 @@ using System.IO;
 
 namespace RickArdurousEditor.Items
 {
-	class Item
+	public class Item
 	{
 		public enum Type
 		{

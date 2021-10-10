@@ -16,6 +16,9 @@ namespace RickArdurousEditor
 
 		private Map mMap = new Map();
 
+		// the instance of the action manager (for undo/redo)
+		private Action.ActionManager mActionManager = new Action.ActionManager();
+
 		// current selection
 		private byte mCurrentSelectedSpriteId = 0;
 		private Items.Item mCurrentSelectedItem = null;
@@ -117,6 +120,7 @@ namespace RickArdurousEditor
 		#endregion
 
 		#region menu event
+		#region File Menu
 		private string getConstVariableFileName(string mapDataFileName)
 		{
 			FileInfo fileInfo = new FileInfo(mapDataFileName);
@@ -142,6 +146,19 @@ namespace RickArdurousEditor
 		{
 			this.Close();
 		}
+		#endregion
+
+		#region Edit menu
+		private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			mActionManager.Undo();
+		}
+
+		private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			mActionManager.Redo();
+		}
+		#endregion
 		#endregion
 
 		#region toolbar events
@@ -192,7 +209,7 @@ namespace RickArdurousEditor
 		{
 			if (mCurrentSelectedItem != null)
 			{
-				mMap.RemoveItem(mCurrentSelectedItem);
+				mActionManager.Do(new Action.ActionDeleteItem(mMap, mCurrentSelectedItem));
 				mCurrentSelectedItem = null;
 				RedrawLevel();
 			}

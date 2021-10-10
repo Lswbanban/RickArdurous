@@ -5,7 +5,7 @@ using System.IO;
 
 namespace RickArdurousEditor
 {
-	class Map
+	public class Map
 	{
 		private const int ARDUBOY_PUZZLE_SCREEN_WIDTH = 16;
 		private const int ARDUBOY_PUZZLE_SCREEN_HEIGHT = 8;
@@ -1020,8 +1020,13 @@ namespace RickArdurousEditor
 
 			// add the item in the correct list and return it
 			Items.Item newItem = new Items.Item(itemType, isMirrored, isSpecial, location.X, location.Y, additionalParameter);
-			mItems[itemType].Add(newItem);
-			return newItem;
+			return AddItem(newItem);
+		}
+
+		public Items.Item AddItem(Items.Item itemToAdd)
+		{
+			mItems[itemToAdd.ItemType].Add(itemToAdd);
+			return itemToAdd;
 		}
 
 		public void RemoveItem(Items.Item itemToRemove)
