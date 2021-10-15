@@ -14,6 +14,8 @@ namespace RickArdurousEditor
 			ADJUST_SENSOR,
 		}
 
+		private static MainForm mInstance = null;
+
 		private Map mMap = new Map();
 
 		// the instance of the action manager (for undo/redo)
@@ -35,9 +37,30 @@ namespace RickArdurousEditor
 
 		private Pen mSelectedSpritePen = new Pen(Color.Yellow, 3);
 
+		#region get/set
+		public static MainForm Instance
+		{
+			get { return mInstance; }
+		}
+
+		public Items.Item CurrentSelectedItem
+		{
+			get { return mCurrentSelectedItem; }
+			set
+			{
+				mCurrentSelectedItem = value;
+				RedrawLevel();
+			}
+		}
+
+		#endregion
+
 		#region init
 		public MainForm()
 		{
+			// set the singleton
+			mInstance = this;
+			// default UI init
 			InitializeComponent();
 			// init the sprite tool box
 			RedrawWallSpriteToolbox(0, 0);
@@ -208,11 +231,7 @@ namespace RickArdurousEditor
 		private void DeleteCurrentSelectedItem()
 		{
 			if (mCurrentSelectedItem != null)
-			{
 				mActionManager.Do(new Action.ActionDeleteItem(mMap, mCurrentSelectedItem));
-				mCurrentSelectedItem = null;
-				RedrawLevel();
-			}
 		}
 
 		private void PictureBoxSprites_MouseClick(object sender, MouseEventArgs e)
