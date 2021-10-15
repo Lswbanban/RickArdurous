@@ -181,6 +181,16 @@ namespace RickArdurousEditor
 		{
 			mActionManager.Redo();
 		}
+
+		private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+		{
+			// enable or disable the undo/redo menu items depending if there is some actions to undo/redo
+			this.undoToolStripMenuItem.Enabled = mActionManager.CanUndo;
+			this.redoToolStripMenuItem.Enabled = mActionManager.CanRedo;
+			// add the name of the action to undo/redo
+			this.undoToolStripMenuItem.Text = (this.undoToolStripMenuItem.Tag as string) + " " + mActionManager.UndoActionName;
+			this.redoToolStripMenuItem.Text = (this.redoToolStripMenuItem.Tag as string) + " " + mActionManager.RedoActionName;
+		}
 		#endregion
 		#endregion
 

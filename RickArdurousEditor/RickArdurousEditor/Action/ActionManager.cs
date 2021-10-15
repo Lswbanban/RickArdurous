@@ -7,6 +7,38 @@ namespace RickArdurousEditor.Action
 		List<Action> mDoneActions = new List<Action>();
 		List<Action> mUndoneActions = new List<Action>();
 
+		#region get/set
+		public bool CanUndo
+		{
+			get { return mDoneActions.Count > 0; }
+		}
+
+		public bool CanRedo
+		{
+			get { return mUndoneActions.Count > 0; }
+		}
+
+		public string UndoActionName
+		{
+			get
+			{
+				if (mDoneActions.Count > 0)
+					return mDoneActions[mDoneActions.Count - 1].GetName();
+				return string.Empty;
+			}
+		}
+
+		public string RedoActionName
+		{
+			get
+			{
+				if (mUndoneActions.Count > 0)
+					return mUndoneActions[mUndoneActions.Count - 1].GetName();
+				return string.Empty;
+			}
+		}
+		#endregion
+
 		public void Do(Action action)
 		{
 			mUndoneActions.Clear();
@@ -34,16 +66,6 @@ namespace RickArdurousEditor.Action
 				mUndoneActions.Add(action);
 				mDoneActions.RemoveAt(mDoneActions.Count - 1);
 			}
-		}
-
-		public bool CanUndo()
-		{
-			return mDoneActions.Count > 0;
-		}
-
-		public bool CanRedo()
-		{
-			return mUndoneActions.Count > 0;
 		}
 	}
 }
