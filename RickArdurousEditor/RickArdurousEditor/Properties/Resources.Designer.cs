@@ -61,6 +61,15 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Item ¤.
+        /// </summary>
+        internal static string ActionAddItem {
+            get {
+                return ResourceManager.GetString("ActionAddItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Item ¤.
         /// </summary>
         internal static string ActionDeleteItem {

@@ -349,7 +349,7 @@ namespace RickArdurousEditor
 						{
 							if (mCurrentSelectedItem == null)
 							{
-								mCurrentSelectedItem = mMap.AddItem((Items.Item.Type)(mCurrentSelectedSpriteId - 16), false, false, ConvertMouseCoordToLevelCoord(e.Location));								
+								mActionManager.Do(new Action.ActionAddItem(mMap, (Items.Item.Type)(mCurrentSelectedSpriteId - 16), ConvertMouseCoordToLevelCoord(e.Location)));
 							}
 							else if (mCurrentEditAction == EditAction.ADJUST_SENSOR)
 							{
