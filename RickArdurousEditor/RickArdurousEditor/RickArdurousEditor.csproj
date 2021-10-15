@@ -48,8 +48,10 @@
   <ItemGroup>
     <Compile Include="Action\Action.cs" />
     <Compile Include="Action\ActionAddItem.cs" />
+    <Compile Include="Action\ActionAdjustSensor.cs" />
     <Compile Include="Action\ActionDeleteItem.cs" />
     <Compile Include="Action\ActionManager.cs" />
+    <Compile Include="Action\ActionMoveItem.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="MainForm.cs">

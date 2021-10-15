@@ -120,8 +120,14 @@
   <data name="ActionAddItem" xml:space="preserve">
     <value>Add Item ¤</value>
   </data>
+  <data name="ActionAdjustSensor" xml:space="preserve">
+    <value>Adjust Sensor</value>
+  </data>
   <data name="ActionDeleteItem" xml:space="preserve">
     <value>Delete Item ¤</value>
+  </data>
+  <data name="ActionMoveItem" xml:space="preserve">
+    <value>Move Item ¤</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="DeleteIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">

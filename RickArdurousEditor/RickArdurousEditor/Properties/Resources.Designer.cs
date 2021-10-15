@@ -70,11 +70,29 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjust Sensor.
+        /// </summary>
+        internal static string ActionAdjustSensor {
+            get {
+                return ResourceManager.GetString("ActionAdjustSensor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Item ¤.
         /// </summary>
         internal static string ActionDeleteItem {
             get {
                 return ResourceManager.GetString("ActionDeleteItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move Item ¤.
+        /// </summary>
+        internal static string ActionMoveItem {
+            get {
+                return ResourceManager.GetString("ActionMoveItem", resourceCulture);
             }
         }
         

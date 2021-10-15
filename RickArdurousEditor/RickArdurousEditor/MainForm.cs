@@ -34,6 +34,8 @@ namespace RickArdurousEditor
 		private EditAction mCurrentEditAction = EditAction.MOVE_ITEM;
 		private Point mLastMouseDownPosition;
 		private Point mLastMouseMovePosition;
+		private Point mOriginalItemPositionForItemMove;
+		private int mOriginalSensorDistanceForAdjustDistance;
 
 		private Pen mSelectedSpritePen = new Pen(Color.Yellow, 3);
 
@@ -117,7 +119,7 @@ namespace RickArdurousEditor
 			PictureBoxItems.Image = spritesImage;
 		}
 
-		private void RedrawLevel()
+		public void RedrawLevel()
 		{
 			// create image
 			if (PictureBoxLevel.Image == null)
@@ -296,13 +298,17 @@ namespace RickArdurousEditor
 					if ((mCurrentSelectedItem != null) && (mCurrentSelectedItem.IsCoordOnMySensorExtrimity(mouseInLevelCoord, 2)))
 					{
 						mCurrentEditAction = EditAction.ADJUST_SENSOR;
+						mOriginalSensorDistanceForAdjustDistance = mCurrentSelectedItem.SensorDistance;
 					}
 					else
 					{
 						mCurrentEditAction = EditAction.MOVE_ITEM;
 						mCurrentSelectedItem = mMap.GetItemAt(mouseInLevelCoord);
 						if (mCurrentSelectedItem != null)
+						{
 							mCurrentSelectedItemGrabDelta = new Point(mCurrentSelectedItem.X - mouseInLevelCoord.X, mCurrentSelectedItem.Y - mouseInLevelCoord.Y);
+							mOriginalItemPositionForItemMove = mCurrentSelectedItem.Location;
+						}
 					}
 					break;
 			}
@@ -361,15 +367,29 @@ namespace RickArdurousEditor
 							{
 								mActionManager.Do(new Action.ActionAddItem(mMap, (Items.Item.Type)(mCurrentSelectedSpriteId - 16), ConvertMouseCoordToLevelCoord(e.Location)));
 							}
-							else if (mCurrentEditAction == EditAction.ADJUST_SENSOR)
+							else
 							{
-								Point mouseDownInLevelCoord = ConvertMouseCoordToLevelCoord(mLastMouseMovePosition);
 								Point newLocation = ConvertMouseCoordToLevelCoord(e.Location);
-								int diff = newLocation.X - mouseDownInLevelCoord.X;
-								if (mCurrentSelectedItem.IsMirror)
-									mCurrentSelectedItem.SensorDistance -= diff;
-								else
-									mCurrentSelectedItem.SensorDistance += diff;
+
+								switch (mCurrentEditAction)
+								{
+									case EditAction.MOVE_ITEM:
+										newLocation.X += mCurrentSelectedItemGrabDelta.X;
+										newLocation.Y += mCurrentSelectedItemGrabDelta.Y;
+										mActionManager.Do(new Action.ActionMoveItem(mCurrentSelectedItem, mOriginalItemPositionForItemMove, newLocation));
+										break;
+
+									case EditAction.ADJUST_SENSOR:
+										Point mouseDownInLevelCoord = ConvertMouseCoordToLevelCoord(mLastMouseMovePosition);
+										int diff = newLocation.X - mouseDownInLevelCoord.X;
+										if (mCurrentSelectedItem.IsMirror)
+											mCurrentSelectedItem.SensorDistance -= diff;
+										else
+											mCurrentSelectedItem.SensorDistance += diff;
+										// create the action
+										mActionManager.Do(new Action.ActionAdjustSensor(mCurrentSelectedItem, mOriginalSensorDistanceForAdjustDistance, mCurrentSelectedItem.SensorDistance));
+										break;
+								}
 							}
 						}
 					}

@@ -65,6 +65,11 @@ namespace RickArdurousEditor.Items
 			get { return mY; }
 		}
 
+		public Point Location
+		{
+			get { return new Point(mX, mY); }
+		}
+
 		public bool IsMirror
 		{
 			get { return mIsMirror; }
