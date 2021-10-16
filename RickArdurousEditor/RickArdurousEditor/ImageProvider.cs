@@ -130,7 +130,7 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Graal.png");
 			Bitmap result = new Bitmap(5, 8);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0f, 1f, 1f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
 		}
 
@@ -138,7 +138,7 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"Statuette.png");
 			Bitmap result = new Bitmap(5, 8);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0f, 1f, 1f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
 		}
 
@@ -146,7 +146,7 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"CrateBullet.png");
 			Bitmap result = new Bitmap(11, 8);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0f, 0.8f, 0.8f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
 		}
 
@@ -154,7 +154,7 @@ namespace RickArdurousEditor
 		{
 			Bitmap sprite = new Bitmap(Application.StartupPath + Properties.Settings.Default.ImageRelativePath + @"CrateDynamite.png");
 			Bitmap result = new Bitmap(11, 8);
-			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0f, 0.8f, 0.8f);
+			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
 		}
 
