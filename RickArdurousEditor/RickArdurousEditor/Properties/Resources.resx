@@ -126,8 +126,14 @@
   <data name="ActionDeleteItem" xml:space="preserve">
     <value>Delete Item ¤</value>
   </data>
+  <data name="ActionMirrorItem" xml:space="preserve">
+    <value>Mirror Item ¤</value>
+  </data>
   <data name="ActionMoveItem" xml:space="preserve">
     <value>Move Item ¤</value>
+  </data>
+  <data name="ActionSetItemSpecial" xml:space="preserve">
+    <value>Set Item ¤ Special</value>
   </data>
   <data name="ActionSetMapSpriteId" xml:space="preserve">
     <value>Set Map Srite Id</value>

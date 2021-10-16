@@ -88,11 +88,29 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mirror Item ¤.
+        /// </summary>
+        internal static string ActionMirrorItem {
+            get {
+                return ResourceManager.GetString("ActionMirrorItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move Item ¤.
         /// </summary>
         internal static string ActionMoveItem {
             get {
                 return ResourceManager.GetString("ActionMoveItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Item ¤ Special.
+        /// </summary>
+        internal static string ActionSetItemSpecial {
+            get {
+                return ResourceManager.GetString("ActionSetItemSpecial", resourceCulture);
             }
         }
         

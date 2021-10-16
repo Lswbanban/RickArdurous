@@ -200,10 +200,7 @@ namespace RickArdurousEditor
 		private void toolStripButtonMirrorItem_Click(object sender, EventArgs e)
 		{
 			if (mCurrentSelectedItem != null)
-			{
-				mCurrentSelectedItem.Mirror();
-				RedrawLevel();
-			}
+				mActionManager.Do(new Action.ActionMirrorItem(mCurrentSelectedItem));
 		}
 		private void toolStripButtonDeleteItem_Click(object sender, EventArgs e)
 		{
@@ -213,20 +210,7 @@ namespace RickArdurousEditor
 		private void toolStripButtonRespawnPointType_Click(object sender, EventArgs e)
 		{
 			if (mCurrentSelectedItem != null)
-			{
-				if (mCurrentSelectedItem.ItemType == Items.Item.Type.RICK)
-				{
-					if (mCurrentSelectedItem.RickRespawnType == Items.Item.RespawnType.NORMAL)
-						mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.START;
-					else
-						mCurrentSelectedItem.RickRespawnType = Items.Item.RespawnType.NORMAL;
-				}
-				else if (mCurrentSelectedItem.ItemType == Items.Item.Type.BOULDER)
-				{
-					mCurrentSelectedItem.IsSpecial = !mCurrentSelectedItem.IsSpecial;
-				}
-				RedrawLevel();
-			}
+				mActionManager.Do(new Action.ActionSetItemSpecial(mCurrentSelectedItem));
 		}
 
 		private void toolStripButtonShowPuzzlePath_CheckedChanged(object sender, EventArgs e)
