@@ -999,6 +999,11 @@ namespace RickArdurousEditor
 				mLevel[coord.X, coord.Y] = id;
 		}
 
+		public byte GetSpriteIdAt(Point coord)
+		{
+			return mLevel[coord.X, coord.Y];
+		}
+
 		public Items.Item GetItemAt(Point location)
 		{
 			foreach (List<Items.Item> itemList in mItems.Values)

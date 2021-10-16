@@ -52,6 +52,7 @@
     <Compile Include="Action\ActionDeleteItem.cs" />
     <Compile Include="Action\ActionManager.cs" />
     <Compile Include="Action\ActionMoveItem.cs" />
+    <Compile Include="Action\ActionSetMapSpriteId.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="MainForm.cs">

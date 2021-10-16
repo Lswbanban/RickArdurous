@@ -97,6 +97,15 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Map Srite Id.
+        /// </summary>
+        internal static string ActionSetMapSpriteId {
+            get {
+                return ResourceManager.GetString("ActionSetMapSpriteId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap DeleteIcon {

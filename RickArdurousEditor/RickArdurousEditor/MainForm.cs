@@ -396,7 +396,6 @@ namespace RickArdurousEditor
 					catch (MapSaveException)
 					{
 					}
-					RedrawLevel();
 					break;
 
 				case MouseButtons.Middle:
@@ -405,8 +404,7 @@ namespace RickArdurousEditor
 
 				case MouseButtons.Right:
 					if (mCurrentSelectedSpriteId < 16)
-						mMap.SetSpriteId(mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId);
-					RedrawLevel();
+						mActionManager.Do(new Action.ActionSetMapSpriteId(mMap, mMap.GetSpriteCoordFromScreenCoord(mMapCamera, e.Location), mCurrentSelectedSpriteId));
 					break;
 			}
 		}
