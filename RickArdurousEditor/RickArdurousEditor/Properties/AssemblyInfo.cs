@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RickArdurousEditor")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Rick Ardurous Editor")]
+[assembly: AssemblyDescription("This software is an Level Editor for the Arduboy Game called Rick Ardurous.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RickArdurousEditor")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("Alban Nanty")]
+[assembly: AssemblyProduct("Rick Ardurous Editor")]
+[assembly: AssemblyCopyright("Open Source 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

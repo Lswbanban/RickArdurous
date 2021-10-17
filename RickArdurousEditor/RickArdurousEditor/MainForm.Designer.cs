@@ -32,8 +32,9 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.ToolBar = new System.Windows.Forms.ToolStrip();
 			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonDeleteItem = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonSetItemSpecial = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonDeleteItem = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripButtonShowPuzzlePath = new System.Windows.Forms.ToolStripButton();
 			this.SplitContainerToolAndLevel = new System.Windows.Forms.SplitContainer();
 			this.SplitContainerWallAndItems = new System.Windows.Forms.SplitContainer();
@@ -54,12 +55,15 @@
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.mirrorItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setItemSpecialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.deleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.deleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ToolStripMenuItemDisplayPuzzlePath = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -105,16 +109,6 @@
 			this.toolStripButtonMirrorItem.ToolTipText = "Mirror the selected Item";
 			this.toolStripButtonMirrorItem.Click += new System.EventHandler(this.toolStripButtonMirrorItem_Click);
 			// 
-			// toolStripButtonDeleteItem
-			// 
-			this.toolStripButtonDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeleteItem.Image")));
-			this.toolStripButtonDeleteItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonDeleteItem.Name = "toolStripButtonDeleteItem";
-			this.toolStripButtonDeleteItem.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonDeleteItem.ToolTipText = "Delete the selected Item";
-			this.toolStripButtonDeleteItem.Click += new System.EventHandler(this.toolStripButtonDeleteItem_Click);
-			// 
 			// toolStripButtonSetItemSpecial
 			// 
 			this.toolStripButtonSetItemSpecial.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -125,6 +119,21 @@
 			this.toolStripButtonSetItemSpecial.Text = "toolStripButton1";
 			this.toolStripButtonSetItemSpecial.ToolTipText = "Set the selected Item Special";
 			this.toolStripButtonSetItemSpecial.Click += new System.EventHandler(this.toolStripButtonSetItemSpecial_Click);
+			// 
+			// toolStripButtonDeleteItem
+			// 
+			this.toolStripButtonDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeleteItem.Image")));
+			this.toolStripButtonDeleteItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonDeleteItem.Name = "toolStripButtonDeleteItem";
+			this.toolStripButtonDeleteItem.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonDeleteItem.ToolTipText = "Delete the selected Item";
+			this.toolStripButtonDeleteItem.Click += new System.EventHandler(this.toolStripButtonDeleteItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
 			// 
 			// toolStripButtonShowPuzzlePath
 			// 
@@ -269,7 +278,9 @@
 			// 
 			this.MenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.viewToolStripMenuItem,
+            this.helpToolStripMenuItem});
 			this.MenuStripMain.Location = new System.Drawing.Point(0, 0);
 			this.MenuStripMain.Name = "MenuStripMain";
 			this.MenuStripMain.Size = new System.Drawing.Size(800, 24);
@@ -334,7 +345,7 @@
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
 			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
 			this.undoToolStripMenuItem.Tag = "Undo";
 			this.undoToolStripMenuItem.Text = "Undo";
 			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
@@ -343,46 +354,72 @@
 			// 
 			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
 			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
 			this.redoToolStripMenuItem.Tag = "Redo";
 			this.redoToolStripMenuItem.Text = "Redo";
 			this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
 			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(154, 6);
 			// 
 			// mirrorItemToolStripMenuItem
 			// 
 			this.mirrorItemToolStripMenuItem.Name = "mirrorItemToolStripMenuItem";
-			this.mirrorItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.mirrorItemToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
 			this.mirrorItemToolStripMenuItem.Text = "Mirror Item";
 			this.mirrorItemToolStripMenuItem.Click += new System.EventHandler(this.mirrorItemToolStripMenuItem_Click);
 			// 
 			// setItemSpecialToolStripMenuItem
 			// 
 			this.setItemSpecialToolStripMenuItem.Name = "setItemSpecialToolStripMenuItem";
-			this.setItemSpecialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.setItemSpecialToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
 			this.setItemSpecialToolStripMenuItem.Text = "Set Item Special";
 			this.setItemSpecialToolStripMenuItem.Click += new System.EventHandler(this.setItemSpecialToolStripMenuItem_Click);
-			// 
-			// deleteItemToolStripMenuItem
-			// 
-			this.deleteItemToolStripMenuItem.Name = "deleteItemToolStripMenuItem";
-			this.deleteItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.deleteItemToolStripMenuItem.Text = "Delete Item";
-			this.deleteItemToolStripMenuItem.Click += new System.EventHandler(this.deleteItemToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(154, 6);
+			// 
+			// deleteItemToolStripMenuItem
+			// 
+			this.deleteItemToolStripMenuItem.Name = "deleteItemToolStripMenuItem";
+			this.deleteItemToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.deleteItemToolStripMenuItem.Text = "Delete Item";
+			this.deleteItemToolStripMenuItem.Click += new System.EventHandler(this.deleteItemToolStripMenuItem_Click);
+			// 
+			// viewToolStripMenuItem
+			// 
+			this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItemDisplayPuzzlePath});
+			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+			this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.viewToolStripMenuItem.Text = "View";
+			// 
+			// ToolStripMenuItemDisplayPuzzlePath
+			// 
+			this.ToolStripMenuItemDisplayPuzzlePath.CheckOnClick = true;
+			this.ToolStripMenuItemDisplayPuzzlePath.Name = "ToolStripMenuItemDisplayPuzzlePath";
+			this.ToolStripMenuItemDisplayPuzzlePath.Size = new System.Drawing.Size(180, 22);
+			this.ToolStripMenuItemDisplayPuzzlePath.Text = "Display Puzzle Path";
+			this.ToolStripMenuItemDisplayPuzzlePath.Click += new System.EventHandler(this.ToolStripMenuItemDisplayPuzzlePath_Click);
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.helpToolStripMenuItem.Text = "Help";
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.aboutToolStripMenuItem.Text = "About...";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -456,6 +493,10 @@
 		private System.Windows.Forms.ToolStripMenuItem setItemSpecialToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		private System.Windows.Forms.ToolStripMenuItem deleteItemToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemDisplayPuzzlePath;
+		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 	}
 }
 

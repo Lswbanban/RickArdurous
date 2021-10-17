@@ -215,6 +215,21 @@ namespace RickArdurousEditor
 			DeleteCurrentSelectedItem();
 		}
 		#endregion
+
+		#region View Menu
+		private void ToolStripMenuItemDisplayPuzzlePath_Click(object sender, EventArgs e)
+		{
+			SetPuzzlePathVisibility(ToolStripMenuItemDisplayPuzzlePath.Checked);
+		}
+		#endregion
+
+		#region Help Menu
+		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			AboutBox aboutBox = new AboutBox();
+			aboutBox.ShowDialog();
+		}
+		#endregion
 		#endregion
 
 		#region toolbar events
@@ -237,8 +252,15 @@ namespace RickArdurousEditor
 
 		private void toolStripButtonShowPuzzlePath_CheckedChanged(object sender, EventArgs e)
 		{
+			SetPuzzlePathVisibility(toolStripButtonShowPuzzlePath.Checked);
+		}
+
+		private void SetPuzzlePathVisibility(bool isVisible)
+		{
 			// set the flag on the map
-			mMap.IsPuzzlePathDrawn = toolStripButtonShowPuzzlePath.Checked;
+			mMap.IsPuzzlePathDrawn = isVisible;
+			this.toolStripButtonShowPuzzlePath.Checked = isVisible;
+			this.ToolStripMenuItemDisplayPuzzlePath.Checked = isVisible;
 			// then redraw the map
 			RedrawLevel();
 		}
