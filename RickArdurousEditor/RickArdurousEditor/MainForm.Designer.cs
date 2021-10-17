@@ -33,7 +33,7 @@
 			this.ToolBar = new System.Windows.Forms.ToolStrip();
 			this.toolStripButtonMirrorItem = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonDeleteItem = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonRespawnPointType = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonSetItemSpecial = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonShowPuzzlePath = new System.Windows.Forms.ToolStripButton();
 			this.SplitContainerToolAndLevel = new System.Windows.Forms.SplitContainer();
 			this.SplitContainerWallAndItems = new System.Windows.Forms.SplitContainer();
@@ -54,6 +54,12 @@
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.mirrorItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setItemSpecialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -78,8 +84,9 @@
 			// 
 			this.ToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonMirrorItem,
+            this.toolStripButtonSetItemSpecial,
             this.toolStripButtonDeleteItem,
-            this.toolStripButtonRespawnPointType,
+            this.toolStripSeparator2,
             this.toolStripButtonShowPuzzlePath});
 			this.ToolBar.Location = new System.Drawing.Point(0, 24);
 			this.ToolBar.Name = "ToolBar";
@@ -95,6 +102,7 @@
 			this.toolStripButtonMirrorItem.Name = "toolStripButtonMirrorItem";
 			this.toolStripButtonMirrorItem.Size = new System.Drawing.Size(23, 22);
 			this.toolStripButtonMirrorItem.Text = "Mirror";
+			this.toolStripButtonMirrorItem.ToolTipText = "Mirror the selected Item";
 			this.toolStripButtonMirrorItem.Click += new System.EventHandler(this.toolStripButtonMirrorItem_Click);
 			// 
 			// toolStripButtonDeleteItem
@@ -104,17 +112,19 @@
 			this.toolStripButtonDeleteItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonDeleteItem.Name = "toolStripButtonDeleteItem";
 			this.toolStripButtonDeleteItem.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonDeleteItem.ToolTipText = "Delete the selected Item";
 			this.toolStripButtonDeleteItem.Click += new System.EventHandler(this.toolStripButtonDeleteItem_Click);
 			// 
-			// toolStripButtonRespawnPointType
+			// toolStripButtonSetItemSpecial
 			// 
-			this.toolStripButtonRespawnPointType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonRespawnPointType.Image = global::RickArdurousEditor.Properties.Resources.RespawnPointType;
-			this.toolStripButtonRespawnPointType.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonRespawnPointType.Name = "toolStripButtonRespawnPointType";
-			this.toolStripButtonRespawnPointType.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonRespawnPointType.Text = "toolStripButton1";
-			this.toolStripButtonRespawnPointType.Click += new System.EventHandler(this.toolStripButtonRespawnPointType_Click);
+			this.toolStripButtonSetItemSpecial.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonSetItemSpecial.Image = global::RickArdurousEditor.Properties.Resources.RespawnPointType;
+			this.toolStripButtonSetItemSpecial.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonSetItemSpecial.Name = "toolStripButtonSetItemSpecial";
+			this.toolStripButtonSetItemSpecial.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonSetItemSpecial.Text = "toolStripButton1";
+			this.toolStripButtonSetItemSpecial.ToolTipText = "Set the selected Item Special";
+			this.toolStripButtonSetItemSpecial.Click += new System.EventHandler(this.toolStripButtonSetItemSpecial_Click);
 			// 
 			// toolStripButtonShowPuzzlePath
 			// 
@@ -125,6 +135,7 @@
 			this.toolStripButtonShowPuzzlePath.Name = "toolStripButtonShowPuzzlePath";
 			this.toolStripButtonShowPuzzlePath.Size = new System.Drawing.Size(23, 22);
 			this.toolStripButtonShowPuzzlePath.Text = "toolStripButton1";
+			this.toolStripButtonShowPuzzlePath.ToolTipText = "Toggle the visibility of the Puzzle Path";
 			this.toolStripButtonShowPuzzlePath.CheckedChanged += new System.EventHandler(this.toolStripButtonShowPuzzlePath_CheckedChanged);
 			// 
 			// SplitContainerToolAndLevel
@@ -279,7 +290,7 @@
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
@@ -287,20 +298,20 @@
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -308,7 +319,12 @@
 			// 
 			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem});
+            this.redoToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.mirrorItemToolStripMenuItem,
+            this.setItemSpecialToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.deleteItemToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "Edit";
@@ -331,6 +347,42 @@
 			this.redoToolStripMenuItem.Tag = "Redo";
 			this.redoToolStripMenuItem.Text = "Redo";
 			this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+			// 
+			// mirrorItemToolStripMenuItem
+			// 
+			this.mirrorItemToolStripMenuItem.Name = "mirrorItemToolStripMenuItem";
+			this.mirrorItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.mirrorItemToolStripMenuItem.Text = "Mirror Item";
+			this.mirrorItemToolStripMenuItem.Click += new System.EventHandler(this.mirrorItemToolStripMenuItem_Click);
+			// 
+			// setItemSpecialToolStripMenuItem
+			// 
+			this.setItemSpecialToolStripMenuItem.Name = "setItemSpecialToolStripMenuItem";
+			this.setItemSpecialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.setItemSpecialToolStripMenuItem.Text = "Set Item Special";
+			this.setItemSpecialToolStripMenuItem.Click += new System.EventHandler(this.setItemSpecialToolStripMenuItem_Click);
+			// 
+			// deleteItemToolStripMenuItem
+			// 
+			this.deleteItemToolStripMenuItem.Name = "deleteItemToolStripMenuItem";
+			this.deleteItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteItemToolStripMenuItem.Text = "Delete Item";
+			this.deleteItemToolStripMenuItem.Click += new System.EventHandler(this.deleteItemToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
 			// 
 			// MainForm
 			// 
@@ -388,7 +440,7 @@
 		private System.Windows.Forms.PictureBox PictureBoxItems;
 		private System.Windows.Forms.ToolStripButton toolStripButtonMirrorItem;
 		private System.Windows.Forms.ToolStripButton toolStripButtonDeleteItem;
-		private System.Windows.Forms.ToolStripButton toolStripButtonRespawnPointType;
+		private System.Windows.Forms.ToolStripButton toolStripButtonSetItemSpecial;
 		private System.Windows.Forms.SplitContainer splitContainerMapAndLogWindow;
 		private System.Windows.Forms.TextBox textBoxLog;
 		private System.Windows.Forms.ToolStripButton toolStripButtonShowPuzzlePath;
@@ -398,6 +450,12 @@
 		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem mirrorItemToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem setItemSpecialToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripMenuItem deleteItemToolStripMenuItem;
 	}
 }
 

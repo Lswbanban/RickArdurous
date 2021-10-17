@@ -40,5 +40,9 @@
 				mItem.IsSpecial = !mItem.IsSpecial;
 			}
 		}
+		static public bool CanThisItemBeSetSpecial(Items.Item item)
+		{
+			return (item.ItemType == Items.Item.Type.RICK) || (item.ItemType == Items.Item.Type.BOULDER);
+		}
 	}
 }

@@ -192,6 +192,27 @@ namespace RickArdurousEditor
 			// add the name of the action to undo/redo
 			this.undoToolStripMenuItem.Text = (this.undoToolStripMenuItem.Tag as string) + " " + mActionManager.UndoActionName;
 			this.redoToolStripMenuItem.Text = (this.redoToolStripMenuItem.Tag as string) + " " + mActionManager.RedoActionName;
+			// enable or disable the item related menu item
+			this.mirrorItemToolStripMenuItem.Enabled = (mCurrentSelectedItem != null);
+			this.setItemSpecialToolStripMenuItem.Enabled = (mCurrentSelectedItem != null) && Action.ActionSetItemSpecial.CanThisItemBeSetSpecial(mCurrentSelectedItem);
+			this.deleteItemToolStripMenuItem.Enabled = (mCurrentSelectedItem != null);
+		}
+
+		private void mirrorItemToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (mCurrentSelectedItem != null)
+				mActionManager.Do(new Action.ActionMirrorItem(mCurrentSelectedItem));
+		}
+
+		private void setItemSpecialToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (mCurrentSelectedItem != null)
+				mActionManager.Do(new Action.ActionSetItemSpecial(mCurrentSelectedItem));
+		}
+
+		private void deleteItemToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			DeleteCurrentSelectedItem();
 		}
 		#endregion
 		#endregion
@@ -202,15 +223,16 @@ namespace RickArdurousEditor
 			if (mCurrentSelectedItem != null)
 				mActionManager.Do(new Action.ActionMirrorItem(mCurrentSelectedItem));
 		}
-		private void toolStripButtonDeleteItem_Click(object sender, EventArgs e)
-		{
-			DeleteCurrentSelectedItem();
-		}
 
-		private void toolStripButtonRespawnPointType_Click(object sender, EventArgs e)
+		private void toolStripButtonSetItemSpecial_Click(object sender, EventArgs e)
 		{
 			if (mCurrentSelectedItem != null)
 				mActionManager.Do(new Action.ActionSetItemSpecial(mCurrentSelectedItem));
+		}
+
+		private void toolStripButtonDeleteItem_Click(object sender, EventArgs e)
+		{
+			DeleteCurrentSelectedItem();
 		}
 
 		private void toolStripButtonShowPuzzlePath_CheckedChanged(object sender, EventArgs e)
@@ -375,6 +397,10 @@ namespace RickArdurousEditor
 										break;
 								}
 							}
+						}
+						else
+						{
+							RedrawLevel();
 						}
 					}
 					catch (MapSaveException)
