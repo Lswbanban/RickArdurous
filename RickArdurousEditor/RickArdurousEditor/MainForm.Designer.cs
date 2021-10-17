@@ -64,6 +64,7 @@
 			this.ToolStripMenuItemDisplayPuzzlePath = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -402,14 +403,15 @@
 			// 
 			this.ToolStripMenuItemDisplayPuzzlePath.CheckOnClick = true;
 			this.ToolStripMenuItemDisplayPuzzlePath.Name = "ToolStripMenuItemDisplayPuzzlePath";
-			this.ToolStripMenuItemDisplayPuzzlePath.Size = new System.Drawing.Size(180, 22);
+			this.ToolStripMenuItemDisplayPuzzlePath.Size = new System.Drawing.Size(175, 22);
 			this.ToolStripMenuItemDisplayPuzzlePath.Text = "Display Puzzle Path";
 			this.ToolStripMenuItemDisplayPuzzlePath.Click += new System.EventHandler(this.ToolStripMenuItemDisplayPuzzlePath_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.documentationToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
 			this.helpToolStripMenuItem.Text = "Help";
@@ -420,6 +422,14 @@
 			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.aboutToolStripMenuItem.Text = "About...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			// 
+			// documentationToolStripMenuItem
+			// 
+			this.documentationToolStripMenuItem.CheckOnClick = true;
+			this.documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
+			this.documentationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.documentationToolStripMenuItem.Text = "Documentation...";
+			this.documentationToolStripMenuItem.Click += new System.EventHandler(this.documentationToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -497,6 +507,7 @@
 		private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemDisplayPuzzlePath;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
 	}
 }
 

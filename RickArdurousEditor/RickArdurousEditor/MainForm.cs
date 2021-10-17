@@ -16,6 +16,8 @@ namespace RickArdurousEditor
 
 		private static MainForm mInstance = null;
 
+		DocumentationForm mDocumentationForm = null;
+
 		private Map mMap = new Map();
 
 		// the instance of the action manager (for undo/redo)
@@ -228,6 +230,27 @@ namespace RickArdurousEditor
 		{
 			AboutBox aboutBox = new AboutBox();
 			aboutBox.ShowDialog();
+		}
+
+		private void documentationToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (documentationToolStripMenuItem.Checked)
+			{
+				if (mDocumentationForm == null)
+					mDocumentationForm = new DocumentationForm();
+				mDocumentationForm.Show(this);
+			}
+			else if (mDocumentationForm != null)
+			{
+				mDocumentationForm.Close();
+				mDocumentationForm = null;
+			}
+		}
+
+		public void DocumentationFormClosedNotification()
+		{
+			documentationToolStripMenuItem.Checked = false;
+			mDocumentationForm = null;
 		}
 		#endregion
 		#endregion

@@ -8,9 +8,9 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 
 # To do
 - Editor
-	- Add some menu items (Edit>Delete item, File > Close/New, File > Save As)
-	- Add a Help menu (Help > About, Help > doc)
-	- Add a stats info display on the level
+	- Add some menu items (File > Close/New, File > Save As)
+	- Add a Help menu (Help > doc)
+	- Add a stats info display on the level in the View Menu
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 	- Fix the drawing of the sprites in the toolbar
 - Game Engine Optim

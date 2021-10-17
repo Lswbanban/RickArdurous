@@ -61,6 +61,12 @@
     <Compile Include="Action\ActionMoveItem.cs" />
     <Compile Include="Action\ActionSetItemSpecial.cs" />
     <Compile Include="Action\ActionSetMapSpriteId.cs" />
+    <Compile Include="DocumentationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentationForm.Designer.cs">
+      <DependentUpon>DocumentationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="MainForm.cs">
@@ -75,6 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentationForm.resx">
+      <DependentUpon>DocumentationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
