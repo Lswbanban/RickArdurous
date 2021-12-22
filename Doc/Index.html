@@ -1,6 +1,118 @@
 <html>
+<head>
+<style>
+	.center { margin:auto }
+	img.center {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		}
+	body {
+		font-family: monospace;
+		margin-left: 10%;
+		margin-right: 10%;
+		}
+	h1 {
+		border-bottom: solid 2px black;
+		background-image: linear-gradient(90deg, #bbbbbb, transparent 90%);
+		margin-top: 50px;
+		}
+	h2 { margin-left: 20px;		
+		padding-left: 5px;
+		background-image: linear-gradient(90deg, #e1e1e1, transparent 40%);
+		}
+	p.title { font-size: 300%;
+			  font-weight: bold;
+			  margin-bottom: 5px;
+			  }
+	p.subtitle { font-size: 200%;
+			  font-weight: bold;
+			  margin-top: 5px;
+			  }
+</style>
+</head>
 <body>
-<div style="margin:auto"><img src="RickArdurousIcon.png"></div>
-Hello!
+<table class="center" cellspacing="10px">
+	<tr>
+		<td><img src="RickArdurousIcon.png"></td>
+		<td>
+			<p class="title">Rick Ardurous</p>
+			<p class="subtitle">Documentation</p>
+		</td>
+	</tr>
+</table>
+
+<h1>About</h1>
+<p><i>Rick Ardurous</i> is a game developed by Alban Nanty for the Arduboy, and inspired by the retro-game <i>Rick Dangerous</i>, where the player takes the role of an adventurer exploring caves in the hope of finding the Grail. The game propose a series of puzzles fitting in one screen. The player will have to reach the exit point of each screen to move to the next puzzle. The game propose 12 puzzle-screens with an increasing difficulty.</p>
+
+<h1>Installation</h1>
+<h2>Git Repo</h2>
+<p><i>Rick Ardurous</i> is open source. The repository is located here: <a href="https://github.com/Lswbanban/RickArdurous">https://github.com/Lswbanban/RickArdurous</a>. After cloning the repository you will find several folders:
+<ul>
+	<li>The base folder contains all the source files of the game. You should open the <b>RickArdurous.ino</b> file in the Arduino IDE if you want to recompile the game.</li>
+	<li>The <b>Doc</b> folder contains this documentation.</li>
+	<li>The <b>image</b> folder contains the images that were used to create the game. These images are also used by the Level Editor.</li>
+	<li>The <b>RickArdurousEditor</b> folder contains the source files of the editor, written in C# with Visual Studio on Windows.</li>
+	<li>The <b>Publishing</b> folder contains all the files needed to create a packed version of the game.</li>
+	<li>The <b>Release</b> folder contains the last compiled version of the Editor, as well as the packed version of the game.</li>
+</ul>
+</p>
+
+<h2>The Game</h2>
+<p>If you want to modify and recompile the game, you can open the <b>RickArdurous.ino</b> file located in the base folder, with the Arduino IDE. Otherwise if you just want to launch the game as it is with a game launcher, you can open the <b>RickArdurous.arduboy</b> file located in the <b>Release</b> folder.</p>
+
+<h2>The Level Editor</h2>
+<p>After cloning the repository, to launch the Level editor on Windows platform, run the <b>RickArdurousEditor.exe</b> executable located in the <b>Release</b> folder. Do not change the folder structure, as the editor reads files located in the parent folder and in the <b>image</b> folder.</p>
+
+<h1>Level Editor</h1>
+<h2>Panel Overview</h2>
+
+<p>The main window of the Editor is split in several panels which size can be adjusted. Refer to the sceenshot and list below to learn more about the functionality of each panel</p>
+<ol>
+	<li>This panel list all the 16 possible sprites for the background of the level. You should click on the sprite that you want to used to draw the map.</li>
+	<li>This panel list all the available items that can be placed in each level. You should click on the item you want to add on the map before clicking on the map.</li>
+	<li>This panel contains the whole map of the game. It is split by puzzle screen with blue lines.</li>
+	<li>This panel is a log window, it displays information and warnings.</li>
+</ol>
+<img src="PanelOverview.png" class="center">
+
+<h2>Mouse Navigation</h2>
+
+<p><b>Panning and Zooming:</b> You can use the mouse wheel to zoom in/out. Then you can click on the mouse wheel and move the mouse to pan the view (once zoomed in).</p>
+
+<p><b>Background Editing:</b> First select a background sprite in panel (1), then click with the <b>Right Mouse Button</b> on the map panel (3), to set the background sprite at the clicked position. If you want to delete a sprite, you need to select the empty sprite (the last sprite) on the panel (1), then use the <b>Right Mouse Button</b> on the map panel (3). Note that some sprite will randomly be mirrored once placed on the map, and you cannot control it. The random algorithm depends on the coordinate of the sprite, and is the same in the editor as it is in the game, so you should see the same background in the editor than in the game. Some other sprites are mirrored depeding on their neighbors: the sprite 7 and 8 will be mirrored if there's an empty sprite on their left, and the big statue sprites (9 and 10) will be mirrored if there's the same sprite on their left.</p>
+
+<p><b>Item Editing:</b> First select a sprite in the item panel (2), then click with the <b>Left Mouse Button</b> on an empty spot of the map panel (3) to add a sprite. If you click with the <b>Left Mouse Button</b> on an existing sprite on the map panel (3), it will select this sprite instead of adding a new one. The selected sprite will be surrounded with a yellow frame. If you want to add an item very close to an existing one, add it first in an empty spot then move it. You can move an item by selecting it, and drag'n'dropping it on the map panel (3). For precise item positioning, zoom in with the mouse wheel before moving the item. If you want to delete an item, first select it, then press the "Del" or "Backspace" key, or click on the red cross in the toolbar.</p>
+
+<h2>Item Mirroring</h2>
+
+<p>Some items can be mirrored, which has various effects in the game. To mirror an item, first select it on the map panel (3), then click on the mirror button in the toolbar. To un-mirror an item, click again on the mirror button in the toolbar. Here are the effects of the mirror property for the various items:</p>
+<ul>
+	<li>Rick Spawn point: This has no effect so far (because it is currently not implemented in the game engine), but ideally it should orientate Rick in the correct direction after a respawn.</li>
+	<li>Green Bonuses: Mirror has no effect.</li>
+	<li>Vertical spike: Mirror will display the spike pointing downward.</li>
+	<li>Horizontal spike: Mirror will display the spike pointing to the right.</li>
+	<li>Yellow enemies: Mirror will spawn the enemies oriented to the left, which means they will start moving to the left after spawning.</li>
+	<li>Stalagmite and Stalactite: Mirror has no effect.</li>
+	<li>Arrow Launcher: Mirror will display the arrow launcher face looking to the left, which means it will launch its arrows to the left.</li>
+	<li>Destroyable Block: Mirror has no effect.</li>
+	<li>Rolling Boulder: Mirror will spawn the boulder oriented to the left, which means it will start rolling to the left after spawning.</li>	
+</ul>
+
+<h2>Item State</h2>
+
+<p>Two items, the Rick Spawn point and the Rolling Boulder can have 2 states, denoted by a bright or dark color. You can switch their state by first selecting the item, then clicking on the item state button in the toolbar, which will change the brightness of the item to denote its state.</p>
+
+<p><b>Rick Spawn point</b>:</p>
+
+<h1>Level Design Tips</h1>
+
+<h2>Game Size Optimization</h2>
+
+<p><b>Item Optimization:</b> The game engine will reuse the instances of the items in between the puzzle screen, which means if you place an enemy in screen one, and an enemy in screen two, the game engine will actually only use one enemy instance to save memory. However if you place 5 enemies in the same puzzle screen, then 5 instances must be created. You should then think of a budget number for each item that you want to use in one screen. The three yellow type of enemies can share the same instance, and the 2 red spikes also, but not the 4 green bonuses.</p>
+
+<p><b>Background Optimization:</b> The background sprites are compressed using a custom RLE algorithm. Only the space (empty sprite) are packed, the other sprites are not. Therefore drawing big empty caves will take less memory that narrow tunels.</p>
+
+<br><br>
 </body>
 </html>

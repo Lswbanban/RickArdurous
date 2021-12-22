@@ -1,15 +1,24 @@
-Rick Ardurous
+# Rick Ardurous
 
-# What is it
+## What is it?
 
-Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Arduboy platform.
+Rick Ardurous is a game developed for the Arduboy, and inspired by the retro-game Rick Dangerous, where the player takes the role of an adventurer exploring caves in the hope of finding the Grail. The game propose a series of puzzles fitting in one screen. The player will have to reach the exit point of each screen to move to the next puzzle. The game propose 12 puzzle-screens with an increasing difficulty.
 
-# Bug list
+## Documentation
 
-# To do
+For more details, please read the documentation by opening the Doc/Index.html file.
+
+## License
+
+This project is open source, both for the game and the Editor.
+
+## Bug list
+
+## To do
 - Editor
+	- Change Release build config to build in the Release folder
+	- Add a settings to change the image path?
 	- Add some menu items (File > Close/New, File > Save As)
-	- Add a Help menu (Help > doc)
 	- Add a stats info display on the level in the View Menu
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 	- Fix the drawing of the sprites in the toolbar
@@ -19,8 +28,4 @@ Rick Ardurous is an attempt to clone the famous old Rick Dangerous on the Ardubo
 - Sound/LED FX
 	- different sound for picking crate/statuette/graal
 	- dynamite explosion
-
-# New items to come
-- And I don't want to do the trigger + moving platform. But we can have trigger plate + door or trigger plate + boulder.
-- And I don't like the bat, so I don't want it (fire do not kill it, but make it move, this is not logical)?
 
