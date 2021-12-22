@@ -76,6 +76,14 @@
 </ol>
 <img src="PanelOverview.png" class="center">
 
+<p>The toolbar contains 4 buttons which are (from left to right):</p>
+<ul>
+	<li>The mirror button: used to mirror some items.</li>
+	<li>The item state button: used to change the state of some items.</li>
+	<li>The delete item button: used to delete the selected item.</li>
+	<li>The draw puzzle path button: toggle the display of the puzzle path, as the editor computed it.</li>
+</ul>
+
 <h2>Mouse Navigation</h2>
 
 <p><b>Panning and Zooming:</b> You can use the mouse wheel to zoom in/out. Then you can click on the mouse wheel and move the mouse to pan the view (once zoomed in).</p>
@@ -103,9 +111,21 @@
 
 <p>Two items, the Rick Spawn point and the Rolling Boulder can have 2 states, denoted by a bright or dark color. You can switch their state by first selecting the item, then clicking on the item state button in the toolbar, which will change the brightness of the item to denote its state.</p>
 
-<p><b>Rick Spawn point</b>:</p>
+<p><b>Rick Spawn point</b>: You must one and only one bright Rick Spawn Point, this will be the initial spawn point of the game. Then every other Rick Spawn Point (the darker version) are intermediate check points. You will get an error if you try to save your map without a bright Rick Spawn Point, or if you have more than one in your map.</p>
+
+<p><b>Rolling Boulder</b>: The bright rolling boulder will spawn in a rolling state. Otherwise the dark rolling boulder will spawn without moving. The player will have to use a dynamite to make the boulder roll.</p>
+
+<h2>Arrow Launcher distance</h2>
+
+<p>If you place an arrow launcher item on the map (the magenta face) you will see that a magenta frame is also displayed. This boxe represents the sensor distance of the arrow launcher. Whenever Rick or an enemy enter in this square, it will launches its arrow. You can adjust this distance by first selecting the arrow launcher item, then moving your mouse over the sensor extremity and drag'n'droping the extremity to resize the sensor box.</p>
 
 <h1>Level Design Tips</h1>
+
+<h2>Puzzle Path</h2>
+
+<p>In order to be saved, your map need to create an non-branching linear puzzle path. This means each puzzle screen must have connection(s) to only 2 neighbors. You can have multiple gate from one screen to the same neighbor, but a screen cannot have gates to 3 or 4 differents neighbors. The gate can be as large as you want, you can leave the whole edge empty if you wish. However, it is recommended to add a background sprite in each corner because a corner can connect to two different neighbors. Said differently, that means two edges of each puzzle screen must be completely filled with background sprites.</p>
+
+<p>On top of respecting the puzzle path constraint, you also need to specify a starting point, and a end point. The starting point is specified with a bright Rick Spawn Point sprite (add this sprite and click on the item state button in the toolbar to make it bright) and the end point is specified with the grail bonus. There can only have one bright rick spawn point and one grail bonus item in the map. The Editor will try to follow a path between these two items, follwing the connections between the puzzle screen. To visualize the path found by the editor, click on the draw puzzle screen path button in the toolbar.</p>
 
 <h2>Game Size Optimization</h2>
 
