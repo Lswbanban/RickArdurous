@@ -148,6 +148,20 @@ namespace RickArdurousEditor
 
 		#region menu event
 		#region File Menu
+
+		private string GetgamePath()
+		{
+			// add a folder separator at the end of the path
+			string gamePath = Properties.Settings.Default.GameRelativePath;
+			if (gamePath[gamePath.Length - 1] != Path.DirectorySeparatorChar)
+				gamePath += Path.DirectorySeparatorChar;
+
+			// check if the path is local or global
+			if (Path.IsPathRooted(gamePath))
+				return gamePath;
+			return Application.StartupPath + gamePath;
+		}
+
 		private string getConstVariableFileName(string mapDataFileName)
 		{
 			FileInfo fileInfo = new FileInfo(mapDataFileName);
@@ -156,7 +170,7 @@ namespace RickArdurousEditor
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string folder = Application.StartupPath + Properties.Settings.Default.GameRelativePath;
+			string folder = GetgamePath();
 			string fileToOpen = @"MapData.cpp";
 			mMap.Load(folder + fileToOpen);
 			RedrawLevel();
@@ -164,9 +178,15 @@ namespace RickArdurousEditor
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string folder = Application.StartupPath + Properties.Settings.Default.GameRelativePath;
+			string folder = GetgamePath();
 			string fileToSave = @"MapData.cpp";
 			mMap.Save(folder + fileToSave, folder + getConstVariableFileName(fileToSave));
+		}
+
+		private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SettingsForm settingsForm = new SettingsForm();
+			settingsForm.ShowDialog();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
