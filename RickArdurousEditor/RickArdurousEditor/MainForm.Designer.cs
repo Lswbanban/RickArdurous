@@ -67,6 +67,9 @@
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openMapFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.saveMapFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -294,6 +297,7 @@
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
             this.toolStripSeparator5,
             this.preferencesToolStripMenuItem,
             this.toolStripSeparator1,
@@ -307,7 +311,7 @@
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.openToolStripMenuItem.Text = "Open";
+			this.openToolStripMenuItem.Text = "Open...";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
@@ -447,6 +451,27 @@
 			this.documentationToolStripMenuItem.Text = "Documentation...";
 			this.documentationToolStripMenuItem.Click += new System.EventHandler(this.documentationToolStripMenuItem_Click);
 			// 
+			// saveAsToolStripMenuItem
+			// 
+			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.saveAsToolStripMenuItem.Text = "Save As...";
+			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+			// 
+			// openMapFileDialog
+			// 
+			this.openMapFileDialog.DefaultExt = "cpp";
+			this.openMapFileDialog.FileName = "MapData.cpp";
+			this.openMapFileDialog.Filter = "C++ files|*.cpp|All files|*.*";
+			this.openMapFileDialog.Title = "Open Map file";
+			// 
+			// saveMapFileDialog
+			// 
+			this.saveMapFileDialog.DefaultExt = "cpp";
+			this.saveMapFileDialog.FileName = "MapData.cpp";
+			this.saveMapFileDialog.Filter = "C++ files|*.cpp|All files|*.*";
+			this.saveMapFileDialog.Title = "Save Map as";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -526,6 +551,9 @@
 		private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+		private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+		private System.Windows.Forms.OpenFileDialog openMapFileDialog;
+		private System.Windows.Forms.SaveFileDialog saveMapFileDialog;
 	}
 }
 

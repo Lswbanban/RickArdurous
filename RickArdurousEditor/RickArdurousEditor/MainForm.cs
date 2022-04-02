@@ -69,8 +69,8 @@ namespace RickArdurousEditor
 			// init the sprite tool box
 			RedrawWallSpriteToolbox(0, 0);
 			RedrawItemsSpriteToolbox(-1, -1);
-			// init the level image
-			RedrawLevel();
+			// load the default map file
+			LoadMap(PathProvider.GetGamePath() + Properties.Settings.Default.DefaultMapFileName);
 		}
 
 		private void RedrawWallSpriteToolbox(int selectedSpriteX, int selectedSpriteY)
@@ -149,38 +149,40 @@ namespace RickArdurousEditor
 		#region menu event
 		#region File Menu
 
-		private string GetgamePath()
-		{
-			// add a folder separator at the end of the path
-			string gamePath = Properties.Settings.Default.GameRelativePath;
-			if (gamePath[gamePath.Length - 1] != Path.DirectorySeparatorChar)
-				gamePath += Path.DirectorySeparatorChar;
-
-			// check if the path is local or global
-			if (Path.IsPathRooted(gamePath))
-				return gamePath;
-			return Application.StartupPath + gamePath;
-		}
-
 		private string getConstVariableFileName(string mapDataFileName)
 		{
 			FileInfo fileInfo = new FileInfo(mapDataFileName);
 			return fileInfo.Name.Remove(fileInfo.Name.IndexOf(fileInfo.Extension)) + "ConstVariables.h";
 		}
 
+		private void LoadMap(string mapFileName)
+		{
+			mMap.Load(mapFileName);
+			RedrawLevel();
+		}
+
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string folder = GetgamePath();
-			string fileToOpen = @"MapData.cpp";
-			mMap.Load(folder + fileToOpen);
-			RedrawLevel();
+			// set the directory and path for the open file dialog
+			openMapFileDialog.InitialDirectory = PathProvider.GetGamePath();
+			if (Path.IsPathRooted(openMapFileDialog.FileName))
+				openMapFileDialog.FileName = Path.GetFileName(openMapFileDialog.FileName);
+			// show the dialog
+			DialogResult result = openMapFileDialog.ShowDialog();
+			if (result == DialogResult.OK)
+				LoadMap(openMapFileDialog.FileName);
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string folder = GetgamePath();
+			string folder = PathProvider.GetGamePath();
 			string fileToSave = @"MapData.cpp";
 			mMap.Save(folder + fileToSave, folder + getConstVariableFileName(fileToSave));
+		}
+
+		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 
 		private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)

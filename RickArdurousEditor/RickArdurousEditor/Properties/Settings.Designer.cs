@@ -58,5 +58,17 @@ namespace RickArdurousEditor.Properties {
                 this["DocRelativePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MapData.cpp")]
+        public string DefaultMapFileName {
+            get {
+                return ((string)(this["DefaultMapFileName"]));
+            }
+            set {
+                this["DefaultMapFileName"] = value;
+            }
+        }
     }
 }

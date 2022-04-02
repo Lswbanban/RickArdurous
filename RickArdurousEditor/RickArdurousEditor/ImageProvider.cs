@@ -8,18 +8,6 @@ namespace RickArdurousEditor
 {
 	class ImageProvider
 	{
-		private static string GetImagePath()
-		{
-			// add a folder separator at the end of the path
-			string imagePath = Properties.Settings.Default.ImageRelativePath;
-			if (imagePath[imagePath.Length - 1] != Path.DirectorySeparatorChar)
-				imagePath += Path.DirectorySeparatorChar;
-
-			// check if the path is local or global
-			if (Path.IsPathRooted(imagePath))
-				return imagePath;
-			return Application.StartupPath + imagePath;
-		}
 
 		private static void SetGCInPixelMode(ref Graphics gc)
 		{
@@ -72,12 +60,12 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetWallSpriteImage()
 		{
-			return new Bitmap(GetImagePath() + @"Walls.png");
+			return new Bitmap(PathProvider.GetImagePath() + @"Walls.png");
 		}
 
 		public static Bitmap GetRickImage(Items.Item.RespawnType respawnType)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Rick.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Rick.png");
 			Bitmap result = new Bitmap(9, 16);
 			float red = 0.1f;
 			float green = 0.4f;
@@ -96,7 +84,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetHorizontalSpikeImage(bool isTop)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"SpikeHorizontalBottom.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"SpikeHorizontalBottom.png");
 			Bitmap result = new Bitmap(3, 8);
 			RotateFlipType rotateFlipOperation = isTop ? RotateFlipType.RotateNoneFlipY : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, rotateFlipOperation, 1f, 0f, 0f);
@@ -105,7 +93,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetVerticalSpikeImage(bool isLeft)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"SpikeVertical.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"SpikeVertical.png");
 			Bitmap result = new Bitmap(4, 8);
 			RotateFlipType rotateFlipOperation = isLeft ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 8), ref result, rotateFlipOperation, 1f, 0f, 0f);
@@ -114,7 +102,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetMummyImage(bool isLeft)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Mummy.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Mummy.png");
 			Bitmap result = new Bitmap(9, 16);
 			RotateFlipType rotateFlipOperation = isLeft ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 9, 16), ref result, rotateFlipOperation, 1f, 1f, 0f);
@@ -123,7 +111,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetSkeletonImage(bool isLeft)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Skeleton.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Skeleton.png");
 			Bitmap result = new Bitmap(6, 16);
 			RotateFlipType rotateFlipOperation = isLeft ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 16), ref result, rotateFlipOperation, 1f, 1f, 0f);
@@ -132,7 +120,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetScorpionImage(bool isLeft)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Scorpion.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Scorpion.png");
 			Bitmap result = new Bitmap(8, 4);
 			RotateFlipType rotateFlipOperation = isLeft ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 8, 4), ref result, rotateFlipOperation, 1f, 1f, 0f);
@@ -141,7 +129,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetGraalImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Graal.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Graal.png");
 			Bitmap result = new Bitmap(5, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
@@ -149,7 +137,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetStatuetteImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Statuette.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Statuette.png");
 			Bitmap result = new Bitmap(5, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 5, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
@@ -157,7 +145,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetBulletCrateImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"CrateBullet.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"CrateBullet.png");
 			Bitmap result = new Bitmap(11, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
@@ -165,7 +153,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetDynamiteCrateImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"CrateDynamite.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"CrateDynamite.png");
 			Bitmap result = new Bitmap(11, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 11, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.3f, 1f, 0f);
 			return result;
@@ -173,7 +161,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetStalagmiteImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Stalagmite.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Stalagmite.png");
 			Bitmap result = new Bitmap(7, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, RotateFlipType.RotateNoneFlipNone, 1f, 0.65f, 0.1f, new Rectangle(0, 0, 3, 8));
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, RotateFlipType.RotateNoneFlipX, 1f, 0.65f, 0.1f, new Rectangle(4, 0, 3, 8));
@@ -182,7 +170,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetStalactiteImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"Stalactite.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"Stalactite.png");
 			Bitmap result = new Bitmap(7, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, RotateFlipType.RotateNoneFlipNone, 1f, 0.65f, 0.1f, new Rectangle(0, 0, 3, 8));
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 3, 8), ref result, RotateFlipType.RotateNoneFlipX, 1f, 0.65f, 0.1f, new Rectangle(4, 0, 3, 8));
@@ -191,7 +179,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetArrowLauncherImage(bool isLeft)
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"ArrowLauncherFace.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"ArrowLauncherFace.png");
 			Bitmap result = new Bitmap(4, 8);
 			RotateFlipType rotateFlipOperation = isLeft ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 8), ref result, rotateFlipOperation, 1f, 0f, 1f, new Rectangle(0, 0, 3, 8));
@@ -200,7 +188,7 @@ namespace RickArdurousEditor
 
 		public static Bitmap GetDestroyableBlockImage()
 		{
-			Bitmap sprite = new Bitmap(GetImagePath() + @"DestroyableBlock.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"DestroyableBlock.png");
 			Bitmap result = new Bitmap(15, 8);
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 15, 8), ref result, RotateFlipType.RotateNoneFlipNone, 0.5f, 0.5f, 0.5f, new Rectangle(0, 0, 15, 8));
 			return result;
@@ -209,7 +197,7 @@ namespace RickArdurousEditor
 		public static Bitmap GetBoulderImage(bool isMirrored, bool isSpecial)
 		{
 			// load the boulder image and write it two times, with one time mirrored
-			Bitmap sprite = new Bitmap(GetImagePath() + @"HalfBoulder.png");
+			Bitmap sprite = new Bitmap(PathProvider.GetImagePath() + @"HalfBoulder.png");
 			Bitmap result = new Bitmap(12, 12);
 			// the special flag will change the color
 			float red = isSpecial ? 0.5f : 0.8f;
@@ -219,7 +207,7 @@ namespace RickArdurousEditor
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, RotateFlipType.RotateNoneFlipX, red, green, blue, new Rectangle(0, 0, 6, 12));
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 6, 12), ref result, RotateFlipType.RotateNoneFlipNone, red, green, blue, new Rectangle(0, 0, 6, 12));
 			// load the shadow and write it in the same image
-			sprite = new Bitmap(GetImagePath() + @"BoulderShadow.png");
+			sprite = new Bitmap(PathProvider.GetImagePath() + @"BoulderShadow.png");
 			RotateFlipType rotateFlipOperation = !isMirrored ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone;
 			CreateTaintedAndMirroredImage(sprite, new Rectangle(0, 0, 4, 4), ref result, rotateFlipOperation, 0.0f, 0.0f, 0.0f, new Rectangle(2, 2, 4, 4));
 			return result;

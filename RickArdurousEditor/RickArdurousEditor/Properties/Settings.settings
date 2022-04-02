@@ -11,5 +11,8 @@
     <Setting Name="DocRelativePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">/../Doc/</Value>
     </Setting>
+    <Setting Name="DefaultMapFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">MapData.cpp</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
