@@ -172,6 +172,13 @@ namespace RickArdurousEditor
 			UpdateTitleBar();
 		}
 
+		private void newToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			mMap.Reset();
+			RedrawLevel();
+			UpdateTitleBar();
+		}
+
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// set the directory and path for the open file dialog

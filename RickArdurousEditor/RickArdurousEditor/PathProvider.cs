@@ -46,7 +46,7 @@ namespace RickArdurousEditor
 		public static string GetConstVariableFileName(string mapDataFileName)
 		{
 			FileInfo fileInfo = new FileInfo(mapDataFileName);
-			return fileInfo.Name.Remove(fileInfo.Name.IndexOf(fileInfo.Extension)) + "ConstVariables.h";
+			return mapDataFileName.Remove(mapDataFileName.IndexOf(fileInfo.Extension)) + "ConstVariables.h";
 		}
 	}
 }

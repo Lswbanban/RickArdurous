@@ -16,9 +16,6 @@ This project is open source, both for the game and the Editor.
 
 ## To do
 - Editor
-	- Change Release build config to build in the Release folder
-	- Add a settings to change the image path?
-	- Add some menu items (File > Close/New, File > Save As)
 	- Add a stats info display on the level in the View Menu
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
 	- Fix the drawing of the sprites in the toolbar

@@ -1005,6 +1005,9 @@ namespace RickArdurousEditor
 
 			// clear all the items
 			mItems.Clear();
+
+			// clear also the file name
+			mFileName =	string.Empty;
 		}
 
 		public void SetSpriteId(Point coord, byte id)
