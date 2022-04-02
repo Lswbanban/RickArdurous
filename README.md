@@ -18,7 +18,6 @@ This project is open source, both for the game and the Editor.
 - Editor
 	- Add a stats info display on the level in the View Menu
 	- MapManager::MAX_UPDATABLE_ITEM_COUNT can be computed by the Editor and saved in MapDataConstVariables
-	- Fix the drawing of the sprites in the toolbar
 - Game Engine Optim
 	- add the PSTR()/F() macro around the menu strings?
 	- bug in Rick state machine, from Fall to Death (for example jump in dynamite explosion)

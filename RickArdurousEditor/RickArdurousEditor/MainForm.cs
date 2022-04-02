@@ -79,15 +79,20 @@ namespace RickArdurousEditor
 			Bitmap spritesImage = new Bitmap(PictureBoxWallSprites.Width, PictureBoxWallSprites.Height);
 			Graphics gc = Graphics.FromImage(spritesImage);
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			gc.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 			gc.DrawImage(originalImage, 0, 0, spritesImage.Width, spritesImage.Height);
 
 			// create a pen for drawing lines to split the sprites
 			Pen linePen = new Pen(Color.Blue, 2);
-			int width = spritesImage.Width / 2;
-			int height = spritesImage.Height / 8;
+			int width = (spritesImage.Width / 2) - 1;
+			float height = (float)spritesImage.Height / 8f;
 			gc.DrawLine(linePen, new Point(width, 0), new Point(width, spritesImage.Height));
 			for (int i = 0; i < 8; ++i)
-				gc.DrawLine(linePen, new Point(0, height * i), new Point(spritesImage.Width, height * i));
+			{
+				int lineHeight = (int)(height * i);
+				gc.DrawLine(linePen, new Point(0, lineHeight), new Point(spritesImage.Width, lineHeight));
+			}
 
 			// draw the selected sprite
 			if (selectedSpriteX >= 0)
@@ -103,15 +108,20 @@ namespace RickArdurousEditor
 			Bitmap spritesImage = new Bitmap(PictureBoxItems.Width, PictureBoxItems.Height);
 			Graphics gc = Graphics.FromImage(spritesImage);
 			gc.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			gc.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+			gc.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 			gc.DrawImage(originalImage, 0, 0, spritesImage.Width, spritesImage.Height);
 
 			// create a pen for drawing lines to split the sprites
 			Pen linePen = new Pen(Color.Blue, 2);
-			int width = spritesImage.Width / 2;
-			int height = spritesImage.Height / 8;
+			int width = (spritesImage.Width / 2) - 1;
+			float height = (float)spritesImage.Height / 8f;
 			gc.DrawLine(linePen, new Point(width, 0), new Point(width, spritesImage.Height));
 			for (int i = 0; i < 8; ++i)
-				gc.DrawLine(linePen, new Point(0, height * i), new Point(spritesImage.Width, height * i));
+			{
+				int lineHeight = (int)(height * i);
+				gc.DrawLine(linePen, new Point(0, lineHeight), new Point(spritesImage.Width, lineHeight));
+			}
 
 			// draw the selected sprite
 			if (selectedItemX >= 0)
