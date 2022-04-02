@@ -42,5 +42,11 @@ namespace RickArdurousEditor
 		{
 			return MakePathAbsolute(Properties.Settings.Default.DocRelativePath, '/');
 		}
+
+		public static string GetConstVariableFileName(string mapDataFileName)
+		{
+			FileInfo fileInfo = new FileInfo(mapDataFileName);
+			return fileInfo.Name.Remove(fileInfo.Name.IndexOf(fileInfo.Extension)) + "ConstVariables.h";
+		}
 	}
 }

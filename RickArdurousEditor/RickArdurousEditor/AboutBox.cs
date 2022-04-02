@@ -24,7 +24,7 @@ namespace RickArdurousEditor
 
 		#region Assembly Attribute Accessors
 
-		public string AssemblyTitle
+		public static string AssemblyTitle
 		{
 			get
 			{

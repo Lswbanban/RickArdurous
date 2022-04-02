@@ -13,6 +13,10 @@ namespace RickArdurousEditor
 		private const int LEVEL_HEIGHT = 32;
 		public const int WALL_SPRITE_WIDTH = 8;
 		public const int WALL_SPRITE_HEIGHT = 8;
+
+		// the file name where the map is saved
+		private string mFileName = string.Empty;
+
 		private byte[,] mLevel = new byte[LEVEL_WIDTH, LEVEL_HEIGHT];
 
 		// all the items in the level
@@ -35,6 +39,11 @@ namespace RickArdurousEditor
 		private int mFirstPuzzleScreenCameraY = 0;
 
 		#region get/set
+		public string FileName
+		{
+			get { return mFileName; }
+		}
+
 		public int DrawSpriteWidth
 		{
 			get { return WALL_SPRITE_WIDTH * mPixelSize; }
@@ -674,6 +683,8 @@ namespace RickArdurousEditor
 		{
 			SaveMapData(mapDataFileName);
 			SaveConstVariables(constVariablesFileName);
+			// memorise the name with which the map was saved
+			mFileName = mapDataFileName;
 		}
 		#endregion
 
@@ -819,6 +830,9 @@ namespace RickArdurousEditor
 				if (respawnList.Count > 0)
 					respawnList[0].RickRespawnType = Items.Item.RespawnType.START;
 			}
+
+			// memorise the name with which the map was loaded
+			mFileName = mapDataFileName;
 		}
 		#endregion
 

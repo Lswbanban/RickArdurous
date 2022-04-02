@@ -149,16 +149,27 @@ namespace RickArdurousEditor
 		#region menu event
 		#region File Menu
 
-		private string getConstVariableFileName(string mapDataFileName)
+		private void UpdateTitleBar()
 		{
-			FileInfo fileInfo = new FileInfo(mapDataFileName);
-			return fileInfo.Name.Remove(fileInfo.Name.IndexOf(fileInfo.Extension)) + "ConstVariables.h";
+			// get the name of the open map file
+			string mapName = string.Empty;
+			if (mMap.FileName != string.Empty)
+				mapName = " - " + Path.GetFileName(mMap.FileName);
+			// change the title of the editor
+			this.Text = AboutBox.AssemblyTitle + mapName;
 		}
 
 		private void LoadMap(string mapFileName)
 		{
 			mMap.Load(mapFileName);
 			RedrawLevel();
+			UpdateTitleBar();
+		}
+
+		private void SaveMap(string mapFileName)
+		{
+			mMap.Save(mapFileName, PathProvider.GetConstVariableFileName(mapFileName));
+			UpdateTitleBar();
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -175,14 +186,23 @@ namespace RickArdurousEditor
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string folder = PathProvider.GetGamePath();
-			string fileToSave = @"MapData.cpp";
-			mMap.Save(folder + fileToSave, folder + getConstVariableFileName(fileToSave));
+			if (mMap.FileName == string.Empty)
+				saveAsToolStripMenuItem_Click(sender, e);
+			else
+				SaveMap(mMap.FileName);
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			// set the directory and path for the open file dialog
+			saveMapFileDialog.InitialDirectory = PathProvider.GetGamePath();
+			if (Path.IsPathRooted(saveMapFileDialog.FileName))
+				saveMapFileDialog.FileName = Path.GetFileName(saveMapFileDialog.FileName);
 
+			// show the dialog
+			DialogResult result = saveMapFileDialog.ShowDialog();
+			if (result == DialogResult.OK)
+				SaveMap(saveMapFileDialog.FileName);
 		}
 
 		private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
