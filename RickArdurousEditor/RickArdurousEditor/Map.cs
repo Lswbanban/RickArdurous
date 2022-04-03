@@ -29,7 +29,7 @@ namespace RickArdurousEditor
 		private Pen mPuzzleScreenSeparatorLinePen = new Pen(Color.CornflowerBlue, 2);
 		private Pen mValidPuzzlePathLinePen = new Pen(Color.LawnGreen, 4);
 		private Pen mInvalidPuzzlePathLinePen = new Pen(Color.OrangeRed, 4);
-
+		private Brush mMainMenuTextBrush = new SolidBrush(Color.FromArgb(60, Color.Wheat));
 
 		// variable computed during the save of the map and needed to be exported
 		private int mLevelWidth = 0;
@@ -1072,6 +1072,9 @@ namespace RickArdurousEditor
 
 			// draw the various element on screen
 			DrawLevelWalls(gc, width, height, startCamera, endCamera, availableSpriteCountX, availableSpriteCountY);
+			// Draw the main menu for the first screen
+			DrawMainMenu(gc, startCamera.X, startCamera.Y);
+			// Draw all the items
 			DrawItems(gc, width, height, startCamera.X, startCamera.Y, selectedItem);
 			// draw a line following all the puzzle chain
 			if (IsPuzzlePathDrawn)
@@ -1201,6 +1204,25 @@ namespace RickArdurousEditor
 			foreach (List<Items.Item> itemList in mItems.Values)
 				foreach (Items.Item item in itemList)
 					item.Draw(gc, mPixelSize, DrawPuzzleScreenWidth, DrawPuzzleScreenHeight, puzzleLineSeparatorWidth, cameraXWorld, cameraYWorld, (selectedItem == item));
+		}
+
+		private void DrawMainMenu(Graphics gc, int cameraX, int cameraY)
+		{
+			// after drawing the map, move the compositing mode to sourc over, for the item to be drawn with transparency
+			gc.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+			// compute the camera position in game world coordinates
+			int cameraXWorld = cameraX * WALL_SPRITE_WIDTH;
+			int cameraYWorld = cameraY * WALL_SPRITE_HEIGHT;
+
+			// compute the menuX position
+			float playMenuX = (27f - cameraXWorld) * mPixelSize;
+			float otherMenuX = (40f - cameraXWorld) * mPixelSize;
+			Font mainMenuTextFont = new Font(FontFamily.GenericMonospace, 8f * mPixelSize, FontStyle.Bold);
+
+			// draw the menus
+			gc.DrawString("> Play", mainMenuTextFont, mMainMenuTextBrush, playMenuX, (30 - cameraYWorld) * mPixelSize);
+			gc.DrawString("Sound On", mainMenuTextFont, mMainMenuTextBrush, otherMenuX, (41 - cameraYWorld) * mPixelSize);
+			gc.DrawString("Controls", mainMenuTextFont, mMainMenuTextBrush, otherMenuX, (52 - cameraYWorld) * mPixelSize);
 		}
 
 		private void DrawPuzzlePath(Graphics gc, int width, int height, int cameraX, int cameraY)
