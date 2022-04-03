@@ -547,18 +547,42 @@ namespace RickArdurousEditor
 			ERROR,
 		}
 
+		private static List<LogLevel> sLogLevelLines = new List<LogLevel>();
+
 		public static void LogMessage(string message, LogLevel level)
 		{
+			// an array of colors depending on the level of the message
+			Color[] messageColor = { Color.Black, Color.DarkGreen, Color.DarkOrange, Color.Red };
+
+			// add the level to the message (so that it can be colored later)
+			// message = "[" + level.ToString() + "] " + message;
+
 			// get the main form
 			MainForm mainForm = Application.OpenForms[0] as MainForm;
 			// add the message in the list of string
 			List<string> existingMessages = new List<string>(mainForm.textBoxLog.Lines);
 			existingMessages.Add(message);
 			mainForm.textBoxLog.Lines = existingMessages.ToArray();
+
+			// add the log level to the list
+			sLogLevelLines.Add(level);
+
+			// set the colors for all the lines
+			int startMessageIndex = 0;
+			int endMessageIndex = 0;
+			for (int i = 0; i < existingMessages.Count; ++i)
+			{
+				string msg = existingMessages[i];
+				endMessageIndex += msg.Length;
+				mainForm.textBoxLog.Select(startMessageIndex, endMessageIndex);
+				mainForm.textBoxLog.SelectionColor = messageColor[(int)sLogLevelLines[i]];
+				startMessageIndex += msg.Length + 1;
+			}
 		}
 
 		private void toolStripMenuItemClear_Click(object sender, EventArgs e)
 		{
+			sLogLevelLines.Clear();
 			this.textBoxLog.Clear();
 		}
 

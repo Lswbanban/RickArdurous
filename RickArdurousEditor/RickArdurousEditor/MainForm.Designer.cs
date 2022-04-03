@@ -42,14 +42,16 @@
 			this.PictureBoxItems = new System.Windows.Forms.PictureBox();
 			this.splitContainerMapAndLogWindow = new System.Windows.Forms.SplitContainer();
 			this.PictureBoxLevel = new System.Windows.Forms.PictureBox();
-			this.textBoxLog = new System.Windows.Forms.TextBox();
+			this.textBoxLog = new System.Windows.Forms.RichTextBox();
 			this.contextMenuStripLogWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItemClear = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemCopyToClipboard = new System.Windows.Forms.ToolStripMenuItem();
 			this.MenuStripMain = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -67,10 +69,8 @@
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openMapFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.saveMapFileDialog = new System.Windows.Forms.SaveFileDialog();
-			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SplitContainerToolAndLevel)).BeginInit();
 			this.SplitContainerToolAndLevel.Panel1.SuspendLayout();
@@ -252,11 +252,10 @@
 			this.textBoxLog.ContextMenuStrip = this.contextMenuStripLogWindow;
 			this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.textBoxLog.Location = new System.Drawing.Point(0, 0);
-			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";
-			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.textBoxLog.Size = new System.Drawing.Size(697, 85);
 			this.textBoxLog.TabIndex = 0;
+			this.textBoxLog.Text = "";
 			// 
 			// contextMenuStripLogWindow
 			// 
@@ -308,11 +307,18 @@
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "File";
 			// 
+			// newToolStripMenuItem
+			// 
+			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.newToolStripMenuItem.Text = "New";
+			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
 			this.openToolStripMenuItem.Text = "Open...";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
@@ -320,32 +326,39 @@
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			// 
+			// saveAsToolStripMenuItem
+			// 
+			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.saveAsToolStripMenuItem.Text = "Save As...";
+			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
 			// 
 			// preferencesToolStripMenuItem
 			// 
 			this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-			this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
 			this.preferencesToolStripMenuItem.Text = "Preferences...";
 			this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(152, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -453,13 +466,6 @@
 			this.documentationToolStripMenuItem.Text = "Documentation...";
 			this.documentationToolStripMenuItem.Click += new System.EventHandler(this.documentationToolStripMenuItem_Click);
 			// 
-			// saveAsToolStripMenuItem
-			// 
-			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.saveAsToolStripMenuItem.Text = "Save As...";
-			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-			// 
 			// openMapFileDialog
 			// 
 			this.openMapFileDialog.DefaultExt = "cpp";
@@ -473,13 +479,6 @@
 			this.saveMapFileDialog.FileName = "MapData.cpp";
 			this.saveMapFileDialog.Filter = "C++ files|*.cpp|All files|*.*";
 			this.saveMapFileDialog.Title = "Save Map as";
-			// 
-			// newToolStripMenuItem
-			// 
-			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.newToolStripMenuItem.Text = "New";
-			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -509,7 +508,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxItems)).EndInit();
 			this.splitContainerMapAndLogWindow.Panel1.ResumeLayout(false);
 			this.splitContainerMapAndLogWindow.Panel2.ResumeLayout(false);
-			this.splitContainerMapAndLogWindow.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMapAndLogWindow)).EndInit();
 			this.splitContainerMapAndLogWindow.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxLevel)).EndInit();
@@ -539,7 +537,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripButtonDeleteItem;
 		private System.Windows.Forms.ToolStripButton toolStripButtonSetItemSpecial;
 		private System.Windows.Forms.SplitContainer splitContainerMapAndLogWindow;
-		private System.Windows.Forms.TextBox textBoxLog;
+		private System.Windows.Forms.RichTextBox textBoxLog;
 		private System.Windows.Forms.ToolStripButton toolStripButtonShowPuzzlePath;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStripLogWindow;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClear;

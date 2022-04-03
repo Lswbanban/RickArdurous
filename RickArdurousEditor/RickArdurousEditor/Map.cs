@@ -613,8 +613,9 @@ namespace RickArdurousEditor
 			writer.WriteLine("*/");
 		}
 
-		private void SaveMapData(string mapDataFileName)
+		private bool SaveMapData(string mapDataFileName)
 		{
+			bool wasSaveOk = true;
 			System.Text.Encoding utf8WithoutBom = new System.Text.UTF8Encoding(false);
 			StreamWriter writer = new StreamWriter(mapDataFileName, false, utf8WithoutBom);
 			try
@@ -629,13 +630,17 @@ namespace RickArdurousEditor
 			}
 			catch (MapSaveException)
 			{
+				wasSaveOk = false;
 			}
 			writer.Flush();
 			writer.Close();
+			// return the save status
+			return wasSaveOk;
 		}
 
-		private void SaveConstVariables(string constVariablesFileName)
+		private bool SaveConstVariables(string constVariablesFileName)
 		{
+			bool wasSaveOk = true;
 			System.Text.Encoding utf8WithoutBom = new System.Text.UTF8Encoding(false);
 			StreamWriter writer = new StreamWriter(constVariablesFileName, false, utf8WithoutBom);
 			try
@@ -677,17 +682,24 @@ namespace RickArdurousEditor
 			}
 			catch (MapSaveException)
 			{
+				wasSaveOk = false;
 			}
 			writer.Flush();
 			writer.Close();
+			// return the save status
+			return wasSaveOk;
 		}
 
 		public void Save(string mapDataFileName, string constVariablesFileName)
 		{
-			SaveMapData(mapDataFileName);
-			SaveConstVariables(constVariablesFileName);
+			bool wasSaveOk = true;
+			wasSaveOk = SaveMapData(mapDataFileName);
+			wasSaveOk = SaveConstVariables(constVariablesFileName) && wasSaveOk;
 			// memorise the name with which the map was saved
 			mFileName = mapDataFileName;
+			// log that the map was correctly saved
+			if (wasSaveOk)
+				MainForm.LogMessage(Properties.Resources.LogMapWasSaveSuccessfully, MainForm.LogLevel.GOOD);
 		}
 		#endregion
 
