@@ -204,30 +204,35 @@ namespace RickArdurousEditor.Items
 			return GetInstanceName(mType, instanceNumber);
 		}
 
-		public static int GetMemorySize(Type type)
+		public static int GetMemorySize(Type type, int instanceCount)
 		{
 			switch (type)
 			{
 				case Type.BULLET_CRATE:
 				case Type.DYNAMITE_CRATE:
+					return (54 * instanceCount) + 216;
 				case Type.STATUETTE:
+					return (54 * instanceCount) + 208;
 				case Type.GRAAL:
-					return 13;
+					// the graal instance is necessary for the build, therefore it is already counted in the global code size
+					return 0;
 				case Type.HORIZONTAL_SPIKE:
 				case Type.VERTICAL_SPIKE:
-					return 7;
+					return (52 * instanceCount) + 260;
 				case Type.MUMMY:
 				case Type.SKELETON:
 				case Type.SCORPION:
-					return 14;
+					return (54 * instanceCount) + 1812;
 				case Type.STALAGMITE:
+					return (46 * instanceCount) + 854;
 				case Type.STALACTITE:
-					return 10;
+					return (46 * instanceCount) + 1044;
 				case Type.ARROW_LAUNCHER:
-					return 15;
+					return (88 * instanceCount) + 452;
 				case Type.DESTROYABLE_BLOCK:
+					return (52 * instanceCount) + 736;
 				case Type.BOULDER:
-					return 8;
+					return (60 * instanceCount) + 820;
 			}
 			return 0;
 		}

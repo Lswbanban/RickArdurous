@@ -248,6 +248,7 @@ namespace RickArdurousEditor
 			startY = LEVEL_HEIGHT - 1;
 			endY = 0;
 			// iterate on the whole level to find non emty cells
+			bool isLevelEmpty = true;
 			for (int y = 0; y < LEVEL_HEIGHT; ++y)
 				for (int x = 0; x < LEVEL_WIDTH; ++x)
 					if (mLevel[x, y] != (byte)WallId.NOTHING)
@@ -266,7 +267,16 @@ namespace RickArdurousEditor
 							startY = minScreenY;
 						if (maxScreenY > endY)
 							endY = maxScreenY;
+						// set the flag to tell that we found something, so the level is not empty
+						isLevelEmpty = false;
 					}
+
+			// if the level is empty, init the start values
+			if (isLevelEmpty)
+			{
+				startX = 0;
+				startY = 0;
+			}
 		}
 
 		private void WriteLevelData(StreamWriter writer)
@@ -405,7 +415,7 @@ namespace RickArdurousEditor
 				for (int j = 1; j <= maxItemCount; ++j)
 					Items.Item.WriteInstance(writer, mSimilarTypes[i][0], j);
 				// increase the total item size depending on the number of instances and the size of the item
-				mItemsMemorySize += maxItemCount * Items.Item.GetMemorySize(mSimilarTypes[i][0]);
+				mItemsMemorySize += Items.Item.GetMemorySize(mSimilarTypes[i][0], maxItemCount);
 			}
 		}
 
@@ -756,7 +766,8 @@ namespace RickArdurousEditor
 			// log that the map was correctly saved
 			if (wasSaveOk)
 			{
-				string message = Properties.Resources.LogMapWasSaveSuccessfully.Replace("¤¤", mItemsMemorySize.ToString()).Replace("¤", mLevelMemorySize.ToString());
+				int totalSize = 19986 + mLevelMemorySize + mItemsMemorySize;
+				string message = Properties.Resources.LogMapWasSaveSuccessfully.Replace("¤¤¤", totalSize.ToString()).Replace("¤¤", mItemsMemorySize.ToString()).Replace("¤", mLevelMemorySize.ToString());
 				MainForm.LogMessage(message, MainForm.LogLevel.GOOD);
 			}
 		}

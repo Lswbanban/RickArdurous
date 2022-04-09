@@ -158,7 +158,7 @@
     <value>There's no Start Rick respawn point in the Map (cyan color). The Map cannot be exported.</value>
   </data>
   <data name="LogMapWasSaveSuccessfully" xml:space="preserve">
-    <value>The Map was saved successfully (Level memory size: ¤ bytes, Items memory size: ¤¤ bytes).</value>
+    <value>The Map was saved successfully (Level memory size: ¤ bytes, Items memory size: ¤¤ bytes, total: ¤¤¤/28672 bytes).</value>
   </data>
   <data name="MainApplicationIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MainApplicationIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

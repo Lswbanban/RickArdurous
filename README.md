@@ -15,8 +15,9 @@ This project is open source, both for the game and the Editor.
 ## Bug list
 
 ## To do
-- Editor
-	- Add a stats info display on the level in the View Menu
+- Packaging the game
+	- create the package
+	- add the editor release
 - Game Engine Optim
 	- add the PSTR()/F() macro around the menu strings?
 	- bug in Rick state machine, from Fall to Death (for example jump in dynamite explosion)

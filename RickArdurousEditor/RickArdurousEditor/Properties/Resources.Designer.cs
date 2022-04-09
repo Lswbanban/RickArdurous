@@ -179,7 +179,7 @@ namespace RickArdurousEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Map was saved successfully (Level memory size: ¤ bytes, Items memory size: ¤¤ bytes)..
+        ///   Looks up a localized string similar to The Map was saved successfully (Level memory size: ¤ bytes, Items memory size: ¤¤ bytes, total: ¤¤¤/28672 bytes)..
         /// </summary>
         internal static string LogMapWasSaveSuccessfully {
             get {
