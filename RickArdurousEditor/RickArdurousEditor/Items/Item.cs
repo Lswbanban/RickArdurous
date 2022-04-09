@@ -204,6 +204,34 @@ namespace RickArdurousEditor.Items
 			return GetInstanceName(mType, instanceNumber);
 		}
 
+		public static int GetMemorySize(Type type)
+		{
+			switch (type)
+			{
+				case Type.BULLET_CRATE:
+				case Type.DYNAMITE_CRATE:
+				case Type.STATUETTE:
+				case Type.GRAAL:
+					return 13;
+				case Type.HORIZONTAL_SPIKE:
+				case Type.VERTICAL_SPIKE:
+					return 7;
+				case Type.MUMMY:
+				case Type.SKELETON:
+				case Type.SCORPION:
+					return 14;
+				case Type.STALAGMITE:
+				case Type.STALACTITE:
+					return 10;
+				case Type.ARROW_LAUNCHER:
+					return 15;
+				case Type.DESTROYABLE_BLOCK:
+				case Type.BOULDER:
+					return 8;
+			}
+			return 0;
+		}
+
 		private static string GetInstanceName(Type type, int instanceNumber)
 		{
 			string instanceNumberString = instanceNumber.ToString();

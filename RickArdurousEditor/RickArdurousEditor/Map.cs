@@ -38,6 +38,10 @@ namespace RickArdurousEditor
 		private int mFirstPuzzleScreenCameraX = 0;
 		private int mFirstPuzzleScreenCameraY = 0;
 
+		// variable to measure the level memory size
+		private int mLevelMemorySize = 0;
+		private int mItemsMemorySize = 0;
+
 		#region get/set
 		public string FileName
 		{
@@ -344,6 +348,9 @@ namespace RickArdurousEditor
 			// add the index of the first id of the last line
 			lineIndex.Add(idCount);
 
+			// memorize the level memory size. It's the number of id multiplied by the sizeof of char
+			mLevelMemorySize = idCount;
+
 			// write the line index array
 			writer.Write("const unsigned int MapManager::LevelLineIndex[] PROGMEM = {");
 			foreach (int index in lineIndex)
@@ -389,12 +396,16 @@ namespace RickArdurousEditor
 
 		private void WriteItemInstances(StreamWriter writer)
 		{
+			// reset the total item size
+			mItemsMemorySize = 0;
 			for (int i = 0; i < mSimilarTypes.Length; ++i)
 			{
 				// get the max number of instances that we need 
 				int maxItemCount = GetMaxItemCount(mSimilarTypes[i]);
 				for (int j = 1; j <= maxItemCount; ++j)
 					Items.Item.WriteInstance(writer, mSimilarTypes[i][0], j);
+				// increase the total item size depending on the number of instances and the size of the item
+				mItemsMemorySize += maxItemCount * Items.Item.GetMemorySize(mSimilarTypes[i][0]);
 			}
 		}
 
@@ -744,7 +755,10 @@ namespace RickArdurousEditor
 			mFileName = mapDataFileName;
 			// log that the map was correctly saved
 			if (wasSaveOk)
-				MainForm.LogMessage(Properties.Resources.LogMapWasSaveSuccessfully, MainForm.LogLevel.GOOD);
+			{
+				string message = Properties.Resources.LogMapWasSaveSuccessfully.Replace("¤¤", mItemsMemorySize.ToString()).Replace("¤", mLevelMemorySize.ToString());
+				MainForm.LogMessage(message, MainForm.LogLevel.GOOD);
+			}
 		}
 		#endregion
 
