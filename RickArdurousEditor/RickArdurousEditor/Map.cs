@@ -414,6 +414,47 @@ namespace RickArdurousEditor
 			// return the list
 			return result;
 		}
+		private int ComputeMaxItemCount()
+		{
+			int maxItemCount = 0;
+			int previousScreenItemCount = 0;
+
+			// iterate on the puzzle path, and sum up items of two consecutive screens
+			for (int i = 0; i < mPuzzlePath.Count; ++i)
+			{
+				// get the current screen path node
+				PuzzlePathNode screenPathNode = mPuzzlePath[i];
+
+				// get the items of the current screen
+				List<Items.Item> itemList = GetItemsOnScreen(screenPathNode.screenX, screenPathNode.screenY);
+
+				// count the number of items in the current list, if there is arrow launcher, we need to add 1 for the arrow
+				// also don't count the RICK items because they are just spawn points
+				int currenScreenItemCount = itemList.Count;
+				foreach (Items.Item item in itemList)
+					if (item.ItemType == Items.Item.Type.ARROW_LAUNCHER)
+						currenScreenItemCount++;
+					else if (item.ItemType == Items.Item.Type.RICK)
+						currenScreenItemCount--;
+
+				// calculate the count for this screen and the previous one
+				int currentItemCountOnTwoScreens = previousScreenItemCount + currenScreenItemCount;
+				if (currentItemCountOnTwoScreens > maxItemCount)
+					maxItemCount = currentItemCountOnTwoScreens;
+
+				// put the count of the current screen in the previous one for the next iteration
+				previousScreenItemCount = currenScreenItemCount;
+			}
+
+			// add one for Rick itself
+			maxItemCount++;
+
+			// Rick as 5 bullets and 5 dynamite, so add with 10 if he uses them all at the same time
+			maxItemCount += Properties.Settings.Default.BulletAndDynamiteCount;
+
+			// return the computed value
+			return maxItemCount;
+		}
 
 		private int IncreaseItemCounterAndGetId(ref int[] itemCount, Items.Item item)
 		{
@@ -675,7 +716,11 @@ namespace RickArdurousEditor
 				int statuetteCount = 0;
 				if (mItems.ContainsKey(Items.Item.Type.STATUETTE))
 					statuetteCount = mItems[Items.Item.Type.STATUETTE].Count;
-				writer.WriteLine("\tstatic constexpr int MAX_STATUETTE_COUNT = " + statuetteCount + ";");
+				writer.WriteLine("\tstatic constexpr int MAX_STATUETTE_COUNT = " + statuetteCount.ToString() + ";");
+				writer.WriteLine();
+				writer.WriteLine("\t// Max Number of Item that can be updated at the same time");
+				int maxItemCount = ComputeMaxItemCount();
+				writer.WriteLine("\tstatic constexpr int MAX_UPDATABLE_ITEM_COUNT = " + maxItemCount.ToString() + ";");
 				writer.WriteLine("};");
 				writer.WriteLine();
 				writer.WriteLine("#endif");

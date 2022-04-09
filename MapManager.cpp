@@ -43,7 +43,6 @@ namespace MapManager
 	CameraCoord CameraY;
 	
 	// the items to currently update
-	static const unsigned int MAX_UPDATABLE_ITEM_COUNT = 20;
 	Item * ItemsToUpdate[MAX_UPDATABLE_ITEM_COUNT];
 	unsigned char ItemsToUpdateCount;
 	

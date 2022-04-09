@@ -14,5 +14,8 @@
     <Setting Name="DefaultMapFileName" Type="System.String" Scope="User">
       <Value Profile="(Default)">MapData.cpp</Value>
     </Setting>
+    <Setting Name="BulletAndDynamiteCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -23,6 +23,9 @@ namespace MapManager
 
 	// Number of statuettes to collect
 	static constexpr int MAX_STATUETTE_COUNT = 10;
+
+	// Max Number of Item that can be updated at the same time
+	static constexpr int MAX_UPDATABLE_ITEM_COUNT = 25;
 };
 
 #endif

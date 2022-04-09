@@ -18,6 +18,7 @@ namespace RickArdurousEditor
 			this.textBoxImagePath.Text = Properties.Settings.Default.ImageRelativePath;
 			this.textBoxGamePath.Text = Properties.Settings.Default.GameRelativePath;
 			this.textBoxDocPath.Text = Properties.Settings.Default.DocRelativePath;
+			this.numericUpDownBulletAndDynamite.Value = Properties.Settings.Default.BulletAndDynamiteCount;
 		}
 
 		private void buttonImagePath_Click(object sender, EventArgs e)
@@ -50,6 +51,7 @@ namespace RickArdurousEditor
 			Properties.Settings.Default.ImageRelativePath = this.textBoxImagePath.Text;
 			Properties.Settings.Default.GameRelativePath = this.textBoxGamePath.Text;
 			Properties.Settings.Default.DocRelativePath = this.textBoxDocPath.Text;
+			Properties.Settings.Default.BulletAndDynamiteCount = (int)this.numericUpDownBulletAndDynamite.Value;
 			// then save it
 			Properties.Settings.Default.Save();
 		}

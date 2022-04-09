@@ -42,7 +42,12 @@
 			this.buttonOk = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.numericUpDownBulletAndDynamite = new System.Windows.Forms.NumericUpDown();
 			this.groupBox1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBulletAndDynamite)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -139,7 +144,7 @@
 			// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(12, 127);
+			this.buttonCancel.Location = new System.Drawing.Point(12, 191);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancel.TabIndex = 9;
@@ -150,7 +155,7 @@
 			// 
 			this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.buttonOk.Location = new System.Drawing.Point(368, 127);
+			this.buttonOk.Location = new System.Drawing.Point(368, 191);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
 			this.buttonOk.TabIndex = 10;
@@ -182,13 +187,47 @@
 			// 
 			this.folderBrowserDialog.ShowNewFolderButton = false;
 			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.numericUpDownBulletAndDynamite);
+			this.groupBox2.Controls.Add(this.label4);
+			this.groupBox2.Location = new System.Drawing.Point(12, 123);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(422, 56);
+			this.groupBox2.TabIndex = 12;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Optimization";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(11, 19);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(142, 26);
+			this.label4.TabIndex = 0;
+			this.label4.Text = "Bullet and Dynamite Count:\r\n(each takes 2 bytes of RAM)";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownBulletAndDynamite
+			// 
+			this.numericUpDownBulletAndDynamite.Location = new System.Drawing.Point(159, 22);
+			this.numericUpDownBulletAndDynamite.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.numericUpDownBulletAndDynamite.Name = "numericUpDownBulletAndDynamite";
+			this.numericUpDownBulletAndDynamite.Size = new System.Drawing.Size(49, 20);
+			this.numericUpDownBulletAndDynamite.TabIndex = 1;
+			// 
 			// SettingsForm
 			// 
 			this.AcceptButton = this.buttonOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(455, 162);
+			this.ClientSize = new System.Drawing.Size(455, 226);
+			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.buttonOk);
 			this.Controls.Add(this.buttonCancel);
@@ -198,6 +237,9 @@
 			this.Text = "Rick Ardurous Editor Settings";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBulletAndDynamite)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -217,5 +259,8 @@
 		private System.Windows.Forms.Button buttonOk;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.NumericUpDown numericUpDownBulletAndDynamite;
+		private System.Windows.Forms.Label label4;
 	}
 }
