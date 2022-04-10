@@ -437,7 +437,7 @@ namespace RickArdurousEditor
 		}
 		private int ComputeMaxItemCount()
 		{
-			int maxItemCount = 0;
+			int maxItemCount = 1; // start with minimum one, to avoid creating an array of size zero (which doesn't compile)
 			int previousScreenItemCount = 0;
 
 			// iterate on the puzzle path, and sum up items of two consecutive screens
@@ -467,8 +467,20 @@ namespace RickArdurousEditor
 				previousScreenItemCount = currenScreenItemCount;
 			}
 
-			// add one for Rick itself
-			maxItemCount++;
+			// check the total number of item instances that we have in the game
+			// don't count RICK item types as they don't create instances
+			// count double for ArrowLauncher as they need a space for their arrow
+			int totalInstanceCount = 0;
+			for (int i = 0; i < mSimilarTypes.Length; ++i)
+				if (mSimilarTypes[i][0] == Items.Item.Type.ARROW_LAUNCHER)
+					totalInstanceCount += GetMaxItemCount(mSimilarTypes[i]) * 2;
+				else if (mSimilarTypes[i][0] != Items.Item.Type.RICK)
+					totalInstanceCount += GetMaxItemCount(mSimilarTypes[i]);
+
+			// check if the max item count is greater than the actual number of instances,
+			// in such a case, take the number of instances, because we cannot have more in the array than the number of instances
+			if (maxItemCount > totalInstanceCount)
+				maxItemCount = totalInstanceCount;
 
 			// Rick as 5 bullets and 5 dynamite, so add with 10 if he uses them all at the same time
 			maxItemCount += Properties.Settings.Default.BulletAndDynamiteCount;
