@@ -18,7 +18,7 @@ bool Stalactite::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case Item::UpdateStep::DRAW_LETHAL:
+		case UpdateStepEnum::DRAW_LETHAL:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -54,7 +54,7 @@ bool Stalactite::Update(UpdateStep step)
 			break;
 		}
 		
-		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+		case UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES:
 		{
 			if (!IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -89,7 +89,7 @@ bool Stalactite::Update(UpdateStep step)
 			break;
 		}
 		
-		case Item::UpdateStep::RESPAWN:
+		case UpdateStepEnum::RESPAWN:
 		{
 			ClearProperty(Item::PropertyFlags::SPECIAL);
 			SparksAnimFrameId = 0;

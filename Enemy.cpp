@@ -20,7 +20,7 @@ bool Enemy::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case Item::UpdateStep::CHECK_LETHAL:
+		case UpdateStepEnum::CHECK_LETHAL:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -36,17 +36,17 @@ bool Enemy::Update(UpdateStep step)
 					// then call the corect update according to the current state
 					switch (AnimState)
 					{
-						case State::WALK:
+						case StateEnum::WALK:
 							UpdateWalk();
 							break;
-						case State::HALF_TURN:
+						case StateEnum::HALF_TURN:
 							UpdateHalfTurn();
 							break;
-						case State::WAIT:
-						case State::WAIT_AGAIN:
+						case StateEnum::WAIT:
+						case StateEnum::WAIT_AGAIN:
 							UpdateWait();
 							break;
-						case State::FALL:
+						case StateEnum::FALL:
 							UpdateFall();
 							break;
 					}
@@ -60,10 +60,10 @@ bool Enemy::Update(UpdateStep step)
 						bool isCollisionOnLeftHalfOfSprite = collision < (1 << (MyWidth >> 1));
 						char velocityX = (IsPropertySet(PropertyFlags::MIRROR_X) != isCollisionOnLeftHalfOfSprite) ? DEATH_VELOCITY_X : -DEATH_VELOCITY_X;
 						// if we are falling stop the fall before reusing the physics id
-						if (AnimState == State::FALL)
+						if (AnimState == StateEnum::FALL)
 							Physics::StopFall(PhysicsId);
 						PhysicsId = Physics::StartParabolicTrajectory(X, Y, velocityX);
-						AnimState = State::DEATH;
+						AnimState = StateEnum::DEATH;
 						ClearProperty(Item::PropertyFlags::ALIVE);
 					}
 				}
@@ -75,7 +75,7 @@ bool Enemy::Update(UpdateStep step)
 			break;
 		}
 		
-		case Item::UpdateStep::DRAW_ENEMIES:
+		case UpdateStepEnum::DRAW_ENEMIES:
 		{
 			// draw the enemy in white if he's alive
 			if (IsPropertySet(Item::PropertyFlags::ALIVE | Item::PropertyFlags::IS_VISIBLE))
@@ -83,7 +83,7 @@ bool Enemy::Update(UpdateStep step)
 			break;
 		}
 		
-		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+		case UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES:
 		{
 			// special case, the Enemy is in that update step only when he is dead
 			if (!IsPropertySet(Item::PropertyFlags::ALIVE))
@@ -94,7 +94,7 @@ bool Enemy::Update(UpdateStep step)
 			break;
 		}
 		
-		case Item::UpdateStep::CHECK_STATIC_COLLISION:
+		case UpdateStepEnum::CHECK_STATIC_COLLISION:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE | Item::PropertyFlags::IS_VISIBLE))
 			{
@@ -103,7 +103,7 @@ bool Enemy::Update(UpdateStep step)
 				if (!IsThereAnyGroundCollisionAt(yUnderFeet))
 				{
 					// check if we are already falling or not
-					if (AnimState == State::FALL)
+					if (AnimState == StateEnum::FALL)
 					{
 						// If we are falling, check the ground several pixel below, depending on my current
 						// fall speed, to see if I will touch the ground during next frame.
@@ -123,7 +123,7 @@ bool Enemy::Update(UpdateStep step)
 				else
 				{
 					// there is ground, check if I was falling
-					if (AnimState == State::FALL)
+					if (AnimState == StateEnum::FALL)
 					{
 						InitWalk();
 						Physics::StopFall(PhysicsId);
@@ -132,7 +132,7 @@ bool Enemy::Update(UpdateStep step)
 			}
 			break;
 		}
-		case Item::UpdateStep::RESPAWN:
+		case UpdateStepEnum::RESPAWN:
 		{
 			// memorize my size based on the type of enemy
 			MyWidth = IsSkeleton() ? SpriteData::SKELETON_SPRITE_WIDTH : 
@@ -191,12 +191,12 @@ void Enemy::UpdateSkeletonBehavior()
 		// check if rick is aligned with me, or if I'm blocked by collision
 		if ((!isRickOnMyLeft && !isRickOnMyRight) || IsThereWallCollisionOrGap(false))
 		{
-			if (AnimState != State::WAIT)
+			if (AnimState != StateEnum::WAIT)
 				InitWait();
 		}
 		else
 		{
-			if (AnimState != State::WALK)
+			if (AnimState != StateEnum::WALK)
 				InitWalk();
 		}
 	}
@@ -204,7 +204,7 @@ void Enemy::UpdateSkeletonBehavior()
 
 void Enemy::InitFall()
 {
-	AnimState = State::FALL;
+	AnimState = StateEnum::FALL;
 	PhysicsId = Physics::StartFall();
 	if (IsSkeleton())
 		AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_FALL;
@@ -219,7 +219,7 @@ void Enemy::InitWait()
 
 void Enemy::InitWalk()
 {
-	AnimState = State::WALK;
+	AnimState = StateEnum::WALK;
 	AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WALK_START;
 	AnimFrameCount = 0;
 }
@@ -229,7 +229,7 @@ void Enemy::InitHalfTurn()
 	// reverse the walking direction imediately for the next frame to test the collision at the right place
 	InverseProperty(PropertyFlags::MIRROR_X);
 	// init the half turn state
-	AnimState = State::HALF_TURN;
+	AnimState = StateEnum::HALF_TURN;
 	AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_HALF_TURN;
 	AnimFrameCount = 0;
 }
@@ -291,8 +291,8 @@ void Enemy::UpdateWait()
 			AnimFrameId = SpriteData::EnemyAnimFrameId::ENEMY_WAIT_START;
 			if (IsScorpion())
 			{
-				if (AnimState == State::WAIT)
-					AnimState = State::WAIT_AGAIN;
+				if (AnimState == StateEnum::WAIT)
+					AnimState = StateEnum::WAIT_AGAIN;
 				else
 					InitHalfTurn();
 			}

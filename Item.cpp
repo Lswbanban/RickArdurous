@@ -13,7 +13,7 @@ void Item::CommonInit(int startX, unsigned char startY, unsigned char flags)
 	// override the property flag to reset totally the property as the specified flag
 	Property = flags;
 	// call the update virtual function with the Respawn step, for specific data init
-	Update(Item::UpdateStep::RESPAWN);
+	Update(UpdateStepEnum::RESPAWN);
 }
 
 void Item::Init(int startX, unsigned char startY, unsigned char flags)
@@ -39,13 +39,13 @@ Item::Side Item::CheckLethalDynamite(unsigned char width, unsigned char checkHei
 			// check on the left
 			int xLeft = xOnScreen - i;
 			if ((xLeft >= 0) && (xLeft < WIDTH) && (arduboy.getPixel(xLeft, yOnScreen) == WHITE))
-				return Side::LEFT;
+				return SideEnum::LEFT;
 			// check on the right
 			int xRight = xOnScreen + width + i;
 			if ((xRight >= 0) && (xRight < WIDTH) && (arduboy.getPixel(xRight, yOnScreen) == WHITE))
-				return Side::RIGHT;
+				return SideEnum::RIGHT;
 		}
 	}
 	// by default no collision detected
-	return Side::NO_SIDE;
+	return SideEnum::NO_SIDE;
 }

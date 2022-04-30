@@ -15,12 +15,13 @@ namespace FXManager
 		unsigned char RepeatTime	:4;
 	};
 
-	enum BufferId
+	enum BufferIdEnum
 	{
 		GAME = 0,
 		RICK,
 		BUFFER_COUNT,
 	};
+	typedef unsigned char BufferId;
 
 	// a variable to turn on/off the sound FX
 	extern bool IsSoundOn;

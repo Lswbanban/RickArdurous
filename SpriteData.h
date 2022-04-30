@@ -3,7 +3,7 @@
 
 namespace SpriteData
 {
-	enum WallId
+	enum WallIdEnum
 	{
 		ROCK_CEILING = 0,
 		ROCK,

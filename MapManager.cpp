@@ -186,26 +186,26 @@ void MapManager::Update()
 
 	// draw items that are lethal when other items are next to them, such ase the dynamite explosion
 	// (which will stay in screen buffer as Lethal, so it is also lethal when overlapping)
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL_BESIDE);
+	MapManager::UpdateItems(Item::UpdateStepEnum::DRAW_LETHAL_BESIDE);
 	
 	// update the entities who wants to check if there's a lethal element next to them
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL_BESIDE);
+	MapManager::UpdateItems(Item::UpdateStepEnum::CHECK_LETHAL_BESIDE);
 	
 	// update the lethal entities
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_LETHAL);
+	MapManager::UpdateItems(Item::UpdateStepEnum::DRAW_LETHAL);
 
 	// Check the lethal collision for Rick after drawing the lethal items
 	Rick::CheckLethalCollision();
 	
 	// Check lethal collision also for the ennemies (they should draw in black to erase the bullets) or destroyable blocks
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_LETHAL);
+	MapManager::UpdateItems(Item::UpdateStepEnum::CHECK_LETHAL);
 
 	// erase the bullet to avoid the bullet to be considered as static collision
 	// also this will kill the bullet that hit Rick or an Enemy
-	MapManager::UpdateItems(Item::UpdateStep::ERASE_BULLET);
+	MapManager::UpdateItems(Item::UpdateStepEnum::ERASE_BULLET);
 
 	// Draw the ennemies
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_ENEMIES);
+	MapManager::UpdateItems(Item::UpdateStepEnum::DRAW_ENEMIES);
 
 	// Check again the lethal collision for Rick because enemies are lethal to the player
 	Rick::CheckLethalCollision();
@@ -217,7 +217,7 @@ void MapManager::Update()
 	Draw(0, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// Draw static collision items
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_STATIC_COLLISION);
+	MapManager::UpdateItems(Item::UpdateStepEnum::DRAW_STATIC_COLLISION);
 
 	// check the collision with the walls, floor and ceilling after the map has been drawn
 	Rick::CheckStaticCollision();
@@ -226,10 +226,10 @@ void MapManager::Update()
 	Draw(SpriteData::PLATFORM, SpriteData::PLATFORM, rickFeetOnScreen);
 
 	// call the function to check the static collision for the items that need it, including the Enemies
-	MapManager::UpdateItems(Item::UpdateStep::CHECK_STATIC_COLLISION);
+	MapManager::UpdateItems(Item::UpdateStepEnum::CHECK_STATIC_COLLISION);
 
 	// draw the pickup items or all the items ignores by the ennemies like a burning dynamite
-	MapManager::UpdateItems(Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES);
+	MapManager::UpdateItems(Item::UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES);
 
 	// draw the ladders after checking the collision
 	Draw(SpriteData::LADDER, SpriteData::LADDER, rickFeetOnScreen);
@@ -272,8 +272,8 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, unsigned char yWorld, bool
 		return IsDestroyableBlockAlive(xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT,
 									yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT);
 	// otherwise it depends on the type of sprite
-	return (!ignoreCeilingSprites && (spriteId != SpriteData::WallId::LADDER)) ||
-			(ignoreCeilingSprites && (spriteId < SpriteData::WallId::ROCK_CEILING_THIN));
+	return (!ignoreCeilingSprites && (spriteId != SpriteData::WallIdEnum::LADDER)) ||
+			(ignoreCeilingSprites && (spriteId < SpriteData::WallIdEnum::ROCK_CEILING_THIN));
 }
 
 unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, unsigned char yWorld)
@@ -294,7 +294,7 @@ unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, unsigned ch
 bool MapManager::IsThereLadderAt(int xWorld, unsigned char yWorld)
 {
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
-	return (spriteId == SpriteData::WallId::LADDER) || (spriteId == SpriteData::WallId::PLATFORM_WITH_LADDER);
+	return (spriteId == SpriteData::WallIdEnum::LADDER) || (spriteId == SpriteData::WallIdEnum::PLATFORM_WITH_LADDER);
 }
 
 unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, unsigned char yWorld)
@@ -459,7 +459,7 @@ void MapManager::TeleportAndRespawnToLastCheckpoint()
 	// check if Rick still has some life
 	if (Rick::LifeCount == 0)
 	{
-		GameManager::CurrentGameState = GameManager::GameState::GAME_OVER;
+		GameManager::CurrentGameState = GameManager::GameStateEnum::GAME_OVER;
 	}
 	else
 	{
@@ -531,7 +531,7 @@ void MapManager::AnimateShutterTransition()
 			}
 			else
 			{
-				GameManager::CurrentGameState = GameManager::GameState::VICTORY;
+				GameManager::CurrentGameState = GameManager::GameStateEnum::VICTORY;
 			}
 		}
 	}

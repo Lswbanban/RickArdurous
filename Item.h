@@ -19,7 +19,7 @@ public:
 		SPECIAL_2 = 1 << 7,
 	};
 	
-	enum UpdateStep
+	enum UpdateStepEnum
 	{
 		DRAW_LETHAL_BESIDE = 0,
 		CHECK_LETHAL_BESIDE,
@@ -32,13 +32,15 @@ public:
 		DRAW_IGNORED_BY_ENEMIES,
 		RESPAWN,
 	};
+	typedef unsigned char UpdateStep;
 
-	enum Side
+	enum SideEnum
 	{
 		NO_SIDE = 0,
 		LEFT,
 		RIGHT,
 	};
+	typedef unsigned char Side;
 	
 	void Init(int startX, unsigned char startY, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;

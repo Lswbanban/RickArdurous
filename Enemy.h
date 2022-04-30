@@ -18,7 +18,7 @@ private:
 	static constexpr int DEATH_VELOCITY_X = 9;
 	static constexpr int SKELETON_SENSOR = 4;
 
-	enum State
+	enum StateEnum
 	{
 		WALK = 0,
 		HALF_TURN,

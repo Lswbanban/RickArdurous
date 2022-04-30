@@ -15,28 +15,28 @@ bool Boulder::Update(UpdateStep step)
 
 	switch (step)
 	{
-		case UpdateStep::RESPAWN:
+		case UpdateStepEnum::RESPAWN:
 			PhysicsFallId = Physics::INVALID_PARABOLIC_ID;
 			break;
 
-		case Item::UpdateStep::CHECK_LETHAL_BESIDE:
+		case UpdateStepEnum::CHECK_LETHAL_BESIDE:
 		{
 			if (!isBoulderRolling && !isFalling)
 			{
 				Item::Side explosionSide = CheckLethalDynamite(SpriteData::BOULDER_SPRITE_WIDTH << 1, 8);
-				if (explosionSide != Item::Side::NO_SIDE)
+				if (explosionSide != Item::SideEnum::NO_SIDE)
 				{
 					//start rolling
 					ClearProperty(SPECIAL | MIRROR_X);
 					// set the side
-					if (explosionSide == Item::Side::RIGHT)
+					if (explosionSide == Item::SideEnum::RIGHT)
 						SetProperty(MIRROR_X);
 				}
 			}
 			break;
 		}
 
-		case UpdateStep::CHECK_STATIC_COLLISION:
+		case UpdateStepEnum::CHECK_STATIC_COLLISION:
 		{
 			// move the boulder
 			char movingDirection = IsPropertySet(MIRROR_X) ? -1 : 1;
@@ -84,14 +84,14 @@ bool Boulder::Update(UpdateStep step)
 			}
 			break;
 		}
-		case UpdateStep::DRAW_LETHAL_BESIDE:
+		case UpdateStepEnum::DRAW_LETHAL_BESIDE:
 		{
 			if (isBoulderRolling)
 				Draw();
 			break;
 		}
 
-		case UpdateStep::DRAW_STATIC_COLLISION:
+		case UpdateStepEnum::DRAW_STATIC_COLLISION:
 		{
 			Draw();
 			break;

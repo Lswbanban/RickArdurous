@@ -22,7 +22,7 @@ bool Dynamite::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case UpdateStep::DRAW_LETHAL_BESIDE:
+		case UpdateStepEnum::DRAW_LETHAL_BESIDE:
 			if (DynamiteAnimFrameId >= 6)
 			{
 				// increase the dynamite frame id, at different speed depending if it is the fuse consuming part or the explosion
@@ -42,7 +42,7 @@ bool Dynamite::Update(UpdateStep step)
 			}
 			break;
 			
-		case UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+		case UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES:
 			// check if the dynamite is alive
 			if (DynamiteAnimFrameId == -1)
 			{

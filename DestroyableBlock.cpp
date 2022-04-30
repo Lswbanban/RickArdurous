@@ -14,7 +14,7 @@ bool DestroyableBlock::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case Item::UpdateStep::CHECK_LETHAL_BESIDE:
+		case UpdateStepEnum::CHECK_LETHAL_BESIDE:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -28,14 +28,14 @@ bool DestroyableBlock::Update(UpdateStep step)
 			break;
 		}
 
-		case UpdateStep::DRAW_STATIC_COLLISION:
+		case UpdateStepEnum::DRAW_STATIC_COLLISION:
 		{
 			// if we are updated, that means we are alive, so no need to check the property flag
 			arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::DestroyableBlock, SpriteData::DESTROYABLE_BLOCK_SPRITE_WIDTH, SpriteData::DESTROYABLE_BLOCK_SPRITE_HEIGHT, WHITE, false);
 			break;
 		}
 		
-		case Item::UpdateStep::RESPAWN:
+		case UpdateStepEnum::RESPAWN:
 		{
 			// set again the destroyable property flag because it may have been cleared in the Init function
 			SetProperty(Item::PropertyFlags::DESTROYABLE_BLOCK);

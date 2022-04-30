@@ -24,7 +24,7 @@ namespace FXManager
 	};
 
 	FXBuffer FXBuffers[BUFFER_COUNT];
-	BufferId  CurrentBufferLightUp = GAME;
+	BufferId CurrentBufferLightUp = GAME;
 	
 	bool IsSoundOn = true;
 }

@@ -31,7 +31,7 @@ bool BlockFragment::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case Item::UpdateStep::DRAW_IGNORED_BY_ENEMIES:
+		case Item::UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES:
 		{
 			// update the trajectory of the stone
 			Physics::UpdateParabolicTrajectory(StoneFallIndex, X, Y);
