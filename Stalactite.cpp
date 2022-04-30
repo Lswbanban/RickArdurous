@@ -112,11 +112,11 @@ void Stalactite::CheckTrigerer(bool isAlive, int trigererX, unsigned char triger
 		(X < trigererX + SpriteData::RICK_SPRITE_WIDTH) && 
 		(X + (SpriteData::STALACTITE_SPRITE_WIDTH * 3) > trigererX))
 	{
-		unsigned char yMap = (Y >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT) + 1;
-		unsigned char trigererYMap = trigererY >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
-		int middleX = X + (SpriteData::STALACTITE_SPRITE_WIDTH >> 1);
+		unsigned char yMap = (Y / SpriteData::LEVEL_SPRITE_HEIGHT) + 1;
+		unsigned char trigererYMap = trigererY / SpriteData::LEVEL_SPRITE_HEIGHT;
+		int middleX = X + (SpriteData::STALACTITE_SPRITE_WIDTH / 2);
 		for (unsigned char currentY = yMap; currentY <= trigererYMap; ++currentY)
-			if (MapManager::IsThereStaticCollisionAt(middleX, currentY << SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT))
+			if (MapManager::IsThereStaticCollisionAt(middleX, currentY * SpriteData::LEVEL_SPRITE_HEIGHT))
 				return;
 		// if we didnt find a collision, between me and the triggered, then start to fall
 		SetProperty(Item::PropertyFlags::SPECIAL);

@@ -163,10 +163,10 @@ void Enemy::MoveAccordingToOrientation()
 bool Enemy::IsThereWallCollisionOrGap(bool shouldCheckGap)
 {
 	int wallX = IsPropertySet(PropertyFlags::MIRROR_X) ? X - WALL_COLLISION_DETECTION_DISTANCE : X + MyWidth + WALL_COLLISION_DETECTION_DISTANCE;
-	unsigned char gapHeightShift = IsScorpion() ? 0 : 1;
+	unsigned char gapHeightMultiplier = IsScorpion() ? 1 : 2;
 	return (MapManager::IsThereStaticCollisionAt(wallX, Y, true) || 
 		(!IsScorpion() && MapManager::IsThereStaticCollisionAt(wallX, Y + SpriteData::LEVEL_SPRITE_HEIGHT)) ||
-		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT << gapHeightShift))));
+		(shouldCheckGap && !MapManager::IsThereStaticCollisionAt(wallX, Y + (SpriteData::LEVEL_SPRITE_HEIGHT * gapHeightMultiplier))));
 }
 
 bool Enemy::IsThereAnyGroundCollisionAt(unsigned char yWorld)
@@ -178,7 +178,7 @@ bool Enemy::IsThereAnyGroundCollisionAt(unsigned char yWorld)
 void Enemy::UpdateSkeletonBehavior()
 {
 	int rickX = Rick::GetCenterX();
-	int myCenterX = X + (SpriteData::SKELETON_SPRITE_WIDTH >> 1);
+	int myCenterX = X + (SpriteData::SKELETON_SPRITE_WIDTH / 2);
 	bool isRickOnMyLeft = rickX < (myCenterX - SKELETON_SENSOR);
 	bool isRickOnMyRight = rickX > (myCenterX + SKELETON_SENSOR);
 	bool amILookingLeft = IsPropertySet(MIRROR_X);

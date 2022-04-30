@@ -114,7 +114,7 @@ uint16_t Arduboy::rawADC(byte adc_bits)
 void Arduboy::drawPixel(uint8_t x, uint8_t y, uint8_t color)
 {
   // draw the pixel at the correct place
-  uint8_t row = y >> 3;
+  uint8_t row = y / 8;
   if (color)
   {
     sBuffer[(row*WIDTH) + x] |=   _BV(y % 8);
@@ -259,14 +259,14 @@ unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t
 		return 0;
 
 	unsigned char yOffset = abs(y) % 8;
-	char bufferRow = y / 8; // cannot use a ">> 3" to preserve the sign, in case y is negative (above the top of the screen)
+	char bufferRow = y / 8;
 	if (y < 0)
 	{
 		bufferRow--;
 		yOffset = 8 - yOffset;
 	}
 	unsigned char yOffsetComplement = 8 - yOffset;
-	unsigned char bitmapRows = h >> 3;
+	unsigned char bitmapRows = h / 8;
 	if (h%8 != 0)
 		bitmapRows++;
 	// compute the start and end X (clamp if outside the screen)
@@ -333,7 +333,7 @@ bool CustomArduboy::CheckWhitePixelsInRow(uint8_t x, uint8_t y, uint8_t w)
 	// need to check the y, because sometimes this function can be called with a y outside the screen
 	if (y < HEIGHT)
 	{
-		unsigned char row = y >> 3;
+		unsigned char row = y / 8;
 		unsigned char yLineToCheck = 1 << (y % 8);
 		int startX = (row*WIDTH) + x;
 		unsigned char* localBuffer = &(sBuffer[startX]);

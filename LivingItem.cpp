@@ -48,7 +48,7 @@ void LivingItem::SaveAndLoadAliveStatus(unsigned char currentScreenIdToSave, uns
 	else
 	{
 		// First save my current alive status
-		unsigned char screenByteNumber = (currentScreenIdToSave >> 3);
+		unsigned char screenByteNumber = (currentScreenIdToSave / 8);
 		unsigned char screenBitValue = 1 << (currentScreenIdToSave % 8);
 		if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			AlivePerPuzzleScreen[screenByteNumber] |= screenBitValue;
@@ -56,7 +56,7 @@ void LivingItem::SaveAndLoadAliveStatus(unsigned char currentScreenIdToSave, uns
 			AlivePerPuzzleScreen[screenByteNumber] &= ~screenBitValue;
 
 		// Then patch my alive status with the value of the screen to load
-		screenByteNumber = (newScreenIdToLoad >> 3);
+		screenByteNumber = (newScreenIdToLoad / 8);
 		screenBitValue = 1 << (newScreenIdToLoad % 8);
 		if (AlivePerPuzzleScreen[screenByteNumber] & screenBitValue)
 			SetProperty(Item::PropertyFlags::ALIVE);

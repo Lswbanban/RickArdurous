@@ -94,7 +94,7 @@ int ArrowBullet::SearchForPixelColorAlongBulletRay(unsigned char color)
 	// iterate on the frame buffer to check if any pixel is set
 	for (char i = startXOnScreen; i != endXOnScreen; i += direction)
 		if (arduboy.getPixel(xOnScreen + i, yOnScreen) == color)
-				return (X + i - (SpriteData::SPARKS_SPRITE_WIDTH >> 1));
+				return (X + i - (SpriteData::SPARKS_SPRITE_WIDTH / 2));
 	// no collision found
 	return NO_PIXEL_FOUND;
 }
@@ -163,7 +163,7 @@ bool ArrowBullet::Update(UpdateStep step)
 					ClearProperty(Item::PropertyFlags::ALIVE);
 					// init the postion for the sparks sprite, and reset the sparks animation frame id
 					X = impactPosition;
-					Y -= (SpriteData::SPARKS_SPRITE_HEIGHT >> 1);
+					Y -= (SpriteData::SPARKS_SPRITE_HEIGHT / 2);
 					SparksAnimFrameId = 0;
 				}
 				else if ((xOnScreen < 0) /*|| (xOnScreen >= WIDTH)*/)

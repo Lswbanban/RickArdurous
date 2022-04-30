@@ -23,7 +23,7 @@ bool Boulder::Update(UpdateStep step)
 		{
 			if (!isBoulderRolling && !isFalling)
 			{
-				Item::Side explosionSide = CheckLethalDynamite(SpriteData::BOULDER_SPRITE_WIDTH << 1, 8);
+				Item::Side explosionSide = CheckLethalDynamite(SpriteData::BOULDER_SPRITE_WIDTH * 2, 8);
 				if (explosionSide != Item::SideEnum::NO_SIDE)
 				{
 					//start rolling
@@ -119,5 +119,5 @@ void Boulder::Draw()
 	// draw the rotating shadow
 	char isShadowRight = (localAnimFrameId == 0) || (localAnimFrameId == 3) ? 0 : 1;
 	char shadowX = xOnScreen + (2 * !isShadowRight) + (SpriteData::BOULDER_SPRITE_WIDTH * isShadowRight);
-	arduboy.drawBitmapExtended(shadowX, yOnScreen + 2, SpriteData::BoulderShadow[localAnimFrameId >> 1], SpriteData::BOULDER_SHADOW_SPRITE_WIDTH, SpriteData::BOULDER_SHADOW_SPRITE_HEIGHT, BLACK, isShadowRight);
+	arduboy.drawBitmapExtended(shadowX, yOnScreen + 2, SpriteData::BoulderShadow[localAnimFrameId / 2], SpriteData::BOULDER_SHADOW_SPRITE_WIDTH, SpriteData::BOULDER_SHADOW_SPRITE_HEIGHT, BLACK, isShadowRight);
 }

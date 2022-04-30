@@ -63,7 +63,7 @@ bool Dynamite::Update(UpdateStep step)
 					// draw the dynamite
 					Draw();
 					// draw the sparks
-					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (DynamiteAnimFrameId>>1)), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT, false);
+					arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X + (DynamiteAnimFrameId >> 1)), MapManager::GetYOnScreen(Y), SpriteData::Sparks[SparksAnimFrameId], SpriteData::SPARKS_SPRITE_WIDTH, SpriteData::SPARKS_SPRITE_HEIGHT, INVERT, false);
 				}
 			}
 			break;

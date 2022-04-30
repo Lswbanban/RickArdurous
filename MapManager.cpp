@@ -269,8 +269,8 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, unsigned char yWorld, bool
 	unsigned char spriteId = GetLevelSpriteAtWorldCoordinate(xWorld, yWorld);
 	// if the sprite is a destroyable block, check if it is destroyed
 	if (spriteId == SpriteData::NOTHING)
-		return IsDestroyableBlockAlive(xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT,
-									yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT);
+		return IsDestroyableBlockAlive(xWorld / SpriteData::LEVEL_SPRITE_WIDTH,
+									yWorld / SpriteData::LEVEL_SPRITE_HEIGHT);
 	// otherwise it depends on the type of sprite
 	return (!ignoreCeilingSprites && (spriteId != SpriteData::WallIdEnum::LADDER)) ||
 			(ignoreCeilingSprites && (spriteId < SpriteData::WallIdEnum::ROCK_CEILING_THIN));
@@ -279,8 +279,8 @@ bool MapManager::IsThereStaticCollisionAt(int xWorld, unsigned char yWorld, bool
 unsigned char MapManager::GetCeillingScreenPositionAbove(int xWorld, unsigned char yWorld)
 {
 	// convert the world coordinate into index for the sprite map
-	unsigned char xMap = xWorld >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT; // we don't care about negative xWorld here?
-	unsigned char yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
+	unsigned char xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
+	unsigned char yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
 	while (yMap % NB_VERTICAL_SPRITE_PER_SCREEN)
 	{
 		if (GetLevelSpriteAt(xMap, yMap) != SpriteData::NOTHING)
@@ -300,8 +300,8 @@ bool MapManager::IsThereLadderAt(int xWorld, unsigned char yWorld)
 unsigned char MapManager::GetLevelSpriteAtWorldCoordinate(int xWorld, unsigned char yWorld)
 {
 	// convert the world coordinate into index for the sprite map
-	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH; // use division instead of (>> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT) as xWorld may be negative
-	unsigned char yMap = yWorld >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT;
+	int xMap = xWorld / SpriteData::LEVEL_SPRITE_WIDTH;
+	unsigned char yMap = yWorld / SpriteData::LEVEL_SPRITE_HEIGHT;
 	// check if we are inside the map. If not, consider that there is collision
 	// to avoid the main character to exit the map and navigate into random memory
 	if ((xMap < 0) || (xMap >= MapManager::LEVEL_WIDTH) || /*(yMap < 0) ||*/ (yMap >= MapManager::LEVEL_HEIGHT))
@@ -326,7 +326,7 @@ unsigned char MapManager::GetLevelSpriteAt(unsigned char xMap, unsigned char yMa
 		// get the char that contains two ids (or one id and one count of empty space)
 		unsigned char packedId = pgm_read_byte(&(Level[i]));
 		// get the first id (or space count)
-		unsigned char id = packedId >> 4;
+		unsigned char id = packedId / 16;
 		// loop two times to check the 2 ids
 		for (unsigned char j = 0; j < 2; ++j)
 		{
@@ -742,7 +742,7 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				// get the char that contains two ids (or one id and one count of empty space)
 				packedId = pgm_read_byte(&(Level[i]));
 				// get the first id (or space count)
-				currentSpriteId = packedId >> 4;
+				currentSpriteId = packedId / 16;
 			}
 			else
 			{
@@ -793,9 +793,9 @@ void MapManager::Draw(unsigned char minSpriteIndex, unsigned char maxSpriteIndex
 				bool isMirror = false;
 				if ((currentSpriteId <= SpriteData::BLOCK_16_8_RIGHT) || (currentSpriteId == SpriteData::ROCK_CEILING_THIN))
 				{
-					unsigned char randomValue = (mapY << 4) | mapX;
-					randomValue ^= randomValue << 2;
-					randomValue ^= randomValue >> 3;
+					unsigned char randomValue = (mapY * 16) | mapX;
+					randomValue ^= randomValue * 4;
+					randomValue ^= randomValue / 8;
 					isMirror = randomValue % 2;
 				}
 				else if ((currentSpriteId == SpriteData::STAIR) || (currentSpriteId == SpriteData::ROCK_LEFT_WALL))

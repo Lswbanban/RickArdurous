@@ -23,7 +23,7 @@ bool Stalagmite::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// spawn sparks if the dynamite kill me
-				if (CheckLethalDynamite(SpriteData::STALAGMITE_SPRITE_WIDTH << 1, 0))
+				if (CheckLethalDynamite(SpriteData::STALAGMITE_SPRITE_WIDTH * 2, 0))
 				{
 					ClearProperty(Item::PropertyFlags::ALIVE);
 					SparksAnimFrameId = 0;

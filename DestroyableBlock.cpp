@@ -19,7 +19,7 @@ bool DestroyableBlock::Update(UpdateStep step)
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
 				// spawn block fragment and remove myself from the manager
-				if (CheckLethalDynamite(SpriteData::LEVEL_SPRITE_WIDTH << 1, 0))
+				if (CheckLethalDynamite(SpriteData::LEVEL_SPRITE_WIDTH * 2, 0))
 				{
 					InitDeath();
 					return true;
@@ -54,5 +54,5 @@ void DestroyableBlock::InitDeath()
 
 bool DestroyableBlock::IsLocatedAt(unsigned char mapX, unsigned char mapY)
 {
-	return (mapY == (Y >> SpriteData::LEVEL_SPRITE_HEIGHT_BIT_SHIFT)) && ((mapX == (X >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT)) || (mapX == ((X + SpriteData::LEVEL_SPRITE_WIDTH) >> SpriteData::LEVEL_SPRITE_WIDTH_BIT_SHIFT)));
+	return (mapY == (Y / SpriteData::LEVEL_SPRITE_HEIGHT)) && ((mapX == (X / SpriteData::LEVEL_SPRITE_WIDTH)) || (mapX == ((X + SpriteData::LEVEL_SPRITE_WIDTH) / SpriteData::LEVEL_SPRITE_WIDTH)));
 }
