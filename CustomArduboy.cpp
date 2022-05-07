@@ -6,6 +6,8 @@
 #include "CustomArduboy.h"
 #include "Arduboy_glcdfont.c"
 
+#ifndef USE_ARDUBOY2
+
 Arduboy::Arduboy()
 {
   // frame management
@@ -251,6 +253,8 @@ unsigned char* Arduboy::getBuffer()
 {
   return sBuffer;
 }
+
+#endif // USE_ARDUBOY2
 
 unsigned int CustomArduboy::drawBitmapExtended(int8_t x, int8_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color, bool mirrorX)
 {

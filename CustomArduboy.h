@@ -1,6 +1,34 @@
 #ifndef _CUSTOM_ARDUBOY_H_
 #define _CUSTOM_ARDUBOY_H_
 
+#ifdef USE_ARDUBOY2
+
+// include the Arduboy2
+#include "Arduboy2.h"
+
+// this function is defined in Arduboy_Audio
+extern unsigned int NoteToFrequency(byte note);
+
+// extend the BeepPin for wrapping the play and stop note
+class CustomBeepPin1 : public BeepPin1
+{
+public:
+	void static playNote(byte chan, byte note)	{ tone(freq(NoteToFrequency(note))); }
+	void static stopNote(byte chan) 			{ noTone(); }
+};
+
+// wrap the missing function in a derivated class
+class Arduboy : public Arduboy2
+{
+public:
+	void beginNoLogo() { beginDoFirst(); audio.begin(); audio.on(); tunes.begin(); }
+	void drawChar(uint8_t x, uint8_t y, unsigned char c, uint8_t color, uint8_t bg) { Arduboy2::drawChar(x, y, c, color, bg, 1); }
+	
+	CustomBeepPin1 tunes;
+};
+
+#else //USE_ARDUBOY2
+
 #include "Arduboy_core.h"
 #include <SPI.h>
 #include <Print.h>
@@ -122,6 +150,8 @@ protected:
   uint8_t cursor_x;
   uint8_t cursor_y;
 };
+
+#endif //USE_ARDUBOY2
 
 
 static constexpr uint8_t TRANSPARENT = 3;

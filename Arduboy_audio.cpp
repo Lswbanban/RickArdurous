@@ -36,6 +36,11 @@ const unsigned int PROGMEM _midi_word_note_frequencies[] = {
 //17740,18795,19912,21096,22351,23680,25088 //note 121 to 127
 };
 
+unsigned int NoteToFrequency(byte note)
+{
+	return pgm_read_word(_midi_word_note_frequencies + note - FIRST_NOTE_IN_INT_ARRAY);
+}
+
 /* AUDIO */
 
 void ArduboyAudio::on()
