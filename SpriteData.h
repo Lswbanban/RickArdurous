@@ -3,7 +3,7 @@
 
 namespace SpriteData
 {
-	enum WallIdEnum
+	enum WallId : unsigned char
 	{
 		ROCK_CEILING = 0,
 		ROCK,
@@ -34,7 +34,7 @@ namespace SpriteData
 	static constexpr int DESTROYABLE_BLOCK_SPRITE_HEIGHT = 8;
 	extern const unsigned char DestroyableBlock[];
 	
-	enum RickAnimFrameId
+	enum RickAnimFrameId : unsigned char
 	{
 		IDLE = 0,
 		WALK_START = 0,
@@ -115,7 +115,7 @@ namespace SpriteData
 	extern const unsigned char DynamiteCrate[];
 	
 	// Mummies
-	enum EnemyAnimFrameId
+	enum EnemyAnimFrameId : unsigned char
 	{
 		ENEMY_WALK_START = 0,
 		ENEMY_WALK_END = 3,

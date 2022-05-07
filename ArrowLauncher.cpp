@@ -26,7 +26,7 @@ bool ArrowLauncher::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case UpdateStepEnum::DRAW_LETHAL:
+		case UpdateStep::DRAW_LETHAL:
 			if (LastLaunchTime == CAN_LAUNCH_ARROW)
 			{
 				// check if the main character is triggering me
@@ -42,14 +42,14 @@ bool ArrowLauncher::Update(UpdateStep step)
 			}
 			break;
 		
-		case UpdateStepEnum::DRAW_STATIC_COLLISION:
+		case UpdateStep::DRAW_STATIC_COLLISION:
 			{
 				// draw the statue that launch the arrow
 				arduboy.drawBitmapExtended(MapManager::GetXOnScreen(X), MapManager::GetYOnScreen(Y), SpriteData::ArrowLauncherFace, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_WIDTH, SpriteData::ARROW_LAUNCHER_FACE_SPRITE_HEIGHT, WHITE, IsPropertySet(Item::PropertyFlags::MIRROR_X));
 			}
 			break;
 			
-		case UpdateStepEnum::RESPAWN:
+		case UpdateStep::RESPAWN:
 			LastLaunchTime = CAN_LAUNCH_ARROW;
 			Arrow.KillBulletWithoutSparks();
 			break;
@@ -89,7 +89,7 @@ void ArrowLauncher::CheckTrigerer(bool isAlive, int trigererX, unsigned char tri
 		if (isAlive && (throwingY > trigererY) && (throwingY < trigererY + 13) && (minX < trigererX + SpriteData::RICK_SPRITE_WIDTH) && (maxX > trigererX))
 		{
 			Arrow.Fire(throwingX, throwingY, isShootingTowardLeft);
-			FXManager::StartFXCommand(FXManager::BufferIdEnum::GAME, {1, 1, 0, 0, 0, 66, 2, 8});
+			FXManager::StartFXCommand(FXManager::BufferId::GAME, {1, 1, 0, 0, 0, 66, 2, 8});
 			LastLaunchTime = 0;
 		}
 	}

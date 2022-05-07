@@ -3,7 +3,7 @@
 
 namespace GameManager
 {
-	enum GameStateEnum
+	enum GameState : unsigned char
 	{
 		MAIN_MENU = 0,
 		PLAYING,
@@ -11,7 +11,6 @@ namespace GameManager
 		VICTORY,
 		HELP_SCREEN,
 	};
-	typedef unsigned char GameState;
 	
 	extern GameState CurrentGameState;
 	

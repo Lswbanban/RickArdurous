@@ -9,7 +9,7 @@
 
 bool Spike::Update(UpdateStep step)
 {
-	if (step == UpdateStepEnum::DRAW_LETHAL)
+	if (step == UpdateStep::DRAW_LETHAL)
 	{
 		if (AnimFrameId == 0)
 		{

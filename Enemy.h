@@ -18,7 +18,7 @@ private:
 	static constexpr int DEATH_VELOCITY_X = 9;
 	static constexpr int SKELETON_SENSOR = 4;
 
-	enum StateEnum
+	enum State : unsigned char
 	{
 		WALK = 0,
 		HALF_TURN,
@@ -30,7 +30,7 @@ private:
 	
 	unsigned char AnimFrameId;
 	unsigned char AnimFrameCount;
-	unsigned char AnimState;
+	State AnimState;
 	unsigned char PhysicsId;
 	unsigned char MyWidth;
 	unsigned char MyHeight;

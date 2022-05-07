@@ -4,7 +4,7 @@
 class Item
 {
 public:
-	enum PropertyFlags
+	enum PropertyFlags : unsigned char
 	{
 		NONE = 0,
 		// this flag is necessary for the MapManager
@@ -19,7 +19,7 @@ public:
 		SPECIAL_2 = 1 << 7,
 	};
 	
-	enum UpdateStepEnum
+	enum UpdateStep : unsigned char
 	{
 		DRAW_LETHAL_BESIDE = 0,
 		CHECK_LETHAL_BESIDE,
@@ -32,15 +32,13 @@ public:
 		DRAW_IGNORED_BY_ENEMIES,
 		RESPAWN,
 	};
-	typedef unsigned char UpdateStep;
 
-	enum SideEnum
+	enum Side : unsigned char
 	{
 		NO_SIDE = 0,
 		LEFT,
 		RIGHT,
 	};
-	typedef unsigned char Side;
 	
 	void Init(int startX, unsigned char startY, unsigned char flags);
 	virtual bool Update(UpdateStep step) = 0;

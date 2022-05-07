@@ -62,14 +62,14 @@ void MainMenu::UpdateMainMenu()
 				break;
 			case 2:
 				// switch the current game state
-				GameManager::CurrentGameState = GameManager::GameStateEnum::HELP_SCREEN;
+				GameManager::CurrentGameState = GameManager::GameState::HELP_SCREEN;
 				break;
 		}
 	}
 	
 	// play the sound fx when moving the menu option
 	if (playFX)
-		FXManager::StartFXCommand(FXManager::BufferIdEnum::GAME, {10, 0, 0, 1, 0, 60, 0, 1});
+		FXManager::StartFXCommand(FXManager::BufferId::GAME, {10, 0, 0, 1, 0, 60, 0, 1});
 	
 	// draw the menu
 	DrawMainMenu();

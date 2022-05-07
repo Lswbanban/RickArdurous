@@ -37,7 +37,7 @@ namespace Rick
 	static constexpr int RIGHT_X_SHIFT_FOR_COLLISION_UNDER_FEET_CRAWL = 9;
 	
 	// state of Rick
-	enum AnimState
+	enum AnimState : unsigned char
 	{
 		IDLE = 0,
 		WALK,
@@ -328,7 +328,7 @@ void Rick::InitDeath(unsigned int collision)
 		LifeCount--;
 	
 	// play the death sound
-	FXManager::StartFXCommand(FXManager::BufferIdEnum::GAME, {10, 0, 0, 0, 4, 68, -4, 4});
+	FXManager::StartFXCommand(FXManager::BufferId::GAME, {10, 0, 0, 0, 4, 68, -4, 4});
 }
 
 /**
@@ -358,7 +358,7 @@ void Rick::PlaceDynamite()
 			AllDynamites[i].LightUp(dynamiteX, Y + 5);
 			DynamiteCount--;
 			// start FX
-			FXManager::StartFXCommand(FXManager::BufferIdEnum::RICK, {4, 0, 0, 1, 26, 60, 0, 5});
+			FXManager::StartFXCommand(FXManager::BufferId::RICK, {4, 0, 0, 1, 26, 60, 0, 5});
 			break;
 		}
 	// reset the dynamite placement flag 
@@ -441,7 +441,7 @@ void Rick::UpdateInput()
 				{
 					AllBullets[i].Fire(IsLookingLeft ? X : X + SpriteData::RICK_SPRITE_WIDTH, Y + 8, IsLookingLeft);
 					BulletCount--;
-					FXManager::StartFXCommand(FXManager::BufferIdEnum::RICK, {1, 0, 0, 0, 0, 64, -1, 12});
+					FXManager::StartFXCommand(FXManager::BufferId::RICK, {1, 0, 0, 0, 0, 64, -1, 12});
 					break;
 				}
 		}
@@ -595,7 +595,7 @@ void Rick::UpdateInput()
 			StateFrameCounter = 0;
 			JumpAndFallAnimSpeedIndex = 0;
 			AirControlFrameCount = 0;
-			FXManager::StartFXCommand(FXManager::BufferIdEnum::RICK, {1, 0, 0, 0, 0, 52, 1, 6});
+			FXManager::StartFXCommand(FXManager::BufferId::RICK, {1, 0, 0, 0, 0, 52, 1, 6});
 		}
 		else if (Input::IsDown(DOWN_BUTTON))
 		{
@@ -775,7 +775,7 @@ void Rick::CheckStaticCollision()
 			// We found a collision under the feet, so if we are falling, stop falling
 			InitIdle();
 			// play a landing sound effect
-			FXManager::StartFXCommand(FXManager::BufferIdEnum::RICK, {1, 0, 0, 0, 0, 56, -1, 4});
+			FXManager::StartFXCommand(FXManager::BufferId::RICK, {1, 0, 0, 0, 0, 56, -1, 4});
 		}
 	}
 	else

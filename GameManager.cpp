@@ -18,27 +18,27 @@ void GameManager::Update()
 {
 	switch (CurrentGameState)
 	{
-		case GameStateEnum::MAIN_MENU:
+		case GameState::MAIN_MENU:
 			MapManager::Update();
 			MainMenu::UpdateMainMenu();
 			break;
 			
-		case GameStateEnum::PLAYING:
+		case GameState::PLAYING:
 			// update the managers
 			MapManager::Update();
 			// update the HUD
 			HUD::Update();
 			break;
 			
-		case GameStateEnum::GAME_OVER:
+		case GameState::GAME_OVER:
 			MainMenu::UpdateGameOver(false);
 			break;
 
-		case GameStateEnum::VICTORY:
+		case GameState::VICTORY:
 			MainMenu::UpdateGameOver(true);
 			break;
 
-		case GameStateEnum::HELP_SCREEN:
+		case GameState::HELP_SCREEN:
 			MainMenu::UpdateHelpScreen();
 			break;
 	}
@@ -59,7 +59,7 @@ void GameManager::StartNewGame()
 	MapManager::Reset(1, MapManager::FIRST_PUZZLE_SCREEN_CAMERA_X, MapManager::FIRST_PUZZLE_SCREEN_CAMERA_Y);
 	
 	// switch the current game state
-	CurrentGameState = GameStateEnum::PLAYING;
+	CurrentGameState = GameState::PLAYING;
 }
 
 void GameManager::GoToMainMenu()
@@ -71,5 +71,5 @@ void GameManager::GoToMainMenu()
 	Rick::MoveOutsideMainMenu();
 	
 	// switch the current game state
-	CurrentGameState = GameStateEnum::MAIN_MENU;
+	CurrentGameState = GameState::MAIN_MENU;
 }

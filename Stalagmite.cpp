@@ -11,14 +11,14 @@ bool Stalagmite::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case UpdateStepEnum::DRAW_LETHAL:
+		case UpdateStep::DRAW_LETHAL:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 				Draw();
 			break;
 		}
 		
-		case UpdateStepEnum::CHECK_LETHAL_BESIDE:
+		case UpdateStep::CHECK_LETHAL_BESIDE:
 		{
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -32,7 +32,7 @@ bool Stalagmite::Update(UpdateStep step)
 			break;
 		}
 
-		case UpdateStepEnum::CHECK_LETHAL:
+		case UpdateStep::CHECK_LETHAL:
 		{
 			// for check lethal, just check one pixel in between the two stalagmite,
 			// if this pixel is white, that means a lethal object traversed me
@@ -50,7 +50,7 @@ bool Stalagmite::Update(UpdateStep step)
 			break;
 		}
 		
-		case UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES:
+		case UpdateStep::DRAW_IGNORED_BY_ENEMIES:
 		{
 			// get my screen coords
 			char screenX = MapManager::GetXOnScreen(X);

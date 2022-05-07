@@ -114,13 +114,13 @@ bool ArrowBullet::Update(UpdateStep step)
 {
 	switch (step)
 	{
-		case UpdateStepEnum::DRAW_LETHAL:
+		case UpdateStep::DRAW_LETHAL:
 			// draw a line along the whole move of the bullet
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 				DrawBulletRay(WHITE);
 			break;
 
-		case UpdateStepEnum::ERASE_BULLET:
+		case UpdateStep::ERASE_BULLET:
 			// erase the line along the whole move of the bullet
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))
 			{
@@ -135,7 +135,7 @@ bool ArrowBullet::Update(UpdateStep step)
 			}
 			break;
 			
-		case UpdateStepEnum::CHECK_STATIC_COLLISION:
+		case UpdateStep::CHECK_STATIC_COLLISION:
 		{
 			// draw the bullet or the sparks depending if the bullet is alive or not
 			if (IsPropertySet(Item::PropertyFlags::ALIVE))

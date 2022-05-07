@@ -93,13 +93,13 @@ void PickUpItem::UpdateShineStar(unsigned char screenX, unsigned char screenY, c
  */
 bool PickUpItem::PickupUpdate(UpdateStep step, const unsigned char sprite[], unsigned char spriteWidth, unsigned char spriteHeight, bool isCrate)
 {
-	if ((step == UpdateStepEnum::DRAW_IGNORED_BY_ENEMIES) && IsPropertySet(Item::PropertyFlags::ALIVE))
+	if ((step == UpdateStep::DRAW_IGNORED_BY_ENEMIES) && IsPropertySet(Item::PropertyFlags::ALIVE))
 	{
 		// check if the player pick me up
 		if (DoesRickPickMeUp(spriteWidth, spriteHeight))
 		{
 			ClearProperty(Item::PropertyFlags::ALIVE);
-			FXManager::StartFXCommand(FXManager::BufferIdEnum::GAME, {2, 0, 1, 0, 1, 78, 2, 3});
+			FXManager::StartFXCommand(FXManager::BufferId::GAME, {2, 0, 1, 0, 1, 78, 2, 3});
 			return true;
 		}
 		
